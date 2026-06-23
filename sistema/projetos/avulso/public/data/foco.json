@@ -1,0 +1,39 @@
+[
+  [
+    {
+      "titulo": "Café & Planejamento (Jazz Hop / Coffee Shop Vibe)",
+      "descricao": "Uma atmosfera leve, otimista e acolhedora para organizar a agenda e iniciar a jornada com positividade.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Foco Contínuo (Lo-fi Zen / Study Beats)",
+      "descricao": "Melodias minimalistas e texturas suaves para manter a concentração profunda, desacelerar a mente e aliviar o estresse.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Produtividade Máxima (Binaural Waves)",
+      "descricao": "Frequências puras projetadas cientificamente para induzir o cérebro ao estado de flow e resolução de problemas complexos.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Bloqueio Externo (Ruído Marrom / Roby Brown Noise)",
+      "descricao": "Uma frequência grave e constante que amortece o ruído externo e silencia pensamentos dispersos, como no TDAH.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Modo Criativo (Natureza & Piano Minimalista)",
+      "descricao": "Sons orgânicos de natureza e pássaros com notas sutis de piano para estimular a imaginação e novas conexões.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Energia para Execução (Deep Focus House / Lounge Music)",
+      "descricao": "Ritmo constante e energético para impulsionar o cérebro e mantê-lo engajado em tarefas mecânicas e repetitivas.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Calma no Caos (Ambient Drone / Space Music)",
+      "descricao": "Texturas sonoras longas, etéreas e sem batidas para manter a ansiedade baixa mesmo sob pressão de prazos.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    }
+  ]
+]

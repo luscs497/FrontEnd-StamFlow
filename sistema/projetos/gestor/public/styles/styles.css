@@ -1,0 +1,2282 @@
+:root {
+    --bg-color: #1a1a24;
+    --card-bg: #252533;
+    --primary: #9d34ff;
+    --text-main: #ffffff;
+    --text-muted: #a0a0b8;
+    --danger: #ff4d4d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style: none;
+}
+
+html,
+body {
+    overflow-x: clip;
+}
+
+body {
+    display: flex;
+    font-family: 'Inter', sans-serif;
+    /* Reduzido de 16px para ~11px */
+    font-size: 12.8px;
+    color: white;
+    background-color: black;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* --- Cores Utilitárias --- */
+.green { color: #34d399; }
+.blue { color: #4a90e2; }
+.purple { color: #9013FE; }
+.orange { color: #F5A623; }
+.red { color: rgb(239, 68, 68); }
+.almost-red { color: rgb(249, 115, 22); }
+.gray { color: #c5c4c4; }
+.display-none { display: none !important; }
+
+/* --- Header / Sidebar --- */
+header {
+    /* Desktop: sticky sidebar — stays in place while .site-content scrolls */
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    align-self: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    /* 400px * 0.67 */
+    max-width: 320px;
+    background-color: rgb(31, 29, 43);
+    /* 2rem -> 1.34rem */
+    padding: 1.6rem;
+    border-right: 2px solid rgb(255 255 255 / 0.1);
+    /* Sombra ajustada */
+    box-shadow: 5px 0 11px rgb(0 0 0 / 0.1);
+}
+
+.nav-bar {
+    display: flex;
+    flex-direction: column;
+    /* 2rem -> 1.34rem */
+    gap: 1.6rem;
+    width: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* 0.77rem -> 0.5rem */
+    gap: 0.6rem;
+    /* padding original: 0rem 3rem 1.2rem -> ajustado */
+    padding: 0rem 2.4rem 0.96rem;
+    border-bottom: 2px solid rgb(255 255 255 / 0.05);
+    /* calc ajustado */
+    width: calc(100% + 3.2rem);
+    margin-left: -1.6rem;
+}
+
+.logo-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3.6px;
+}
+
+.svg-logo {
+    /* 48px -> 32px */
+    width: 38.4px;
+    height: 38.4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(166, 144, 16);
+    background-color: rgb(22, 19, 32);
+    /* 1rem -> 0.67rem */
+    padding: 0.804rem;
+    position: relative;
+    border-radius: 7.2px;
+    border: 1px solid rgba(134, 98, 255, 0.2);
+    box-shadow: 0 0 1px rgba(238, 255, 5, 0.4), inset 0 0 2px rgba(238, 255, 5, 0.2);
+}
+
+.svg-logo svg {
+    position: absolute;
+    /* 24px -> 16px */
+    width: 19.2px;
+    height: 19.2px;
+}
+
+.text-logo {
+    /* 25px -> 17px */
+    font-size: 20.4px;
+    font-weight: 700;
+}
+
+.abrir-header {
+    display: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.abrir-header:hover {
+    color: #34D399;
+}
+
+/* Animação Hamburger */
+.linha {
+    transition: transform 0.3s ease, opacity 0.2s ease;
+    transform-origin: 50% 50%;
+}
+
+/* Ajuste fino na translação */
+.abrir-header.ativo .linha1 { transform: translateY(3px) rotate(45deg); }
+.abrir-header.ativo .linha2 { opacity: 0; }
+.abrir-header.ativo .linha3 { transform: translateY(-3px) rotate(-45deg); }
+
+/* --- Navegação --- */
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    /* 1rem -> 0.67rem */
+    gap: 0.8rem;
+}
+
+.nav-item {
+    width: 100%;
+    /* 1.3rem -> 0.87rem */
+    padding: 1.04rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* 14px -> 9px */
+    gap: 10.8px;
+    /* 20px -> 13.5px */
+    font-size: 16px;
+    color: #9CA3AF;
+    transition: background-color 0.1s ease, color 0.1s ease;
+    /* 16px -> 11px */
+    border-radius: 12.8px;
+}
+
+.nav-item > *, .nav-item svg, .nav-item svg * {
+    transition: stroke 0.25s ease, fill 0.25s ease, color 0.25s ease;
+}
+
+.nav-item.green-hover.ativo {
+    color: #34D399;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item:not(.ativo):hover, .nav-item:not(.ativo):hover * {
+    color: white;
+}
+
+.nav-item svg {
+    /* 32px -> 21.5px */
+    width: 25.6px;
+    height: 25.6px;
+}
+
+/* --- Perfil --- */
+.perfil {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    /* 1rem -> 0.67rem */
+    gap: 0.8rem;
+    padding: 0.8rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 19.2px;
+    box-shadow: 0 5px 21px rgba(0, 0, 0, 0.2);
+}
+
+.perfil:hover {
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 5px 21px rgba(0, 0, 0, 0.25);
+}
+
+.imagem-usuario {
+    width: 100%;
+    /* 70px -> 47px */
+    max-width: 56px;
+}
+
+.imagem-usuario img {
+    width: 100%;
+}
+
+.info-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-usuario h4 { font-size: 14.4px; }
+.info-usuario p { font-size: 12.8px; color: #c5c4c4; }
+
+/* --- Main Content --- */
+.site-content {
+    width: 100%;
+    background-color: #161320;
+    /*
+      Grows to fill the remaining space inside the body flex container
+      (which is row on desktop, column on mobile). On desktop this is a
+      no-op cosmetically since align-items: stretch already filled it;
+      on mobile, this is what prevents the "black area" below the
+      content when the active section is empty (e.g. Reports with no
+      tickets).
+    */
+    flex: 1;
+}
+
+.content-header {
+    /* 2.1rem 4rem -> 1.4rem 2.68rem */
+    padding: 1.68rem 3.2rem;
+    background-color: rgb(31 29 43 / 0.5);
+    border-bottom: 2px solid rgb(255 255 255 / 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sistema {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* 0.6rem -> 0.4rem */
+    gap: 0.48rem;
+    color: #34d399;
+    border-radius: 80.4px;
+    /* 10px 15px -> 7px 10px */
+    padding: 8.4px 12px;
+    border: 1px solid rgb(52 211 153 / 0.3);
+    background-color: rgb(52 211 153 / 0.1);
+}
+
+.sistema svg {
+    /* 12px -> 8px */
+    width: 9.6px;
+    height: 9.6px;
+    fill: #34d399;
+}
+
+/* --- Container e Sub-Header --- */
+.container-1700 {
+    margin: 0 auto;
+    width: 100%;
+    /* 1700px -> 1140px (67%) */
+    max-width: 1360px;
+    padding: 1.6rem 3.2rem;
+    display: flex;
+    flex-direction: column;
+    /* 40px -> 27px */
+    gap: 32px;
+}
+
+.sub-header {
+    /* 2rem -> 1.34rem */
+    padding: 0 0 1.6rem 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid rgb(255 255 255 / 0.1);
+}
+
+.sub-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+}
+
+.sub-header-text h2 { font-size: 38.4px; }
+.sub-header-text p { font-size: 16px; }
+
+.close-btn-section {
+    /* 32px -> 21px */
+    width: 25.2px;
+    height: 25.2px;
+    color: #c5c4c4;
+    transition: color 0.1s ease;
+}
+
+.close-btn-section:hover {
+    color: white;
+    cursor: pointer;
+}
+
+/* Gaps ajustados */
+.gap-32 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* 32px -> 21px */
+    gap: 25.6px;
+}
+
+.gap-48 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* 48px -> 32px */
+    gap: 38.4px;
+}
+
+.periodos-navegacao {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    /* 24px -> 16px */
+    padding: 19.2px;
+    background-color: rgb(31, 29, 43);
+    border-radius: 9.6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.space-btw {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.periodos {
+    width: fit-content;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    /* 24px -> 16px */
+    gap: 19.2px;
+}
+
+.periodos li {
+    white-space: nowrap;
+    /* 12px 20px -> 8px 13px */
+    padding: 9.6px 15.6px;
+    /* 18px -> 12px */
+    font-size: 14.4px;
+    color: rgb(156, 163, 175);
+    font-weight: 700;
+    border-radius: 9.6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.periodo.ativo {
+    background-color: rgb(52, 211, 153);
+    color: rgb(31, 29, 43);
+}
+
+/*
+  Month picker chip.
+
+  This <li> contains a self-styled .selecao dropdown so we strip the
+  default .periodos li chrome (padding, font-size, hover background)
+  and let the inner .selecao define its own appearance. It only renders
+  when the "Esse Mês" period is the active one (controlled by
+  manager-dashboard.js via the display-none class).
+*/
+.periodos li.periodo-mes-picker {
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: default;
+    /* Match the visual height of sibling chips so the row stays balanced */
+    min-width: 168px;
+}
+.periodos li.periodo-mes-picker .selecao {
+    margin: 0;
+    /* fit-content keeps the chip from forcing the whole row wider than it needs */
+    width: 100%;
+}
+.periodos li.periodo-mes-picker .selecao .selecionado {
+    cursor: pointer;
+}
+.periodos li.periodo-mes-picker .selecao .selecionado h3 {
+    font-size: 13.2px;
+    font-weight: 700;
+}
+.periodos li.periodo-mes-picker .prazos-selecoes-suspenso {
+    /*
+      Float the dropdown over the surrounding chips so opening it doesn't
+      push the periodo navigation taller. Anchor to the chip's own box.
+    */
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    min-width: 168px;
+    background-color: rgb(22, 19, 32);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8.4px;
+    z-index: 20;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+    padding: 8.4px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+.periodos li.periodo-mes-picker {
+    position: relative;
+}
+
+.comparar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 18px -> 12px */
+    font-size: 14.4px;
+    background-color: rgb(74, 144, 226);
+    /* 12px 20px -> 8px 13px */
+    padding: 9.6px 15.6px;
+    color: white;
+    font-weight: 700;
+    border-radius: 9.6px;
+    border: none;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.comparar-btn:hover {
+    background-color: rgb(21, 129, 252);
+}
+
+.lista-insights {
+    width: 100%;
+}
+
+.insight {
+    width: 100%;
+    /* 32px -> 21px */
+    padding: 25.2px;
+    background-color: rgb(31, 29, 43);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* 20px -> 13px */
+    border-radius: 15.6px;
+}
+
+.insight h2 {
+    /* 26px -> 17.5px */
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.gap-24 {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    /* 24px -> 16px */
+    gap: 19.2px;
+}
+
+.periodo, .periodoTextContainer {
+    /* 12px -> 8px */
+    padding: 9.6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    /* 12px -> 8px */
+    font-size: 9.6px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border-radius: 7.2px;
+}
+
+.gap-16 {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    /* 16px -> 11px */
+    gap: 12.8px;
+}
+
+.especificidades {
+    list-style: none;
+    width: 100%;
+}
+
+.especificidades li {
+    width: 100%;
+    /* 12px -> 8px */
+    padding-bottom: 9.6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.especificidades li h3 {
+    color: rgba(209, 213, 219, 0.74);
+    font-weight: 700;
+}
+
+.especificidades li p {
+    /* 18px -> 12px */
+    font-size: 14.4px;
+}
+
+.barra {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    /* 18px -> 12px */
+    height: 14.4px;
+    border-radius: 7.2px;
+    background-color: rgb(55, 65, 81);
+}
+
+.barra-porcentagem {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    /* 10px -> 7px */
+    gap: 8.4px;
+    width: 100%;
+    /* 220px -> 147px */
+    max-width: 176.4px;
+    font-weight: 700;
+}
+
+.barra-preenchida {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+}
+
+.barra-porcentagem p {
+    /* 18px -> 12px */
+    font-size: 14.4px;
+    font-weight: 700;
+}
+
+#excelende-bar-preenchida, #alegria-bar-preenchida {
+    background-color: #34D399;
+}
+
+#boa-bar-preenchida {
+    background-color: rgb(245, 158, 11);
+}
+
+#ruim-bar-preenchida, #raiva-bar-preenchida {
+    background-color: rgb(249, 115, 22);
+}
+
+#critico-bar-preenchida, #tristeza-bar-preenchida {
+    background-color: rgb(239, 68, 68);
+}
+
+.color-excelente {
+    color: #34D399;
+}
+
+.color-boa {
+    color: rgb(245, 158, 11);
+}
+
+.color-ruim {
+    color: rgb(249, 115, 22);
+}
+
+.color-critico {
+    color: rgb(239, 68, 68);
+}
+
+.color-azul {
+    color: rgb(74, 144, 226);
+}
+
+.color-roxo {
+    color: rgb(144, 19, 254);
+}
+
+.color-vermelho {
+    color: rgb(239, 68, 68);
+}
+
+.classificacao-status {
+    color: rgba(255, 255, 255, 0.4);
+    /* 18px -> 12px */
+    font-size: 14.4px;
+    font-weight: 700;
+}
+
+#neutro-bar-preenchida {
+    background-color: rgb(74, 144, 226);;
+}
+
+.h2-svg {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* 10px -> 7px */
+    gap: 8.4px;
+}
+
+.degrade-roxo {
+    background: linear-gradient(to right, rgb(144, 19, 254), rgb(74, 144, 226));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#abrir-periodos-mob {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+#abrir-periodos-mob:hover {
+    color: #b8b8b8;;
+}
+
+.periodos-invisiveis {
+    width: calc(100% + 1px);
+    flex-direction: column;
+    position: absolute;
+    z-index: 0;
+    left:-0.5px;
+    top: 100%;
+    border-radius: 0 0 9.6px 9.6px;
+    background-color: #1F1D2B;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none;
+    /* 1.5rem -> 1rem */
+    padding-bottom: 1.2rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+}
+
+.noBorderBottom {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.wid100 {
+    width: 100%;
+}
+
+.lista-comparar {
+    width: 100%;
+}
+
+.linha-comparacao {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    /* 20px -> 13px */
+    gap: 15.6px;
+}
+
+.linha-horizontal {
+    /* 300px -> 200px */
+    height: 240px;
+    /* 2px -> 1.5px */
+    width: 1.5px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.prazosDiv {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* 40px -> 27px */
+    gap: 32.4px;
+}
+
+.gap-8 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* 8px -> 5px */
+    gap: 6.4px;
+}
+
+.selecionar-prazo {
+    width: 100%;
+    /* 500px -> 335px */
+    max-width: 402px;
+}
+
+.selecionar-prazo p {
+    color: rgb(156, 163, 175);
+    /* 14px -> 10px */
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 140%;
+}
+
+.selecao {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+    /* 12px 16px -> 8px 11px */
+    padding: 9.6px 13.2px;
+    /* 14px -> 10px */
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 700;
+    background-color: rgb(22, 19, 32);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8.4px;
+}
+
+.selecionado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#selecao-a-abrir, #selecao-b-abrir {
+    cursor: pointer;
+}
+
+.prazos-selecoes-suspenso {
+    width: 100%;
+    /* 20px -> 13px */
+    padding-top: 15.6px;
+    /* 10px -> 7px */
+    padding-bottom: 8.4px;
+}
+
+.prazos-selecoes-suspenso li {
+    width: 100%;
+    cursor: pointer;
+    /* 8px -> 5px */
+    padding: 6px;
+    border-radius: 6px;
+    /* 16px -> 11px */
+    font-size: 13.2px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+}
+
+.prazos-selecoes-suspenso li:hover {
+    background-color: rgb(35, 29, 53);
+}
+
+.cancelar-btn {
+    /* 18px -> 12px */
+    font-size: 14.4px;
+    /* 12px 20px -> 8px 13px */
+    padding: 9.6px 15.6px;
+    color: rgb(156, 163, 175);
+    font-weight: 700;
+    border-radius: 9.6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: background-color 0.2s ease;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.cancelar-btn:hover:hover {
+    background-color: #161320;
+}
+
+.prazos-selecoes-suspenso li.ativo {
+    display: none !important;
+}
+
+.space-btw.gapl-30 {
+    align-items: stretch;
+    /* 30px -> 20px */
+    gap: 24px;
+}
+
+.classificacao-reports {
+    background-color: #1F1D2B;
+    /* 24px -> 16px */
+    padding: 19.2px;
+    width: 100%;
+    border-radius: 13.2px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.classificacao-reports-header {
+    /* (100% + 48px) -> +32px */
+    width: calc(100% + 38.4px);
+    /* -24px -> -16px */
+    margin-left: -19.2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* 24px -> 16px */
+    padding: 19.2px;
+    padding-top: 0;
+    /* 16px -> 11px */
+    font-size: 13.2px;
+    font-weight: 600;
+}
+
+.lista-reports {
+    /* 24px -> 16px */
+    padding-top: 19.2px;
+}
+
+.lista-reports li {
+    width: 100%;
+    /* 16px -> 11px */
+    padding: 13.2px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 9.6px;
+    align-items: flex-end !important;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.lista-reports li:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.reports-info {
+    color: rgb(107, 114, 128);
+    /* 12px -> 8px */
+    font-size: 9.6px;
+    font-weight: 500;
+    line-height: 13.2px;
+}
+
+.report-description {
+    width: 100%;
+    text-align: left;
+    /* 16px -> 11px */
+    font-size: 13.2px;
+    color: rgb(209, 213, 219);
+}
+
+.abrir-detalhes-report {
+    /* 10px 18px -> 7px 12px */
+    padding: 8.4px 14.4px;
+    border-radius: 3.6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    /* 14px -> 10px */
+    font-size: 12px;
+    color: white;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.abrir-detalhes-report:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.pop-ups {
+    position: fixed;
+    backdrop-filter: blur(8px);
+    background-color: #1a1a24a6;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pop-up {
+    width: 100%;
+    /* 1000px -> 670px */
+    max-width: 804px;
+    /* 48px -> 32px */
+    padding: 38.4px;
+    background-color: #1F1D2B;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 13.2px;
+}
+
+.title-close {
+    /* 24px -> 16px */
+    padding-bottom: 19.2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.title-close h2 {
+    color: white;
+    /* 32px -> 21.5px */
+    font-size: 25.8px;
+    font-weight: 700;
+}
+
+.title-close svg {
+    color: rgb(156, 163, 175);
+    /* 28px -> 19px */
+    width: 22.8px;
+    height: 22.8px;
+    cursor: pointer;
+}
+
+.conversa {
+    /* 20px -> 13px */
+    padding: 15.6px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 9.6px;
+}
+
+.conversa-message {
+    color: rgb(209, 213, 219);
+    /* 16px -> 11px */
+    font-size: 13.2px;
+    /* 28px -> 19px */
+    line-height: 22.8px;
+}
+
+.report-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* 12px -> 8px */
+    gap: 9.6px;
+    /* 14px -> 10px */
+    font-size: 12px;
+    font-weight: 700;
+    color: rgb(107, 114, 128);
+}
+
+.message-space {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* 15px -> 10px */
+    gap: 12px;
+    flex-direction: column;
+}
+
+.message-space h3 {
+    width: 100%;
+    /* 16px -> 11px */
+    font-size: 13.2px;
+    color: rgb(156, 163, 175);
+    font-weight: 600;
+}
+
+.message-space textarea {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 9.6px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* 150px -> 100px */
+    min-height: 120px;
+    /* 20px -> 13px */
+    padding: 15.6px;
+    /* 20px -> 13.5px */
+    font-size: 16.2px;
+    color: white;
+    transition: border-color 0.2s ease;
+    resize: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.message-space textarea::placeholder {
+    font-size: 16.2px;
+    font-family: 'Inter', sans-serif;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.message-space textarea:focus {
+    border-color: #4a90e2;
+    outline: none;
+}
+
+.status {
+    /* 12px -> 8px */
+    gap: 9.6px;
+}
+
+.status-opcao {
+    width: 100%;
+    /* 18px 12px -> 12px 8px */
+    padding: 14.4px 9.6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9.6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8.4px;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.status-opcao:hover {
+    background-color: rgba(255, 255, 255, 0.1);;
+}
+
+.buttons-options {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 9.6px;
+}
+
+.buttons-options button {
+    width: 100%;
+    /* 20px -> 13px */
+    padding: 15.6px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    /* 18px -> 12px */
+    font-size: 14.4px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 9.6px;
+}
+
+.btn-salvar {
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-enviar {
+    background-color: rgb(52, 211, 153) !important;
+    color: black !important;
+}
+
+.status-opcao.concluido {
+    background-color: rgb(52, 211, 153);
+    color: black;
+}
+
+.status-opcao.andamento {
+    background-color: #F5A623;
+    color: black;
+}
+
+.status-opcao.aberto {
+    background-color: rgb(239, 68, 68);
+    color: black;
+}
+
+.mensagem {
+    width: 100%;
+    /* 24px 16px -> 16px 11px */
+    padding: 19.2px 13.2px;
+    background-color: #1F1D2B;
+    border-radius: 9.6px;
+}
+
+.mensagem h4 {
+    /* 17px -> 11.5px */
+    font-size: 13.8px;
+    font-weight: 700;
+}
+
+.mensagem p {
+    /* 16px -> 11px */
+    font-size: 13.2px;
+    color: rgb(209, 213, 219);
+}
+
+.mensagem-gestor {
+    color: #4a90e2;
+    border-left: 2px solid #4a90e2;;
+}
+
+.mensagem-cliente {
+    align-items: flex-end;
+    justify-content: flex-end;
+    color: rgb(52, 211, 153);
+    border-right: 2px solid rgb(52, 211, 153);
+}
+
+.conversas {
+    list-style: none;
+    width: 100%;
+}
+
+/* ====== Comparação em 2 colunas ====== */
+.comparacao-duas-colunas {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    /* 20px -> 13px */
+    gap: 15.6px;
+    width: 100%;
+}
+
+.coluna-comparacao {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* 32px -> 21px */
+    gap: 25.2px;
+}
+
+/* ====== Barras por classe (sem IDs duplicados) ====== */
+.bar-excelente { background-color: #34D399; }
+.bar-boa       { background-color: rgb(245, 158, 11); }
+.bar-ruim      { background-color: rgb(249, 115, 22); }
+.bar-critico   { background-color: rgb(239, 68, 68); }
+.bar-neutro    { background-color: rgb(74, 144, 226); }
+
+
+.logo-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3.6px;
+}
+
+.img {
+    width: 100%;
+}
+
+.logo-image {
+    /* -40px -> -27px */
+    margin-left: -32px;
+    width: 100%;
+    max-width: 200px;
+    height: 36.8px;
+    overflow: hidden;
+}
+
+.logo-image img {
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.modais {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.71);
+    backdrop-filter: blur(8px);
+    z-index: 999;
+}
+
+.modal-perfil {
+    /* 3rem 2.5rem -> 2rem 1.67rem */
+    padding: 2.4rem 2.004rem;
+    width: 100%;
+    /* 650px -> 435px */
+    max-width: 522px;
+    border-radius: 14.4px;
+    background-color: #1F1D2B;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.perfil-title-close {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.perfil-title-close h2 {
+    /* 36px -> 24px */
+    font-size: 28.8px;
+    font-weight: 700;
+}
+
+.perfil-title-close svg {
+    /* 28px -> 19px */
+    width: 22.8px;
+    height: 22.8px;
+    cursor: pointer;
+    color: rgb(156, 163, 175);
+}
+
+.perfil-descricao {
+    /* 20px -> 13.5px */
+    font-size: 16.2px;
+    color: rgb(156, 163, 175);
+}
+
+.dados-perfil {
+    width: 100%;
+}
+
+.dados-perfil label {
+    /* 22px -> 15px */
+    font-size: 18px;
+    color: rgb(156, 163, 175);
+    font-weight: 500;
+}
+
+.dados-perfil-input {
+    /* 20px 25px -> 13px 17px */
+    padding: 15.6px 20.4px;
+    width: 100%;
+    background-color: rgb(37, 40, 54);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* 15px -> 10px */
+    gap: 12px;
+    color: rgb(107, 114, 128) !important;
+    transition: border-color 0.3s ease;
+}
+
+.dados-perfil-input:focus-within {
+    border-color: #4a91e29a;
+    color: #4a90e2 !important;
+}
+
+.dados-perfil-input input {
+    /* 20px -> 13.5px */
+    font-size: 16.2px;
+    color: rgb(173, 178, 187);
+    width: 100%;
+    background-color: transparent;
+    border: none;
+}
+
+.dados-perfil-input input {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.btn-login {
+    width: 100%;
+    /* 18px -> 12px */
+    padding: 14.4px;
+    background-image: linear-gradient(to right, rgb(124, 58, 237), rgb(99, 102, 241), rgb(59, 130, 246));
+    cursor: pointer;
+    border: none;
+    border-radius: 9.6px;
+    /* 18px -> 12px */
+    font-size: 14.4px;
+    font-weight: 600;
+    transition: transform 0.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3.6px;
+    color: white;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+}
+
+.mar-top15 {
+    /* 25px -> 17px */
+    margin-top: 20.4px;
+}
+
+.buttons-perfil {
+    /* 15px -> 10px */
+    margin-top: 12px;
+    width: 100%;
+    /* 30px -> 20px */
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* 15px -> 10px */
+    gap: 12px;
+}
+
+.buttons-perfil button {
+    /* 15px 20px -> 10px 13px */
+    padding: 12px 15.6px;
+    width: 100%;
+    /* 18px -> 12px */
+    font-size: 14.4px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.buttons-perfil button:hover {
+    transform: translateY(-2px);
+}
+
+.perfil-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 10px -> 7px */
+    gap: 8.4px;
+    background-color: transparent;
+    border: none;
+    color: rgb(239, 68, 68);
+}
+
+.perfil-logout svg {
+    /* 26px -> 17.5px */
+    width: 21px;
+    height: 21px;
+}
+
+.btn-salvar {
+    border-radius: 9.6px;
+    border: none;
+    background-color: #34D399;
+    color: black;
+}
+
+.nav-item.purple-hover.ativo {
+    color: #9013F3;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* @media 1700 -> ajustado para 1140 */
+@media (max-width: 1140px) {
+  .space-btw.gapl-30 {
+    flex-direction: column;
+    align-items: stretch;
+    /* 24px -> 16px */
+    gap: 19.2px;
+  }
+
+  .classificacao-reports {
+    width: 100%;
+  }
+}
+
+/* --- Botão Exportar e Dropdown --- */
+/*
+  Actions wrapper (Export + Compare). Previously this had inline
+  `display: flex; gap: 12px; align-items: center` on the JSX
+  element; moved here so the gap and child sizing can respond to
+  viewport width without inline-style specificity getting in the way.
+*/
+.actions-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 14.4px;
+}
+
+.export-container {
+    position: relative;
+    z-index: 10;
+}
+
+.export-btn {
+    display: flex;
+    align-items: center;
+    /* 8px -> 5px */
+    gap: 6px;
+    /* 16px -> 11px */
+    font-size: 13.2px;
+    background-color: rgb(144, 19, 254);
+    /* 12px 18px -> 8px 12px */
+    padding: 9.6px 14.4px;
+    color: white;
+    font-weight: 700;
+    border-radius: 9.6px;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.1s;
+    cursor: pointer;
+}
+
+.export-btn:hover {
+    background-color: rgb(113, 14, 200);
+}
+
+.export-btn:active {
+    transform: translateY(2px);
+}
+
+/* Dropdown Menu */
+.export-dropdown {
+    position: absolute;
+    /* +8px -> +5px */
+    top: calc(100% + 6px);
+    right: 0;
+    /* 160px -> 107px */
+    width: 128.4px;
+    background-color: #252533;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9.6px;
+    /* sombra ajustada */
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    list-style: none;
+    flex-direction: column;
+    /* 6px -> 4px */
+    padding: 4.8px;
+    display: flex;
+}
+
+.export-dropdown.display-none {
+    display: none;
+}
+
+.export-dropdown li {
+    /* 10px 12px -> 7px 8px */
+    padding: 8.4px 9.6px;
+    display: flex;
+    align-items: center;
+    /* 10px -> 7px */
+    gap: 8.4px;
+    color: rgba(255, 255, 255, 0.8);
+    /* 14px -> 9.5px */
+    font-size: 11.4px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.export-dropdown li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.export-dropdown li svg {
+    opacity: 0.8;
+}
+
+.collaborators-utils {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 19.2px;
+}
+
+.collaborators-info {
+    width: 100%;
+    padding: 1.8rem;
+    background-color: #1F1D2B;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 19.2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.collaborators-info-text.gap-16 {
+    gap: 6px;
+}
+
+
+.collaborators-info-text h3 {
+    font-size: 21px;
+}
+
+.collaborators-info-text p {
+    font-size: 16.8px;
+    color: rgb(156, 163, 175);
+}
+
+.collaborators-info-quantity.gap-16 {
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    gap: 6px;
+}
+
+.collaborators-info-quantity h3{
+    text-align: center;
+    font-size: 43.2px;
+    color: rgb(74, 144, 226);
+}
+
+.collaborators-info-quantity p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 14.4px;
+    font-weight: 500;
+    color: #6B7280;
+    white-space: nowrap;
+
+}
+
+.collaborators-action {
+    width: 100%;
+    max-width: 396px;
+    background-color: #4A90E2;
+    border-radius: 19.2px;
+    padding: 1.8rem;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 0 20px rgba(74, 144, 226, 0.4);
+    cursor: pointer;
+}
+
+.collaborators-action:hover {
+    background-color: #4281c9;
+}
+
+.collaborators-action svg {
+    width: 33.6px;
+    height: 33.6px;
+}
+
+.collaborators-action p {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.collaborators-action.gap-8 {
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+
+/* ==========================================================================
+   Colaboradores - Lista e Ações (Atualizado +10%)
+   ========================================================================== */
+
+.action-bar-selection {
+    background-color: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 9.6px;
+    padding: 15.6px 26.4px;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.btn-action-bar {
+    display: flex;
+    align-items: center;
+    gap: 10.8px;
+    padding: 10.8px 21.6px;
+    border-radius: 7.2px;
+    font-size: 14.4px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+.btn-excluir {
+    background-color: rgb(239, 68, 68);
+}
+
+.btn-excluir:hover {
+    background-color: rgb(220, 38, 38);
+}
+
+.btn-desfazer {
+    background-color: rgb(16, 185, 129);
+}
+
+.btn-desfazer:hover {
+    background-color: rgb(5, 150, 105);
+}
+
+.colab-table-container {
+    background-color: rgb(31, 29, 43);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14.4px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.colab-search-header {
+    display: flex;
+    align-items: center;
+    gap: 15.6px;
+    padding: 21.6px 26.4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.colab-search-header input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    font-size: 16.2px;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.colab-search-header input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.colab-list-header {
+    padding: 16.8px 26.4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.colab-list {
+    list-style: none;
+    max-height: 336px; /* Aumentado para acomodar os novos espaçamentos de 5 itens */
+    overflow-y: auto;
+}
+
+/* Scrollbar personalizada para a lista */
+.colab-list::-webkit-scrollbar {
+    width: 7.2px;
+}
+.colab-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.colab-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+.colab-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.colab-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 21.6px 26.4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s;
+}
+
+.colab-item:last-child {
+    border-bottom: none;
+}
+
+.colab-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.colab-item.selected {
+    background-color: rgba(74, 144, 226, 0.05);
+}
+
+/* Custom Checkbox */
+.colab-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 21.6px;
+    height: 21.6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4.8px;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.colab-checkbox:checked {
+    background-color: #4A90E2;
+    border-color: #4A90E2;
+}
+
+.colab-checkbox:checked::after {
+    content: '✔';
+    color: white;
+    font-size: 13.2px;
+}
+
+
+/* ==========================================================================
+   Modal Adicionar Colaboradores (Atualizado +10%)
+   ========================================================================== */
+
+.modal-add-colab {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content-colab {
+    background-color: #1F1D2B; /* Fundo da modal */
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Bordas mantidas iguais */
+    border-radius: 14.4px;
+    width: 100%;
+    max-width: 660px; /* 500px -> 550px */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header-colab {
+    padding: 31.2px; /* 24px -> 26px */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-header-colab h2 {
+    font-size: 26.4px; /* 20px -> 22px */
+    color: white;
+}
+
+.close-icon {
+    color: rgb(156, 163, 175);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-icon:hover {
+    color: white;
+}
+
+.modal-tabs-colab {
+    display: flex;
+    padding: 0 31.2px; /* 24px -> 26px */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 31.2px; /* 24px -> 26px */
+}
+
+.tab-btn-colab {
+    background: transparent;
+    border: none;
+    color: rgb(156, 163, 175);
+    font-size: 16.2px; /* 12px -> 13.5px */
+    font-weight: 600;
+    padding: 21.6px 0; /* 16px -> 18px */
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab-btn-colab:hover {
+    color: white;
+}
+
+.tab-btn-colab.active {
+    color: #4A90E2;
+    border-bottom: 2px solid #4A90E2; /* Bordas mantidas iguais */
+}
+
+.modal-body-colab {
+    padding: 31.2px; /* 24px -> 26px */
+    min-height: 198px; /* 150px -> 165px */
+}
+
+.label-colab {
+    font-size: 13.2px; /* 10px -> 11px */
+    font-weight: 700;
+    color: rgb(156, 163, 175);
+    letter-spacing: 0.5px;
+}
+
+.input-colab, .textarea-colab {
+    width: 100%;
+    background-color: #161320;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Bordas mantidas iguais */
+    border-radius: 9.6px;
+    padding: 18px 21.6px; /* 14px 16px -> 15px 18px */
+    color: white;
+    font-size: 18px; /* 13.5px -> 15px */
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-colab::placeholder, .textarea-colab::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.input-colab:focus, .textarea-colab:focus {
+    border-color: #4A90E2;
+}
+
+.textarea-colab {
+    resize: none;
+    height: 132px; /* 100px -> 110px */
+}
+
+.csv-dropzone {
+    width: 100%;
+    border: 1px dashed rgba(255, 255, 255, 0.2); /* Bordas mantidas iguais */
+    border-radius: 9.6px;
+    padding: 42px; /* 32px -> 35px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.csv-dropzone:hover {
+    background-color: rgba(74, 144, 226, 0.05);
+    border-color: rgba(74, 144, 226, 0.5);
+}
+
+.modal-footer-colab {
+    padding: 31.2px; /* 24px -> 26px */
+    display: flex;
+    gap: 21.6px; /* 16px -> 18px */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-cancelar-colab, .btn-importar-colab {
+    width: 100%;
+    padding: 16.2px; /* 12px -> 13.5px */
+    border-radius: 9.6px;
+    font-size: 18px; /* 13.5px -> 15px */
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancelar-colab {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.btn-cancelar-colab:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-importar-colab {
+    background-color: #4A90E2;
+    border: none;
+    color: white;
+}
+
+.btn-importar-colab:hover {
+    background-color: #357ABD;
+}
+
+
+/* ==========================================================================
+   Modal Adicionar Colaboradores - Animações e Ajustes Finais
+   ========================================================================== */
+
+/* Animação suave de entrada (Scale e Fade) */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-add-colab {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Aciona a animação apenas quando a modal perde o display-none */
+.modal-add-colab:not(.display-none) .modal-content-colab {
+    animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+.modal-content-colab {
+    background-color: #1F1D2B;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14.4px;
+    width: 100%;
+    max-width: 660px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ... mantenha .modal-header-colab, .modal-tabs-colab ... */
+
+.tab-content-colab {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Gap aumentado (+2px) */
+}
+
+.label-colab {
+    font-size: 15.6px; /* Aumentado 2px (era 11px) */
+    font-weight: 700;
+    color: rgb(156, 163, 175);
+    letter-spacing: 0.5px;
+}
+
+/* ... mantenha o restante das classes de inputs e dropzone ... */
+
+.btn-importar-colab {
+    background-color: #4A90E2;
+    border: none;
+    color: white;
+    transition: all 0.2s;
+}
+
+.btn-importar-colab:hover:not(:disabled) {
+    background-color: #357ABD;
+}
+
+/* Estado visual para botão desabilitado */
+.btn-importar-colab:disabled {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+}
+
+
+/* Ajuste mobile — vira coluna abaixo de 500px */
+@media (max-width: 500px) {
+    /* Tudo em coluna: Exportar → Comparar → Hoje */
+    .periodos-navegacao.space-btw {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .actions-wrapper {
+        order: 1;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .export-container {
+        width: 100%;
+    }
+
+    .export-btn,
+    .comparar-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+        font-size: 13.6px;
+    }
+
+    /* Botões + chip "Hoje" com altura idêntica na coluna */
+    .export-btn,
+    .comparar-btn,
+    .periodos .periodo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-height: 44px;
+        padding-top: 0;
+        padding-bottom: 0;
+        font-size: 13.6px;
+        line-height: 1.2;
+    }
+
+    /* Chip ativo abaixo dos botões, mesma largura */
+    .periodos {
+        order: 2;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+
+    .periodos .periodo {
+        width: 100%;
+        text-align: center;
+        border-radius: 9.6px;
+    }
+
+    /* Dropdown sem shadow acima */
+    .export-dropdown {
+        box-shadow: none;
+        border-top: none;
+        border-radius: 0 0 9.6px 9.6px;
+    }
+
+    /* Painel de comparação: cancelar fica full width na coluna */
+    .cancelar-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE - SEÇÃO DE COLABORADORES E MODAL
+   ========================================================================== */
+
+/* Ajustes para Tablets e telas médias (Até 992px) */
+@media (max-width: 992px) {
+    .collaborators-utils {
+        flex-direction: column;
+    }
+
+    .collaborators-action {
+        max-width: 100%;
+    }
+}
+
+/* Ajustes para Mobile (Até 768px) */
+@media (max-width: 768px) {
+    
+    /* Barra de ações (seleção de itens) */
+    .action-bar-selection {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 19.2px;
+        padding: 19.2px;
+    }
+
+    .action-bar-selection > div {
+        width: 100%;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-action-bar {
+        width: 100%;
+        justify-content: center;
+        padding: 14.4px;
+    }
+
+    /* Lista de Colaboradores */
+    .colab-search-header, 
+    .colab-list-header, 
+    .colab-item {
+        padding: 19.2px;
+    }
+
+    /* Proteção para e-mails muito grandes não quebrarem o layout */
+    .colab-item p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 240px; /* Ajuste flexível */
+    }
+
+    .colab-item > div {
+        width: 100%;
+    }
+
+    /* Modal de Perfil — menor no mobile (reduzido proporcionalmente) */
+    .modais {
+        padding: 16px;
+    }
+
+    .modal-perfil {
+        padding: 1.1rem 1rem;
+        max-width: 380px;
+        max-height: 88vh;
+        overflow-y: auto;
+        gap: 18px;
+    }
+
+    .perfil-title-close h2 {
+        font-size: 17.6px;
+    }
+
+    .perfil-title-close svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    .perfil-descricao {
+        font-size: 13px;
+    }
+
+    .dados-perfil {
+        gap: 11px;
+    }
+
+    .dados-perfil label {
+        font-size: 12px;
+    }
+
+    .dados-perfil-input {
+        padding: 8.5px 12px;
+        gap: 9px;
+    }
+
+    .dados-perfil-input svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .dados-perfil-input input {
+        font-size: 12.5px;
+    }
+
+    .btn-login {
+        padding: 11px;
+        font-size: 12.5px;
+    }
+
+    .mar-top15 {
+        margin-top: 14px;
+    }
+
+    .buttons-perfil {
+        padding-top: 12px;
+        margin-top: 6px;
+        gap: 9px;
+    }
+
+    .buttons-perfil button {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+
+    .perfil-logout svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Modal de Adicionar Colaboradores — menor no mobile (reduzido proporcionalmente) */
+    .modal-add-colab {
+        padding: 12px;
+    }
+
+    .modal-content-colab {
+        max-height: 88vh;
+        overflow-y: auto;
+        max-width: 400px;
+    }
+
+    .modal-header-colab,
+    .modal-tabs-colab,
+    .modal-body-colab,
+    .modal-footer-colab {
+        padding: 14px;
+    }
+
+    .modal-header-colab h2 {
+        font-size: 19px;
+    }
+
+    .modal-header-colab p {
+        font-size: 12.5px !important;
+    }
+
+    .modal-body-colab {
+        min-height: 150px;
+    }
+
+    .label-colab {
+        font-size: 11.5px;
+    }
+
+    .input-colab,
+    .textarea-colab {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .textarea-colab {
+        height: 110px;
+    }
+
+    .modal-tabs-colab {
+        gap: 16px;
+        justify-content: space-between;
+    }
+
+    .tab-btn-colab {
+        font-size: 13px;
+        padding: 14px 0;
+    }
+
+    .csv-dropzone {
+        padding: 24px 16px;
+        text-align: center;
+    }
+
+    .btn-cancelar-colab,
+    .btn-importar-colab {
+        padding: 13px;
+        font-size: 14px;
+    }
+
+    .modal-footer-colab {
+        flex-direction: column-reverse; /* Botão principal (Importar) fica em cima */
+        gap: 12px;
+    }
+}
+
+/* Ajustes extras para celulares menores (Até 468px) */
+@media (max-width: 468px) {
+    .collaborators-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 19.2px;
+    }
+
+    .collaborators-info-quantity.gap-16 {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .colab-item p {
+        max-width: 180px; /* Reduz ainda mais a área do texto */
+    }
+
+    .tab-btn-colab {
+        font-size: 13.2px;
+    }
+}
+/* ---- Sidebar fixa: override para mobile (hamburger overlay) ---- */
+@media screen and (max-width: 992px) {
+    header {
+        position: relative;
+        height: auto;
+        min-height: unset;
+        max-height: unset;
+        overflow-y: visible;
+        align-self: auto;
+    }
+
+    /* Quando o menu mobile está aberto, previne scroll do body */
+    body:has(header.clicado) {
+        overflow: hidden;
+    }
+
+    header.clicado {
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100dvh;
+        overscroll-behavior: contain;
+        overflow-y: auto;
+        overflow-x: clip;
+    }
+
+    header.clicado .nav-bar {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: clip;
+        overscroll-behavior: contain;
+    }
+
+    header.clicado .perfil {
+        flex-shrink: 0;
+    }
+}

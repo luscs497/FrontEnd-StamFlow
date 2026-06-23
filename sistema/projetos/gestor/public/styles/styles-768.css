@@ -1,0 +1,253 @@
+/* --- Layout Mobile Geral --- */
+body {
+    flex-direction: column;
+    width: 100%;
+}
+
+/* --- Header Mobile --- */
+header {
+    max-width: none;
+    padding: 0.8rem;
+    padding-top: 0;
+    min-height: auto;
+    border: none;
+    padding-bottom: 0;
+}
+
+/* Estado do Menu Aberto (Clicado) */
+header.clicado {
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    width: 100%;
+    padding-bottom: 40px;
+    z-index: 999;
+}
+
+header.clicado .nav-bar > * {
+    display: flex;
+}
+
+header.clicado .perfil {
+    display: flex;
+}
+
+/* Visibilidade dos Itens no Mobile (Fechado) */
+.nav-bar > * {
+    display: none;
+}
+
+.nav-bar > .logo {
+    display: flex;
+}
+
+.perfil {
+    display: none;
+}
+
+.abrir-header {
+    display: block;
+}
+
+/* --- Estilização Interna do Header --- */
+.logo {
+    padding: 0.8rem 1.6rem 0.8rem 1.44rem;
+}
+
+.logo-image img {
+    margin-left: 5px;
+}
+
+.nav-item {
+    padding: 1.04rem 0.64rem;
+    gap: 8px;
+    font-size: 13.6px;
+}
+
+.nav-item svg {
+    width: 19.2px;
+    height: 19.2px;
+}
+
+.imagem-usuario {
+    max-width: 32px;
+}
+
+.info-usuario h4 {
+    font-size: 12px;
+}
+
+.info-usuario p {
+    font-size: 11.2px;
+}
+
+.content-header {
+    padding: 0.84rem 0.8rem;
+}
+
+.container-1700 {
+    padding: 1.6rem 0.8rem;
+}
+
+.sub-header {
+    padding-bottom: 1.2rem;
+    gap: 0.2px;
+}
+
+.sub-header-text h2 {
+    font-size: 28.8px;
+}
+
+.sub-header-text p {
+    font-size: 14.4px;
+}
+
+#close-btn {
+    width: 31.2px;
+    height: 31.2px;
+}
+
+.relatorios-content {
+    padding-top: 0;
+    gap: 36px;
+}
+
+/* ============================
+   469–768px: barra de períodos fica em LINHA (como desktop).
+   Só vira coluna abaixo de 500px (tratado no @media do styles.css).
+   ============================ */
+
+/* 1) Painel de comparação: prazosDiv em coluna + cancelar alinhado ao topo */
+.periodos-navegacao.space-btw {
+  align-items: flex-start;
+}
+
+.cancelar-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+/* 2) Comparação: empilha tudo */
+.linha-comparacao {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 19.2px;
+}
+
+/* some divisor vertical e adiciona um divisor horizontal bonito */
+.linha-horizontal {
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* cards de comparação respiram melhor */
+.sc-prazo-a,
+.sc-prazo-b {
+  width: 100%;
+}
+
+/* 3) Períodos A/B (dropdowns) no mobile: empilha */
+.prazosDiv {
+  flex-direction: column;
+  gap: 19.2px;
+}
+
+/* cada seletor ocupa tudo */
+.selecionar-prazo {
+  max-width: none;
+}
+
+/* dropdown suspenso não estoura largura */
+.prazos-selecoes-suspenso {
+  width: 100%;
+}
+
+/* 4) Ajuste fino no header do insight: deixa quebrar sem esmagar */
+.insight .space-btw {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* 5) Barras: no mobile, deixa o texto ir pra baixo se precisar */
+.barra-porcentagem {
+  max-width: none;
+}
+
+.sc-prazo-b {
+  border-top: 2px solid rgba(255, 255, 255, 0.12);
+  padding-top: 24px;
+  margin-top: 4.8px;
+}
+
+/* =========================
+   Reports - <= 768px
+   ========================= */
+
+
+.space-btw.gapl-30 {
+  flex-direction: column;
+  gap: 19.2px;
+}
+
+/* cards mais "touch friendly" */
+.classificacao-reports {
+  padding: 19.2px;
+  border-radius: 19.2px;
+}
+
+/* dá uma "linha visual" melhor no header de cada coluna */
+.classificacao-reports-header {
+  width: calc(100% + 38.4px);
+  margin-left: -19.2px;
+  padding: 19.2px;
+  padding-top: 0;
+}
+
+/* tipografia */
+.classificacao-reports-header h2 {
+  font-size: 22.8px;
+}
+
+/* itens da lista (quando tiver) */
+.lista-reports li {
+  padding: 16.8px;
+  border-radius: 14.4px;
+}
+
+.report-description {
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+/* botão "abrir" mais clicável */
+.abrir-detalhes-report {
+  width: 100%;
+  padding: 14.4px 16.8px;
+  border-radius: 12px;
+}
+
+/* =========================
+   Pop-up Report - <= 468px
+   ========================= */
+
+.pop-up {
+  padding: 16.8px;
+}
+
+.title-close h2 {
+  font-size: 26.4px;
+}
+
+.message-space textarea {
+  min-height: 144px;
+  font-size: 19.2px;
+}
+
+.message-space textarea::placeholder {
+  font-size: 19.2px;
+}
+
+.space-btw.status {
+    flex-direction: column;
+}

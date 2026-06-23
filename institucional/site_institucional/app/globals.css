@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --ring: rgba(56, 189, 248, 0.65);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Equivalente ao zoom de 125% do Chrome: escala o root, e como o
+     Tailwind usa rem/em para quase tudo (fontes, paddings, gaps, radii),
+     o site inteiro cresce proporcionalmente sem quebrar cliques, modais
+     fixed/sticky, ou overflow — diferente de usar transform: scale(). */
+  font-size: 125%;
+}
+
+body {
+  background-color: #0b1120;
+  color: #f8fafc;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Atmosfera de fundo: sutil, NÃO um blob roxo genérico.
+   Dois pontos de luz frios e muito apagados, ancorados no topo. */
+.bg-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 18% -8%, rgba(56, 189, 248, 0.08), transparent 60%),
+    radial-gradient(55% 48% at 88% 2%, rgba(124, 58, 237, 0.15), transparent 60%),
+    linear-gradient(180deg, #0b1120 0%, #0b1120 60%, #0a0f1c 100%);
+}
+
+@layer components {
+  /* Texto com o gradiente do raio (uso pontual, ao estilo Stripe) */
+  .text-raio {
+    background-image: linear-gradient(100deg, #38bdf8 0%, #7c3aed 52%, #a855f7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.18em] text-slatey;
+  }
+
+  /* Tick do gradiente que acompanha as eyebrows */
+  .eyebrow-tick {
+    @apply h-[6px] w-[6px] rounded-full;
+    background-image: linear-gradient(100deg, #38bdf8, #7c3aed, #a855f7);
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.75);
+  }
+
+  .surface-card {
+    @apply rounded-card border border-hairline bg-surface/70 backdrop-blur-sm;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-field bg-raio px-6 py-3.5 text-[15px] font-semibold text-ink transition-transform duration-200 will-change-transform;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-field border border-hairline bg-white/[0.02] px-6 py-3.5 text-[15px] font-semibold text-cloud transition-colors duration-200;
+  }
+  .btn-ghost:hover {
+    @apply border-white/25 bg-white/[0.05];
+  }
+
+  .field {
+    @apply w-full rounded-field border border-hairline bg-surface-2/60 px-5 py-3.5 text-base text-cloud placeholder:text-muted transition-shadow duration-200 outline-none;
+  }
+  .field:focus {
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18), 0 0 0 1px rgba(56, 189, 248, 0.5);
+  }
+  .field[aria-invalid="true"] {
+    border-color: rgba(239, 68, 68, 0.55);
+  }
+  .field[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.16), 0 0 0 1px rgba(239, 68, 68, 0.6);
+  }
+}
+
+/* Foco visível e consistente para navegação por teclado */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #0b1120, 0 0 0 4px var(--ring);
+  border-radius: 8px;
+}
+
+/* Seleção de texto na cor de marca */
+::selection {
+  background: rgba(124, 58, 237, 0.38);
+  color: #fff;
+}
+
+/* Respeita quem pediu menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

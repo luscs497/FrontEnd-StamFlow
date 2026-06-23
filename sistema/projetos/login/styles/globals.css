@@ -1,0 +1,398 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+html {
+  zoom: 0.8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  font-family: 'Rubik', sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  /* Movemos a cor de fundo para o body também para evitar qualquer faixa branca */
+  background-color: rgb(15, 23, 42); 
+}
+
+main {
+  /* Compensamos o zoom: 100vh / 0.8 = 125vh */
+  min-height: 125vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgb(15, 23, 42);
+}
+
+/* ── Utility gaps ── */
+.gap-32 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.gap-24 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.gap-16 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* ── Login icon ── */
+.login-svg-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 24px;
+  background-image: linear-gradient(to right top, rgb(124, 58, 237), rgb(99, 102, 241), rgb(59, 130, 246));
+}
+
+.login-svg-container svg {
+  width: 48px;
+  height: 48px;
+  fill: white;
+}
+
+/* ── Welcome text ── */
+.bem-vindo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.bem-vindo h1 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.bem-vindo p {
+  font-size: 18px;
+  color: rgb(148, 163, 184);
+}
+
+/* ── Form ── */
+.formData {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.inputs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+}
+
+.input-field {
+  padding: 20px 16px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  background-color: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+.icon-gray > * {
+  color: rgb(100, 116, 139) !important;
+}
+
+.input-campo {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: left;
+  color: rgb(100, 116, 139);
+  font-size: 16px;
+}
+
+.input-campo::placeholder {
+  color: rgb(100, 116, 139);
+  font-size: 16px;
+}
+
+/* ── Login section ── */
+.login {
+  width: 100%;
+  max-width: 500px;
+  padding: 0 16px;
+}
+
+/* ── Forgot password ── */
+.forgot-pass {
+  font-size: 14px;
+  color: rgb(129, 140, 248);
+  line-height: 200%;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.forgot-pass:hover {
+  color: rgb(174, 182, 255);
+}
+
+/* ── Buttons ── */
+.btn-login {
+  width: 100%;
+  padding: 18px;
+  background-image: linear-gradient(to right, rgb(124, 58, 237), rgb(99, 102, 241), rgb(59, 130, 246));
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  transition: transform 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+}
+
+.btn-login:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn {
+  width: 100%;
+  padding: 18px;
+  background-image: linear-gradient(to right, rgb(124, 58, 237), rgb(99, 102, 241), rgb(59, 130, 246));
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  transition: transform 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Divider ── */
+.lines {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: rgba(100, 116, 139, 1);
+  font-size: 14px;
+}
+
+.line {
+  height: 1px;
+  width: 100%;
+  background-color: rgba(100, 116, 139, 0.4);
+}
+
+.version {
+  font-size: 12px;
+  color: rgb(100, 116, 139);
+}
+
+/* ── Popups / Modals ── */
+.password-reminder-popup {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-pass {
+  max-width: 450px;
+  width: 100%;
+  padding: 32px;
+  margin: 16px;
+  border: 1.5px solid rgba(100, 116, 139, 0.4);
+  border-radius: 24px;
+  background-color: rgb(15, 23, 42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.popup-footer {
+  font-size: 12px;
+  color: rgb(100, 116, 139);
+}
+
+/* ── Popup header row ── */
+.title-close {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.title-close h2 {
+  width: 100%;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.close-popup-pass {
+  cursor: pointer;
+  font-size: 32px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: rgb(100, 116, 139);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: rgba(30, 41, 59, 0.5);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+}
+
+.close-popup-pass:hover {
+  background-color: rgba(47, 56, 70, 0.5);
+  color: white;
+}
+
+/* ── Recovery info block ── */
+.rec-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.rec-info p {
+  color: rgb(148, 163, 184);
+  font-size: 14px;
+  line-height: 150%;
+}
+
+/* ── Eye-toggle icon ── */
+.toggle-pass-icon {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-pass-icon > * {
+  transition: color 0.2s ease;
+  color: rgb(100, 116, 139);
+}
+
+.toggle-pass-icon:hover > * {
+  color: white !important;
+}
+
+/* ── Register page ── */
+.register-page main {
+  padding: 24px 16px;
+}
+
+.register-section {
+  width: 100%;
+  max-width: 500px;
+  padding: 0 16px;
+}
+
+.register-inputs {
+  gap: 20px !important;
+}
+
+.register-form {
+  gap: 32px !important;
+}
+
+/* ── Alert boxes (register) ── */
+.alert {
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: left;
+  line-height: 1.5;
+}
+
+.alert-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: rgb(252, 165, 165);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.alert-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: rgb(134, 239, 172);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* ── Admin token note ── */
+.admin-note {
+  font-size: 12px;
+  color: rgb(100, 116, 139);
+  text-align: left;
+  line-height: 1.5;
+}

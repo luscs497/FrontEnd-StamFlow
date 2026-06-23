@@ -1,0 +1,176 @@
+body {
+    flex-direction: column;
+    width: 100%;
+}
+
+header {
+    max-width: none;
+    padding: 0.8rem;
+    padding-top: 0;
+    min-height: auto;
+    border: none;
+    padding-bottom: 0;
+}
+
+/* Lógica do Menu Hamburger Aberto */
+header.clicado {
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    width: 100%;
+    padding-bottom: 40px;
+    z-index: 999;
+}
+
+header.clicado .nav-bar > * {
+    display: flex;
+}
+
+header.clicado .perfil {
+    display: flex;
+}
+
+/* Esconde itens de navegação e perfil por padrão no mobile */
+.nav-bar > * {
+    display: none;
+}
+
+.nav-bar > .logo {
+    display: flex;
+}
+
+.perfil {
+    display: none;
+}
+
+.abrir-header {
+    display: block;
+}
+
+/* Ajustes de Espaçamento e Fontes Mobile */
+.logo {
+    padding: 0.8rem 1.6rem 0.8rem 1.44rem;
+}
+
+.logo-image img {
+    margin-left: 5px;
+}
+
+.nav-item {
+    padding: 1.04rem 0.64rem;
+    gap: 8px;
+    font-size: 13.6px;
+}
+
+.nav-item svg {
+    width: 19.2px;
+    height: 19.2px;
+}
+
+.imagem-usuario {
+    max-width: 32px;
+}
+
+.info-usuario h4 {
+    font-size: 12px;
+}
+
+.info-usuario p {
+    font-size: 11.2px;
+}
+
+.content-header {
+    padding: 0.84rem 0.8rem;
+}
+
+.container-1700 {
+    padding: 1.6rem 0.8rem;
+}
+
+/* Sub-Header (Cabeçalho dos Relatórios) */
+.sub-header {
+    padding-bottom: 1.2rem;
+    gap: 0.2px;
+}
+
+.sub-header-text h2 {
+    font-size: 28.8px;
+}
+
+.sub-header-text p {
+    font-size: 14.4px;
+}
+
+#close-btn {
+    width: 31.2px;
+    height: 31.2px;
+}
+
+.relatorios-content {
+    padding-top: 0;
+    gap: 36px;
+}
+
+/* =========================
+   Reports - <= 992px
+   ========================= */
+
+/* 3 colunas -> 1 coluna */
+.space-btw.gapl-30 {
+  flex-direction: column;
+  gap: 19.2px;
+}
+
+/* cada card fica com "cara" de seção */
+.classificacao-reports {
+  padding: 21.6px;
+  border-radius: 19.2px;
+}
+
+/* header do card mais compacto */
+.classificacao-reports-header {
+  width: calc(100% + 43.2px);
+  margin-left: -21.6px;
+  padding: 21.6px;
+  padding-top: 0;
+}
+
+.classificacao-reports-header h2 {
+  font-size: 24px;
+}
+
+/* se você renderiza listas dentro (lista-reports), deixa mais confortável */
+.lista-reports {
+  padding-top: 21.6px;
+}
+
+.lista-reports li {
+  padding: 16.8px;
+  border-radius: 14.4px;
+}
+
+/* =========================
+   Pop-up Report - <= 992px
+   ========================= */
+
+.pop-ups {
+  padding: 19.2px;
+}
+
+.pop-up {
+  max-width: 100%;
+  padding: 21.6px;
+  border-radius: 19.2px;
+  max-height: calc(100vh - 38.4px);
+  overflow: auto;
+}
+
+/* botões em coluna no mobile */
+.buttons-options {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.buttons-options button {
+  padding: 19.2px;
+}
