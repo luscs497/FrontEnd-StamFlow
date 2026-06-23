@@ -122,24 +122,43 @@ if(criarTicket){
     });
 }
 
+const STATUS_LABELS = {
+    aberto: "Aberto",
+    em_andamento: "Em andamento",
+    concluido: "Concluído"
+};
+
+function aplicarStatusNaDiv(divStatus, status) {
+    if (!divStatus) return;
+    const p = divStatus.querySelector("p") || divStatus;
+    p.textContent = STATUS_LABELS[status] || status;
+
+    divStatus.classList.remove("status-concluido", "status-em_andamento");
+    if (status === "concluido") {
+        divStatus.classList.add("status-concluido");
+    } else if (status === "em_andamento") {
+        divStatus.classList.add("status-em_andamento");
+    }
+}
+
 function renderizarConversas(ticket) {
     let conversas = document.createElement("ul");
     conversas.classList.add("conversas", "gap-16");
 
     if(ticket.messages && Array.isArray(ticket.messages)) {
-        ticket.messages.forEach((el, index) => {
+        ticket.messages.forEach((el) => {
             let li = document.createElement("li");
             let title = document.createElement("h4");
             let p = document.createElement("p");
 
             li.classList.add("mensagem", "gap-8");
 
-            if(index % 2 === 0) {
-                title.textContent = "Você:";
-                li.classList.add("mensagem-cliente");
-            } else {
+            if(el.author_type === "gestor") {
                 title.textContent = "Resposta do Ticket:";
                 li.classList.add("mensagem-gestor");
+            } else {
+                title.textContent = "Você:";
+                li.classList.add("mensagem-cliente");
             }
 
             p.textContent = el.content;
@@ -156,6 +175,7 @@ function renderizarConversas(ticket) {
 function criarTicketMinimizado(ticket) {
     const li = document.createElement("li");
     li.classList.add("ticket-minimizado");
+    if (ticket.id != null) li.dataset.ticketId = String(ticket.id);
 
     const primeiraMsg = (ticket.messages && ticket.messages.length > 0)
         ? ticket.messages[0].content
@@ -172,6 +192,8 @@ function criarTicketMinimizado(ticket) {
             ${primeiraMsg}
         </p>
     `;
+
+    aplicarStatusNaDiv(li.querySelector(".report-status"), ticket.status);
 
     li.addEventListener("click", () => {
         if(tickets) tickets.classList.add("display-none");
@@ -191,7 +213,7 @@ function atualizarTicketMaximizado(ticket) {
 
     if(ticketMini) {
         ticketMini.querySelector("h3").textContent = ticket.assunto;
-        ticketMini.querySelector(".report-status p").textContent = ticket.status;
+        aplicarStatusNaDiv(ticketMini.querySelector(".report-status"), ticket.status);
 
         const primeiraMsg = (ticket.messages && ticket.messages.length > 0)
             ? ticket.messages[0].content
@@ -280,11 +302,39 @@ async function enviarNovaMensagem(ticket, mensagem) {
         if(!ticket.messages) ticket.messages = [];
         ticket.messages.push(novaMensagem);
 
+        // Regra do backend: mensagem do cliente só muda o status se o ticket
+        // estava "concluido" (reabre para "em_andamento"). Se estava "aberto"
+        // ou já "em_andamento", o status permanece como está.
+        if (ticket.status === "concluido") {
+            ticket.status = "em_andamento";
+        }
+
         atualizarConversas(ticket);
+        atualizarStatusNaTela(ticket);
 
     } catch (error) {
         console.error("Erro de rede:", error);
         alert("Erro ao enviar mensagem.");
+    }
+}
+
+function atualizarStatusNaTela(ticket) {
+    const ticketExpandido = document.querySelector(".ticket-expandido");
+    if(ticketExpandido) {
+        const ticketMini = ticketExpandido.querySelector(":scope > .ticket-minimizado");
+        if(ticketMini) {
+            aplicarStatusNaDiv(ticketMini.querySelector(".report-status"), ticket.status);
+        }
+    }
+
+    // A lista principal (.tickets) mantém os <li> antigos em memória mesmo
+    // depois de "Voltar" — sem re-fetch, eles só seriam atualizados na
+    // próxima abertura do modal. Atualizamos aqui para refletir na hora.
+    if (tickets && ticket.id != null) {
+        const item = tickets.querySelector(`.ticket-minimizado[data-ticket-id="${ticket.id}"]`);
+        if (item) {
+            aplicarStatusNaDiv(item.querySelector(".report-status"), ticket.status);
+        }
     }
 }
 
@@ -293,12 +343,7 @@ const textarea = document.getElementById("nova-mensagem");
 
 if(btnEnviar && textarea){
     btnEnviar.addEventListener("click", () => {
-        if (!ticketAtual || !Array.isArray(ticketAtual.messages)) return;
-
-        if (ticketAtual.messages.length % 2 !== 0) {
-            alert("Aguarde a resposta do suporte antes de enviar outra mensagem.");
-            return;
-        }
+        if (!ticketAtual) return;
 
         const mensagem = textarea.value.trim();
         if (!mensagem) return;
