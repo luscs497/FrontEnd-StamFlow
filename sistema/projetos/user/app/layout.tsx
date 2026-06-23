@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Power Dash AI",
+  title: "StamFlow",
   description:
     "Power Dash AI - Monitor your productivity with stamina tracking, posture checks, guided exercises, and mental breaks. Optimize your well-being and focus.",
 };
