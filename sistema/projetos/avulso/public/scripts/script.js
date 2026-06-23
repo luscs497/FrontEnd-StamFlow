@@ -652,10 +652,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 13. Detalhes de Áudio (accordion)
   // ============================================================
   const listaAbrirDescricoes = document.querySelectorAll(".abrir-audios-details");
-  const listaAudiosDescriptions = document.querySelectorAll(".audio-classificacao-detalhes");
-  listaAbrirDescricoes.forEach((el, index) => {
+  listaAbrirDescricoes.forEach((el) => {
     el.addEventListener("click", () => {
-      if (listaAudiosDescriptions[index]) listaAudiosDescriptions[index].classList.toggle("display-none");
+      const item = el.closest(".audio-classificacao");
+      if (!item) return;
+      const detalhes = item.querySelector(".audio-classificacao-detalhes");
+      const audios = item.querySelector(".audios");
+      const abrindo = audios ? audios.classList.contains("display-none") : false;
+      if (detalhes) detalhes.classList.toggle("display-none", !abrindo);
+      if (audios) audios.classList.toggle("display-none", !abrindo);
+      el.classList.toggle("audios-details-aberto", abrindo);
     });
   });
 

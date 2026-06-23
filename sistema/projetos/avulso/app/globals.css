@@ -12,7 +12,7 @@
 :root {
     --bg-color: #1a1a24;
     --card-bg: #252533;
-    --primary: #9d34ff;
+    --primary: #7264EA;
     --text-main: #ffffff;
     --text-muted: #a0a0b8;
     --danger: #ff4d4d;
@@ -152,7 +152,7 @@ header {
 }
 
 .nav-item.purple-hover.ativo {
-    color: #9013F3;
+    color: #7264EA;
     background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -267,7 +267,7 @@ header {
 }
 
 .li-subitem.purple-hover:hover {
-    color: #9013F3;
+    color: #7264EA;
 }
 
 .li-subitem.green-hover:hover {
@@ -819,16 +819,16 @@ header {
 }
 
 .purple-card {
-    border-color: rgb(144, 19, 254);
+    border-color: rgb(114, 100, 234);
     background-color: #241D36;
 }
 
 .purple-card button {
-    background-color: rgb(144, 19, 254);
+    background-color: rgb(114, 100, 234);
 }
 
 .purple-card .texto-conteudo h3 {
-    color: rgb(144, 19, 254);
+    color: rgb(114, 100, 234);
 }
 
 .yellow-card {
@@ -879,7 +879,7 @@ header {
 
 
 .purple {
-    color: #9013FE !important;
+    color: #7264EA !important;
 }
 
 .pausas-mentais, .mensagens-foco {
@@ -903,7 +903,7 @@ header {
 }
 
 .pausa-mental:hover {
-    border-color: rgb(144, 19, 243, 0.2);
+    border-color: rgb(114, 100, 234, 0.2);
 }
 
 .mensagem-foco:hover { 
@@ -957,14 +957,14 @@ header {
     width: 51.2px;
     height: 51.2px;
     border-radius: 50%;
-    background-color: #9013F3;
+    background-color: #7264EA;
     border: none;
     cursor: pointer;
     transition: background-color 0.1s ease;
 }
 
 .time-play button:hover {
-    background-color: #6e0cbf;
+    background-color: #7264EA;
 }
 
 .mensagem-foco .time-play button:hover {
@@ -1384,11 +1384,11 @@ header {
 }
 
 .notificacoes-config .purple {
-    border-color: #9013FE;
+    border-color: #7264EA;
 }
 
 .notificacoes-config  .purple:hover {
-    border: 0.8px solid rgb(144 19 254 / 0.6);
+    border: 0.8px solid rgb(114 100 234 / 0.6);
 }
 
 .notificacoes-config .orange {
@@ -1473,8 +1473,8 @@ header {
 }
 
 .purple-slider input:checked + .slider {
-    background-color: #9013F3;
-    border: 0.8px solid #9013F3;
+    background-color: #7264EA;
+    border: 0.8px solid #7264EA;
 }
 
 .orange-slider input:checked + .slider {
@@ -1648,7 +1648,7 @@ header {
 }
 
 .pop-up-pausa-mental {
-    border-color: #9013F3;
+    border-color: #7264EA;
 }
 
 .pop-up-pausa-foco {
@@ -1747,15 +1747,15 @@ header {
 
 /*Mental Audio Modal*/
 .modal-audio[categoria="mental"] {
-    border-top-color: #9013FE !important;
+    border-top-color: #7264EA !important;
 }
 
 .modal-audio[categoria="mental"] #modal-audio-pause {
-    background-color: #9013FE;
+    background-color: #7264EA;
 }
 
 .modal-audio[categoria="mental"] #modal-audio-pause:hover {
-    background-color: #750cd1;
+    background-color: #7264EA;
 }
 
 /*Foco Audio Modal*/
@@ -2350,7 +2350,7 @@ header {
 }
 
 .boarding-purple > * {
-    color: #8B5CF6 !important;
+    color: #7264EA !important;
 }
 
 .next-purple {
@@ -2892,7 +2892,7 @@ header {
 }
 
 .audio-classificacao-header-div.purple {
-    border-color: #9013F3;
+    border-color: #7264EA;
 }
 
 .audio-classificacao-header {
@@ -2911,6 +2911,15 @@ header {
     width: 25.6px;
     height: 25.6px;
     cursor: pointer;
+}
+
+.abrir-audios-details {
+    transform: rotate(0deg);
+    transition: transform 0.2s ease;
+}
+
+.abrir-audios-details.audios-details-aberto {
+    transform: rotate(180deg);
 }
 
 .audio-classificacao-detalhes {
@@ -3001,11 +3010,11 @@ header {
 }
 
 [categoria="mental"] .audio-audio-player {
-    background-color: #9013F3;
+    background-color: #7264EA;
 }
 
 [categoria="mental"] li:hover {
-    border-color: #9013F3;
+    border-color: #7264EA;
 }
 
 .audio-audio-player:hover {
@@ -3043,7 +3052,7 @@ header {
 }
 
 #abrir-embasamento-mental:hover {
-    color: #9013F3;
+    color: #7264EA;
 }
 
 #abrir-embasamento-foco:hover {
@@ -3051,12 +3060,12 @@ header {
 }
 
 #fechar-embasamento-mental-button {
-    background-color: #8e13f31a;
-    color: #9013F3;
+    background-color: #7264EA1a;
+    color: #7264EA;
 }
 
 #fechar-embasamento-mental-button:hover {
-    background-color: #8e13f335;
+    background-color: #7264EA35;
 }
 
 
@@ -3162,7 +3171,7 @@ header {
     width: 100%;
     font-size: 25.6px;
     padding-bottom: 8px;
-    border-bottom: 0.8px solid #8e13f33c;
+    border-bottom: 0.8px solid #7264EA3c;
 }
 
 .artigo-dentro-categoria {
@@ -3184,7 +3193,7 @@ header {
     font-style: italic;
     color: rgb(156, 163, 175);
     padding-left: 20px;
-    border-left: 0.8px solid #8e13f35b;
+    border-left: 0.8px solid #7264EA5b;
 }
 
 #fechar-embasamento-foco-button {
@@ -3847,13 +3856,14 @@ header {
 /* ===== styles-1500.css  @media screen and (max-width: 1500px) and (min-width: 1201px) ===== */
 @media screen and (max-width: 1500px) and (min-width: 1201px) {
 header {
-    max-width: 200px;
-    padding: 0.8rem;
+    max-width: 300px;
+    padding: 1rem;
+    overflow-y: visible;
 }
 
 .logo {
-    padding-bottom: 0.8rem;
-    padding-left: 1.76rem;
+    padding-bottom: 1rem;
+    padding-left: 2.2rem;
 }
 
 .nav-item {
@@ -3881,11 +3891,11 @@ header {
 }
 
 .content-header {
-    padding: 0.84rem 0.8rem;
+    padding: 1.2rem 2rem;
 }
 
 .container-1700 {
-    padding: 1.6rem 0.8rem;
+    padding: 2rem;
 }
 
 .div-stamina-conteudo{
@@ -4083,14 +4093,14 @@ header {
 /* ===== styles-1200.css  @media screen and (max-width: 1200px) and (min-width: 993px) ===== */
 @media screen and (max-width: 1200px) and (min-width: 993px) {
 header {
-    max-width: 200px;
-    padding: 0.8rem;
+    max-width: 250px;
+    padding: 1rem;
 }
 
 .logo {
-    margin-left: 8px;
-    padding-bottom: 0.8rem;
-    padding-left: 1.76rem;
+    margin-left: -20px;
+    padding-left: -1.5rem;
+    padding-bottom: 1rem;
 }
 
 .nav-item {
@@ -4118,11 +4128,11 @@ header {
 }
 
 .content-header {
-    padding: 1.2rem 0.8rem;
+    padding: 1.17rem 1.2rem;
 }
 
 .container-1700 {
-    padding: 1.6rem 0.8rem;
+    padding: 1.2rem;
 }
 
 .div-stamina-conteudo{
@@ -6207,7 +6217,14 @@ header.clicado .perfil {
             If the menu content ever exceeds the available space, it scrolls
             INSIDE the sidebar only — the page below never affects it. Scoped
             to desktop where the sidebar is the layout primitive (mobile uses
-            the hamburger overlay, governed by .clicado above). */
+            the hamburger overlay, governed by .clicado above).
+            overflow-x: clip (added) suppresses the same implicit horizontal
+            scrollbar described in R3#1 above — .logo extends past the
+            nav-bar's left edge via a negative margin-left, and once
+            overflow-y becomes anything other than visible (auto, here), the
+            browser silently turns overflow-x into auto too, exposing a
+            sliver of horizontal scroll. Explicit overflow-x: clip blocks it
+            without disabling the vertical scroll this rule provides. */
 @media screen and (min-width: 993px) {
     header {
         position: sticky;
@@ -6217,6 +6234,7 @@ header.clicado .perfil {
         max-height: calc(100vh / var(--app-zoom, 1));
         align-self: flex-start;
         overflow-y: auto;
+        overflow-x: clip;
         overscroll-behavior: contain;
     }
 }
@@ -6355,6 +6373,21 @@ header.clicado .perfil {
 #periodos-nao-visiveis {
     width: 102.5%;
     left: -2px;
+}
+
+/* ---- (R7#1) Mobile content not reaching the bottom of the viewport: the
+            page background. On mobile the header switches from the sticky
+            desktop sidebar to a hamburger overlay (see R3#4 above), so
+            nothing keeps the page at full viewport height anymore. When a
+            section's content (e.g. "Pausa Mental") is shorter than the
+            screen, .site-content stops short and the black body background
+            shows through below it. FIX: give .site-content a min-height of
+            the full viewport so it always reaches the bottom, regardless of
+            how much content a given section has. */
+@media screen and (max-width: 992px) {
+    .site-content {
+        min-height: 100vh;
+    }
 }
 
 /* === END FIXES === */
