@@ -1,12 +1,13 @@
 header {
-    max-width: 200px;
-    padding: 0.8rem;
+    max-width: 250px;
+    padding: 1rem;
+    overflow-x: clip;
 }
 
 .logo {
-    padding-bottom: 0.8rem;
-    padding-left: 1.76rem;
-    margin-left: 8px;
+    margin-left: -20px;
+    padding-left: -1.5rem;
+    padding-bottom: 1rem;
 }
 
 .nav-item {
@@ -33,11 +34,11 @@ header {
 }
 
 .content-header {
-    padding: 1.2rem 0.8rem;
+    padding: 1.42rem 1.2rem;
 }
 
 .container-1700 {
-    padding: 1.6rem 0.8rem;
+    padding: 1.2rem;
 }
 
 .sub-header {
@@ -81,4 +82,31 @@ header {
 
 .classificacao-reports-header h2 {
   font-size: 24px;
+}
+
+/* =========================
+   Statistics / Comparar - <= 1200px
+   Sidebar ainda ocupa 250px aqui, então o conteúdo principal tem menos
+   espaço sobrando: deixamos os dois cards de período (com os date pickers)
+   quebrarem em coluna mais cedo, antes do aperto real aparecer.
+   ========================= */
+
+.prazosDiv {
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.selecionar-prazo {
+    max-width: none;
+    min-width: 280px;
+    flex: 1 1 280px;
+}
+
+.periodos-navegacao.space-btw {
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.cancelar-btn {
+    flex-shrink: 0;
 }

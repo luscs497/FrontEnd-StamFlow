@@ -347,25 +347,40 @@ function periodoLabelFromKey(key) {
     const btnComparar = document.getElementById("comparar");
     const allContainersA = document.querySelectorAll(".sc-prazo-a");
     const allContainersB = document.querySelectorAll(".sc-prazo-b");
-    const listaA = document.getElementById("selecao-a-lista");
-    const listaB = document.getElementById("selecao-b-lista");
 
-    const prazoSelecionadoA = document.getElementById("prazo-selecionado-a");
-    const prazoSelecionadoB = document.getElementById("prazo-selecionado-b");
+    const inputInicioA = document.getElementById("data-inicio-a");
+    const inputFimA = document.getElementById("data-fim-a");
+    const inputInicioB = document.getElementById("data-inicio-b");
+    const inputFimB = document.getElementById("data-fim-b");
 
-    async function loadComparisonColumn(nodeListContainers, periodoLabel) {
+    // Formata "2026-06-17" -> "17/06" para o rótulo de cada card. Mantém o
+    // ano só quando ele difere do ano atual, para não poluir o rótulo no
+    // caso comum (comparações dentro do mesmo ano).
+    function formatDateLabel(isoDate) {
+      if (!isoDate) return "";
+      const [y, m, d] = isoDate.split("-");
+      const currentYear = new Date().getFullYear();
+      return Number(y) === currentYear ? `${d}/${m}` : `${d}/${m}/${y}`;
+    }
+
+    function formatRangeLabel(startIso, endIso) {
+      if (!startIso || !endIso) return "";
+      if (startIso === endIso) return formatDateLabel(startIso);
+      return `${formatDateLabel(startIso)} - ${formatDateLabel(endIso)}`;
+    }
+
+    async function loadComparisonColumn(nodeListContainers, startDate, endDate) {
       if (!nodeListContainers || nodeListContainers.length === 0) return;
+      if (!startDate || !endDate) return;
 
-      const key = periodoKeyFromLabel(periodoLabel);
-      const days = PERIOD_MAP[key] ?? 0;
-
-      const hoje = getToday();
-      const inicio = getDateAgo(days);
+      // Garante ordem cronológica correta mesmo se o usuário escolher a
+      // data final antes da inicial nos inputs.
+      const [inicio, fim] = startDate <= endDate ? [startDate, endDate] : [endDate, startDate];
 
       const [data, teamAch, qtdTickets] = await Promise.all([
-        fetchTeamData(inicio, hoje),
-        fetchTeamAchievements(inicio, hoje),
-        fetchTicketsCount(inicio, hoje),
+        fetchTeamData(inicio, fim),
+        fetchTeamAchievements(inicio, fim),
+        fetchTicketsCount(inicio, fim),
       ]);
 
       if (!data) return;
@@ -375,39 +390,41 @@ function periodoLabelFromKey(key) {
       data.engajamento = data.engajamento || {};
       data.engajamento.tickets_total = qtdTickets;
 
+      const label = formatRangeLabel(inicio, fim);
       nodeListContainers.forEach((container) => {
         renderMetricsInContainer(container, data);
 
         const txt = container.querySelector(".periodo-text");
-        if (txt) txt.textContent = String(periodoLabel || "").toUpperCase();
+        if (txt) txt.textContent = label.toUpperCase();
       });
     }
 
-    if (listaA) {
-      listaA.querySelectorAll("li").forEach((li) => {
-        li.addEventListener("click", () => {
-          const periodo = li.getAttribute("periodo") || "Hoje";
-          loadComparisonColumn(allContainersA, periodo);
-        });
-      });
+    function loadColumnA() {
+      loadComparisonColumn(allContainersA, inputInicioA?.value, inputFimA?.value);
     }
 
-    if (listaB) {
-      listaB.querySelectorAll("li").forEach((li) => {
-        li.addEventListener("click", () => {
-          const periodo = li.getAttribute("periodo") || "Semana";
-          loadComparisonColumn(allContainersB, periodo);
-        });
-      });
+    function loadColumnB() {
+      loadComparisonColumn(allContainersB, inputInicioB?.value, inputFimB?.value);
     }
+
+    [inputInicioA, inputFimA].forEach((el) => el?.addEventListener("change", loadColumnA));
+    [inputInicioB, inputFimB].forEach((el) => el?.addEventListener("change", loadColumnB));
 
     if (btnComparar) {
       btnComparar.addEventListener("click", () => {
-        loadComparisonColumn(allContainersA, "Hoje");
-        loadComparisonColumn(allContainersB, "Semana");
+        const hoje = getToday();
+        const semanaAtras = getDateAgo(7);
 
-        if (prazoSelecionadoA) prazoSelecionadoA.textContent = "Hoje";
-        if (prazoSelecionadoB) prazoSelecionadoB.textContent = "Semana";
+        // Estado inicial ao abrir a comparação: PERIODO A = hoje,
+        // PERIODO B = últimos 7 dias — preserva o comportamento padrão que
+        // já existia (Hoje vs Semana), só que agora como datas editáveis.
+        if (inputInicioA) inputInicioA.value = hoje;
+        if (inputFimA) inputFimA.value = hoje;
+        if (inputInicioB) inputInicioB.value = semanaAtras;
+        if (inputFimB) inputFimB.value = hoje;
+
+        loadColumnA();
+        loadColumnB();
       });
     }
   }

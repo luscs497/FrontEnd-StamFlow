@@ -174,3 +174,25 @@ header.clicado .perfil {
 .buttons-options button {
   padding: 19.2px;
 }
+
+/* =========================
+   Statistics / Comparar - <= 992px
+   Header já é hamburger aqui (mais espaço horizontal sobrando), mas os
+   inputs de data ainda merecem folga para não comprimir "2026-06-24".
+   ========================= */
+
+.prazosDiv {
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.selecionar-prazo {
+    max-width: none;
+    min-width: 260px;
+    flex: 1 1 260px;
+}
+
+.periodos-navegacao.space-btw {
+    flex-wrap: wrap;
+    gap: 12px;
+}

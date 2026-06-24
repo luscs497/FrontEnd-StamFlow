@@ -74,17 +74,17 @@ export default function PainelGestorPage() {
                 </div>
             </div>
             <ul className="nav-links">
-                <li className="nav-item purple-hover link-nav" title="Statistics">
+                <li className="nav-item orange-hover link-nav" title="Statistics">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="20"><line x1="12" y1="20" x2="12" y2="10" /><line x1="18" y1="20" x2="18" y2="4" /><line x1="6" y1="20" x2="6" y2="16" /></svg>
                     <h3>Estatísticas</h3>
                 </li>
-                <li className="nav-item purple-hover link-nav" id="tickets-section-link" title="Reports">
+                <li className="nav-item red-hover link-nav" id="tickets-section-link" title="Reports">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="20"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
                     <h3>Reports</h3>
                 </li>
-                <li className="nav-item purple-hover link-nav" title="Collaborators">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="20"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
-                    <h3>Collaborators</h3>
+                <li className="nav-item blue-hover link-nav" title="Collaborators">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                    <h3>Equipe</h3>
                 </li>
             </ul>
         </nav>
@@ -323,30 +323,24 @@ export default function PainelGestorPage() {
                         <div className="prazosDiv">
                             <div className="selecionar-prazo gap-8">
                                 <p>PERIODO A</p>
-                                <div className="selecao" id="selecao-a">
-                                    <div className="selecionado">
-                                        <h3 id="prazo-selecionado-a">Hoje</h3>
-                                        <svg id="selecao-a-abrir" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="16"><polyline points="6 9 12 15 18 9" /></svg>
+                                <div className="selecao-data-range" id="selecao-a">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                    <div className="input-data-wrapper">
+                                        <input type="date" id="data-inicio-a" className="input-data-inicio" />
+                                        <span className="data-separador">→</span>
+                                        <input type="date" id="data-fim-a" className="input-data-fim" />
                                     </div>
-                                    <ul className="prazos-selecoes-suspenso display-none" id="selecao-a-lista">
-                                        <li periodo="Hoje" className="ativo">Hoje</li>
-                                        <li periodo="Semana">Essa semana</li>
-                                        <li periodo="Mês">Esse mês</li>
-                                    </ul>
                                 </div>
                             </div>
                             <div className="selecionar-prazo gap-8">
                                 <p>PERIODO B</p>
-                                <div className="selecao" id="selecao-b">
-                                    <div className="selecionado">
-                                        <h3 id="prazo-selecionado-b">Hoje</h3>
-                                        <svg id="selecao-b-abrir" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="16"><polyline points="6 9 12 15 18 9" /></svg>
+                                <div className="selecao-data-range" id="selecao-b">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                    <div className="input-data-wrapper">
+                                        <input type="date" id="data-inicio-b" className="input-data-inicio" />
+                                        <span className="data-separador">→</span>
+                                        <input type="date" id="data-fim-b" className="input-data-fim" />
                                     </div>
-                                    <ul className="prazos-selecoes-suspenso display-none" id="selecao-b-lista">
-                                        <li periodo="Hoje">Hoje</li>
-                                        <li periodo="Semana" className="ativo">Essa semana</li>
-                                        <li periodo="Mês">Esse mês</li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -643,6 +637,10 @@ export default function PainelGestorPage() {
                             <h3>5</h3>
                             <p>VIDAS ATIVAS</p>
                         </div>
+                        <div className="collaborators-info-quantity-small" id="license-usage-box">
+                            <h3 id="license-usage-text">–</h3>
+                            <p>VAGAS DE FUNCIONÁRIO</p>
+                        </div>
                     </div>
 
                     <div className="collaborators-action gap-8">
@@ -673,6 +671,11 @@ export default function PainelGestorPage() {
                         <div className="colab-search-header">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="gray"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
                             <input type="text" id="search-collaborator" placeholder="Buscar por e-mail..." />
+                            <div className="colab-filtros">
+                                <button type="button" className="colab-filtro-btn ativo" data-filtro="todos">Todos</button>
+                                <button type="button" className="colab-filtro-btn" data-filtro="ativo">Ativos</button>
+                                <button type="button" className="colab-filtro-btn" data-filtro="inativo">Inativos</button>
+                            </div>
                         </div>
 
                         <div className="colab-list-header space-btw">

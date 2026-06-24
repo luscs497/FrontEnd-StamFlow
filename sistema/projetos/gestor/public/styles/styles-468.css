@@ -114,14 +114,14 @@ header.clicado .perfil {
    ============================ */
 
 .periodos-navegacao {
-  padding: 19.2px;
+  padding: 16px;
 }
 
 /* ---- Mobile: tudo em coluna, mesma largura ---- */
 .periodos-navegacao.space-btw {
   flex-direction: column;
   align-items: stretch;
-  gap: 8px;
+  gap: 6px;
 }
 
 /* Actions: coluna, acima */
@@ -141,11 +141,13 @@ header.clicado .perfil {
 .comparar-btn {
   width: 100%;
   justify-content: center;
-  padding: 10px 14px;
+  padding: 8px 14px;
   font-size: 13.6px;
 }
 
-/* Botões + chip "Hoje" com altura idêntica na coluna */
+/* Botões + chip "Hoje" um pouco mais compactos — ainda confortáveis ao
+   toque (min-height 40px é o piso recomendado), mas sem a folga extra de
+   antes, que deixava a barra de período ocupando altura demais. */
 .export-btn,
 .comparar-btn,
 .periodos .periodo {
@@ -153,32 +155,75 @@ header.clicado .perfil {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  min-height: 44px;
+  min-height: 40px;
   padding-top: 0;
   padding-bottom: 0;
   font-size: 13.6px;
   line-height: 1.2;
 }
 
-/* Chip ativo: abaixo, mesma largura */
+/* Hoje / Essa Semana / Esse Mês: lado a lado em vez de empilhados — é o
+   que mais reduz a altura total do bloco sem apertar o toque (cada chip
+   ainda tem largura suficiente). */
 .periodos {
   order: 2;
   width: 100%;
-  flex-direction: column;
+  flex-direction: row;
   align-items: stretch;
-  gap: 0;
+  gap: 6px;
 }
 
 .periodos .periodo {
-  width: 100%;
+  flex: 1;
+  width: auto;
   text-align: center;
   border-radius: 9.6px;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: 12px;
 }
 
 /* Painel de comparação: cancelar fica full width na coluna */
 .cancelar-btn {
   width: 100%;
   justify-content: center;
+}
+
+/* ============================
+   Aba Comparar (PERIODO A/B + os 2 cards lado a lado) — estas regras
+   faltavam aqui: existiam em styles-768.css (469-768px), mas como cada
+   arquivo de breakpoint é carregado de forma exclusiva (não acumula com
+   o anterior), nada disso chegava em telas <=468px. Resultado: PERIODO B
+   e a segunda coluna de cards ficavam cortados/lado a lado em vez de
+   empilhados, exatamente como reportado.
+   ============================ */
+
+/* Os dois cards de métricas (Período A vs Período B) empilham */
+.linha-comparacao {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.linha-horizontal {
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sc-prazo-a,
+.sc-prazo-b {
+  width: 100%;
+}
+
+/* PERIODO A / PERIODO B (os date pickers) empilham também */
+.prazosDiv {
+  flex-direction: column;
+  gap: 14px;
+}
+
+.selecionar-prazo {
+  max-width: none;
 }
 
 
@@ -204,9 +249,20 @@ header.clicado .perfil {
   font-size: 15.6px;
 }
 
-/* seletores (dropdown) mais compactos */
-.selecao {
-  padding: 12px 14.4px;
+/* date range (PERIODO A/B) mais compacto em telas pequenas */
+.selecao-data-range {
+  padding: 8px 10px;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.selecao-data-range .input-data-wrapper {
+  gap: 4px;
+}
+
+.selecao-data-range input[type="date"] {
+  font-size: 10.4px;
+  min-width: 84px;
 }
 
 /* cancelar-btn compacto (comparar-btn já tem padding definido acima) */
@@ -218,6 +274,11 @@ header.clicado .perfil {
 /* barra e porcentagem se encaixam melhor */
 .barra {
   height: 19.2px;
+}
+
+.barra-porcentagem {
+  max-width: 110px;
+  gap: 8px;
 }
 
 .barra-porcentagem p {
@@ -251,6 +312,7 @@ header.clicado .perfil {
 
 .reports-info {
   font-size: 14.4px;
+  line-height: 1.4;
 }
 
 .report-description {

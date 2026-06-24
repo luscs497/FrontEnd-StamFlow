@@ -234,70 +234,17 @@
     compararBtn.addEventListener("click", () => {
       divsGestor[0].classList.add("display-none");
       divsGestor[1].classList.remove("display-none");
-      document.querySelectorAll(".prazos-selecoes-suspenso").forEach((ul) => ul.classList.add("display-none"));
     });
 
     cancelarBtn.addEventListener("click", () => {
       divsGestor[0].classList.remove("display-none");
       divsGestor[1].classList.add("display-none");
-      document.querySelectorAll(".prazos-selecoes-suspenso").forEach((ul) => ul.classList.add("display-none"));
     });
   }
 
-  const abrirSelecaoA = document.getElementById("selecao-a-abrir");
-  const abrirSelecaoB = document.getElementById("selecao-b-abrir");
-  const selecaoA = document.getElementById("selecao-a-lista");
-  const selecaoB = document.getElementById("selecao-b-lista");
-  const prazoSelecionadoA = document.getElementById("prazo-selecionado-a");
-  const prazoSelecionadoB = document.getElementById("prazo-selecionado-b");
-
-  function closeAllComparacaoDropdowns() {
-    selecaoA?.classList.add("display-none");
-    selecaoB?.classList.add("display-none");
-  }
-
-  if (abrirSelecaoA && selecaoA) {
-    abrirSelecaoA.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      selecaoB?.classList.add("display-none");
-      selecaoA.classList.toggle("display-none");
-    });
-  }
-
-  if (abrirSelecaoB && selecaoB) {
-    abrirSelecaoB.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      selecaoA?.classList.add("display-none");
-      selecaoB.classList.toggle("display-none");
-    });
-  }
-
-  const itensA = selecaoA ? selecaoA.querySelectorAll("li") : [];
-  const itensB = selecaoB ? selecaoB.querySelectorAll("li") : [];
-
-  function removerAtivoItens(lista) {
-    lista.forEach((e) => e.classList.remove("ativo"));
-  }
-
-  itensA.forEach((el) => {
-    el.addEventListener("click", () => {
-      removerAtivoItens(itensA);
-      el.classList.add("ativo");
-      if (prazoSelecionadoA) prazoSelecionadoA.textContent = el.getAttribute("periodo") || "Hoje";
-      selecaoA.classList.add("display-none");
-    });
-  });
-
-  itensB.forEach((el) => {
-    el.addEventListener("click", () => {
-      removerAtivoItens(itensB);
-      el.classList.add("ativo");
-      if (prazoSelecionadoB) prazoSelecionadoB.textContent = el.getAttribute("periodo") || "Semana";
-      selecaoB.classList.add("display-none");
-    });
-  });
-
-  document.addEventListener("click", () => closeAllComparacaoDropdowns());
+  // Os seletores de período A/B da aba Comparar agora são inputs de data
+  // reais (input[type="date"]); a lógica de fetch/preenchimento deles vive
+  // em manager-dashboard.js, que já escuta o evento "change" desses campos.
 
   const fecharReport = document.getElementById("fechar-report");
   const reportDiv = document.querySelector(".pop-ups");

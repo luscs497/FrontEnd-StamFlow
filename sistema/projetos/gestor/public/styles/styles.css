@@ -1,7 +1,7 @@
 :root {
     --bg-color: #1a1a24;
     --card-bg: #252533;
-    --primary: #9d34ff;
+    --primary: #7264EA;
     --text-main: #ffffff;
     --text-muted: #a0a0b8;
     --danger: #ff4d4d;
@@ -36,7 +36,7 @@ body {
 /* --- Cores Utilitárias --- */
 .green { color: #34d399; }
 .blue { color: #4a90e2; }
-.purple { color: #9013FE; }
+.purple { color: #7264EA; }
 .orange { color: #F5A623; }
 .red { color: rgb(239, 68, 68); }
 .almost-red { color: rgb(249, 115, 22); }
@@ -53,6 +53,7 @@ header {
     max-height: 100vh;
     align-self: flex-start;
     overflow-y: auto;
+    overflow-x: clip;
     overscroll-behavior: contain;
     display: flex;
     flex-direction: column;
@@ -532,6 +533,10 @@ header {
     /* 12px -> 8px */
     padding-bottom: 9.6px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Garante respiro entre o nome (Excelente/Felicidade/...) e a barra de
+       porcentagem mesmo quando o espaço aperta — sem isso, space-between
+       deixa a barra crescer até colar no texto em telas estreitas. */
+    gap: 12px;
 }
 
 .especificidades li h3 {
@@ -558,8 +563,9 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    /* 10px -> 7px */
-    gap: 8.4px;
+    /* 8.4px era pouco para a barra não colar no texto da porcentagem em
+       telas estreitas */
+    gap: 12px;
     width: 100%;
     /* 220px -> 147px */
     max-width: 176.4px;
@@ -617,7 +623,7 @@ header {
 }
 
 .color-roxo {
-    color: rgb(144, 19, 254);
+    color: rgb(114, 100, 234);
 }
 
 .color-vermelho {
@@ -644,7 +650,7 @@ header {
 }
 
 .degrade-roxo {
-    background: linear-gradient(to right, rgb(144, 19, 254), rgb(74, 144, 226));
+    background: linear-gradient(to right, rgb(114, 100, 234), rgb(74, 144, 226));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -813,6 +819,57 @@ header {
     display: none !important;
 }
 
+/* Date range picker (aba Comparar): substitui o dropdown fixo de
+   Hoje/Semana/Mês por dois inputs de data reais (início e fim). */
+.selecao-data-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: rgb(22, 19, 32);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8.4px;
+}
+
+.selecao-data-range svg {
+    flex-shrink: 0;
+    color: rgb(156, 163, 175);
+}
+
+.selecao-data-range .input-data-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+
+.selecao-data-range input[type="date"] {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color-scheme: dark;
+}
+
+.selecao-data-range input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.7);
+}
+
+.selecao-data-range .data-separador {
+    color: rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
 .space-btw.gapl-30 {
     align-items: stretch;
     /* 30px -> 20px */
@@ -869,6 +926,22 @@ header {
     font-size: 9.6px;
     font-weight: 500;
     line-height: 13.2px;
+    /* Sem gap, a data ("Há 23h") cola direto no título quando ele é longo
+       e quebra linha — o space-between (herdado de .space-btw) só separa
+       os extremos, não garante respiro mínimo entre eles. */
+    gap: 12px;
+}
+
+.reports-info h4 {
+    /* Some o título quebra em 2+ linhas; a data não deve encolher pra
+       abrir espaço — ela é curta e sempre cabe no fim da primeira linha. */
+    flex: 1;
+    min-width: 0;
+}
+
+.reports-info p {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .report-description {
@@ -1353,7 +1426,22 @@ header {
 }
 
 .nav-item.purple-hover.ativo {
-    color: #9013F3;
+    color: #7264EA;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.orange-hover.ativo {
+    color: #F5A623;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.red-hover.ativo {
+    color: rgb(239, 68, 68);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.blue-hover.ativo {
+    color: #4a90e2;
     background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -1396,7 +1484,7 @@ header {
     gap: 6px;
     /* 16px -> 11px */
     font-size: 13.2px;
-    background-color: rgb(144, 19, 254);
+    background-color: rgb(114, 100, 234);
     /* 12px 18px -> 8px 12px */
     padding: 9.6px 14.4px;
     color: white;
@@ -1482,6 +1570,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
 }
 
 .collaborators-info-text.gap-16 {
@@ -1511,6 +1600,14 @@ header {
     color: rgb(74, 144, 226);
 }
 
+.collaborators-info-quantity h3.licenca-cheia {
+    color: rgb(239, 68, 68);
+}
+
+.collaborators-info-quantity h3.licenca-alerta {
+    color: rgb(245, 158, 11);
+}
+
 .collaborators-info-quantity p{
     font-family: 'Roboto', sans-serif;
     font-size: 14.4px;
@@ -1518,6 +1615,41 @@ header {
     color: #6B7280;
     white-space: nowrap;
 
+}
+
+/* Indicador de vagas de licença: mesma estrutura do bloco "VIDAS ATIVAS",
+   mas reduzido — não deve competir visualmente com o número principal. */
+.collaborators-info-quantity-small {
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    gap: 2px;
+    padding-left: 20px;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.collaborators-info-quantity-small h3 {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(74, 144, 226);
+}
+
+.collaborators-info-quantity-small h3.licenca-cheia {
+    color: rgb(239, 68, 68);
+}
+
+.collaborators-info-quantity-small h3.licenca-alerta {
+    color: rgb(245, 158, 11);
+}
+
+.collaborators-info-quantity-small p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 9.6px;
+    font-weight: 500;
+    color: #6B7280;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
 }
 
 .collaborators-action {
@@ -1671,6 +1803,54 @@ header {
 
 .colab-item.selected {
     background-color: rgba(74, 144, 226, 0.05);
+}
+
+.colab-status {
+    padding: 6px 12px;
+    border-radius: 6.4px;
+    font-weight: 700;
+    font-size: 11.2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.colab-status.status-ativo {
+    background-color: rgba(52, 211, 153, 0.1);
+    color: #34D399;
+}
+
+.colab-status.status-inativo {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: rgb(239, 68, 68);
+}
+
+/* Filtro de status (Todos / Ativos / Inativos) */
+.colab-filtros {
+    display: flex;
+    gap: 8px;
+}
+
+.colab-filtro-btn {
+    padding: 6.4px 14.4px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: transparent;
+    color: #9CA3AF;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.colab-filtro-btn:hover {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.colab-filtro-btn.ativo {
+    background-color: rgba(74, 144, 226, 0.12);
+    border-color: rgba(74, 144, 226, 0.4);
+    color: #4a90e2;
 }
 
 /* Custom Checkbox */
@@ -2232,6 +2412,12 @@ header {
 
     .collaborators-info-quantity.gap-16 {
         width: 100%;
+        justify-content: flex-start;
+    }
+
+    .collaborators-info-quantity-small {
+        border-left: none;
+        padding-left: 0;
         justify-content: flex-start;
     }
 
