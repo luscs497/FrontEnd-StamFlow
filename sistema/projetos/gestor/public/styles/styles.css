@@ -369,6 +369,16 @@ header {
     justify-content: space-between;
 }
 
+/* Seletor de data da Visão Principal (Hoje/Semana/Mês foram substituídos
+   por isso): sem o wrapper .selecionar-prazo que a aba Comparar usa, ele
+   herdaria width: 100% do flex e ocuparia todo o espaço entre si e
+   Exportar/Comparar, esparramando os dois inputs nas pontas com um vão
+   vazio enorme no meio. */
+#selecao-periodo-principal {
+    max-width: 320px;
+    flex-shrink: 0;
+}
+
 .periodos {
     width: fit-content;
     list-style: none;

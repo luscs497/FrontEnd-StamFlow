@@ -115,18 +115,14 @@ export default function PainelGestorPage() {
             <div className="wid100">
                 <div className="painel-gestor gap-48">
                     <div className="periodos-navegacao space-btw">
-                        <ul className="periodos">
-                            <li className="periodo periodo-nav ativo" periodo="hoje">Hoje</li>
-                            <li className="periodo periodo-nav" periodo="semana">Essa Semana</li>
-                            <li className="periodo periodo-nav" periodo="mes">Esse Mês</li>
-                            
-                            <svg className="display-none" id="abrir-periodos-mob" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="16"><polyline points="6 9 12 15 18 9" /></svg>
-                            <ul className="peridos periodos-invisiveis display-none">
-                                <li className="periodo-suspenso periodo-nav display-none" periodo="hoje">Hoje</li>
-                                <li className="periodo-suspenso periodo-nav" periodo="semana">Essa Semana</li>
-                                <li className="periodo-suspenso periodo-nav" periodo="mes">Esse Mês</li>
-                            </ul>
-                        </ul>
+                        <div className="selecao-data-range" id="selecao-periodo-principal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                            <div className="input-data-wrapper">
+                                <input type="date" id="data-inicio-principal" className="input-data-inicio" />
+                                <span className="data-separador">→</span>
+                                <input type="date" id="data-fim-principal" className="input-data-fim" />
+                            </div>
+                        </div>
                         
                         <div className="actions-wrapper">
                             

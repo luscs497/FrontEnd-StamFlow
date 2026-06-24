@@ -287,75 +287,10 @@ function periodoLabelFromKey(key) {
 
     console.log("👔 Painel do Gestor Iniciado");
 
-    // ---------------------------
-    // 1) VISÃO PRINCIPAL
-    // ---------------------------
-    const mainInsightsContainer = document.querySelector(".lista-insights");
-    const periodosNav = document.querySelectorAll(".periodos .periodo-nav");
-
-    // "Esse Mês" usa sempre o mês corrente (do dia 1 até hoje), sem picker.
-    window.__getSelectedMonthOffset = () => 0;
-
-    async function loadMainView(periodoKey) {
-      let inicio;
-      let hoje;
-
-      if (periodoKey === "mes") {
-        // Sempre usa o mês corrente do calendário (do dia 1 até hoje).
-        const range = getMonthRange(0);
-        inicio = range.start_date;
-        hoje = range.end_date;
-      } else {
-        const days = PERIOD_MAP[periodoKey] ?? 0;
-        hoje = getToday();
-        inicio = getDateAgo(days);
-      }
-
-      const [data, teamAch, qtdTickets] = await Promise.all([
-        fetchTeamData(inicio, hoje),
-        fetchTeamAchievements(inicio, hoje),
-        fetchTicketsCount(inicio, hoje),
-      ]);
-
-      if (!data || !mainInsightsContainer) return;
-
-      injectTeamAchievementsIntoData(data, teamAch);
-
-      data.engajamento = data.engajamento || {};
-      data.engajamento.tickets_total = qtdTickets;
-
-      renderMetricsInContainer(mainInsightsContainer, data);
-
-      const txt = periodoLabelFromKey(periodoKey);
-      mainInsightsContainer.querySelectorAll(".periodo-text").forEach((p) => {
-        p.textContent = txt;
-      });
-    }
-
-    periodosNav.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const periodo = btn.getAttribute("periodo") || "hoje";
-        loadMainView(periodo);
-      });
-    });
-
-    loadMainView("hoje");
-
-    // ---------------------------
-    // 2) VISÃO DE COMPARAÇÃO
-    // ---------------------------
-    const btnComparar = document.getElementById("comparar");
-    const allContainersA = document.querySelectorAll(".sc-prazo-a");
-    const allContainersB = document.querySelectorAll(".sc-prazo-b");
-
-    const inputInicioA = document.getElementById("data-inicio-a");
-    const inputFimA = document.getElementById("data-fim-a");
-    const inputInicioB = document.getElementById("data-inicio-b");
-    const inputFimB = document.getElementById("data-fim-b");
-
     // Formata "2026-06-17" -> "17/06" para o rótulo de cada card. Mantém o
     // ano só quando ele difere do ano atual, para não poluir o rótulo no
-    // caso comum (comparações dentro do mesmo ano).
+    // caso comum (período dentro do mesmo ano). Compartilhada pela Visão
+    // Principal e pela Visão de Comparação.
     function formatDateLabel(isoDate) {
       if (!isoDate) return "";
       const [y, m, d] = isoDate.split("-");
@@ -368,6 +303,70 @@ function periodoLabelFromKey(key) {
       if (startIso === endIso) return formatDateLabel(startIso);
       return `${formatDateLabel(startIso)} - ${formatDateLabel(endIso)}`;
     }
+
+    // ---------------------------
+    // 1) VISÃO PRINCIPAL
+    // ---------------------------
+    const mainInsightsContainer = document.querySelector(".lista-insights");
+    const inputInicioPrincipal = document.getElementById("data-inicio-principal");
+    const inputFimPrincipal = document.getElementById("data-fim-principal");
+
+    async function loadMainView(startDate, endDate) {
+      if (!startDate || !endDate || !mainInsightsContainer) return;
+
+      // Garante ordem cronológica correta mesmo se o usuário escolher a
+      // data final antes da inicial.
+      const [inicio, fim] = startDate <= endDate ? [startDate, endDate] : [endDate, startDate];
+
+      const [data, teamAch, qtdTickets] = await Promise.all([
+        fetchTeamData(inicio, fim),
+        fetchTeamAchievements(inicio, fim),
+        fetchTicketsCount(inicio, fim),
+      ]);
+
+      if (!data) return;
+
+      injectTeamAchievementsIntoData(data, teamAch);
+
+      data.engajamento = data.engajamento || {};
+      data.engajamento.tickets_total = qtdTickets;
+
+      renderMetricsInContainer(mainInsightsContainer, data);
+
+      const txt = formatRangeLabel(inicio, fim);
+      mainInsightsContainer.querySelectorAll(".periodo-text").forEach((p) => {
+        p.textContent = txt.toUpperCase();
+      });
+    }
+
+    function loadMainViewFromInputs() {
+      loadMainView(inputInicioPrincipal?.value, inputFimPrincipal?.value);
+    }
+
+    [inputInicioPrincipal, inputFimPrincipal].forEach((el) =>
+      el?.addEventListener("change", loadMainViewFromInputs)
+    );
+
+    // Estado inicial: hoje (início = fim = hoje), preservando o
+    // comportamento padrão que já existia ("Hoje" pré-selecionado).
+    (function initMainViewDefault() {
+      const hoje = getToday();
+      if (inputInicioPrincipal) inputInicioPrincipal.value = hoje;
+      if (inputFimPrincipal) inputFimPrincipal.value = hoje;
+      loadMainView(hoje, hoje);
+    })();
+
+    // ---------------------------
+    // 2) VISÃO DE COMPARAÇÃO
+    // ---------------------------
+    const btnComparar = document.getElementById("comparar");
+    const allContainersA = document.querySelectorAll(".sc-prazo-a");
+    const allContainersB = document.querySelectorAll(".sc-prazo-b");
+
+    const inputInicioA = document.getElementById("data-inicio-a");
+    const inputFimA = document.getElementById("data-fim-a");
+    const inputInicioB = document.getElementById("data-inicio-b");
+    const inputFimB = document.getElementById("data-fim-b");
 
     async function loadComparisonColumn(nodeListContainers, startDate, endDate) {
       if (!nodeListContainers || nodeListContainers.length === 0) return;
@@ -457,36 +456,24 @@ function periodoLabelFromKey(key) {
       });
     }
 
-    // 2. Função Auxiliar: Obter Datas (YYYY-MM-DD) baseado na aba ativa
+    // 2. Função Auxiliar: Obter Datas (YYYY-MM-DD) do período selecionado
+    //    nos inputs de data da Visão Principal (antes era lido do chip
+    //    Hoje/Semana/Mês, que não existe mais).
     function getDatesFromActiveTab() {
-      const activeTab = document.querySelector(".periodo.ativo");
-      const periodo = activeTab ? activeTab.getAttribute("periodo") : "hoje";
+      const inicioEl = document.getElementById("data-inicio-principal");
+      const fimEl = document.getElementById("data-fim-principal");
+      const inicio = inicioEl?.value;
+      const fim = fimEl?.value;
 
-      // "Esse Mês" sempre usa o mês corrente (offset 0)
-      if (periodo === "mes" && typeof getMonthRange === "function") {
-        return getMonthRange(0);
+      if (!inicio || !fim) {
+        const hoje = toISODateLocal(new Date());
+        return { start_date: hoje, end_date: hoje };
       }
 
-      const end = new Date();
-      const start = new Date();
-
-      if (periodo === "semana") {
-        const day = start.getDay();
-        const diff = start.getDate() - day + (day === 0 ? -6 : 1);
-        start.setDate(diff);
-      } else if (periodo === "mes") {
-        start.setDate(1);
-      }
-
-      // Usa data LOCAL (toISODateLocal), igual à forma como o camera.js
-      // salva report_date. Usar toISOString() (UTC) causava um deslocamento
-      // de 1 dia à noite (fuso BR), fazendo o "hoje" não bater com os dados.
-      const formatDate = (d) => toISODateLocal(d);
-
-      return {
-        start_date: formatDate(start),
-        end_date: formatDate(end),
-      };
+      // Garante ordem cronológica correta mesmo se o usuário escolher a
+      // data final antes da inicial.
+      const [start_date, end_date] = inicio <= fim ? [inicio, fim] : [fim, inicio];
+      return { start_date, end_date };
     }
 
     // 3. Lógica de Download
