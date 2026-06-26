@@ -133,6 +133,24 @@
     });
   });
 
+  // Seletor de tag/categoria do Report (mesmo padrão do seletor de status).
+  // Aqui o nome da classe visual é igual ao valor do atributo "tag", então
+  // não precisa de tradução de índice como no status.
+  const tagSeletores = document.querySelectorAll(".tag-opcao");
+
+  function removerAtivoTag() {
+    tagSeletores.forEach((el) => {
+      el.className = "tag-opcao";
+    });
+  }
+
+  tagSeletores.forEach((el) => {
+    el.addEventListener("click", () => {
+      removerAtivoTag();
+      el.classList.add(el.getAttribute("tag"));
+    });
+  });
+
   // ============================================================================
   // 5) Modal Perfil e Logout (ATUALIZADO)
   // ============================================================================

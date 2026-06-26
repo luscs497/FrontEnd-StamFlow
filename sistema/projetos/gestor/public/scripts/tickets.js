@@ -91,6 +91,12 @@ async function getCompanyTickets() {
     }
 }
 
+const TAG_LABELS = {
+    operational: "Operacional",
+    hr_management: "Gestão RH",
+    legal: "Legal/Jurídico"
+};
+
 function getByStatus(tickets, status) {
     if (!tickets) return [];
     let lista = [];
@@ -151,6 +157,12 @@ function gerarMinimizados (lista) {
 
         const p = document.createElement("p");
 
+        const tagIndicador = document.createElement("span");
+        tagIndicador.classList.add("report-tag-indicador");
+        if (el.tag === "hr_management") tagIndicador.classList.add("tag-hr_management");
+        else if (el.tag === "legal") tagIndicador.classList.add("tag-legal");
+        tagIndicador.innerHTML = `<span class="bolinha"></span>${TAG_LABELS[el.tag] || el.tag}`;
+
         const pMsg = document.createElement("p");
         pMsg.classList.add("report-description");
 
@@ -175,6 +187,7 @@ function gerarMinimizados (lista) {
         div.appendChild(h4);
         div.appendChild(p);
         li.appendChild(div);
+        li.appendChild(tagIndicador);
         li.appendChild(pMsg);
         li.appendChild(button);
 
@@ -221,11 +234,13 @@ function updateDetalhes(ticket) {
     const assuntoExpandido = document.getElementById("maximizado-assunto");
     const tempoExpandido = document.getElementById("maximizado-tempo");
     const statusExpandido = document.getElementById("maximizado-status");
+    const tagExpandido = document.getElementById("maximizado-tag");
     const conversasExpandido = document.getElementById("conversas");
 
     if(assuntoExpandido) assuntoExpandido.textContent = ticket.assunto;
     if(tempoExpandido) tempoExpandido.textContent = calcularTempoPassado(ticket.atualizado_em);
     if(statusExpandido) statusExpandido.textContent = ticket.status;
+    if(tagExpandido) tagExpandido.textContent = TAG_LABELS[ticket.tag] || ticket.tag;
     if(conversasExpandido) renderizarConversas(ticket, conversasExpandido);
 }
 
@@ -264,6 +279,25 @@ async function showMinimizados () {
 async function updateTicketStatus(ticketId, newStatus) {
     const endpoint = `https://api.stamflow.com.br/tickets/${ticketId}/status`;
     const payload = { status: newStatus };
+
+    try {
+        const res = await window.authFetch(endpoint, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if(res.ok) {
+            showMinimizados();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateTicketTag(ticketId, newTag) {
+    const endpoint = `https://api.stamflow.com.br/tickets/${ticketId}/tag`;
+    const payload = { tag: newTag };
 
     try {
         const res = await window.authFetch(endpoint, {
@@ -319,9 +353,13 @@ if(btnSalvar){
     btnSalvar.addEventListener("click", () => {
         if(reportDiv) reportDiv.classList.add("display-none");
         const statusSelecionado = [...document.querySelectorAll(".status-opcao")].filter(el => el.classList.length > 1);
-        
+        const tagSelecionada = [...document.querySelectorAll(".tag-opcao")].filter(el => el.classList.length > 1);
+
         if(ticketAtual && statusSelecionado.length > 0) {
             updateTicketStatus(ticketAtual.id, statusSelecionado[0].getAttribute("status"));
+        }
+        if(ticketAtual && tagSelecionada.length > 0) {
+            updateTicketTag(ticketAtual.id, tagSelecionada[0].getAttribute("tag"));
         }
     });
 }

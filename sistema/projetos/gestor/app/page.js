@@ -177,7 +177,7 @@ export default function PainelGestorPage() {
                                     </div>
                                 </li>
                                 <li className="space-btw">
-                                    <h3>Ruim</h3>
+                                    <h3>Atenção</h3>
                                     <div className="barra-porcentagem">
                                         <div className="barra">
                                             <div className="barra-preenchida" id="ruim-bar-preenchida" dados="dados"></div>
@@ -186,7 +186,7 @@ export default function PainelGestorPage() {
                                     </div>
                                 </li>
                                 <li className="space-btw">
-                                    <h3>Crítico</h3>
+                                    <h3>Crítica</h3>
                                     <div className="barra-porcentagem">
                                         <div className="barra">
                                             <div className="barra-preenchida" id="critico-bar-preenchida" dados="dados"></div>
@@ -706,6 +706,7 @@ export default function PainelGestorPage() {
                             <div className="report-info">
                                 <p id="maximizado-tempo">Há 2h</p>
                                 <p className="color-critico" id="maximizado-status">Abertas</p>
+                                <p id="maximizado-tag">Operacional</p>
                             </div>
                         </div>
                         <div className="message-space">
@@ -725,6 +726,23 @@ export default function PainelGestorPage() {
                         <div className="status-opcao" status="aberto">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="14"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
                             Aberto
+                        </div>
+                    </div>
+                    <div className="gap-8">
+                        <p className="gray" style={{ "fontSize": "11px", "fontWeight": "700" }}>CATEGORIA</p>
+                        <div className="space-btw tag">
+                            <div className="tag-opcao" tag="operational">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="14"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
+                                Operacional
+                            </div>
+                            <div className="tag-opcao" tag="hr_management">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="14"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                                Gestão RH
+                            </div>
+                            <div className="tag-opcao" tag="legal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="14"><path d="M12 3v18" /><path d="m7 8 -5 4 2.5 5.5a4.5 4.5 0 0 0 5 0L7 8Z" /><path d="m17 8 -5-5 5 5 5 4 -2.5 5.5a4.5 4.5 0 0 1-5 0L17 8Z" /></svg>
+                                Legal/Jurídico
+                            </div>
                         </div>
                     </div>
                 </div>

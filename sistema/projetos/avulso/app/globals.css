@@ -288,6 +288,183 @@ header {
     justify-content: space-between;
 }
 
+/* Bloco direito do header: sino de notificações + status do sistema */
+.content-header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.notificacoes-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.notificacoes-sino {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.notificacoes-sino:hover {
+    color: #34d399;
+}
+
+.notificacoes-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.notificacoes-painel {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 360px;
+    max-width: 90vw;
+    max-height: 70vh;
+    overflow-y: auto;
+    background-color: #1f1d2b;
+    border: 0.8px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+}
+
+.notificacoes-painel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 0.8px solid rgba(255, 255, 255, 0.08);
+    position: sticky;
+    top: 0;
+    background-color: #1f1d2b;
+}
+
+.notificacoes-painel-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+}
+
+.notificacoes-marcar-todas {
+    background: none;
+    border: none;
+    color: #34d399;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.notificacoes-marcar-todas:hover {
+    color: #2bb888;
+}
+
+.notificacoes-lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.notificacao-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 0.8px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-items: flex-start;
+}
+
+.notificacao-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.notificacao-item.nao-lida {
+    background-color: rgba(52, 211, 153, 0.06);
+}
+
+.notificacao-item-icone {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(52, 211, 153, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #34d399;
+}
+
+.notificacao-item-icone svg {
+    width: 18px;
+    height: 18px;
+}
+
+.notificacao-item-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.notificacao-item-titulo {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+}
+
+.notificacao-item-mensagem {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgb(156, 163, 175);
+}
+
+.notificacao-item-tempo {
+    font-size: 11px;
+    color: rgb(107, 114, 128);
+    margin-top: 2px;
+}
+
+.notificacao-item-seta {
+    flex-shrink: 0;
+    align-self: center;
+    color: rgb(107, 114, 128);
+}
+
+.notificacao-item-seta svg {
+    width: 16px;
+    height: 16px;
+}
+
+.notificacoes-vazio {
+    padding: 32px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: rgb(107, 114, 128);
+}
+
 
 #section-name {
     display: flex;
@@ -351,6 +528,99 @@ header {
     border-radius: 6.4px;
     font-weight: 500;
     font-size: 19.2px;
+}
+
+/* Título do card de Stamina + ícone de ajuda "Como melhorar minha Stamina" */
+.stamina-titulo-com-ajuda {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.abrir-como-melhorar-stamina {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.abrir-como-melhorar-stamina:hover {
+    color: #34d399;
+}
+
+/* Variante azul do ícone de ajuda (usada na seção Checkup, para casar com
+   a cor azul do título "Checkup de Postura"). */
+.abrir-como-melhorar-stamina-blue:hover {
+    color: #4a90e2;
+}
+
+.abrir-como-melhorar-stamina svg {
+    width: 19.2px;
+    height: 19.2px;
+}
+
+/* Conteúdo do popup "Como melhorar minha Stamina" */
+.stamina-ajuda-conteudo {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stamina-ajuda-intro,
+.stamina-ajuda-rodape {
+    width: 100%;
+    font-size: 14.4px;
+    line-height: 1.6;
+    color: rgb(209, 213, 219);
+}
+
+.stamina-ajuda-bloco {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stamina-ajuda-bloco > h3 {
+    font-size: 19.2px;
+    font-weight: 700;
+}
+
+.stamina-ajuda-bloco > p {
+    font-size: 14.4px;
+    line-height: 1.6;
+    color: rgb(156, 163, 175);
+}
+
+.stamina-ajuda-lista {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    list-style: none;
+}
+
+.stamina-ajuda-lista li {
+    width: 100%;
+    padding-left: 16px;
+    border-left: 2.4px solid rgba(255, 255, 255, 0.1);
+}
+
+.stamina-ajuda-lista h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    padding-bottom: 4px;
+}
+
+.stamina-ajuda-lista p {
+    font-size: 14.4px;
+    line-height: 1.6;
+    color: rgb(156, 163, 175);
 }
 
 .div-barra-stamina {
@@ -3068,6 +3338,53 @@ header {
     background-color: #7264EA35;
 }
 
+/* Link "Como essa meditação te ajuda a focar" (por áudio, em Pausa Mental) */
+.audio-como-ajuda-abrir:hover {
+    color: #7264EA;
+}
+
+#fechar-como-ajuda-button {
+    background-color: #7264EA1a;
+    color: #7264EA;
+}
+
+#fechar-como-ajuda-button:hover {
+    background-color: #7264EA35;
+}
+
+.como-ajuda-texto {
+    width: 100%;
+    font-size: 14.4px;
+    line-height: 1.6;
+    color: rgb(209, 213, 219);
+}
+
+/* Estrutura do item de áudio em Pausa Mental, com o link de explicação:
+   uma coluna externa alinhada à direita, contendo a linha [tempo + play]
+   e, abaixo, o link "Explicação da meditação" sozinho. */
+.audio-div-right-com-explicacao {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 8px;
+}
+
+.audio-time-play-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.audio-como-ajuda-abrir {
+    font-size: 11.2px;
+    text-align: right;
+    width: max-content;
+    max-width: 320px;
+    white-space: nowrap;
+}
+
 
 .modais {
     display: flex;
@@ -4088,6 +4405,10 @@ header {
 .report-conteudo {
     padding: 25.6px 19.2px;
 }
+
+.audio-como-ajuda-abrir {
+    max-width: 280px;
+}
 }
 
 /* ===== styles-1200.css  @media screen and (max-width: 1200px) and (min-width: 993px) ===== */
@@ -4472,6 +4793,10 @@ header {
 
 .audio-minimizado p {
     font-size: 14.4px;
+}
+
+.audio-como-ajuda-abrir {
+    max-width: 240px;
 }
 }
 
@@ -4900,6 +5225,9 @@ body {
     font-size: 14.4px;
 }
 
+.audio-como-ajuda-abrir {
+    max-width: 220px;
+}
 
 }
 
@@ -5454,6 +5782,11 @@ body {
 
 .embasamento-header-text {
     flex-direction: column;
+}
+
+.audio-como-ajuda-abrir {
+    max-width: 180px;
+    white-space: normal;
 }
 }
 
@@ -6078,6 +6411,14 @@ body {
 
 .artigo-categoria h2 {
     font-size: 19.2px;
+}
+
+/* Nesta faixa o card (.audio-minimizado) empilha em coluna e
+   .audio-div-right ocupa 100% da largura — há espaço de sobra, então o
+   link "Explicação da meditação" pode ficar bem mais largo aqui. */
+.audio-como-ajuda-abrir {
+    max-width: 280px;
+    white-space: normal;
 }
 }
 

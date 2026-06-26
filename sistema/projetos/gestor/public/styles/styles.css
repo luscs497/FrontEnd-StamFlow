@@ -962,6 +962,81 @@ header {
     color: rgb(209, 213, 219);
 }
 
+/* Indicador de tag/categoria do Report na listagem do gestor:
+   bolinha colorida + label curto, para não competir por espaço com o
+   título/data (que já têm regras delicadas de quebra de linha). */
+.report-tag-indicador {
+    display: flex;
+    align-items: center;
+    gap: 4.8px;
+    font-size: 9.6px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.report-tag-indicador .bolinha {
+    width: 6.4px;
+    height: 6.4px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: rgb(52, 211, 153); /* operational (default) */
+}
+
+.report-tag-indicador.tag-hr_management .bolinha {
+    background-color: #F5A623;
+}
+
+.report-tag-indicador.tag-legal .bolinha {
+    background-color: rgb(239, 68, 68);
+}
+
+.report-tag-indicador.tag-hr_management {
+    color: #F5A623;
+}
+
+.report-tag-indicador.tag-legal {
+    color: rgb(239, 68, 68);
+}
+
+.report-tag-indicador:not(.tag-hr_management):not(.tag-legal) {
+    color: rgb(52, 211, 153);
+}
+
+/* Seletor de tag no modal de detalhes (mesmo padrão visual do
+   seletor de status já existente: chips clicáveis). */
+.tag-opcao {
+    width: 100%;
+    padding: 14.4px 9.6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9.6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8.4px;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tag-opcao:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tag-opcao.operational {
+    background-color: rgb(52, 211, 153);
+    color: black;
+}
+
+.tag-opcao.hr_management {
+    background-color: #F5A623;
+    color: black;
+}
+
+.tag-opcao.legal {
+    background-color: rgb(239, 68, 68);
+    color: black;
+}
+
 .abrir-detalhes-report {
     /* 10px 18px -> 7px 12px */
     padding: 8.4px 14.4px;
@@ -1511,6 +1586,59 @@ header {
 
 .export-btn:active {
     transform: translateY(2px);
+}
+
+/* ------------------------------------------------------------------
+   Reordenação visual a partir de 993px (cobre desktop puro >1140px E
+   a faixa tablet 993-1140px, que usa o mesmo layout em linha — só o
+   empilhamento vertical de fato começa em <=768px, em styles-768.css).
+
+   Pedido: [calendário] [Comparar] ---- espaço máximo ---- [Exportar]
+
+   Por que isso é feito só em CSS, sem mudar o DOM/JSX:
+   No breakpoint <=468px (styles-468.css), o botão Comparar PRECISA
+   continuar dentro de .actions-wrapper, porque a regra de empilhamento
+   mobile (.actions-wrapper { order:1; flex-direction:column; ... })
+   depende de Comparar e Exportar serem filhos desse wrapper para
+   ficarem um abaixo do outro corretamente. Mover Comparar para fora
+   do wrapper no DOM quebraria esse empilhamento.
+
+   A solução é "soltar" os filhos do wrapper apenas visualmente nessa
+   faixa: display:contents remove a caixa do .actions-wrapper sem
+   remover seus filhos do DOM, fazendo export-container e comparar-btn
+   participarem do flex de .periodos-navegacao como se fossem filhos
+   diretos dela — daí o `order` de cada um decide a posição final.
+   Suporte: todos os navegadores modernos (Chrome/Firefox/Safari/Edge
+   desde 2017+). Em um navegador hipotético sem suporte, o pior caso é
+   manter o visual atual (sem quebrar nada).
+
+   Confirmado sem conflito: nem styles-1500.css, nem styles-1200.css,
+   nem styles-992.css tocam display/order de .actions-wrapper,
+   .comparar-btn ou .export-container — só ajustam flex-wrap/gap do
+   .periodos-navegacao, que continua coexistindo normalmente.
+   ------------------------------------------------------------------ */
+@media (min-width: 993px) {
+    .periodos-navegacao.space-btw {
+        justify-content: flex-start;
+    }
+
+    .selecao-data-range {
+        order: 1;
+    }
+
+    .actions-wrapper {
+        display: contents;
+    }
+
+    .comparar-btn {
+        order: 2;
+        margin-left: 14.4px;
+    }
+
+    .export-container {
+        order: 3;
+        margin-left: auto;
+    }
 }
 
 /* Dropdown Menu */

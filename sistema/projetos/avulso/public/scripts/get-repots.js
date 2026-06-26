@@ -60,9 +60,11 @@ async function fetchReportData(token_unused, startDate, endDate) {
 // 1) HOME (ABA "HOJE")
 // ============================================================================
 function classifyStamina(pct) {
-  if (pct >= 85) return { key: "excelente", label: "Excelente", colorClass: "excelente" };
-  if (pct >= 70) return { key: "boa", label: "Boa", colorClass: "boa" };
-  if (pct >= 50) return { key: "atencao", label: "Atenção", colorClass: "atencao" };
+  // Faixas padrão StamFlow (25% cada):
+  //   Excelente: 75-100   Boa: 50-74   Atenção: 25-49   Crítica: 0-24
+  if (pct >= 75) return { key: "excelente", label: "Excelente", colorClass: "excelente" };
+  if (pct >= 50) return { key: "boa", label: "Boa", colorClass: "boa" };
+  if (pct >= 25) return { key: "atencao", label: "Atenção", colorClass: "atencao" };
   return { key: "critica", label: "Crítica", colorClass: "critica" };
 }
 

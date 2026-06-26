@@ -214,9 +214,13 @@ function applyWorkerUpdates() {
     }
   }
 
+  // Mantém o estado de emoção sempre fresco (a cada leitura do worker), para
+  // que a janela de predominância de 2s vote com dados atuais. A atualização
+  // visual (texto/cor) continua no throttle de 500ms abaixo para não pesar.
+  _telemetryCurrentState.emotion = ema;
+
   if (now - _lastUiUpdate > 500) {
     _lastUiUpdate = now;
-    _telemetryCurrentState.emotion = ema;
     for (const k in uiEmotions) {
       const el = uiEmotions[k];
       if (el) {
@@ -512,50 +516,136 @@ function mapPostureLabelToKey(label) {
 
 function getEmotionLabelForSync(emotionType, val0to1) {
     const pct = val0to1 * 100;
+
+    // Emoções negativas: qualquer presença sustentada degrada o humor.
     if (['sad', 'angry'].includes(emotionType)) {
-        if (pct === 0) return 'perfeito'; 
+        if (pct === 0) return 'perfeito';
         if (pct <= 10) return 'bom';
         if (pct <= 50) return 'ruim';
         return 'critico';
     }
-    if (pct <= 25) return 'critico';
-    if (pct <= 50) return 'ruim';
-    if (pct <= 75) return 'bom';
+
+    // Neutro = estado saudável/calmo. NÃO é penalizado: estar sereno
+    // durante o trabalho é positivo, então sempre conta como 'perfeito'.
+    if (emotionType === 'neutral') {
+        return 'perfeito';
+    }
+
+    // Felicidade (happy): positiva, escala com a intensidade.
+    if (pct <= 25) return 'ruim';
+    if (pct <= 50) return 'bom';
     return 'perfeito';
 }
 
-const SAMPLING_INTERVAL = 10000; 
-const SECONDS_PER_SAMPLE = 10;   
+// Amostragem de POSTURA: a cada 10s grava o estado atual de cada parte.
+// (Postura muda devagar; 10s é resolução suficiente e mantém o buffer enxuto.)
+const SAMPLING_INTERVAL = 10000;
+const SECONDS_PER_SAMPLE = 10;
 
-// --- CORREÇÃO DO LOOP DE AMOSTRAGEM ---
-// Agora escolhe a emoção DOMINANTE e incrementa apenas ela
-setInterval(() => {
-    // 1. Postura (mantido como está, pois são partes independentes)
-    Object.keys(detailedBuffer).forEach(key => {
-        if(['shoulder','head','rotation','back'].includes(key)){
-            const state = _telemetryCurrentState.posture[key];
-            if(detailedBuffer[key][state] !== undefined) detailedBuffer[key][state] += SECONDS_PER_SAMPLE;
+// Amostragem de EMOÇÃO: janela curta de predominância real (2s).
+// Em vez de um snapshot instantâneo (que capturava microexpressões soltas
+// no momento exato do tick), acumulamos qual emoção domina em cada leitura
+// dentro da janela e, ao fechá-la, gravamos a emoção que PREDOMINOU de fato
+// na maior parte dos 2s. Isso dá fidelidade temporal sem ruído de pico.
+const EMOTION_WINDOW_MS = 2000;
+const EMOTION_WINDOW_SECONDS = 2; // quanto a janela vale no buffer (em "segundos")
+
+// Preferência de desempate: do mais positivo para o menos. Em empate real
+// de EMA, vence o estado mais saudável (não o "primeiro da lista").
+const EMOTION_PRIORITY = ['happy', 'neutral', 'sad', 'angry'];
+
+// Contagem de "vitórias" de cada emoção dentro da janela atual.
+let _emotionWindowVotes = { neutral: 0, happy: 0, sad: 0, angry: 0 };
+// Soma dos EMAs da emoção vencedora, p/ estimar a intensidade média dela.
+let _emotionWindowMaxSum = { neutral: 0, happy: 0, sad: 0, angry: 0 };
+let _emotionWindowTicks = 0;
+
+/**
+ * Escolhe a emoção dominante de UM instante (uma leitura de EMA).
+ * Desempate pela ordem de positividade (EMOTION_PRIORITY), não pela ordem
+ * de iteração — assim um empate neutral x happy vai para happy, e nunca
+ * pende sistematicamente para neutral.
+ */
+function pickInstantDominant(emos) {
+    let best = null;
+    let bestVal = -Infinity;
+    for (const k of EMOTION_PRIORITY) {
+        const v = emos[k] || 0;
+        if (v > bestVal) {
+            bestVal = v;
+            best = k;
         }
-    });
-
-    // 2. Emoção (CORRIGIDO: Escolhe apenas a vencedora)
-    const emos = _telemetryCurrentState.emotion;
-    // Encontra qual emoção tem o maior valor atual (ex: happy: 0.9, sad: 0.01)
-    let dominantEmo = 'neutral';
-    let maxVal = -1;
-
-    ['neutral','happy','sad','angry'].forEach(k => {
-        if (emos[k] > maxVal) {
-            maxVal = emos[k];
-            dominantEmo = k;
-        }
-    });
-
-    // Incrementa APENAS a dominante no buffer
-    const state = getEmotionLabelForSync(dominantEmo, maxVal);
-    if(detailedBuffer[dominantEmo] && detailedBuffer[dominantEmo][state] !== undefined) {
-        detailedBuffer[dominantEmo][state] += SECONDS_PER_SAMPLE;
     }
+    return { emo: best, val: bestVal };
+}
+
+// Coleta um "voto" a cada leitura curta (mesma cadência da UI de emoção).
+function sampleEmotionTick() {
+    if (!_facePresent) return; // sem rosto não vota
+    const emos = _telemetryCurrentState.emotion;
+    if (!emos) return;
+    const { emo, val } = pickInstantDominant(emos);
+    if (emo == null) return;
+    _emotionWindowVotes[emo] += 1;
+    _emotionWindowMaxSum[emo] += val;
+    _emotionWindowTicks += 1;
+}
+
+// Fecha a janela de 2s: grava no buffer a emoção que predominou.
+function flushEmotionWindow() {
+    // Se não há rosto agora, ou nenhuma leitura válida foi coletada, descarta
+    // a janela sem gravar (evita misturar votos de antes/depois da ausência).
+    if (!_facePresent || _emotionWindowTicks === 0) {
+        _emotionWindowVotes = { neutral: 0, happy: 0, sad: 0, angry: 0 };
+        _emotionWindowMaxSum = { neutral: 0, happy: 0, sad: 0, angry: 0 };
+        _emotionWindowTicks = 0;
+        return;
+    }
+
+    // Vencedora da janela = mais votos; desempate por positividade.
+    let winner = null;
+    let winnerVotes = -1;
+    for (const k of EMOTION_PRIORITY) {
+        if (_emotionWindowVotes[k] > winnerVotes) {
+            winnerVotes = _emotionWindowVotes[k];
+            winner = k;
+        }
+    }
+
+    // Intensidade média da vencedora dentro da janela (p/ classificar o bucket).
+    const avgVal = _emotionWindowVotes[winner] > 0
+        ? _emotionWindowMaxSum[winner] / _emotionWindowVotes[winner]
+        : 0;
+
+    const state = getEmotionLabelForSync(winner, avgVal);
+    if (detailedBuffer[winner] && detailedBuffer[winner][state] !== undefined) {
+        detailedBuffer[winner][state] += EMOTION_WINDOW_SECONDS;
+    }
+
+    // Reseta a janela.
+    _emotionWindowVotes = { neutral: 0, happy: 0, sad: 0, angry: 0 };
+    _emotionWindowMaxSum = { neutral: 0, happy: 0, sad: 0, angry: 0 };
+    _emotionWindowTicks = 0;
+}
+
+// Coleta votos na mesma cadência do envio de expressões ao worker (~100ms),
+// garantindo várias leituras por janela de 2s.
+setInterval(sampleEmotionTick, EMOTION_SEND_INTERVAL_MS);
+
+// Fecha a janela de emoção a cada 2s, gravando a predominante real.
+setInterval(flushEmotionWindow, EMOTION_WINDOW_MS);
+
+// Amostragem de POSTURA (independente da emoção): a cada 10s grava o estado
+// atual de cada parte do corpo. As 4 partes são registradas a cada amostra.
+setInterval(() => {
+    Object.keys(detailedBuffer).forEach(key => {
+        if (['shoulder', 'head', 'rotation', 'back'].includes(key)) {
+            const state = _telemetryCurrentState.posture[key];
+            if (detailedBuffer[key][state] !== undefined) {
+                detailedBuffer[key][state] += SECONDS_PER_SAMPLE;
+            }
+        }
+    });
 
     if (_currentStaminaValue > 0) _notificationHistoryBuffer.push(_currentStaminaValue);
 }, SAMPLING_INTERVAL);
@@ -613,3 +703,127 @@ setInterval(() => {
     sendStaminaNotification(sum / _notificationHistoryBuffer.length);
     _notificationHistoryBuffer = [];
 }, NOTIFICATION_INTERVAL_MS);
+
+/* ====================================================================
+ * ALERTAS DE BEM-ESTAR (Tipo A) — integrados ao sino de notificações.
+ *
+ * Detecta condições ao vivo a partir do estado da câmera e dispara
+ * alertas via window.StamflowNotifications.pushLocalAlert (que cuida do
+ * pop-up nativo, da lista do sino e da persistência no backend).
+ *
+ * Regras:
+ *   - 3h contínuas de uso (rosto presente)        -> recomenda pausa
+ *   - 10 min contínuos em postura crítica         -> recomenda ajuste
+ *   - 30 min contínuos em postura de atenção      -> recomenda ajuste
+ *
+ * "Contínuo" reinicia quando o rosto some por um período (pausa real) ou
+ * quando a postura melhora. Cada alerta tem um cooldown para não repetir.
+ * ==================================================================== */
+(function () {
+  "use strict";
+
+  const CHECK_INTERVAL_MS = 30 * 1000;     // granularidade da verificação
+  const SENTADO_LIMITE_MS = 3 * 60 * 60 * 1000;   // 3h
+  const CRITICA_LIMITE_MS = 10 * 60 * 1000;       // 10 min
+  const ATENCAO_LIMITE_MS = 30 * 60 * 1000;       // 30 min
+  const COOLDOWN_MS = 15 * 60 * 1000;             // não repetir o mesmo alerta antes disso
+  const AUSENCIA_RESET_MS = 60 * 1000;            // 1 min sem rosto reseta o "sentado contínuo"
+
+  let _sentadoDesde = null;       // timestamp em que começou o uso contínuo
+  let _ausenteDesde = null;       // timestamp em que o rosto sumiu
+  let _criticaDesde = null;       // timestamp em que a postura ficou crítica
+  let _atencaoDesde = null;       // timestamp em que a postura ficou em atenção
+
+  let _ultimoAlertaPausa = -Infinity;
+  let _ultimoAlertaCritica = -Infinity;
+  let _ultimoAlertaAtencao = -Infinity;
+
+  // Deriva o "nível geral" da postura a partir das 4 partes do corpo.
+  // Conservador: a pior parte define o nível (bem-estar pede alerta cedo).
+  function nivelPosturaGeral() {
+    try {
+      const p = _telemetryCurrentState && _telemetryCurrentState.posture;
+      if (!p) return null;
+      const vals = [p.shoulder, p.head, p.rotation, p.back];
+      if (vals.includes("critico")) return "critico";
+      if (vals.includes("ruim")) return "atencao";
+      return "ok";
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function alertar(opts) {
+    if (window.StamflowNotifications && typeof window.StamflowNotifications.pushLocalAlert === "function") {
+      window.StamflowNotifications.pushLocalAlert(opts);
+    }
+  }
+
+  setInterval(function () {
+    const agora = Date.now();
+
+    // --- Presença / uso contínuo ---
+    if (_facePresent) {
+      _ausenteDesde = null;
+      if (_sentadoDesde === null) _sentadoDesde = agora;
+
+      // 3h sentado -> pausa
+      if (agora - _sentadoDesde >= SENTADO_LIMITE_MS &&
+          agora - _ultimoAlertaPausa >= COOLDOWN_MS) {
+        _ultimoAlertaPausa = agora;
+        alertar({
+          tipo: "pausa_recomendada",
+          titulo: "Hora de uma pausa",
+          mensagem: "Você está há cerca de 3 horas em frente ao computador. Que tal uma pausa mental para recarregar?",
+          link_destino: "pausa-mental",
+        });
+      }
+    } else {
+      // Rosto ausente: se ficar ausente tempo suficiente, considera pausa real
+      // e zera o contador de uso contínuo.
+      if (_ausenteDesde === null) _ausenteDesde = agora;
+      if (agora - _ausenteDesde >= AUSENCIA_RESET_MS) {
+        _sentadoDesde = null;
+      }
+      // Sem rosto não há postura a avaliar.
+      _criticaDesde = null;
+      _atencaoDesde = null;
+      return;
+    }
+
+    // --- Postura ---
+    const nivel = nivelPosturaGeral();
+
+    if (nivel === "critico") {
+      _atencaoDesde = null;
+      if (_criticaDesde === null) _criticaDesde = agora;
+      if (agora - _criticaDesde >= CRITICA_LIMITE_MS &&
+          agora - _ultimoAlertaCritica >= COOLDOWN_MS) {
+        _ultimoAlertaCritica = agora;
+        alertar({
+          tipo: "postura_critica",
+          titulo: "Ajuste sua postura",
+          mensagem: "Você está há cerca de 10 minutos em postura crítica. Reposicione-se para evitar dores e fadiga.",
+          link_destino: "checkup",
+        });
+      }
+    } else if (nivel === "atencao") {
+      _criticaDesde = null;
+      if (_atencaoDesde === null) _atencaoDesde = agora;
+      if (agora - _atencaoDesde >= ATENCAO_LIMITE_MS &&
+          agora - _ultimoAlertaAtencao >= COOLDOWN_MS) {
+        _ultimoAlertaAtencao = agora;
+        alertar({
+          tipo: "postura_atencao",
+          titulo: "Atenção à postura",
+          mensagem: "Você está há cerca de 30 minutos em postura de atenção. Um pequeno ajuste agora faz diferença.",
+          link_destino: "checkup",
+        });
+      }
+    } else {
+      // Postura ok: zera os contadores de postura ruim.
+      _criticaDesde = null;
+      _atencaoDesde = null;
+    }
+  }, CHECK_INTERVAL_MS);
+})();

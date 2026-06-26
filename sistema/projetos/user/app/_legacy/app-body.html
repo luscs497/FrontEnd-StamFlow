@@ -83,18 +83,40 @@
                 </svg>-->
                 Dashboard
             </h2>
-            <div class="sistema">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="40" />
-                </svg>
-                <div id="status" class="status-sistema">Carregando...</div>
+            <div class="content-header-right">
+                <div class="notificacoes-wrapper">
+                    <div class="notificacoes-sino" id="notificacoes-sino" role="button" tabindex="0" aria-label="Notificações" title="Notificações">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span class="notificacoes-badge display-none" id="notificacoes-badge">0</span>
+                    </div>
+                    <div class="notificacoes-painel display-none" id="notificacoes-painel">
+                        <div class="notificacoes-painel-header">
+                            <h3>Notificações</h3>
+                            <button class="notificacoes-marcar-todas" id="notificacoes-marcar-todas">Marcar todas como lidas</button>
+                        </div>
+                        <ul class="notificacoes-lista" id="notificacoes-lista">
+                            <li class="notificacoes-vazio" id="notificacoes-vazio">Você não tem notificações.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="sistema">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" />
+                    </svg>
+                    <div id="status" class="status-sistema">Carregando...</div>
+                </div>
             </div>
         </div>
         <!--DashBoard-->
         <div class="container-1700 conteudo-site" >
             <div class="div-stamina">
                 <div class="div-stamina-conteudo">
-                    <h3>Sistema de Energia Produtiva (Stamina) </h3>
+                    <div class="stamina-titulo-com-ajuda">
+                        <h3>Sistema de Energia Produtiva (Stamina) </h3>
+                        <div class="abrir-como-melhorar-stamina" role="button" tabindex="0" aria-label="Como melhorar minha Stamina" title="Como melhorar minha Stamina">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="18"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </div>
+                    </div>
                     <div class="stamina-info">
                         <h2 class="porcentagem-stamina">--</h2>
                         <div class="stamina-status"><span class="stamina-status-text">--</span></div>
@@ -148,7 +170,7 @@
                 </div>
                 <div class="aviso aviso-critico display-none">
                     <svg class="red" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="32" class="text-[#F59E0B] mb-2"> <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon> </svg>
-                    <h3 class="red">PAtenção! Desempenho abaixo do esperado!</h3>
+                    <h3 class="red">Atenção! Desempenho abaixo do esperado!</h3>
                     <p>Que tal fazer uma pausa? </p>
                 </div>
             </div>
@@ -268,7 +290,7 @@
                                 <h3 class="green">1. Oxigenação do pescoço (sentado)</h3>
                                 <svg class="green abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Aliviar a tensão acumulada no pescoço e ombros devido à postura estática.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Aliviar a tensão acumulada no pescoço e ombros devido à postura estática.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="exercicio">
                             
@@ -281,7 +303,7 @@
                                 <h3 class="green">2. Oxigenação da coluna (sentado)</h3>
                                 <svg class="green abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Alongar e oxigenar a região lombar para evitar dores crônicas ao sentar.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Alongar e oxigenar a região lombar para evitar dores crônicas ao sentar.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="exercicio">
                         </ul>
@@ -293,7 +315,7 @@
                                 <h3 class="green">3. Oxigenação dos braços (sentado)</h3>
                                 <svg class="green abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Prevenir LER/DORT através do alongamento e oxigenação dos antebraços e dedos.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Prevenir LER/DORT através do alongamento e oxigenação dos antebraços e dedos.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="exercicio">
                         </ul>
@@ -305,7 +327,7 @@
                                 <h3 class="green">4. Oxigenação da face (sentado)</h3>
                                 <svg class="green abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Relaxar a musculatura facial e aliviar a tensão da mandíbula.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Relaxar a musculatura facial e aliviar a tensão da mandíbula.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="exercicio">
                         </ul>
@@ -317,7 +339,7 @@
                                 <h3 class="green">5. Oxigenação dos olhos (sentado)</h3>
                                 <svg class="green abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Reduzir a fadiga ocular digital e prevenir dores de cabeça.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Reduzir a fadiga ocular digital e prevenir dores de cabeça.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="exercicio">
                         </ul>
@@ -329,7 +351,7 @@
                                 <h3 class="green">6. Oxigenação corpo todo (em pé)</h3>
                                 <svg class="green abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Estimular o sistema circulatório e retorno venoso, beneficiando todo o corpo.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Estimular o sistema circulatório e retorno venoso, beneficiando todo o corpo.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="exercicio">
 
@@ -342,7 +364,7 @@
                                 <h3 class="green">7. Exercícios de respiração (sentado)</h3>
                                 <svg class="green abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Oxigenar o cérebro e reduzir o estresse através do controle da respiração.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Oxigenar o cérebro e reduzir o estresse através do controle da respiração.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="exercicio">
                             
@@ -376,7 +398,7 @@
                                 <h3 class="purple">Categoria 1: Arquitetura do Foco para Ação</h3>
                                 <svg class="purple abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Otimização cognitiva para produção focada.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Otimização cognitiva para produção focada.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="mental">
                         </ul>
@@ -388,7 +410,7 @@
                                 <h3 class="purple">Categoria 2: Inteligência Social e Presença</h3>
                                 <svg class="purple abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Qualidade nas interações e performance em apresentações.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Qualidade nas interações e performance em apresentações.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="mental">
                         </ul>
@@ -400,7 +422,7 @@
                                 <h3 class="purple">Categoria 3: Gerenciamento de Estresse Agudo</h3>
                                 <svg class="purple abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: "Primeiros socorros" para momentos de alta tensão ou frustração.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: "Primeiros socorros" para momentos de alta tensão ou frustração.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="mental">
                             
@@ -413,7 +435,7 @@
                                 <h3 class="purple">Categoria 4: Reset e Manutenção de Estado Mental Equilibrado</h3>
                                 <svg class="purple abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Limpar o "cache" do cérebro e mudar de estado mental.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Limpar o "cache" do cérebro e mudar de estado mental.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="mental">
                             
@@ -475,7 +497,7 @@
                                 <h3 class="blue">Fase 1: Fundação Biológica | Prepare o corpo</h3>
                                 <svg class="blue abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Restaurar a fisiologia cerebral e o equilíbrio químico para sair do estado de sobrevivência e permitir a performance.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Restaurar a fisiologia cerebral e o equilíbrio químico para sair do estado de sobrevivência e permitir a performance.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="university">
                         </ul>
@@ -487,7 +509,7 @@
                                 <h3 class="blue">Fase 2: Arquitetura da Rotina | Prepare o ambiente</h3>
                                 <svg class="blue abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Construir padrões que eliminem a necessidade de força de vontade, facilitando a entrada em estado de fluxo e foco profundo.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Construir padrões que eliminem a necessidade de força de vontade, facilitando a entrada em estado de fluxo e foco profundo.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="university">
                         </ul>
@@ -499,7 +521,7 @@
                                 <h3 class="blue">Fase 3: Gestão Estratégica | Prepare a mente</h3>
                                 <svg class="blue abrir-audios-details" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="20" class="text-[#34D399] transform transition-transform "><polyline points="6 9 12 15 18 9"></polyline></svg>
                             </div>
-                            <p class="display-none audio-classificacao-detalhes">Objetivo: Organizar o fluxo de informações, otimizar a tomada de decisão e priorizar o essencial para blindagem contra fadiga mental e burnout.</p>
+                            <p class="audio-classificacao-detalhes">Objetivo: Organizar o fluxo de informações, otimizar a tomada de decisão e priorizar o essencial para blindagem contra fadiga mental e burnout.</p>
                         </div>
                         <ul class="audios gap-32 display-none" categoria="university">
                             
@@ -512,7 +534,12 @@
         <div class="container-1700 conteudo-site display-none">
             <div class="sub-header">
                 <div class="sub-header-text">
-                    <h2 class="green">Checkup de Postura</h2>
+                    <div class="stamina-titulo-com-ajuda">
+                        <h2 class="blue">Checkup de Postura</h2>
+                        <div class="abrir-como-melhorar-stamina abrir-como-melhorar-stamina-blue" role="button" tabindex="0" aria-label="Como melhorar minha Stamina" title="Como melhorar minha Stamina">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="18"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </div>
+                    </div>
                 </div>
                 <div class="close-btn-section">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -598,7 +625,12 @@
 
             <div class="div-stamina" id="scan-stamina-container" style="margin-top: 30px;">
                 <div class="div-stamina-conteudo">
-                    <h3>Nível de Energia Atual</h3>
+                    <div class="stamina-titulo-com-ajuda">
+                        <h3>Nível de Energia Atual</h3>
+                        <div class="abrir-como-melhorar-stamina" role="button" tabindex="0" aria-label="Como melhorar minha Stamina" title="Como melhorar minha Stamina">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="18"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </div>
+                    </div>
                     <div class="stamina-info">
                         <h2 class="porcentagem-stamina" id="scan-porcentagem">--</h2>
                         <div class="stamina-status">
@@ -1134,6 +1166,78 @@
                 
             </ul>
             <button class="button-close-embasamento" id="fechar-embasamento-mental-button">Fechar</button>
+        </div>
+        <!--Modal "Explicação da meditação" (Pausa Mental) - popup único, reaproveitado por áudio-->
+        <div class="popup-embasamento gap-32 display-none" id="modal-como-ajuda">
+            <div class="embasamento-header">
+                <div class="embasamento-header-text">
+                    <svg class="purple" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#34D399]" size="28"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <h2 id="modal-como-ajuda-titulo">Explicação da meditação</h2>
+                </div>
+                <svg id="fechar-como-ajuda" class="fechar-embasamento-div" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </div>
+            <p id="modal-como-ajuda-texto" class="como-ajuda-texto">Carregando...</p>
+            <button class="button-close-embasamento" id="fechar-como-ajuda-button">Fechar</button>
+        </div>
+        <!--Modal "Como melhorar minha Stamina"-->
+        <div class="popup-embasamento gap-32 display-none" id="modal-como-melhorar-stamina">
+            <div class="embasamento-header">
+                <div class="embasamento-header-text">
+                    <svg class="green" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="28"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    <h2>Como melhorar minha Stamina</h2>
+                </div>
+                <svg id="fechar-como-melhorar-stamina" class="fechar-embasamento-div" xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" size="24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </div>
+
+            <div class="stamina-ajuda-conteudo gap-32">
+                <p class="stamina-ajuda-intro">
+                    Sua Stamina é uma nota de 0 a 100 que resume o quanto seu corpo e sua mente estão trabalhando de forma saudável ao longo do dia. Ela é composta por dois fatores, com pesos diferentes: <strong>70% Postura</strong> e <strong>30% Emoção</strong>. Por isso, cuidar de como você se senta tem o maior impacto — mas seu estado emocional também conta.
+                </p>
+
+                <div class="stamina-ajuda-bloco gap-16">
+                    <h3 class="green">Postura — 70% da sua Stamina</h3>
+                    <p>A postura é avaliada em quatro pontos do seu corpo enquanto você usa o computador. Quanto mais alinhado você se mantém, maior a sua nota. Os quatro pontos são:</p>
+                    <ul class="stamina-ajuda-lista gap-16">
+                        <li>
+                            <h4>Inclinação dos ombros</h4>
+                            <p>Mede se seus ombros estão nivelados ou pendendo para um lado. Para melhorar: mantenha os dois ombros na mesma altura, relaxados, sem elevá-los em direção às orelhas.</p>
+                        </li>
+                        <li>
+                            <h4>Projeção da cabeça</h4>
+                            <p>Mede se sua cabeça está alinhada com a coluna ou projetada para a frente (em direção à tela). Para melhorar: traga o queixo levemente para trás, deixando as orelhas alinhadas com os ombros, e posicione o monitor na altura dos olhos.</p>
+                        </li>
+                        <li>
+                            <h4>Rotação lateral dos ombros</h4>
+                            <p>Mede se seu tronco está virado para um lado em vez de de frente para a tela. Para melhorar: posicione o monitor diretamente à sua frente, evitando girar o tronco para enxergar a tela ou documentos ao lado.</p>
+                        </li>
+                        <li>
+                            <h4>Inclinação do dorso</h4>
+                            <p>Mede se suas costas estão eretas e apoiadas ou curvadas para a frente. Para melhorar: apoie a lombar no encosto da cadeira, mantenha os pés no chão e evite "afundar" ou curvar a coluna sobre a mesa.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="stamina-ajuda-bloco gap-16">
+                    <h3 class="purple">Emoção — 30% da sua Stamina</h3>
+                    <p>O componente emocional observa seu estado predominante ao longo do tempo. Estar calmo e sereno é considerado um estado saudável — você não precisa estar sorrindo o tempo todo. O que pesa negativamente é a presença prolongada de emoções como tristeza ou irritação. Para melhorar:</p>
+                    <ul class="stamina-ajuda-lista gap-16">
+                        <li>
+                            <h4>Faça pausas mentais</h4>
+                            <p>Use as meditações guiadas da seção Pausa Mental para regular a respiração e reduzir a tensão acumulada. Isso ajuda a sair de estados de estresse e a voltar a um estado de calma.</p>
+                        </li>
+                        <li>
+                            <h4>Respeite seus limites</h4>
+                            <p>Frustração e irritação frequentes costumam ser sinais de sobrecarga. Pequenas pausas ao longo do dia ajudam a manter o equilíbrio emocional e, com ele, a sua Stamina.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="stamina-ajuda-rodape">
+                    Sua Stamina é classificada em quatro faixas: <strong>Crítica</strong> (0-24%), <strong>Atenção</strong> (25-49%), <strong>Boa</strong> (50-74%) e <strong>Excelente</strong> (75-100%). Pequenos ajustes ao longo do dia, somados, fazem sua nota subir de faixa.
+                </p>
+            </div>
+
+            <button class="button-close-embasamento" id="fechar-como-melhorar-stamina-button">Fechar</button>
         </div>
         <!--Modal do popup de artigos científicos foco-->
         <div class="popup-embasamento gap-32 display-none" id="modal-embasamento-foco">

@@ -22,4 +22,5 @@ export const LEGACY_SCRIPTS: string[] = [
   "/scripts/script.js",
   "/scripts/camera.js",
   "/scripts/get-repots.js",
+  "/scripts/notifications.js",
 ];

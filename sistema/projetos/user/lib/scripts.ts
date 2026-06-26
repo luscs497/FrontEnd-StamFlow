@@ -24,6 +24,7 @@ export const LEGACY_SCRIPTS: string[] = [
   "/scripts/script.js",
   "/scripts/camera.js",
   "/scripts/get-repots.js",
+  "/scripts/notifications.js",
   // Tickets / Reports module (depends on window.authFetch from auth.js)
   "/scripts/tickets.js",
 ];

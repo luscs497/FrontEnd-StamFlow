@@ -412,11 +412,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     divLeft.insertAdjacentHTML("afterbegin", svg);
     divLeft.appendChild(divLeftText);
     li.appendChild(divLeft);
-    divRight.appendChild(tempoAudio);
-    divRight.appendChild(audioPlayer);
+
+    // Link "Explicação da meditação" — somente na categoria "mental"
+    // (Pausa Mental). Estrutura: uma coluna externa (alinhada à direita)
+    // contendo a linha [tempo + play] e, abaixo, o link sozinho.
+    if (categoria === "mental" && dados.comoAjuda) {
+      divRight.classList.add("audio-div-right-com-explicacao");
+
+      const timePlayRow = document.createElement("div");
+      timePlayRow.classList.add("audio-time-play-row");
+      timePlayRow.appendChild(tempoAudio);
+      timePlayRow.appendChild(audioPlayer);
+      divRight.appendChild(timePlayRow);
+
+      const comoAjudaLink = document.createElement("div");
+      comoAjudaLink.classList.add("modal-cientifico-abrir", "audio-como-ajuda-abrir");
+      comoAjudaLink.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="6.4" height="6.4" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg><p>Explicação da meditação</p>';
+      comoAjudaLink.addEventListener("click", (ev) => {
+        ev.stopPropagation(); // não deve disparar o play do áudio
+        abrirComoAjudaModal(dados);
+      });
+      divRight.appendChild(comoAjudaLink);
+    } else {
+      divRight.appendChild(tempoAudio);
+      divRight.appendChild(audioPlayer);
+    }
+
     li.appendChild(divRight);
     return li;
   }
+
 
   function gerarAudiosMinimizados(grupo) {
     const listaAudios = document.querySelectorAll(".audios");
@@ -459,6 +485,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     svgDiv.innerHTML = svg;
     loadAndPlayTrack({ dados, cor, svg, categoria });
   }
+
+  // Popup "Explicação da meditação" (Pausa Mental).
+  // Reaproveita UM único popup no mesmo estilo visual do popup-embasamento,
+  // trocando o conteúdo a cada áudio clicado (mesmo padrão do modal de áudio).
+  const modalComoAjuda = document.getElementById("modal-como-ajuda");
+  function abrirComoAjudaModal(dados) {
+    if (!modalComoAjuda) return;
+    const titulo = document.getElementById("modal-como-ajuda-titulo");
+    const texto = document.getElementById("modal-como-ajuda-texto");
+    if (titulo) titulo.textContent = dados.titulo;
+    if (texto) texto.textContent = dados.comoAjuda || "";
+    if (modalComoAjuda.classList.contains("display-none")) {
+      toggleModal(modalComoAjuda);
+    }
+  }
+
+  ["fechar-como-ajuda", "fechar-como-ajuda-button"].forEach((id) => {
+    const btn = document.getElementById(id);
+    if (btn && modalComoAjuda) btn.addEventListener("click", () => toggleModal(modalComoAjuda));
+  });
 
   function playTrackByIndex(categoria, gIndex, iIndex) {
     playerState = { categoria, groupIndex: gIndex, itemIndex: iIndex };
@@ -619,6 +665,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  // Modal "Como melhorar minha Stamina" — acionável por vários ícones (?)
+  // espalhados pela UI (Dashboard, Checkup e card de energia do scan).
+  const modalComoMelhorar = document.getElementById("modal-como-melhorar-stamina");
+  if (modalComoMelhorar) {
+    document.querySelectorAll(".abrir-como-melhorar-stamina").forEach((el) => {
+      el.addEventListener("click", () => toggleModal(modalComoMelhorar));
+      // Acessibilidade: os ícones são role="button", então respondem a Enter/Espaço.
+      el.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter" || ev.key === " ") {
+          ev.preventDefault();
+          toggleModal(modalComoMelhorar);
+        }
+      });
+    });
+  }
+  ["fechar-como-melhorar-stamina", "fechar-como-melhorar-stamina-button"].forEach((id) => {
+    const btn = document.getElementById(id);
+    if (btn && modalComoMelhorar) btn.addEventListener("click", () => toggleModal(modalComoMelhorar));
+  });
+
   // Modal Privacidade Tickets
   const modalPrivacidade = document.getElementById("modal-privacidade-tickets");
   ["abrir-politica"].forEach((id) => {
@@ -650,16 +716,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ============================================================
   // 13. Detalhes de Áudio (accordion)
+  // O parágrafo descritivo (.audio-classificacao-detalhes) é sempre
+  // visível desde o carregamento. A seta controla apenas a lista de
+  // áudios (.audios).
   // ============================================================
   const listaAbrirDescricoes = document.querySelectorAll(".abrir-audios-details");
   listaAbrirDescricoes.forEach((el) => {
     el.addEventListener("click", () => {
       const item = el.closest(".audio-classificacao");
       if (!item) return;
-      const detalhes = item.querySelector(".audio-classificacao-detalhes");
       const audios = item.querySelector(".audios");
       const abrindo = audios ? audios.classList.contains("display-none") : false;
-      if (detalhes) detalhes.classList.toggle("display-none", !abrindo);
       if (audios) audios.classList.toggle("display-none", !abrindo);
       el.classList.toggle("audios-details-aberto", abrindo);
     });
