@@ -29,6 +29,8 @@ const SCRIPTS = [
   "/scripts/tickets.js",
   "/scripts/manager-dashboard.js",
   "/scripts/collaborators.js",
+  "/scripts/compliance.js",
+  "/scripts/faq.js",
 ];
 
 function hardRedirect(url) {

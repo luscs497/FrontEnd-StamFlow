@@ -78,9 +78,19 @@ export default function PainelGestorPage() {
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="20"><line x1="12" y1="20" x2="12" y2="10" /><line x1="18" y1="20" x2="18" y2="4" /><line x1="6" y1="20" x2="6" y2="16" /></svg>
                     <h3>Estatísticas</h3>
                 </li>
-                <li className="nav-item red-hover link-nav" id="tickets-section-link" title="Reports">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="20"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
-                    <h3>Reports</h3>
+                <li className="tem-sub-lista">
+                    <div className="nav-item tem-sub-lista-selector red-hover">
+                        <div className="nav-item sem-hover">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="20"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+                            <h3>Reports</h3>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="16"><polyline points="6 9 12 15 18 9" /></svg>
+                    </div>
+                    <ul className="sub-lista display-none">
+                        <li className="li-subitem red-hover link-nav" id="tickets-section-link" title="Reports">Gestão de Reports</li>
+                        <li className="li-subitem red-hover link-nav" title="Compliance Training">Treinamento Compliance</li>
+                        <li className="li-subitem red-hover link-nav" title="FAQ Painel Gestor">FAQ</li>
+                    </ul>
                 </li>
                 <li className="nav-item blue-hover link-nav" title="Collaborators">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" size="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
@@ -611,6 +621,34 @@ export default function PainelGestorPage() {
                     </div>
                 </div>
             </div>
+        </div>
+
+        {/*Treinamento Compliance*/}
+        <div className="container-1700 conteudo-site display-none">
+            <div className="sub-header">
+                <div className="sub-header-text">
+                    <h2 className="degrade-roxo">Treinamento Compliance</h2>
+                    <p className="gray">Temas comuns de Reports e como conduzir cada um</p>
+                </div>
+            </div>
+
+            <ul className="gap-32 lista-compliance" id="lista-compliance">
+                {/* Gerado dinamicamente via /data/compliance.json (compliance.js) */}
+            </ul>
+        </div>
+
+        {/*FAQ*/}
+        <div className="container-1700 conteudo-site display-none">
+            <div className="sub-header">
+                <div className="sub-header-text">
+                    <h2 className="degrade-roxo">FAQ</h2>
+                    <p className="gray">Dúvidas frequentes sobre como usar o Painel do Gestor</p>
+                </div>
+            </div>
+
+            <ul className="gap-32 lista-faq" id="lista-faq">
+                {/* Gerado dinamicamente via /data/faq.json (faq.js) */}
+            </ul>
         </div>
 
         {/*Colaboradores*/}

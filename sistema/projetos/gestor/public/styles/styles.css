@@ -200,6 +200,72 @@ header {
     height: 25.6px;
 }
 
+/* Submenu "Reports" (Gestão de Reports / Treinamento Compliance / FAQ) —
+   mesmo padrão visual usado nos painéis avulso/user para Exercícios/Pausa
+   Mental/etc. (.tem-sub-lista / .sub-lista / .li-subitem). */
+.tem-sub-lista {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.tem-sub-lista-selector {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.tem-sub-lista-selector .nav-item.sem-hover {
+    padding: 0px;
+    flex: 1;
+}
+
+.tem-sub-lista-selector .nav-item.sem-hover:hover {
+    background-color: transparent !important;
+}
+
+.tem-sub-lista-selector > svg {
+    flex-shrink: 0;
+    margin-right: 1.04rem;
+    color: #9CA3AF;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.tem-sub-lista-selector.ativo > svg,
+.tem-sub-lista-selector.ativo .nav-item.sem-hover {
+    color: rgb(239, 68, 68);
+}
+
+.tem-sub-lista-selector.ativo > svg {
+    transform: rotate(180deg);
+}
+
+.sub-lista {
+    padding-top: 0.8rem;
+    padding-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+.li-subitem {
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+.li-subitem:hover {
+    color: white;
+}
+
+.li-subitem.red-hover:hover,
+.li-subitem.red-hover.ativo {
+    color: rgb(239, 68, 68);
+}
+
 /* --- Perfil --- */
 .perfil {
     display: flex;
@@ -1052,6 +1118,178 @@ header {
 
 .abrir-detalhes-report:hover {
     background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================
+   Treinamento Compliance (FAQ de Reports)
+   ========================= */
+
+.lista-compliance {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* 40px -> 27px */
+    gap: 32px;
+    padding-top: 19.2px;
+}
+
+.compliance-categoria {
+    width: 100%;
+    padding: 25.2px;
+    background-color: rgb(31, 29, 43);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15.6px;
+}
+
+.compliance-categoria > h2 {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.compliance-lista-itens {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.compliance-item {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.compliance-item:last-child {
+    border-bottom: none;
+}
+
+.compliance-item-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14.4px 0;
+    cursor: pointer;
+}
+
+.compliance-item-header h3 {
+    font-size: 15.2px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.compliance-item-header.red { color: rgb(239, 68, 68); }
+.compliance-item-header.orange { color: #F5A623; }
+.compliance-item-header.blue { color: #4a90e2; }
+.compliance-item-header.green { color: #34D399; }
+.compliance-item-header.purple { color: #7264EA; }
+
+.abrir-compliance-details {
+    flex-shrink: 0;
+    width: 20.8px;
+    height: 20.8px;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease;
+}
+
+.abrir-compliance-details.compliance-details-aberto {
+    transform: rotate(180deg);
+}
+
+.compliance-item-resposta {
+    font-size: 14.4px;
+    line-height: 1.6;
+    color: rgb(156, 163, 175);
+    padding-bottom: 16px;
+    padding-right: 36px;
+}
+
+/* =========================
+   FAQ (Painel do Gestor) — mesmo padrão visual do Treinamento
+   Compliance acima, com classes próprias para não colidir.
+   ========================= */
+
+.lista-faq {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding-top: 19.2px;
+}
+
+.faq-categoria {
+    width: 100%;
+    padding: 25.2px;
+    background-color: rgb(31, 29, 43);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15.6px;
+}
+
+.faq-categoria > h2 {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.faq-lista-itens {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.faq-item {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-item-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14.4px 0;
+    cursor: pointer;
+}
+
+.faq-item-header h3 {
+    font-size: 15.2px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.faq-item-header.red { color: rgb(239, 68, 68); }
+.faq-item-header.orange { color: #F5A623; }
+.faq-item-header.blue { color: #4a90e2; }
+.faq-item-header.green { color: #34D399; }
+.faq-item-header.purple { color: #7264EA; }
+
+.abrir-faq-details {
+    flex-shrink: 0;
+    width: 20.8px;
+    height: 20.8px;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease;
+}
+
+.abrir-faq-details.faq-details-aberto {
+    transform: rotate(180deg);
+}
+
+.faq-item-resposta {
+    font-size: 14.4px;
+    line-height: 1.6;
+    color: rgb(156, 163, 175);
+    padding-bottom: 16px;
+    padding-right: 36px;
 }
 
 .pop-ups {

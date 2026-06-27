@@ -1,0 +1,70 @@
+[
+  {
+    "categoria": "Financeiro e Benefícios",
+    "cor": "red",
+    "itens": [
+      {
+        "pergunta": "Atraso ou divergência no pagamento de salário",
+        "resposta": "Confirme com o financeiro a data de processamento da folha antes de responder. Informe ao colaborador o prazo real de regularização, sem prometer datas que você não pode garantir. Se a divergência for de valor, peça o holerite do colaborador para comparar antes de afirmar que está correto ou incorreto."
+      },
+      {
+        "pergunta": "Dúvida sobre reembolso de despesas",
+        "resposta": "Peça que o colaborador anexe (por fora do sistema, se necessário) o comprovante da despesa. Confirme se o tipo de gasto está dentro da política de reembolso da empresa antes de aprovar. Se não estiver, explique o motivo de forma clara, citando a regra, em vez de só negar."
+      },
+      {
+        "pergunta": "Dúvida ou reclamação sobre benefícios (plano de saúde, vale-refeição, etc.)",
+        "resposta": "Verifique primeiro se é uma dúvida de elegibilidade (ex: período de carência) ou um problema operacional (ex: cartão não chegou, plano não está ativo). Direcione para o RH quando for uma falha do fornecedor do benefício — você não deve tentar resolver isso sozinho, mas deve manter o colaborador informado do andamento."
+      }
+    ]
+  },
+  {
+    "categoria": "Relacionamento e Ambiente de Trabalho",
+    "cor": "orange",
+    "itens": [
+      {
+        "pergunta": "Conflito entre colegas de equipe",
+        "resposta": "Nunca tente resolver o conflito só pela troca de mensagens do Report. Marque uma conversa (mesmo que rápida) com as partes envolvidas, individualmente primeiro. Responda ao Report confirmando que a situação está sendo tratada, sem dar detalhes do que foi discutido com a outra parte."
+      },
+      {
+        "pergunta": "Queixa sobre comportamento de outro colaborador (assédio, discriminação, conduta inadequada)",
+        "resposta": "Trate como prioridade máxima — responda rapidamente confirmando o recebimento, mesmo que a investigação leve mais tempo. Não minimize nem peça para o colaborador 'deixar passar'. Se a empresa tiver um canal de Compliance/RH específico para isso, oriente o colaborador a também registrar lá, sem deixar de tratar o caso pelo Report."
+      },
+      {
+        "pergunta": "Reclamação sobre carga de trabalho ou prazos excessivos",
+        "resposta": "Evite responder só com 'vou verificar' sem prazo. Analise com o colaborador quais entregas estão pesando mais, e dê um retorno concreto (redistribuir tarefa, ajustar prazo, ou explicar por que não é possível ajustar agora). Esse tipo de Report costuma se repetir se não houver uma ação visível."
+      }
+    ]
+  },
+  {
+    "categoria": "Operacional e Uso da Plataforma",
+    "cor": "blue",
+    "itens": [
+      {
+        "pergunta": "Dificuldade técnica para usar o StamFlow (login, câmera, exercícios não carregam)",
+        "resposta": "Peça print da tela ou descrição exata do erro antes de escalar para o suporte técnico. Muitos problemas comuns (câmera não habilitada, navegador desatualizado) podem ser resolvidos só orientando o colaborador, sem precisar abrir chamado."
+      },
+      {
+        "pergunta": "Dúvida sobre como a Stamina/postura é avaliada",
+        "resposta": "Explique de forma simples que a pontuação combina postura (peso maior) e estado emocional captado durante o uso, e que isso serve para sugerir pausas e exercícios — não é uma avaliação de desempenho profissional. Esse esclarecimento evita que o colaborador sinta que está sendo 'vigiado' ou avaliado injustamente."
+      },
+      {
+        "pergunta": "Solicitação de exclusão de dados ou da conta",
+        "resposta": "Não exclua a conta diretamente pelo Report. Confirme a identidade do solicitante e siga o processo formal de desligamento/exclusão de dados da empresa (LGPD), direcionando para o RH ou TI quando aplicável. Documente que a solicitação foi recebida e a data."
+      }
+    ]
+  },
+  {
+    "categoria": "Políticas Internas",
+    "cor": "green",
+    "itens": [
+      {
+        "pergunta": "Dúvida sobre política de férias, faltas ou home office",
+        "resposta": "Responda com base na política oficial vigente da empresa — se você não tem certeza da regra atual, confirme com o RH antes de responder, em vez de dar uma resposta informal que pode gerar expectativa errada para o colaborador."
+      },
+      {
+        "pergunta": "Sugestão de melhoria ou feedback sobre processos da empresa",
+        "resposta": "Mesmo quando não for uma queixa, vale agradecer o retorno e dar um direcionamento (vai ser avaliado, foi implementado, ou não é viável e por quê). Reports desse tipo não devem ficar sem resposta só porque não são urgentes — isso desmotiva quem contribui."
+      }
+    ]
+  }
+]

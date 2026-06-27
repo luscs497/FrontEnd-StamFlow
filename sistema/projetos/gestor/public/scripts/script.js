@@ -63,6 +63,8 @@
         abrirHeader.classList.remove("ativo");
         header.classList.remove("clicado");
       }
+
+      sincronizarDestaquePai();
     });
   });
 
@@ -72,6 +74,45 @@
       header.classList.toggle("clicado");
     });
   }
+
+  // Submenu "Reports" (Gestão de Reports / Treinamento Compliance / FAQ): o
+  // cabeçalho (.tem-sub-lista-selector) só expande/colapsa a lista de
+  // filhos — a navegação real acontece nos próprios filhos (.li-subitem).
+  const subListaSelectors = document.querySelectorAll(".tem-sub-lista-selector");
+
+  function getSubListaPai(selector) {
+    return selector.closest(".tem-sub-lista")?.querySelector(".sub-lista") || null;
+  }
+
+  subListaSelectors.forEach((selector) => {
+    selector.addEventListener("click", () => {
+      const subLista = getSubListaPai(selector);
+      if (subLista) subLista.classList.toggle("display-none");
+    });
+  });
+
+  // Mantém o cabeçalho "Reports" destacado (cor ativa + seta para cima)
+  // sempre que um dos filhos (Gestão de Reports / Treinamento Compliance /
+  // FAQ) estiver selecionado — sem isso, o usuário perde a referência de
+  // onde está ao navegar dentro do submenu.
+  function sincronizarDestaquePai() {
+    subListaSelectors.forEach((selector) => {
+      const subLista = getSubListaPai(selector);
+      if (!subLista) return;
+      const temFilhoAtivo = subLista.querySelector(".li-subitem.ativo") !== null;
+      selector.classList.toggle("ativo", temFilhoAtivo);
+      if (temFilhoAtivo) {
+        // Mantém o submenu aberto enquanto um dos filhos estiver ativo.
+        subLista.classList.remove("display-none");
+      } else {
+        // Fecha ao navegar para fora do submenu, para não deixá-lo aberto
+        // sem nenhum item correspondente selecionado.
+        subLista.classList.add("display-none");
+      }
+    });
+  }
+
+  sincronizarDestaquePai();
 
   // ============================================================================
   // 3) Dropdown de Períodos (Painel Principal) — REMOVIDO.

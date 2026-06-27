@@ -1,0 +1,174 @@
+[
+  {
+    "categoria": "Painel Principal e Estatísticas",
+    "cor": "purple",
+    "itens": [
+      {
+        "pergunta": "Como funciona o seletor de período no Painel do Gestor?",
+        "resposta": "Você escolhe uma data de início e uma data de fim no campo de seleção de período, e os números são recalculados automaticamente a cada alteração — não existe botão 'Aplicar'. Se você selecionar a data final antes da inicial, o sistema reordena as duas automaticamente, então não há erro mesmo invertendo a ordem de seleção."
+      },
+      {
+        "pergunta": "O que significa a Stamina Coletiva mostrada no painel?",
+        "resposta": "É um indicador agregado da equipe, calculado a partir da postura (70% do peso) e do humor (30% do peso) registrados no período. O sistema separa o resultado em quatro faixas: Excelente (75-100%), Boa (50-74%), Atenção (25-49%) e Crítica (0-24%). Cada barra do card mostra a porcentagem de tempo da equipe em cada uma dessas faixas."
+      },
+      {
+        "pergunta": "Por que os status de Ergonomia da Equipe (ombros, cabeça, dorso) aparecem como '------' às vezes?",
+        "resposta": "Esse traço aparece quando não há nenhum dado de postura registrado para aquela articulação no período selecionado — geralmente porque a equipe não usou o sistema de captura postural naquele intervalo. Quando há dados, o rótulo muda para Excelente, Boa, Atenção ou Crítica, seguindo a mesma régua de 25% usada na Stamina Coletiva."
+      },
+      {
+        "pergunta": "O que é 'Sistema Ativo' no card de Engajamento?",
+        "resposta": "É o tempo total de uso do StamFlow pela equipe dentro do período selecionado (ex.: '2h 15min'), não uma porcentagem. Esse valor é somado a cada sincronização de métricas feita pelos colaboradores enquanto usam o sistema."
+      },
+      {
+        "pergunta": "Como são contadas as Pausas Mentais e os Exercícios no painel?",
+        "resposta": "São contagens brutas de quantas vezes a equipe completou uma pausa mental ou um exercício dentro do período selecionado — não é porcentagem nem média. Cada conclusão de exercício ou pausa soma 1 ao total do dia para aquele colaborador, e o painel exibe a soma de toda a equipe no intervalo escolhido."
+      },
+      {
+        "pergunta": "O número de 'Queixa/Report' no painel principal é o mesmo da aba Reports?",
+        "resposta": "Sim. Esse número conta todos os Reports da empresa cuja data (criação ou última atualização) cai dentro do período selecionado no Painel Principal — é a mesma base de dados da aba Gestão de Reports, só que filtrada pelo intervalo de datas escolhido ali, e não pelo status do ticket."
+      },
+      {
+        "pergunta": "Por que às vezes os números do painel demoram para atualizar depois que mudo as datas?",
+        "resposta": "A troca de período dispara três buscas ao mesmo tempo (dados da equipe, conquistas do período e contagem de Reports), e o painel só atualiza a tela depois que todas elas voltarem. Em conexões mais lentas ou períodos muito longos, pode haver um pequeno atraso antes dos números mudarem."
+      }
+    ]
+  },
+  {
+    "categoria": "Comparação de Períodos",
+    "cor": "blue",
+    "itens": [
+      {
+        "pergunta": "Como funciona o botão Comparar?",
+        "resposta": "Ele troca a visão principal por duas colunas lado a lado, Período A e Período B, cada uma com seu próprio seletor de datas. Ao abrir a comparação pela primeira vez, o sistema já preenche um padrão: Período A como hoje e Período B como os últimos 7 dias, mas você pode trocar livremente as datas de cada lado depois."
+      },
+      {
+        "pergunta": "O que o botão Cancelar faz na tela de comparação?",
+        "resposta": "Ele fecha a visão de comparação e volta para a visão principal (não comparativa). Ele não apaga nem desfaz nenhum dado — só troca qual painel está visível na tela."
+      },
+      {
+        "pergunta": "Os Períodos A e B da comparação usam os mesmos dados do painel principal?",
+        "resposta": "Sim, exatamente a mesma fonte de dados (equipe, conquistas e Reports), só que buscada de forma independente para cada coluna, com as datas que você escolher em cada uma. Por isso é possível, por exemplo, comparar 'esta semana' contra 'a mesma semana do mês passado' definindo as datas manualmente em cada lado."
+      }
+    ]
+  },
+  {
+    "categoria": "Exportação de Relatórios",
+    "cor": "green",
+    "itens": [
+      {
+        "pergunta": "Quais formatos de exportação estão disponíveis?",
+        "resposta": "CSV e PDF, através do botão Exportar no canto da Visão Principal. O arquivo gerado é baixado automaticamente pelo navegador, com um nome no formato 'relatorio_stamflow_DATA-INICIO_DATA-FIM.formato'."
+      },
+      {
+        "pergunta": "A exportação usa qual período de datas?",
+        "resposta": "Sempre as datas que estiverem selecionadas na Visão Principal no momento do clique em Exportar — não as datas da tela de Comparação, mesmo que ela esteja aberta. Se nenhuma data tiver sido escolhida ainda, o sistema usa o dia de hoje como período padrão."
+      },
+      {
+        "pergunta": "Por que recebi uma mensagem dizendo que não há dados para exportar?",
+        "resposta": "Isso acontece quando não existe nenhum registro de atividade da equipe no período de datas selecionado — não é um erro do sistema. Os relatórios só existem depois que pelo menos um colaborador usa o StamFlow (faz pausas, exercícios ou tem postura/humor registrados) dentro daquele intervalo."
+      }
+    ]
+  },
+  {
+    "categoria": "Gestão de Reports",
+    "cor": "red",
+    "itens": [
+      {
+        "pergunta": "O que diferencia os status Aberto, Em Andamento e Concluído de um Report?",
+        "resposta": "Aberto é o estado inicial de todo Report novo, criado pelo colaborador. Em Andamento indica que o gestor já respondeu pelo menos uma vez àquele caso. Concluído é definido manualmente pelo gestor através dos botões de status dentro do modal de detalhes do Report, ao marcar o caso como resolvido."
+      },
+      {
+        "pergunta": "Se eu responder um Report sem marcar nenhum status manualmente, o que acontece com ele?",
+        "resposta": "Ele muda automaticamente para Em Andamento assim que você envia a resposta — mesmo que você não tenha clicado em nenhum dos botões de status (Solucionado / Em Andamento / Aberto) no modal. Isso vale mesmo se o Report estivesse marcado como Concluído antes: qualquer resposta do gestor reabre o caso para Em Andamento."
+      },
+      {
+        "pergunta": "O que acontece se o colaborador enviar uma nova mensagem em um Report já Concluído?",
+        "resposta": "O Report é reaberto automaticamente para Em Andamento. Já se o colaborador enviar mensagem em um Report que já estava Aberto ou Em Andamento, o status permanece o mesmo — só a resposta do gestor (ou a reabertura de um Concluído) muda o status do ticket."
+      },
+      {
+        "pergunta": "Por que às vezes o botão de Responder no Report está bloqueado com a mensagem 'Aguarde a resposta do cliente'?",
+        "resposta": "O painel não permite duas respostas seguidas do gestor no mesmo Report sem uma nova mensagem do colaborador no meio. Se a última mensagem do histórico já foi sua (gestor), o sistema bloqueia um novo envio até o colaborador responder."
+      },
+      {
+        "pergunta": "Qual é a diferença entre o status do Report e a categoria/tag dele (Operacional, Gestão RH, Legal/Jurídico)?",
+        "resposta": "O status (Aberto/Em Andamento/Concluído) indica o andamento do atendimento. A tag é uma classificação por assunto, escolhida inicialmente pelo colaborador ao abrir o Report, mas que o gestor pode reclassificar a qualquer momento pelo seletor de categoria dentro do modal de detalhes — ela serve só para organização interna, não muda o fluxo de atendimento."
+      },
+      {
+        "pergunta": "Quem aparece como autor de cada mensagem dentro de um Report?",
+        "resposta": "O painel identifica a ordem das mensagens dentro do ticket: as mensagens em posição par (1ª, 3ª, 5ª...) são sempre do colaborador, e as em posição ímpar (2ª, 4ª, 6ª...) são sempre do gestor — porque toda conversa começa com a mensagem inicial do colaborador que abriu o Report."
+      },
+      {
+        "pergunta": "É possível saber a identidade do colaborador que abriu um Report?",
+        "resposta": "Não pela tela de Gestão de Reports. A resposta do gestor é tratada como anônima (o próprio modal indica isso no campo de resposta), e a lista de Reports não exibe nome nem e-mail de quem abriu o caso — apenas o assunto, o tempo desde a última atualização e a categoria."
+      },
+      {
+        "pergunta": "Como o painel calcula o texto 'Há 2h', 'Há 3 dias' etc. nos Reports?",
+        "resposta": "É o tempo desde a última atualização do ticket (não desde a criação). Para menos de 1 minuto mostra 'Agora mesmo', para menos de 1 hora mostra minutos, para menos de 24h mostra horas, para menos de 7 dias mostra dias, e a partir de 7 dias o painel passa a mostrar a data exata (dia/mês) em vez do tempo relativo."
+      }
+    ]
+  },
+  {
+    "categoria": "Colaboradores e Licenças",
+    "cor": "orange",
+    "itens": [
+      {
+        "pergunta": "Qual é a diferença entre um colaborador 'Ativo' e um 'Inativo' na lista de Colaboradores?",
+        "resposta": "Ativo significa que a pessoa já concluiu o cadastro e tem uma conta de fato no StamFlow. Inativo significa que um convite foi enviado para aquele e-mail, mas a pessoa ainda não terminou de criar a conta — não tem relação com a pessoa estar 'desativada' ou ter saído da empresa."
+      },
+      {
+        "pergunta": "Por que não vejo todos os colaboradores da empresa, só os que eu mesmo convidei?",
+        "resposta": "Na verdade você deveria ver todos: a lista de Colaboradores é compartilhada entre todos os gestores da mesma empresa, e não filtrada por quem enviou o convite. Se algum colaborador não aparece, vale checar o filtro de busca por e-mail/nome e os botões Todos/Ativos/Inativos no topo da lista, que podem estar restringindo a visualização."
+      },
+      {
+        "pergunta": "O que significa o número em 'VAGAS DE FUNCIONÁRIO'?",
+        "resposta": "É o uso atual da licença contratada pela empresa, no formato 'usadas/total' (ex.: '8/10'). Esse número conta tanto os colaboradores já Ativos quanto os convites ainda pendentes (Inativos) — ou seja, uma vaga já é reservada no momento em que o convite é enviado, antes mesmo da pessoa terminar o cadastro."
+      },
+      {
+        "pergunta": "Por que o indicador de vagas fica com uma cor diferente (laranja ou vermelho)?",
+        "resposta": "O indicador muda de cor sozinho conforme o uso se aproxima do limite contratado: fica em alerta a partir de 80% das vagas ocupadas, e indica licença cheia quando todas as vagas já estão em uso ou quando a assinatura da empresa não está ativa. Servem como aviso antes de você tentar convidar alguém e ser bloqueado por falta de vaga."
+      },
+      {
+        "pergunta": "O que acontece se eu tentar convidar um colaborador sem vagas de licença disponíveis?",
+        "resposta": "O backend bloqueia o convite e devolve uma mensagem informando que o limite de funcionários foi atingido, antes mesmo de gerar o convite ou enviar o e-mail. Nesse caso é necessário liberar uma vaga (excluindo um colaborador inativo ou um convite pendente, por exemplo) ou ampliar o plano contratado."
+      },
+      {
+        "pergunta": "Por quanto tempo um convite de colaborador fica válido antes de expirar?",
+        "resposta": "24 horas a partir do envio. Depois desse prazo, o link de cadastro enviado por e-mail deixa de funcionar e é necessário enviar um novo convite para aquele e-mail."
+      },
+      {
+        "pergunta": "Como funciona o envio de convites em massa (texto colado ou CSV)?",
+        "resposta": "Em qualquer um dos dois modos, o painel primeiro extrai automaticamente todos os endereços de e-mail válidos encontrados no texto ou no arquivo, ignorando duplicados, e só então envia tudo de uma vez. Se algum e-mail da lista já estiver cadastrado no StamFlow, o backend pula apenas aquele e-mail e segue convidando os demais, informando ao final quais foram ignorados."
+      },
+      {
+        "pergunta": "Por que ao excluir colaboradores selecionados às vezes recebo mais de um aviso de erro?",
+        "resposta": "Porque colaboradores Ativos e convites pendentes (Inativos) são removidos por duas operações separadas no backend. Se você selecionar uma mistura dos dois tipos e uma das duas operações falhar, o painel mostra o erro daquela parte especificamente, mesmo que a outra parte da exclusão tenha funcionado normalmente."
+      },
+      {
+        "pergunta": "O botão 'Desfazer seleção' cancela alguma exclusão que eu já confirmei?",
+        "resposta": "Não. Ele só limpa quais colaboradores estão marcados na tela antes de você clicar em Excluir Selecionados — é como um 'cancelar seleção', não um desfazer de exclusão já realizada. Depois que a exclusão é confirmada e processada pelo backend, ela não pode ser revertida pelo painel."
+      },
+      {
+        "pergunta": "Por que o número de colaboradores no cabeçalho ('VIDAS ATIVAS') às vezes não muda na hora depois que eu importo novos e-mails?",
+        "resposta": "Esse número só conta colaboradores com status Ativo (cadastro concluído), então convites recém-enviados não entram nessa contagem até a pessoa convidada efetivamente criar a conta — eles aparecem como Inativos na lista, mas já contam para o uso de licença em 'VAGAS DE FUNCIONÁRIO'."
+      }
+    ]
+  },
+  {
+    "categoria": "Navegação Geral do Painel",
+    "cor": "purple",
+    "itens": [
+      {
+        "pergunta": "Como acesso o submenu de Reports (Gestão de Reports, Treinamento Compliance e FAQ)?",
+        "resposta": "Clique no item 'Reports' no menu lateral para expandir a lista com as três opções; clicar de novo no cabeçalho recolhe a lista sem trocar de tela. Enquanto qualquer uma das três telas do submenu estiver aberta, o cabeçalho 'Reports' permanece destacado e a lista fica expandida, para você não perder a referência de onde está navegando."
+      },
+      {
+        "pergunta": "Por que, ao navegar em outra seção do menu (como Estatísticas ou Equipe), o submenu de Reports fecha sozinho?",
+        "resposta": "O submenu só fica aberto enquanto um dos seus três itens (Gestão de Reports, Treinamento Compliance ou FAQ) estiver selecionado. Ao clicar em qualquer item fora desse submenu, ele se recolhe automaticamente, já que nenhum dos filhos dele continua ativo."
+      },
+      {
+        "pergunta": "No celular, por que não consigo ver o menu lateral completo?",
+        "resposta": "Em telas estreitas, o menu lateral fica escondido por padrão e é aberto pelo ícone de menu (as três linhas, tipo 'hamburguer') no topo da tela. Tocar nele expande o menu completo, incluindo o submenu de Reports; navegar para qualquer seção fecha esse menu automaticamente, para liberar espaço de tela no celular."
+      }
+    ]
+  }
+]
