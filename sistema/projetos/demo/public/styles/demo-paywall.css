@@ -1,0 +1,86 @@
+/* demo-paywall.css — estilo do overlay de bloqueio da versão demo
+   (decisão de produto, 2026-06). Carregado apenas no build demo.stamflow.com.br.
+   Paleta consistente com .popup-embasamento (styles.css) para não parecer
+   um elemento estranho ao resto da interface. */
+
+#demo-paywall-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(10, 9, 15, 0.72);
+  backdrop-filter: blur(4px);
+  padding: 16px;
+}
+
+#demo-paywall-overlay.ativo {
+  display: flex;
+}
+
+.demo-paywall-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #1f1d2b;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.demo-paywall-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.demo-paywall-close:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.demo-paywall-lock {
+  font-size: 32px;
+  margin-bottom: 0.75rem;
+}
+
+.demo-paywall-title {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+}
+
+.demo-paywall-text {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+}
+
+.demo-paywall-cta {
+  display: inline-block;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  border-radius: 14px;
+  background-color: #7c3aed;
+  background-image: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.demo-paywall-cta:hover {
+  opacity: 0.9;
+}

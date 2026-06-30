@@ -1,0 +1,70 @@
+[
+  [
+    {
+      "titulo": "Nação Dopamina (Dopamine Nation)",
+      "subtitulo": "Dra. Anna Lembke",
+      "descricao": "O manual de desintoxicação para reequilibrar a química do prazer e recuperar a motivação real em um mundo de estímulos viciantes.",
+      "audioPath": "/assets/audios/nacao-dopamina.mp3"
+    },
+    {
+      "titulo": "Indistraível (Indistractable)",
+      "subtitulo": "Nir Eyal",
+      "descricao": "Aprenda a dominar os gatilhos emocionais internos que empurram para a distração, devolvendo o controle da própria atenção.",
+      "audioPath": "/assets/audios/indistraivel.mp3"
+    },
+    {
+      "titulo": "Por que Nós Dormimos (Why We Sleep)",
+      "subtitulo": "Matthew Walker",
+      "descricao": "A base não negociável da produtividade, explicando como o sono profundo limpa toxinas metabólicas e sustenta a clareza mental.",
+      "audioPath": "/assets/audios/porque-nos-dormimos.mp3"
+    }
+  ],
+
+  [
+    {
+      "titulo": "Trabalho Focado (Deep Work)",
+      "subtitulo": "Cal Newport",
+      "descricao": "Define o foco profundo e sem distrações como a habilidade mais valiosa e rara da economia moderna.",
+      "audioPath": "/assets/audios/trabalho-focado.mp3"
+    },
+    {
+      "titulo": "Flow (Flow)",
+      "subtitulo": "Mihaly Csikszentmihalyi",
+      "descricao": "A ciência da imersão total e da alta performance, entrando no estado de fluxo onde tempo e esforço desaparecem.",
+      "audioPath": "/assets/audios/flow.mp3"
+    },
+    {
+      "titulo": "Hábitos Atômicos (Atomic Habits)",
+      "subtitulo": "James Clear",
+      "descricao": "Guia prático que ensina a matemática do sucesso a longo prazo por meio de pequenas ações diárias consistentes.",
+      "audioPath": "/assets/audios/habitos-atomicos.mp3"
+    },
+    {
+      "titulo": "O Poder do Hábito (The Power of Habit)",
+      "subtitulo": "Charles Duhigg",
+      "descricao": "Explica o loop neurológico dos hábitos, essencial para substituir vícios por comportamentos produtivos.",
+      "audioPath": "/assets/audios/poder-do-habito.mp3"
+    }
+  ],
+
+  [
+    {
+      "titulo": "A Mente Organizada (The Organized Mind)",
+      "subtitulo": "Daniel Levitin",
+      "descricao": "Mostra como externalizar a memória em sistemas confiáveis, reduzindo a sobrecarga cognitiva da era da informação.",
+      "audioPath": "/assets/audios/mente-organizada.mp3"
+    },
+    {
+      "titulo": "Rápido e Devagar (Thinking, Fast and Slow)",
+      "subtitulo": "Daniel Kahneman",
+      "descricao": "Explica como o cérebro alterna entre dois sistemas de pensamento e como economizar energia mental em decisões complexas.",
+      "audioPath": "/assets/audios/rapido-e-devagar.mp3"
+    },
+    {
+      "titulo": "Essencialismo (Essentialism)",
+      "subtitulo": "Greg McKeown",
+      "descricao": "A disciplina de eliminar o bom para focar apenas no ótimo, protegendo tempo e energia para o que realmente importa.",
+      "audioPath": "/assets/audios/essencialismo.mp3"
+    }
+  ]
+]

@@ -1,0 +1,162 @@
+[
+  [
+    {
+      "titulo": "Olhar na direção dos ombros",
+      "descricao": "Melhora a rotação cervical.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Olhar para cima e para baixo",
+      "descricao": "Trabalha a extensão e flexão.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Aproximar as orelhas dos ombros",
+      "descricao": "Alongamento lateral.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Encolhimento e alongamento dos ombros",
+      "descricao": "Alivia tensão no trapézio.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    }
+  ],
+
+  [
+    {
+      "titulo": "Rotação de coluna",
+      "descricao": "Girar braço para trás e olhar para ponta do dedo.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Extensão/flexão de coluna",
+      "descricao": "Espreguiçar olhando para cima, depois tocar o chão.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Alongamento lateral",
+      "descricao": "Esticar braço por sobre a cabeça na direção contrária.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Giros de trapézio e ombros",
+      "descricao": "Giros em circunferências para frente e para trás.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    }
+  ],
+
+  [
+    {
+      "titulo": "Alongamento flexores",
+      "descricao": "Puxar todos os dedos, incluindo o polegar.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Alongamento extensores",
+      "descricao": "Inverso do primeiro (palma para baixo).",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Giros de punho",
+      "descricao": "Rotações externas e internas.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Abertura e fechamento dos dedos",
+      "descricao": "Hiperextensão e flexão máxima, com preensão.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    }
+  ],
+
+  [
+    {
+      "titulo": "Hiperextensão",
+      "descricao": "Cara de espanto.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Hiperflexão",
+      "descricao": "Cara de bravo com bicão.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Hipersorriso",
+      "descricao": "Sorriso genuíno, alargando bochechas mas comprimindo olhos.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Automassagem Soltura de Mandíbula",
+      "descricao": "Masseter Release.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    }
+  ],
+
+  [
+    {
+      "titulo": "Olhar fixamente para o ponto mais acima",
+      "descricao": "Trabalha a musculatura ocular vertical.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Olhar fixamente para o ponto mais abaixo",
+      "descricao": "Trabalha a musculatura ocular vertical.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Olhar fixamente para o ponto mais à esquerda",
+      "descricao": "Trabalha a musculatura ocular horizontal.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Olhar fixamente para o ponto mais à direita",
+      "descricao": "Trabalha a musculatura ocular horizontal.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    }
+  ],
+
+  [
+    {
+      "titulo": "Alongamento \"Espreguiçada Total\"",
+      "descricao": "Extensão Global.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Sentar e levantar",
+      "descricao": "Ativação de grandes grupos musculares.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Corrida parado",
+      "descricao": "Aumenta a frequência cardíaca suavemente.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Panturrilha em pé",
+      "descricao": "Bilateral ou unilateral.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    }
+  ],
+
+  [
+    {
+      "titulo": "Técnica 4-4-4-4 (SEAL's)",
+      "descricao": "Respiração tática para foco e calma.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Respiração Diafragmática (Abdominal)",
+      "descricao": "Respiração abdominal profunda.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Técnica 4-7-8 (Relaxante Natural)",
+      "descricao": "Relaxante natural para o sistema nervoso.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    },
+    {
+      "titulo": "Respiração das Narinas Alternadas (Nadi Shodhana)",
+      "descricao": "Respiração para equilíbrio.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3"
+    }
+  ]
+]

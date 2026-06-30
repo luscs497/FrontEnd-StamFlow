@@ -25,6 +25,7 @@ const PANEL_URLS: Record<string, string> = {
   avulso: "https://painel.stamflow.com.br/",
   empregado: "https://user.stamflow.com.br/",
   gestor: "https://gestor.stamflow.com.br/",
+  demo: "https://demo.stamflow.com.br/",
 };
 
 function hardRedirect(url: string) {
@@ -87,7 +88,25 @@ async function verifySession(): Promise<boolean> {
   if (tipo === "manager") {
     allowedPanel = "gestor";
   } else if (tipo === "client") {
-    allowedPanel = companyId != null ? "empregado" : "avulso";
+    if (companyId != null) {
+      allowedPanel = "empregado";
+    } else {
+      // Client sem empresa: avulso (pagante) ou demo (status DEMO).
+      // /auth/me não traz o status, então consultamos /account/profile.
+      let subscriptionStatus: string | undefined;
+      try {
+        const profileRes = await fetch(`${API_BASE}/account/profile`, {
+          credentials: "include",
+        });
+        if (profileRes.ok) {
+          const profile = await profileRes.json();
+          subscriptionStatus = profile?.assinatura?.status;
+        }
+      } catch {
+        // Falha secundária: trata como avulso (padrão seguro).
+      }
+      allowedPanel = subscriptionStatus === "DEMO" ? "demo" : "avulso";
+    }
   } else {
     // "company" ou tipo desconhecido não têm painel próprio
     allowedPanel = null;

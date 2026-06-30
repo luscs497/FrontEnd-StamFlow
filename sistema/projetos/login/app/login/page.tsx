@@ -38,7 +38,25 @@ export default function LoginPage() {
           if (user.company_id !== null && user.company_id !== undefined) {
             window.location.href = 'https://user.stamflow.com.br/'
           } else {
-            window.location.href = 'https://painel.stamflow.com.br/'
+            // Client sem empresa: pode ser conta avulso (pagante/trial completo)
+            // ou conta DEMO. O /auth/login não retorna o status da assinatura,
+            // então consultamos /account/profile para decidir o painel correto.
+            let destino = 'https://painel.stamflow.com.br/'
+            try {
+              const profileRes = await fetch('https://api.stamflow.com.br/account/profile', {
+                credentials: 'include',
+              })
+              if (profileRes.ok) {
+                const profile = await profileRes.json()
+                if (profile?.assinatura?.status === 'DEMO') {
+                  destino = 'https://demo.stamflow.com.br/'
+                }
+              }
+            } catch {
+              // Falha ao consultar o profile: mantém o painel avulso como
+              // padrão seguro (não trava o login por uma falha secundária).
+            }
+            window.location.href = destino
           }
         } else {
           window.location.href = 'https://painel.stamflow.com.br/'

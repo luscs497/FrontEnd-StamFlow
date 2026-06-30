@@ -22,6 +22,7 @@ const PANEL_URLS = {
   avulso: "https://painel.stamflow.com.br/",
   empregado: "https://user.stamflow.com.br/",
   gestor: "https://gestor.stamflow.com.br/",
+  demo: "https://demo.stamflow.com.br/",
 };
 
 const SCRIPTS = [
@@ -83,7 +84,25 @@ async function verifySession() {
   if (tipo === "manager") {
     allowedPanel = "gestor";
   } else if (tipo === "client") {
-    allowedPanel = companyId != null ? "empregado" : "avulso";
+    if (companyId != null) {
+      allowedPanel = "empregado";
+    } else {
+      // Client sem empresa: avulso (pagante) ou demo (status DEMO).
+      // /auth/me não traz o status, então consultamos /account/profile.
+      let subscriptionStatus;
+      try {
+        const profileRes = await fetch(`${API_BASE}/account/profile`, {
+          credentials: "include",
+        });
+        if (profileRes.ok) {
+          const profile = await profileRes.json();
+          subscriptionStatus = profile && profile.assinatura ? profile.assinatura.status : undefined;
+        }
+      } catch {
+        // Falha secundária: trata como avulso (padrão seguro).
+      }
+      allowedPanel = subscriptionStatus === "DEMO" ? "demo" : "avulso";
+    }
   } else {
     allowedPanel = null; // company / desconhecido
   }

@@ -1,0 +1,620 @@
+header {
+    max-width: none;
+    padding: 1rem;
+    padding-top: 0;
+    min-height: auto;
+    border: none;
+    padding-bottom: 0;
+}
+
+header.clicado {
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    width: 100%;
+    padding-bottom: 50px;
+    z-index: 999;
+}
+
+header.clicado .nav-bar > * {
+    display: flex;
+}
+
+header.clicado .perfil {
+    display: flex;
+}
+
+.nav-bar > * {
+    display: none;
+}
+
+.nav-bar > .logo {
+    display: flex;
+}
+
+.perfil {
+    display: none;
+}
+
+.abrir-header {
+    display: block;
+}
+
+.div-stamina, .relatorio-stamina {
+    margin: -2rem -2rem;
+    border-radius: 0;
+    padding: 1.5rem;
+}
+
+ .relatorio-stamina {
+    margin-top: 10px;
+ }
+
+
+
+.logo {
+    padding: 1rem 2rem 1rem 1.8rem;
+}
+
+.nav-item {
+    padding: 1.3rem 0.8rem;
+    gap: 10px;
+    font-size: 17px;
+}
+
+.nav-item svg {
+    width: 24px;
+    height: 24px;
+}
+
+#stamina {
+    height: 36px;
+}
+
+
+.imagem-usuario {
+    max-width: 40px;
+}
+
+.info-usuario h4 {
+    font-size: 15px;
+}
+
+.info-usuario p {
+    font-size: 14px;
+}
+
+.content-header {
+    padding: 1.05rem 1rem;
+}
+
+.container-1700 {
+    padding: 2rem 1rem;
+}
+
+.div-stamina-conteudo{
+    font-size: 18px;
+}
+
+.stamina-info h2 {
+    font-size: 38px;
+}
+
+.aviso svg {
+    width: 36px;
+    height: 36px;
+}
+
+.aviso h3 {
+    font-size: 24px;
+}
+
+.aviso p {
+    font-size: 18px;
+}
+
+.primeira-div h3 {
+    font-size: 24px;
+}
+
+.relogio-hora {
+    font-size: 18px;
+}
+
+.relogio-hora svg {
+    width: 26px;
+    height: 32px;
+}
+
+.barra-relatorio-content h4 {
+    font-size: 20px;
+}
+
+.porcentagem-tempo h5{
+    font-size: 22px
+}
+
+.porcentagem-tempo p {
+    font-size: 18px;
+}
+
+.relatorios-conquistas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.conquista {
+    padding: 1rem;
+}
+
+.sub-header {
+    padding-bottom: 1rem;
+}
+
+.sub-header {
+    gap: 0.2px;
+}
+
+.sub-header-text h2 {
+    font-size: 36px;
+}
+
+.sub-header-text p {
+    font-size: 18px;
+}
+
+#close-btn {
+    width: 26px;
+    height: 26px;
+}
+
+.cards-conteudo {
+    gap: 30px;
+    grid-template-columns: repeat(1, 1fr);
+}
+
+.pausas-mentais, .mensagens-foco {
+    padding-top: 0;
+    gap: 15px;
+}
+
+.pausa-mental, .mensagem-foco {
+    padding: 1rem;
+}
+
+.svg-titulo svg {
+    width: 36px;
+    height: 36px;
+}
+
+.svg-titulo {
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.titulo-descricao {
+    gap: 5px;
+}
+
+.titulo-descricao p {
+    font-size: 12px;
+}
+
+.titulo-descricao h3 {
+    font-size: 15px;
+}
+
+.camera {
+    height: 400px;
+}
+
+.camera-resultado {
+    padding-top: 0;
+    gap: 10px;
+    flex-direction: column;
+
+}
+
+.resultados {
+    padding:2rem;
+    gap: 1.3rem;
+    max-width: none;
+}
+
+.resultados h3 {
+    font-size: 24px;
+}
+
+.resultado-porcentagem-classificacao {
+    gap: 3px;
+}
+
+.resultado-porcentagem-classificacao h4 {
+    font-size: 14px;
+}
+
+.resultado-geral.green {
+    font-size: 36px;
+}
+
+.time-play {
+    gap: 8px;
+}
+
+.time-play .time {
+    font-size: 18px;
+}
+
+.time-play button {
+    width: 40px;
+    height: 40px;
+}
+
+.time-play button svg{
+    width: 22px;
+    height: 22px;
+}
+
+.resultado-geral {
+    font-size: 40px;
+}
+
+.classificacoes {
+    gap: 20px;
+}
+
+.classificacao h5{
+    font-size: 18px;
+}
+
+.relatorios-content {
+    padding-top: 0;
+    gap: 30px;
+}
+
+.estatisticas-periodo-especifico {
+    gap: 20px;
+}
+
+.estatisticas {
+    gap: 20px;
+    flex-direction: column;
+}
+
+.estatistica-card {
+    padding: 1.5rem;
+}
+
+
+.estatistica-card .svg-titulo {
+    gap: 5px;
+}
+
+.estatistica-card svg {
+    width: 30px;
+    height: 30px;
+}
+
+.estatistica-card h3 {
+    font-size: 24px;
+}
+
+.estatisticas-distribuicao {
+    gap: 1rem;
+}
+
+.estatisticas-distribuicao li h4{
+    font-size: 20px;
+}
+
+.conquistas .orange {
+    font-size: 24px;
+}
+
+.conquistas h3 svg {
+    width: 30px;
+    height: 30px;
+}
+
+.conquistas-periodo {
+    gap: 15px;
+    flex-direction: column;
+}
+
+.barra {
+    height: 10px;
+}
+
+.barra-relatorio-content {
+    gap: 10px;
+}
+
+.svg-tempo span {
+    font-size: 22px;
+}
+
+.svg-tempo svg {
+    width: 20px;
+    height: 20px;
+}
+
+.recomendacao-notificacao {
+    font-size: 18px;
+}
+
+.texto-conteudo h3{
+    font-size: 24px;
+}
+
+.recomendacao {
+    font-size: 16px;
+}
+
+.emogi {
+    font-size: 48px;
+}
+
+.periodos-navegacao {
+    width: fit-content;
+}
+
+.periodos-navegacao {
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.periodo-nav {
+    padding: 8px 14px;
+    font-size: 20px;
+}
+
+.estatistica-especifica {
+    font-size: 18px;
+}
+
+.barra-classificacao {
+    max-width: none;
+    height: 12px;
+}
+
+.estatistica-card, .conquistas {
+    gap: 1.8rem;
+}
+
+.conquistas-periodo li {
+    gap: 5px;
+}
+
+.conquistas-periodo li h5{
+    font-size: 28px;
+}
+
+.conquistas-periodo li svg{
+    width: 28px;
+    height: 28px;
+}
+
+.notificacoes .orange, .tempo-alerta .orange {
+    font-size: 24px;
+}
+
+.notificacoes h3 {
+    gap: 5px;
+}
+
+.salvar-config button {
+    padding: 12px;
+    font-size: 20px;
+}
+
+.salvar-config button svg{
+    width: 36px;
+    height: 36px;
+}
+
+body {
+    flex-direction: column;
+    width: 100%;
+}
+
+.linha-conteudo.flex-lateral svg{
+    width: 32px;
+    height: 32px;
+}
+
+.content-header {
+    gap: 10px;
+}
+
+.sistema h3 {
+    font-size: 12px;
+}
+
+.notificacoes-config li{
+    padding: 0.8rem;
+}
+
+.text-config {
+    gap: 8px;
+}
+
+.text-config h4 {
+    font-size: 16px;
+}
+
+.text-config p {
+    font-size: 13px;
+}
+
+.marcadores-stamina {
+    gap: 10px;
+}
+
+.marcadores-stamina h4 {
+    font-size: 14px;
+}
+
+.marcadores-stamina h4 svg {
+    width: 12px;
+    height: 12px;
+}
+
+.pop-up.pop-up-timer {
+    max-width: 300px;
+    gap: 15px;
+    padding: 1.3rem;
+}
+
+.timer-buttons {
+    flex-direction: column;
+}
+
+.timer-emoji {
+    padding: 1rem;
+    font-size: 24px;
+}
+
+.title-temporizador p {
+    font-size: 28px;
+}
+
+.report-conteudo {
+    padding: 24px !important;
+}
+
+.divTickets {
+    height: 100%;
+    padding: 48px 24px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.ticket-minimizado {
+    word-break: break-word;
+    padding: 18px;
+    gap: 10px;
+}
+
+.ticket-minimizado-header h3 {
+    font-size: 16px;
+}
+
+.report-status {
+    font-size: 14px;
+}
+
+.ticket-msg-resumida {
+    font-size: 14px;
+}
+
+.mensagem {
+    padding: 18px 14px;
+}
+
+.mensagem h4 {
+    font-size: 15px;
+}
+
+.mensagem p {
+    font-size: 14px;
+}
+
+.politica-div {
+    padding-top: 64px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 100% !important;
+}
+
+@media (max-width: 380px) {
+    .text-config {
+        max-width: 220px;
+    }
+}
+
+@media (max-width: 332px) {
+    .text-config {
+        max-width: 190px;
+    }
+}
+
+.audio-classificacao-header h3 {
+    font-size: 26px;
+}
+
+.audio-classificacao-header svg {
+    width: 24px;
+    height: 24px;
+}
+
+.gap-16 {
+    gap: 10px;
+}
+
+.audio-div-left {
+    gap: 15px;
+}
+
+.audio-div-left svg {
+    width: 32px;
+    height: 32px;
+}
+
+.audio-minimizado h3 {
+    font-size: 20px;
+}
+
+.audio-minimizado p {
+    font-size: 18px;
+}
+
+.audio-div-right {
+    width: 100%;
+    justify-content: space-between;
+    flex-direction: row-reverse ;
+}
+
+.audio-audio-player {
+    width: 42px;
+    height: 42px;
+}
+
+.audio-audio-player svg {
+    width: 20px;
+    height: 20px;
+}
+
+.gap-32 {
+    gap: 20px;
+}
+
+.audio-minimizado {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.modal-audio {
+    padding: 3rem 1.5rem;
+    gap: 10px !important;
+}
+
+.embasamento-header-text h2 {
+    font-size: 20px !important;
+}
+
+.embasamento-header-text svg {
+    width: 30px;
+}
+
+.popup-embasamento {
+    min-height: 100%;
+    max-height: 100vh;
+}
+
+.artigo-categoria h2 {
+    font-size: 24px;
+}

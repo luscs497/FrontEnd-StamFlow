@@ -1,0 +1,130 @@
+[
+  [
+    {
+      "titulo": "Início de Jornada (Preparação)",
+      "descricao": "Preparação mental para o dia.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3",
+      "comoAjuda": "A respiração guiada no início do dia ativa o nervo vago, reduzindo os níveis de cortisol acumulados durante a noite. Isso prepara o sistema nervoso para entrar em estado de alerta calmo, em vez de alerta ansioso, facilitando a transição para o foco."
+    },
+    {
+      "titulo": "Impulso para Vencer o Bloqueio (Começar)",
+      "descricao": "Superar a procrastinação inicial.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3",
+      "comoAjuda": "A procrastinação costuma vir de uma resposta de evitação do cérebro a tarefas percebidas como difíceis. Esta pausa usa respiração ritmada para reduzir a atividade da amígdala (centro do medo) e devolver controle ao córtex pré-frontal, a região responsável por decisões e iniciativa."
+    },
+    {
+      "titulo": "Blindagem contra Distrações (Manter o mental)",
+      "descricao": "Técnicas para manter a atenção.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3",
+      "comoAjuda": "Manter a atenção depende da rede executiva central do cérebro, que se esgota com estímulos constantes. Pausas curtas de respiração consciente dão um \"respiro\" a essa rede, restaurando parte da capacidade de ignorar distrações por mais tempo."
+    },
+    {
+      "titulo": "Desconexão de Multitarefa (Limpar o ruído para focar)",
+      "descricao": "Focar em uma tarefa por vez.",
+      "audioPath": "/assets/audios/respiracao-consciente.mp3",
+      "comoAjuda": "Alternar entre tarefas gera uma sobrecarga cognitiva chamada \"custo de troca de contexto\". Essa pausa ajuda o cérebro a encerrar conscientemente uma linha de pensamento antes de abrir outra, reduzindo a fadiga mental acumulada pela multitarefa."
+    }
+  ],
+  [
+    {
+      "titulo": "mental Pré-Reunião (Calibrar presença executiva)",
+      "descricao": "Preparação mental antes de reuniões importantes.",
+      "audioPath": "/assets/audios/mental-pre-reuniao.mp3",
+      "comoAjuda": "Momentos antes de uma reunião importante, o corpo libera adrenalina como resposta a uma situação social de avaliação. Essa pausa regula a respiração para reduzir a frequência cardíaca, ajudando a transformar a tensão em presença e clareza mental."
+    },
+    {
+      "titulo": "Confiança para Apresentação (Modo Performance)",
+      "descricao": "Aumentar a autoconfiança antes de falar em público.",
+      "audioPath": "/assets/audios/confianca-apresentacao.mp3",
+      "comoAjuda": "Falar em público ativa o mesmo sistema de \"luta ou fuga\" usado em situações de ameaça real. Respirações lentas e profundas sinalizam ao cérebro que o ambiente é seguro, baixando o cortisol e permitindo que a voz e os pensamentos fiquem mais estáveis."
+    },
+    {
+      "titulo": "Recuperação Pós-Reunião (Limpeza mental)",
+      "descricao": "Acalmar e processar informações após reuniões.",
+      "audioPath": "/assets/audios/recuperacao-pos-reuniao.mp3",
+      "comoAjuda": "Depois de uma reunião intensa, o cérebro continua em estado de alta atividade mesmo sem estímulo externo. Esta pausa ajuda o sistema nervoso parassimpático a assumir o controle, permitindo que as informações recebidas sejam processadas e arquivadas com mais clareza."
+    },
+    {
+      "titulo": "Empatia para Conversas Difíceis (Conexão)",
+      "descricao": "Preparação emocional para diálogos desafiadores.",
+      "audioPath": "/assets/audios/empatia-conversas-dificeis.mp3",
+      "comoAjuda": "Conversas difíceis tendem a ativar mecanismos de defesa que dificultam a escuta genuína. Regular a respiração antes do diálogo reduz a reatividade emocional, criando espaço mental para ouvir com mais empatia e responder em vez de reagir."
+    },
+    {
+      "titulo": "Processando Feedback Difícil (Separação Ego-Tarefa)",
+      "descricao": "Lidar construtivamente com críticas.",
+      "audioPath": "/assets/audios/processando-feedback.mp3",
+      "comoAjuda": "Receber críticas pode ativar circuitos cerebrais de ameaça social, dificultando separar a crítica da tarefa do julgamento sobre si mesmo. Esta pausa ajuda a reduzir essa resposta defensiva, permitindo encarar o feedback como informação útil, não como ataque."
+    }
+  ],
+  [
+    {
+      "titulo": "Gerenciando a Pressão do Prazo (Modo Anti-pânico)",
+      "descricao": "Manter a calma sob pressão de prazos.",
+      "audioPath": "/assets/audios/pressao-prazo.mp3",
+      "comoAjuda": "Sob pressão de prazo, o corpo libera cortisol e adrenalina em excesso, o que pode prejudicar o raciocínio claro. Respirações longas e pausadas ativam o nervo vago, reduzindo essa resposta de pânico e devolvendo a capacidade de organizar prioridades com calma."
+    },
+    {
+      "titulo": "Clareza na Tomada de Decisão (Bloquear paralisia da dúvida)",
+      "descricao": "Lapidar a confiança para decisões importantes.",
+      "audioPath": "/assets/audios/clareza-decisao.mp3",
+      "comoAjuda": "Excesso de estresse reduz a atividade do córtex pré-frontal, a área responsável por avaliar opções e decidir. Esta pausa ajuda a baixar esse estresse, restaurando o acesso ao pensamento analítico necessário para decisões mais seguras."
+    },
+    {
+      "titulo": "Alívio de Stress Pós E-mail (Desligar luta ou fuga)",
+      "descricao": "Reduzir a tensão após ler e-mails estressantes.",
+      "audioPath": "/assets/audios/alivio-pos-email.mp3",
+      "comoAjuda": "Um e-mail tenso pode disparar uma resposta de luta ou fuga mesmo sem nenhuma ameaça física real. Essa pausa usa respiração consciente para sinalizar segurança ao sistema nervoso, desligando gradualmente essa resposta de alerta."
+    },
+    {
+      "titulo": "Lidando com a Frustração (Controle emocional)",
+      "descricao": "Gerenciar emoções negativas no trabalho.",
+      "audioPath": "/assets/audios/lidando-frustracao.mp3",
+      "comoAjuda": "A frustração ativa rapidamente a amígdala, dificultando o controle sobre reações impulsivas. Pausar para respirar ativa o sistema parassimpático, dando ao córtex pré-frontal tempo de retomar o controle antes de qualquer reação precipitada."
+    },
+    {
+      "titulo": "Calma após Falha Técnica (Aceitação e Resiliência)",
+      "descricao": "Manter a calma diante de problemas técnicos.",
+      "audioPath": "/assets/audios/falha-tecnica.mp3",
+      "comoAjuda": "Falhas inesperadas (como um sistema que trava) provocam um pico de estresse semelhante a outras ameaças percebidas. Esta pausa reduz esse pico fisiológico, ajudando a abordar o problema com resiliência em vez de reatividade."
+    }
+  ],
+  [
+    {
+      "titulo": "Reset Mental Rápido (Limpar o cache)",
+      "descricao": "Pausa rápida para refrescar a mente.",
+      "audioPath": "/assets/audios/reset-mental.mp3",
+      "comoAjuda": "Após períodos longos de concentração, o cérebro acumula fadiga em circuitos específicos de atenção. Um reset breve com respiração guiada permite que esses circuitos se recuperem parcialmente, renovando a disposição para a próxima tarefa."
+    },
+    {
+      "titulo": "Desbloqueio Criativo (Destravar novas ideias)",
+      "descricao": "Estimular a criatividade e inovação.",
+      "audioPath": "/assets/audios/desbloqueio-criativo.mp3",
+      "comoAjuda": "A criatividade está associada à ativação da \"rede de modo padrão\" do cérebro, que só opera bem quando o sistema não está em alerta. Reduzir o estresse com respiração consciente cria as condições ideais para que essa rede gere novas conexões e ideias."
+    },
+    {
+      "titulo": "Energia e Reconexão Pós-Almoço (Vencer a lentidão)",
+      "descricao": "Combater a sonolência pós-refeição.",
+      "audioPath": "/assets/audios/energia-pos-almoco.mp3",
+      "comoAjuda": "Depois de comer, o corpo direciona energia para a digestão, o que pode causar uma queda natural de alerta. Respirações mais ativas aumentam a oxigenação do sangue e estimulam o sistema nervoso simpático, ajudando a recuperar a disposição."
+    },
+    {
+      "titulo": "Resgatando a Respiração (Ativar oxigenação)",
+      "descricao": "Exercício de respiração para energizar.",
+      "audioPath": "/assets/audios/resgatando-respiracao.mp3",
+      "comoAjuda": "Em momentos de concentração intensa, é comum respirar de forma superficial sem perceber, reduzindo a oxigenação do cérebro. Este exercício reestabelece um padrão respiratório mais profundo, aumentando a entrega de oxigênio e a clareza mental."
+    },
+    {
+      "titulo": "Descanso Visual Guiado (Reduzir fadiga ocular)",
+      "descricao": "Relaxamento específico para os olhos.",
+      "audioPath": "/assets/audios/descanso-visual.mp3",
+      "comoAjuda": "Olhar para telas por longos períodos reduz a frequência do ato de piscar, causando fadiga ocular e, por consequência, fadiga mental. Esta pausa combina relaxamento visual com respiração consciente para aliviar essa tensão acumulada."
+    },
+    {
+      "titulo": "Deixando o Trabalho no Trabalho (Desligamento)",
+      "descricao": "Transição mental do trabalho para a vida pessoal.",
+      "audioPath": "/assets/audios/desligamento.mp3",
+      "comoAjuda": "Sem um ritual de transição, o cérebro tende a manter o modo \"trabalho\" ativo mesmo após o expediente, prejudicando o descanso. Esta pausa funciona como um sinal claro para o sistema nervoso encerrar o estado de alerta produtivo e permitir o relaxamento real."
+    }
+  ]
+]
