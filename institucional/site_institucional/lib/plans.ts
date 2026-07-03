@@ -1,11 +1,20 @@
 /**
- * Vitrine de planos individuais (avulso).
+ * Vitrine do plano individual (avulso).
  *
- * Os preços/nomes abaixo são PROVISÓRIOS e simulam o que virá de
- * GET /subscription_plan/plans?type=individual. Por isso nada é "hardcoded"
- * no layout: a UI lê desta fonte e suporta carregando / erro / sucesso, além de
- * preços e nomes variáveis. Para integrar de verdade, basta trocar fetchIndividualPlans()
- * por uma chamada real ao endpoint e mapear a resposta para o tipo Plan.
+ * Modelo real do produto: existe UM plano individual, contratável em quatro
+ * períodos (mensal, trimestral, semestral e anual) — cada período é um
+ * registro próprio em GET /subscription_plan/plans (type=individual), com
+ * preço total fechado (não é desconto percentual sobre o mensal).
+ *
+ * Os valores abaixo espelham os planos reais cadastrados no backend:
+ *   Avulso Mensal      R$  29,90  (2990 centavos)
+ *   Avulso Trimestral  R$  79,90  (7990)
+ *   Avulso Semestral   R$ 149,90  (14990)
+ *   Avulso Anual       R$ 269,90  (26990)
+ *
+ * A UI continua lendo desta fonte com estados de carregando/erro/sucesso;
+ * para integrar de verdade basta trocar fetchAvulsoPlan() pela chamada real
+ * ao endpoint e mapear a resposta.
  */
 
 export type PeriodId = "mensal" | "trimestral" | "semestral" | "anual";
@@ -14,70 +23,66 @@ export interface Period {
   id: PeriodId;
   label: string;
   months: number;
-  /** Desconto aplicado sobre o preço mensal cheio (0 = sem desconto). */
-  discount: number;
+  /** Preço total do período, em centavos (espelha price_in_cents do backend). */
+  priceInCents: number;
 }
 
 export const PERIODS: Period[] = [
-  { id: "mensal", label: "Mensal", months: 1, discount: 0 },
-  { id: "trimestral", label: "Trimestral", months: 3, discount: 0.05 },
-  { id: "semestral", label: "Semestral", months: 6, discount: 0.1 },
-  { id: "anual", label: "Anual", months: 12, discount: 0.2 },
+  { id: "mensal", label: "Mensal", months: 1, priceInCents: 2990 },
+  { id: "trimestral", label: "Trimestral", months: 3, priceInCents: 7990 },
+  { id: "semestral", label: "Semestral", months: 6, priceInCents: 14990 },
+  { id: "anual", label: "Anual", months: 12, priceInCents: 26990 },
 ];
 
 export interface Plan {
   id: string;
   name: string;
   tagline: string;
-  /** Preço mensal cheio, em reais (base para o cálculo por período). */
-  basePrice: number;
   features: string[];
-  highlight?: boolean;
 }
 
-const MOCK_PLANS: Plan[] = [
-  {
-    id: "essencial",
-    name: "Essencial",
-    tagline: "Para começar a enxergar a sua energia ao longo do dia.",
-    basePrice: 19,
-    features: [
-      "Leitura de postura (ombros, cabeça, coluna, rotação) e humor",
-      "Índice de energia ao vivo",
-      "Pausa Mental e exercícios guiados",
-      "Processamento 100% no seu navegador",
-    ],
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    tagline: "Para quem leva o próprio ritmo a sério.",
-    basePrice: 39,
-    highlight: true,
-    features: [
-      "Tudo do Essencial",
-      "Histórico e tendências de energia",
-      "Biblioteca completa de exercícios, Foco e StamFlow University",
-      "Metas e lembretes inteligentes",
-      "Suporte prioritário",
-    ],
-  },
-];
+/**
+ * O plano individual único do StamFlow. As features refletem o que o painel
+ * avulso entrega hoje (leitura ao vivo, exercícios, Pausa Mental, Foco,
+ * University, relatórios/insights, conquistas e suporte).
+ */
+const AVULSO_PLAN: Plan = {
+  id: "avulso",
+  name: "StamFlow Individual",
+  tagline:
+    "Acesso completo a tudo que o StamFlow oferece — do acompanhamento ao vivo aos relatórios de evolução.",
+  features: [
+    "Leitura de humor, postura e energia em tempo real pela webcam",
+    "Processamento 100% no seu navegador — nenhuma imagem sai do seu dispositivo",
+    "Exercícios guiados para pausas ativas ao longo do dia",
+    "Pausa Mental: áudios de respiração e relaxamento",
+    "Modo Foco: trilhas sonoras para concentração",
+    "StamFlow University: conteúdo sobre ergonomia e bem-estar",
+    "Relatórios com histórico e tendências da sua energia",
+    "Sistema de conquistas para acompanhar sua evolução",
+    "Suporte por chamados direto no painel",
+  ],
+};
 
 /** Resultado do cálculo de preço para um período. */
 export interface PriceBreakdown {
+  /** Equivalente mensal (total do período dividido pelos meses). */
   perMonth: number;
+  /** Total cobrado no período, em reais. */
   total: number;
+  /** Economia percentual em relação a pagar o mensal cheio pelo mesmo tempo. */
   savingsPct: number;
 }
 
-export function priceFor(plan: Plan, period: Period): PriceBreakdown {
-  const perMonth = plan.basePrice * (1 - period.discount);
-  return {
-    perMonth,
-    total: perMonth * period.months,
-    savingsPct: Math.round(period.discount * 100),
-  };
+const MONTHLY_BASE_CENTS = PERIODS[0].priceInCents;
+
+export function priceFor(period: Period): PriceBreakdown {
+  const total = period.priceInCents / 100;
+  const perMonth = total / period.months;
+  const fullPrice = (MONTHLY_BASE_CENTS * period.months) / 100;
+  const savingsPct =
+    period.months === 1 ? 0 : Math.round((1 - total / fullPrice) * 100);
+  return { perMonth, total, savingsPct };
 }
 
 export function formatBRL(value: number): string {
@@ -90,21 +95,20 @@ export function formatBRL(value: number): string {
 }
 
 /**
- * Simula GET /subscription_plan/plans?type=individual.
- * Resolve depois de um pequeno atraso para a UI exercitar o estado "carregando".
- *
- * Para demonstrar o estado de ERRO no layout, troque `SIMULATE_ERROR` para true.
+ * Simula GET /subscription_plan/plans?type=individual (consolidado no plano
+ * único). Resolve depois de um pequeno atraso para a UI exercitar o estado
+ * "carregando". Para demonstrar o estado de ERRO, troque SIMULATE_ERROR.
  */
 const SIMULATE_ERROR = false;
 
-export function fetchIndividualPlans(): Promise<Plan[]> {
+export function fetchAvulsoPlan(): Promise<Plan> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (SIMULATE_ERROR) {
-        reject(new Error("Não foi possível carregar os planos agora."));
+        reject(new Error("Não foi possível carregar o plano agora."));
         return;
       }
-      resolve(MOCK_PLANS);
+      resolve(AVULSO_PLAN);
     }, 900);
   });
 }

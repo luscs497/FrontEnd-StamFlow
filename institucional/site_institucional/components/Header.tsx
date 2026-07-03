@@ -33,7 +33,7 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex h-20 max-w-[88rem] items-center justify-between px-6 sm:px-10">
-        <a href="#topo" className="rounded-lg" aria-label="StamFlow — início">
+        <a href="/" className="rounded-lg" aria-label="StamFlow — início">
           <Logo size={23} />
         </a>
 

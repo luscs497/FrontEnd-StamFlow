@@ -22,8 +22,37 @@ const PANEL_URLS = {
   avulso: "https://painel.stamflow.com.br/",
   empregado: "https://user.stamflow.com.br/",
   gestor: "https://gestor.stamflow.com.br/",
-  demo: "https://demo.stamflow.com.br/",
 };
+
+// Destinos para quem não tem acesso liberado. A demo foi desativada no fluxo
+// (o backend segue pronto para religá-la no futuro).
+const SEM_ASSINATURA_URL = "https://stamflow.com.br/sem_assinatura";
+const EXPIRADA_URL = "https://stamflow.com.br/assinatura_expirada";
+
+// Classifica o acesso a partir do /account/profile.
+// "ok" (libera) | "sem" (nunca teve) | "expirada" (teve e perdeu).
+function classificarAcesso(assinatura) {
+  if (!assinatura || !assinatura.status) return "sem";
+  const status = assinatura.status;
+  const vencida =
+    !!assinatura.expira_em && new Date(assinatura.expira_em).getTime() < Date.now();
+  if ((status === "ACTIVE" || status === "TRIALING") && !vencida) return "ok";
+  if (status === "INCOMPLETE") return "sem";
+  return "expirada";
+}
+
+async function fetchAssinatura() {
+  try {
+    const res = await fetch(`${API_BASE}/account/profile`, { credentials: "include" });
+    if (res.ok) {
+      const profile = await res.json();
+      return profile && profile.assinatura ? profile.assinatura : null;
+    }
+  } catch {
+    // trata como sem assinatura
+  }
+  return null;
+}
 
 const SCRIPTS = [
   "/scripts/script.js",
@@ -82,27 +111,24 @@ async function verifySession() {
 
   let allowedPanel;
   if (tipo === "manager") {
+    // Gestor é o dono deste painel. Classifica a expiração aqui: se o plano
+    // da empresa venceu/cancelou, vai para /assinatura_expirada?perfil=empresa
+    // (mensagem "renove o plano da sua empresa"). Se nunca teve, também tratamos
+    // como caso de contratar/renovar empresarial.
+    const acesso = classificarAcesso(await fetchAssinatura());
+    if (acesso === "expirada") {
+      hardRedirect(`${EXPIRADA_URL}?perfil=empresa`);
+      return false;
+    }
+    if (acesso === "sem") {
+      hardRedirect(SEM_ASSINATURA_URL);
+      return false;
+    }
     allowedPanel = "gestor";
   } else if (tipo === "client") {
-    if (companyId != null) {
-      allowedPanel = "empregado";
-    } else {
-      // Client sem empresa: avulso (pagante) ou demo (status DEMO).
-      // /auth/me não traz o status, então consultamos /account/profile.
-      let subscriptionStatus;
-      try {
-        const profileRes = await fetch(`${API_BASE}/account/profile`, {
-          credentials: "include",
-        });
-        if (profileRes.ok) {
-          const profile = await profileRes.json();
-          subscriptionStatus = profile && profile.assinatura ? profile.assinatura.status : undefined;
-        }
-      } catch {
-        // Falha secundária: trata como avulso (padrão seguro).
-      }
-      allowedPanel = subscriptionStatus === "DEMO" ? "demo" : "avulso";
-    }
+    // Nenhum tipo de client é dono deste painel: apenas encaminha para o
+    // painel correto, que fará a classificação de acesso.
+    allowedPanel = companyId != null ? "empregado" : "avulso";
   } else {
     allowedPanel = null; // company / desconhecido
   }

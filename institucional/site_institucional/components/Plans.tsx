@@ -6,31 +6,31 @@ import { Reveal, SectionHeading } from "@/components/ui/Section";
 import { Alert } from "@/components/ui/Alert";
 import { useModals } from "@/components/Providers";
 import {
-  fetchIndividualPlans,
+  fetchAvulsoPlan,
   formatBRL,
   priceFor,
   PERIODS,
   type Plan,
   type Period,
 } from "@/lib/plans";
-import { fadeUp, viewportOnce } from "@/lib/motion";
+import { fadeUp } from "@/lib/motion";
 
 type LoadState = "loading" | "error" | "success";
 
 export function Plans() {
   const { openTrial, openEnterprise } = useModals();
   const [state, setState] = useState<LoadState>("loading");
-  const [plans, setPlans] = useState<Plan[]>([]);
+  const [plan, setPlan] = useState<Plan | null>(null);
   const [period, setPeriod] = useState<Period>(PERIODS[3]); // anual por padrão
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let active = true;
     setState("loading");
-    fetchIndividualPlans()
+    fetchAvulsoPlan()
       .then((data) => {
         if (!active) return;
-        setPlans(data);
+        setPlan(data);
         setState("success");
       })
       .catch(() => active && setState("error"));
@@ -41,7 +41,7 @@ export function Plans() {
 
   return (
     <section id="planos" className="py-28 sm:py-36">
-      <div className="mx-auto max-w-[88rem] px-6 sm:px-10">
+      <div className="mx-auto max-w-[76rem] px-6 sm:px-10">
         <Reveal className="flex flex-col items-center text-center">
           <SectionHeading
             align="center"
@@ -51,7 +51,7 @@ export function Plans() {
                 Comece grátis. <span className="text-raio">Continue no seu ritmo.</span>
               </>
             }
-            description="Sete dias com tudo liberado. Depois, escolha o plano que combina com o seu dia."
+            description="Sete dias com tudo liberado. Depois, um único plano com tudo incluído — escolha só por quanto tempo."
           />
         </Reveal>
 
@@ -64,6 +64,7 @@ export function Plans() {
           >
             {PERIODS.map((p) => {
               const selected = p.id === period.id;
+              const savings = priceFor(p).savingsPct;
               return (
                 <button
                   key={p.id}
@@ -84,9 +85,9 @@ export function Plans() {
                     />
                   )}
                   {p.label}
-                  {p.discount > 0 && (
+                  {savings > 0 && (
                     <span className={`ml-1.5 text-sm ${selected ? "text-white/85" : "text-signal"}`}>
-                      −{Math.round(p.discount * 100)}%
+                      −{savings}%
                     </span>
                   )}
                 </button>
@@ -97,11 +98,11 @@ export function Plans() {
 
         {/* Conteúdo conforme o estado de carregamento */}
         <div className="mt-12">
-          {state === "loading" && <PlansSkeleton />}
+          {state === "loading" && <PlanSkeleton />}
 
           {state === "error" && (
             <div className="mx-auto max-w-md">
-              <Alert tone="error">Não foi possível carregar os planos agora.</Alert>
+              <Alert tone="error">Não foi possível carregar o plano agora.</Alert>
               <div className="mt-4 text-center">
                 <button type="button" onClick={() => setReloadKey((k) => k + 1)} className="btn-ghost">
                   Tentar de novo
@@ -110,30 +111,39 @@ export function Plans() {
             </div>
           )}
 
-          {state === "success" && (
-            <motion.div
-              initial="hidden"
-              animate="show"
-              variants={{ show: { transition: { staggerChildren: 0.08 } } }}
-              className="grid gap-6 md:grid-cols-3"
-            >
-              {plans.map((plan) => (
-                <PlanCard key={plan.id} plan={plan} period={period} onChoose={openTrial} />
-              ))}
-              <EnterprisePointer onChoose={openEnterprise} />
-            </motion.div>
+          {state === "success" && plan && (
+            <AvulsoCard plan={plan} period={period} onChoose={openTrial} />
           )}
         </div>
 
+        {/* Ponteiro discreto para o plano empresarial */}
+        <Reveal delay={0.1} className="mt-8">
+          <div className="mx-auto flex max-w-[76rem] flex-col items-center justify-between gap-4 rounded-3xl border border-hairline bg-surface-2/30 px-8 py-6 text-center sm:flex-row sm:text-left">
+            <div>
+              <h3 className="font-display text-xl font-bold text-cloud">É uma empresa?</h3>
+              <p className="mt-1 text-[15px] text-slatey">
+                Plano por licenças, com valor sob medida e visão agregada da equipe para o gestor.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={openEnterprise}
+              className="btn-ghost shrink-0 whitespace-nowrap"
+            >
+              Falar com vendas
+            </button>
+          </div>
+        </Reveal>
+
         <p className="mt-9 text-center text-[15px] text-muted">
-          Preços de lançamento, em reais. Você pode trocar de plano ou cancelar quando quiser.
+          Preços de lançamento, em reais. Você pode trocar de período ou cancelar quando quiser.
         </p>
       </div>
     </section>
   );
 }
 
-function PlanCard({
+function AvulsoCard({
   plan,
   period,
   onChoose,
@@ -142,104 +152,107 @@ function PlanCard({
   period: Period;
   onChoose: () => void;
 }) {
-  const price = priceFor(plan, period);
+  const price = priceFor(period);
 
   return (
     <motion.div
+      key={period.id}
       variants={fadeUp}
-      className={`surface-card relative flex flex-col p-8 ${
-        plan.highlight ? "ring-1 ring-brand-violet/50" : ""
-      }`}
+      initial="hidden"
+      animate="show"
+      className="surface-card relative overflow-hidden p-8 sm:p-12"
     >
-      {plan.highlight && (
-        <span className="absolute -top-3.5 left-8 rounded-full bg-raio px-3.5 py-1.5 text-[13px] font-bold text-ink">
-          Mais escolhido
-        </span>
-      )}
+      {/* brilho decorativo sutil no canto */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-raio/10 blur-3xl"
+      />
 
-      <h3 className="font-display text-2xl font-bold text-cloud">{plan.name}</h3>
-      <p className="mt-2.5 min-h-[48px] text-base leading-relaxed text-slatey">{plan.tagline}</p>
-
-      <div className="mt-6">
-        <div className="flex items-baseline gap-2">
-          <span className="font-display text-[44px] font-bold text-cloud tabular-nums">
-            {formatBRL(price.perMonth)}
+      <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
+        {/* Coluna esquerda: identidade + preço + CTA */}
+        <div className="flex flex-col">
+          <span className="inline-flex w-fit items-center rounded-full border border-hairline bg-surface/60 px-3.5 py-1.5 text-[13px] font-semibold text-raio">
+            Plano único · tudo incluído
           </span>
-          <span className="text-base text-muted">/mês</span>
+
+          <h3 className="mt-5 font-display text-3xl font-bold text-cloud sm:text-4xl">
+            {plan.name}
+          </h3>
+          <p className="mt-3 max-w-md text-lg leading-relaxed text-slatey">{plan.tagline}</p>
+
+          <div className="mt-8">
+            <div className="flex items-baseline gap-2.5">
+              <span className="font-display text-6xl font-bold text-cloud tabular-nums sm:text-7xl">
+                {formatBRL(price.perMonth)}
+              </span>
+              <span className="text-lg text-muted">/mês</span>
+            </div>
+            <p className="mt-2.5 text-base text-muted">
+              {period.months === 1
+                ? "cobrança mensal recorrente"
+                : `${formatBRL(price.total)} cobrados a cada ${period.months} meses`}
+              {price.savingsPct > 0 && (
+                <span className="ml-2 font-semibold text-signal">
+                  você economiza {price.savingsPct}%
+                </span>
+              )}
+            </p>
+          </div>
+
+          <button type="button" onClick={onChoose} className="btn-primary mt-9 w-full sm:w-auto sm:px-10">
+            Começar teste grátis de 7 dias
+          </button>
+          <p className="mt-3 text-sm text-muted">Sem compromisso — você só escolhe o plano depois.</p>
         </div>
-        <p className="mt-1.5 text-sm text-muted">
-          {period.months === 1
-            ? "cobrança mensal"
-            : `${formatBRL(price.total)} a cada ${period.months} meses`}
-          {price.savingsPct > 0 && (
-            <span className="ml-1.5 font-semibold text-signal">economia de {price.savingsPct}%</span>
-          )}
-        </p>
+
+        {/* Coluna direita: features, em duas colunas para ocupar o espaço */}
+        <div className="lg:border-l lg:border-hairline lg:pl-14">
+          <p className="mb-5 text-sm font-semibold uppercase tracking-wide text-muted">
+            Tudo o que está incluído
+          </p>
+          <ul className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            {plan.features.map((f) => (
+              <li key={f} className="flex items-start gap-3 text-[15px] leading-relaxed text-slatey">
+                <span className="mt-0.5 shrink-0 text-signal">
+                  <svg width="16" height="16" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path
+                      d="M2.5 7.3l2.6 2.6L11.5 4"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-
-      <button
-        type="button"
-        onClick={onChoose}
-        className={`mt-7 w-full ${plan.highlight ? "btn-primary" : "btn-ghost"}`}
-      >
-        Começar teste grátis
-      </button>
-
-      <ul className="mt-7 space-y-3 border-t border-hairline pt-7">
-        {plan.features.map((f) => (
-          <li key={f} className="flex items-start gap-3 text-[15px] text-slatey">
-            <span className="mt-0.5 text-signal">
-              <svg width="15" height="15" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M2.5 7.3l2.6 2.6L11.5 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            {f}
-          </li>
-        ))}
-      </ul>
     </motion.div>
   );
 }
 
-function EnterprisePointer({ onChoose }: { onChoose: () => void }) {
+function PlanSkeleton() {
   return (
-    <motion.div
-      variants={fadeUp}
-      className="surface-card flex flex-col justify-between bg-surface-2/30 p-8"
-    >
-      <div>
-        <h3 className="font-display text-2xl font-bold text-cloud">Empresas</h3>
-        <p className="mt-2.5 text-base leading-relaxed text-slatey">
-          Plano por licenças, com valor sob medida. Visão agregada da equipe para o gestor.
-        </p>
-        <div className="mt-6">
-          <span className="font-display text-[34px] font-bold text-raio">Sob medida</span>
-          <p className="mt-1.5 text-sm text-muted">por colaborador e licença de gestor</p>
-        </div>
-      </div>
-      <button type="button" onClick={onChoose} className="btn-ghost mt-7 w-full">
-        Falar com vendas
-      </button>
-    </motion.div>
-  );
-}
-
-function PlansSkeleton() {
-  return (
-    <div className="grid gap-6 md:grid-cols-3" aria-hidden="true">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="surface-card p-8">
-          <div className="h-5 w-24 animate-pulse rounded bg-white/10" />
+    <div className="surface-card p-8 sm:p-12" aria-hidden="true">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
+        <div>
+          <div className="h-6 w-40 animate-pulse rounded-full bg-white/10" />
+          <div className="mt-5 h-9 w-64 animate-pulse rounded bg-white/10" />
           <div className="mt-3 h-4 w-full animate-pulse rounded bg-white/5" />
-          <div className="mt-6 h-10 w-32 animate-pulse rounded bg-white/10" />
-          <div className="mt-6 h-11 w-full animate-pulse rounded-field bg-white/5" />
-          <div className="mt-6 space-y-2.5 border-t border-hairline pt-6">
-            {[0, 1, 2, 3].map((j) => (
-              <div key={j} className="h-3.5 w-full animate-pulse rounded bg-white/5" />
+          <div className="mt-8 h-16 w-48 animate-pulse rounded bg-white/10" />
+          <div className="mt-9 h-12 w-full animate-pulse rounded-field bg-white/5 sm:w-64" />
+        </div>
+        <div className="lg:border-l lg:border-hairline lg:pl-14">
+          <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((j) => (
+              <div key={j} className="h-4 w-full animate-pulse rounded bg-white/5" />
             ))}
           </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 }

@@ -22,6 +22,19 @@ export function Modal({
   const panelRef = useRef<HTMLDivElement>(null);
   const lastFocused = useRef<HTMLElement | null>(null);
 
+  // Mantém sempre a versão mais recente de onClose sem que ela vire
+  // dependência dos effects abaixo. Sem isso, como o componente pai recria
+  // a função onClose a cada render (ex.: a cada tecla digitada num input),
+  // o effect de foco re-executava e roubava o foco do input, jogando-o no
+  // primeiro elemento focável (o botão X). Esse era o bug de "perde o foco
+  // a cada letra".
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  // Effect 1 — trava o scroll e foca o primeiro campo. Depende SÓ de `open`,
+  // então só roda ao abrir/fechar o modal, nunca a cada tecla.
   useEffect(() => {
     if (!open) return;
 
@@ -30,7 +43,6 @@ export function Modal({
     const prevOverflow = root.style.overflow;
     root.style.overflow = "hidden";
 
-    // Foca o primeiro elemento focável do painel.
     const t = window.setTimeout(() => {
       const focusable = panelRef.current?.querySelector<HTMLElement>(
         'input, button, textarea, select, a[href], [tabindex]:not([tabindex="-1"])'
@@ -38,9 +50,22 @@ export function Modal({
       focusable?.focus();
     }, 30);
 
+    return () => {
+      window.clearTimeout(t);
+      root.style.overflow = prevOverflow;
+      lastFocused.current?.focus?.();
+    };
+  }, [open]);
+
+  // Effect 2 — teclas (Esc para fechar, Tab para o trap de foco). Também
+  // depende só de `open`; usa onCloseRef para sempre chamar a versão atual
+  // do onClose sem virar dependência.
+  useEffect(() => {
+    if (!open) return;
+
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
       // Trap de foco simples dentro do painel.
@@ -65,12 +90,9 @@ export function Modal({
 
     document.addEventListener("keydown", onKey);
     return () => {
-      window.clearTimeout(t);
       document.removeEventListener("keydown", onKey);
-      root.style.overflow = prevOverflow;
-      lastFocused.current?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   return (
     <AnimatePresence>

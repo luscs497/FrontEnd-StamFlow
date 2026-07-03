@@ -32,31 +32,17 @@ export default function LoginPage() {
       if (res.ok) {
         const user = data.user
 
+        // O login apenas encaminha para o painel correto conforme o tipo.
+        // A classificação de acesso (ativo / sem assinatura / expirada) é
+        // feita pelo próprio painel de destino no seu bootstrap — assim a
+        // regra fica em um lugar só por painel, sem duplicação aqui.
         if (user.user_type === 'manager') {
           window.location.href = 'https://gestor.stamflow.com.br/'
         } else if (user.user_type === 'client') {
           if (user.company_id !== null && user.company_id !== undefined) {
             window.location.href = 'https://user.stamflow.com.br/'
           } else {
-            // Client sem empresa: pode ser conta avulso (pagante/trial completo)
-            // ou conta DEMO. O /auth/login não retorna o status da assinatura,
-            // então consultamos /account/profile para decidir o painel correto.
-            let destino = 'https://painel.stamflow.com.br/'
-            try {
-              const profileRes = await fetch('https://api.stamflow.com.br/account/profile', {
-                credentials: 'include',
-              })
-              if (profileRes.ok) {
-                const profile = await profileRes.json()
-                if (profile?.assinatura?.status === 'DEMO') {
-                  destino = 'https://demo.stamflow.com.br/'
-                }
-              }
-            } catch {
-              // Falha ao consultar o profile: mantém o painel avulso como
-              // padrão seguro (não trava o login por uma falha secundária).
-            }
-            window.location.href = destino
+            window.location.href = 'https://painel.stamflow.com.br/'
           }
         } else {
           window.location.href = 'https://painel.stamflow.com.br/'

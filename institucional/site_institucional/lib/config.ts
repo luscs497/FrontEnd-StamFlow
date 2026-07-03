@@ -27,11 +27,14 @@ export const SALES_WHATSAPP = "558482002100";
 // Duração do teste grátis.
 export const TRIAL_DAYS = 7;
 
-// Âncoras de navegação interna.
+// Âncoras de navegação. Absolutas a partir da raiz para funcionarem de
+// qualquer página (ex.: a partir de /empresas). "Para empresas" aponta para
+// a landing dedicada /empresas, não mais para a seção da home.
 export const NAV = [
-  { label: "Como funciona", href: "#como-funciona" },
-  { label: "Privacidade", href: "#privacidade" },
-  { label: "Para empresas", href: "#empresas" },
-  { label: "Planos", href: "#planos" },
-  { label: "Dúvidas", href: "#duvidas" },
+  { label: "Como funciona", href: "/#como-funciona" },
+  { label: "Privacidade", href: "/#privacidade" },
+  { label: "Para você", href: "/para-voce" },
+  { label: "Para empresas", href: "/empresas" },
+  { label: "Planos", href: "/#planos" },
+  { label: "Dúvidas", href: "/#duvidas" },
 ] as const;

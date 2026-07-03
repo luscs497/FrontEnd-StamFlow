@@ -47,7 +47,7 @@ export function ForCompanies() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewportOnce}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="surface-card p-8"
           >
             <div className="flex items-center justify-between">
@@ -82,7 +82,7 @@ export function ForCompanies() {
                       initial={{ width: 0 }}
                       whileInView={{ width: `${row.value}%` }}
                       viewport={viewportOnce}
-                      transition={{ duration: 0.9, delay: 0.15 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.7, delay: 0.1 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                     />
                   </div>
                 </div>

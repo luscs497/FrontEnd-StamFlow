@@ -45,7 +45,7 @@ export function Privacy() {
               initial={{ opacity: 0, scale: 0.96 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={viewportOnce}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="relative"
             >
               <div className="relative rounded-card border border-dashed border-brand-cyan/40 bg-ink/40 p-7">

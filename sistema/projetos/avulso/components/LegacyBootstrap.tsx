@@ -14,6 +14,30 @@ declare global {
 // ---------------------------------------------------------------------------
 const API_BASE = "https://api.stamflow.com.br";
 const LOGIN_URL = "https://login.stamflow.com.br/";
+// Destinos para quem não tem acesso liberado ao painel. A demo foi desativada
+// no fluxo (o backend segue pronto para religá-la no futuro).
+//   /sem_assinatura      -> nunca teve assinatura (ou checkout incompleto)
+//   /assinatura_expirada -> teve e expirou/cancelou; ?perfil ajusta a mensagem
+const SEM_ASSINATURA_URL = "https://stamflow.com.br/sem_assinatura";
+const EXPIRADA_URL = "https://stamflow.com.br/assinatura_expirada";
+
+// Classifica o acesso a partir do /account/profile.
+// Retorna: "ok" (libera painel) | "sem" (nunca teve) | "expirada" (teve e perdeu).
+// perfil ("avulso" | "colaborador" | "empresa") define a mensagem da página
+// de expirada.
+function classificarAcesso(
+  assinatura: { status?: string; expira_em?: string | null } | null | undefined
+): "ok" | "sem" | "expirada" {
+  if (!assinatura || !assinatura.status) return "sem";
+
+  const status = assinatura.status;
+  const vencida =
+    !!assinatura.expira_em && new Date(assinatura.expira_em).getTime() < Date.now();
+
+  if ((status === "ACTIVE" || status === "TRIALING") && !vencida) return "ok";
+  if (status === "INCOMPLETE") return "sem";
+  return "expirada";
+}
 
 // Qual painel é ESTE build. Cada painel é um deploy separado.
 //   "avulso"    -> painel.stamflow.com.br      (client SEM empresa)
@@ -25,7 +49,6 @@ const PANEL_URLS: Record<string, string> = {
   avulso: "https://painel.stamflow.com.br/",
   empregado: "https://user.stamflow.com.br/",
   gestor: "https://gestor.stamflow.com.br/",
-  demo: "https://demo.stamflow.com.br/",
 };
 
 function hardRedirect(url: string) {
@@ -91,21 +114,30 @@ async function verifySession(): Promise<boolean> {
     if (companyId != null) {
       allowedPanel = "empregado";
     } else {
-      // Client sem empresa: avulso (pagante) ou demo (status DEMO).
-      // /auth/me não traz o status, então consultamos /account/profile.
-      let subscriptionStatus: string | undefined;
+      // Client sem empresa: busca o profile e classifica o acesso.
+      // ok -> painel avulso | sem -> /sem_assinatura | expirada -> /assinatura_expirada
+      let assinatura: { status?: string; expira_em?: string | null } | null = null;
       try {
         const profileRes = await fetch(`${API_BASE}/account/profile`, {
           credentials: "include",
         });
         if (profileRes.ok) {
           const profile = await profileRes.json();
-          subscriptionStatus = profile?.assinatura?.status;
+          assinatura = profile?.assinatura ?? null;
         }
       } catch {
-        // Falha secundária: trata como avulso (padrão seguro).
+        // Falha secundária: por segurança, trata como sem assinatura.
       }
-      allowedPanel = subscriptionStatus === "DEMO" ? "demo" : "avulso";
+      const acesso = classificarAcesso(assinatura);
+      if (acesso === "expirada") {
+        hardRedirect(`${EXPIRADA_URL}?perfil=avulso`);
+        return false;
+      }
+      if (acesso === "sem") {
+        hardRedirect(SEM_ASSINATURA_URL);
+        return false;
+      }
+      allowedPanel = "avulso";
     }
   } else {
     // "company" ou tipo desconhecido não têm painel próprio
