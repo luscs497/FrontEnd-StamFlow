@@ -25,13 +25,15 @@ export interface Period {
   months: number;
   /** Preço total do período, em centavos (espelha price_in_cents do backend). */
   priceInCents: number;
+  /** id do plano correspondente em GET /subscription_plan/plans (backend real). */
+  backendPlanId: number;
 }
 
 export const PERIODS: Period[] = [
-  { id: "mensal", label: "Mensal", months: 1, priceInCents: 2990 },
-  { id: "trimestral", label: "Trimestral", months: 3, priceInCents: 7990 },
-  { id: "semestral", label: "Semestral", months: 6, priceInCents: 14990 },
-  { id: "anual", label: "Anual", months: 12, priceInCents: 26990 },
+  { id: "mensal", label: "Mensal", months: 1, priceInCents: 2990, backendPlanId: 2 },
+  { id: "trimestral", label: "Trimestral", months: 3, priceInCents: 7990, backendPlanId: 3 },
+  { id: "semestral", label: "Semestral", months: 6, priceInCents: 14990, backendPlanId: 4 },
+  { id: "anual", label: "Anual", months: 12, priceInCents: 26990, backendPlanId: 5 },
 ];
 
 export interface Plan {

@@ -105,6 +105,20 @@ body {
   color: #fff;
 }
 
+/* ------------------------------------------------------------------
+   Rede de segurança para o carregamento (evita "só o header, precisa de F5").
+
+   Componentes com framer-motion são renderizados no HTML estático já com
+   style="opacity:0" (estado inicial). Se o JS não executar, esse conteúdo
+   ficaria invisível para sempre. O script no <head> adiciona .js ao <html>
+   antes do paint; se ele NÃO rodar (JS desligado/quebrado), a regra abaixo
+   revela o conteúdo. Com JS ativo, o framer-motion assume e anima normal.
+   Cobre também navegadores sem suporte a scripting. */
+html:not(.js) [style*="opacity:0"],
+html:not(.js) [style*="opacity: 0"] {
+  opacity: 1 !important;
+}
+
 /* Respeita quem pediu menos movimento */
 @media (prefers-reduced-motion: reduce) {
   html {

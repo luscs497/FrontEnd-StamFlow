@@ -1,0 +1,138 @@
+- generic [active] [ref=f17e1]:
+  - banner [ref=f17e2]:
+    - generic [ref=f17e3]:
+      - link "StamFlow — início" [ref=f17e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f17e5]:
+          - text: Stam
+          - img [ref=f17e6]
+          - generic [ref=f17e8]: Flow
+      - navigation "Seções" [ref=f17e9]:
+        - link "Para você" [ref=f17e10] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f17e11] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f17e12] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f17e13] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f17e14]:
+        - button "Carrinho, 1 item" [ref=f17e16] [cursor=pointer]:
+          - img [ref=f17e17]
+          - generic [ref=f17e21]: "1"
+        - link "Entrar" [ref=f17e22] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - link "Começar a Jornada" [ref=f17e23] [cursor=pointer]:
+          - /url: /#planos
+  - main [ref=f17e24]:
+    - generic [ref=f17e26]:
+      - link "Voltar aos planos" [ref=f17e27] [cursor=pointer]:
+        - /url: /#planos
+        - img [ref=f17e28]
+        - text: Voltar aos planos
+      - heading "Finalizar assinatura" [level=1] [ref=f17e30]
+      - generic [ref=f17e31]:
+        - generic [ref=f17e32]:
+          - generic [ref=f17e33]:
+            - heading "Seus dados" [level=2] [ref=f17e34]
+            - tablist "Login ou cadastro" [ref=f17e35]:
+              - tab "Criar conta" [selected] [ref=f17e36] [cursor=pointer]: Criar conta
+              - tab "Já tenho conta" [ref=f17e38] [cursor=pointer]
+          - generic [ref=f17e39]:
+            - generic [ref=f17e40]:
+              - generic [ref=f17e41]: Nome completo
+              - textbox "Nome completo" [ref=f17e42]:
+                - /placeholder: Ana Ribeiro
+            - generic [ref=f17e43]:
+              - generic [ref=f17e44]: E-mail
+              - textbox "E-mail" [ref=f17e45]:
+                - /placeholder: voce@email.com
+            - generic [ref=f17e46]:
+              - generic [ref=f17e47]: Senha
+              - textbox "Senha" [ref=f17e48]:
+                - /placeholder: ••••••••
+            - button "Ir para o pagamento" [ref=f17e49] [cursor=pointer]:
+              - text: Ir para o pagamento
+              - img [ref=f17e50]
+            - paragraph [ref=f17e52]: Ao continuar você concorda com os Termos e a Política de Privacidade. Pagamento processado com segurança.
+        - complementary [ref=f17e53]:
+          - heading "Resumo do pedido" [level=2] [ref=f17e54]
+          - generic [ref=f17e55]:
+            - generic [ref=f17e56]:
+              - paragraph [ref=f17e57]: StamFlow Individual
+              - paragraph [ref=f17e58]: Plano trimestral
+              - button "Remover" [ref=f17e59] [cursor=pointer]
+            - paragraph [ref=f17e60]: R$ 79,90
+          - generic [ref=f17e61]:
+            - generic [ref=f17e62]:
+              - term [ref=f17e63]: Equivalente mensal
+              - definition [ref=f17e64]: R$ 26,63/mês
+            - generic [ref=f17e65]:
+              - term [ref=f17e66]: Economia no período
+              - definition [ref=f17e67]: −11%
+          - generic [ref=f17e68]:
+            - generic [ref=f17e69]: Total hoje
+            - generic [ref=f17e70]: R$ 79,90
+          - generic [ref=f17e71]:
+            - img [ref=f17e72]
+            - text: 7 dias de teste incluídos · cancele quando quiser
+  - contentinfo [ref=f17e75]:
+    - separator [ref=f17e77]
+    - generic [ref=f17e78]:
+      - generic [ref=f17e79]:
+        - generic [ref=f17e80]:
+          - text: Stam
+          - img [ref=f17e81]
+          - generic [ref=f17e83]: Flow
+        - paragraph [ref=f17e84]: Sua energia produtiva, lida em tempo real — e cuidada ao longo do dia. Processamento 100% no seu navegador.
+        - generic [ref=f17e85]:
+          - link "Instagram" [ref=f17e86] [cursor=pointer]:
+            - /url: https://instagram.com
+            - img [ref=f17e87]
+          - link "LinkedIn" [ref=f17e91] [cursor=pointer]:
+            - /url: https://linkedin.com
+            - img [ref=f17e92]
+          - link "YouTube" [ref=f17e95] [cursor=pointer]:
+            - /url: https://youtube.com
+            - img [ref=f17e96]
+      - generic [ref=f17e99]:
+        - heading "Produto" [level=3] [ref=f17e100]
+        - list [ref=f17e101]:
+          - listitem [ref=f17e102]:
+            - link "Para você" [ref=f17e103] [cursor=pointer]:
+              - /url: /para-voce
+          - listitem [ref=f17e104]:
+            - link "Planos" [ref=f17e105] [cursor=pointer]:
+              - /url: /#planos
+          - listitem [ref=f17e106]:
+            - link "Como funciona" [ref=f17e107] [cursor=pointer]:
+              - /url: /#como-funciona
+          - listitem [ref=f17e108]:
+            - link "Privacidade" [ref=f17e109] [cursor=pointer]:
+              - /url: /#privacidade
+      - generic [ref=f17e110]:
+        - heading "Empresas" [level=3] [ref=f17e111]
+        - list [ref=f17e112]:
+          - listitem [ref=f17e113]:
+            - link "Para empresas" [ref=f17e114] [cursor=pointer]:
+              - /url: /empresas
+          - listitem [ref=f17e115]:
+            - link "Apoio à NR-1" [ref=f17e116] [cursor=pointer]:
+              - /url: /empresas#nr1
+          - listitem [ref=f17e117]:
+            - link "Dúvidas" [ref=f17e118] [cursor=pointer]:
+              - /url: /#duvidas
+      - generic [ref=f17e119]:
+        - heading "Acesso" [level=3] [ref=f17e120]
+        - list [ref=f17e121]:
+          - listitem [ref=f17e122]:
+            - link "Entrar" [ref=f17e123] [cursor=pointer]:
+              - /url: https://login.stamflow.com.br
+          - listitem [ref=f17e124]:
+            - button "Falar com vendas" [ref=f17e125] [cursor=pointer]
+    - generic [ref=f17e126]:
+      - separator [ref=f17e127]
+      - generic [ref=f17e128]:
+        - paragraph [ref=f17e129]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f17e130]: Feito com cuidado — sua energia, no seu ritmo.
+  - alert [ref=f17e131]

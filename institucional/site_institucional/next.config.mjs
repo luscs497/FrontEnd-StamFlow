@@ -16,11 +16,6 @@ const nextConfig = {
 
   // Trailing slash facilita o roteamento em hospedagem estática simples.
   trailingSlash: true,
-
-  // As fontes são carregadas via <link> no layout (Rubik + Inter). Desligamos a
-  // otimização automática de fontes do Next para o build não tentar buscar a
-  // folha do Google em build-time — o carregamento acontece no navegador.
-  optimizeFonts: false,
 };
 
 export default nextConfig;

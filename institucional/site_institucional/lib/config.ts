@@ -30,9 +30,11 @@ export const TRIAL_DAYS = 7;
 // Âncoras de navegação. Absolutas a partir da raiz para funcionarem de
 // qualquer página (ex.: a partir de /empresas). "Para empresas" aponta para
 // a landing dedicada /empresas, não mais para a seção da home.
+// Navegação enxuta, focada nos caminhos de conversão: os dois públicos
+// (você / empresas), os planos e as dúvidas. "Como funciona" e "Privacidade"
+// seguem acessíveis pela home (seções) e são explicados dentro das landings
+// de cada público, então saíram do topo para reduzir a poluição visual.
 export const NAV = [
-  { label: "Como funciona", href: "/#como-funciona" },
-  { label: "Privacidade", href: "/#privacidade" },
   { label: "Para você", href: "/para-voce" },
   { label: "Para empresas", href: "/empresas" },
   { label: "Planos", href: "/#planos" },

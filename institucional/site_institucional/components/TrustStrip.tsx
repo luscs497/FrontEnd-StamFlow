@@ -5,7 +5,7 @@ import { Reveal } from "@/components/ui/Section";
 const STATS = [
   { v: "100%", k: "processado no navegador" },
   { v: "0", k: "vídeos enviados a servidor" },
-  { v: "7 dias", k: "de teste, produto completo" },
+  { v: "4", k: "pontos de postura lidos" },
   { v: "30s", k: "para cada leitura de energia" },
 ];
 

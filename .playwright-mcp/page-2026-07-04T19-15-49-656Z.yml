@@ -1,0 +1,126 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "StamFlow — início" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: StamFl
+        - img [ref=e7]
+        - generic [ref=e9]: w
+      - navigation [ref=e10]:
+        - link "Para você" [ref=e11] [cursor=pointer]:
+          - /url: /para-voce/
+        - link "Para empresas" [ref=e12] [cursor=pointer]:
+          - /url: /empresas/
+        - link "Planos" [ref=e13] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=e14] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=e15]:
+        - button "Carrinho" [ref=e17] [cursor=pointer]:
+          - img [ref=e18]
+        - link "Entrar" [ref=e22] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - link "Começar agora" [ref=e23] [cursor=pointer]:
+          - /url: /para-voce/
+          - generic [ref=e24]: Começar agora
+  - main [ref=e25]:
+    - generic [ref=e27]:
+      - img [ref=e31]
+      - paragraph [ref=e33]: Bem-estar no trabalho, lido em tempo real
+      - heading "Sua energia, em fluxo." [level=1] [ref=e35]:
+        - text: Sua energia,
+        - text: em fluxo.
+      - paragraph [ref=e36]: O StamFlow lê seu humor, postura e energia pela webcam — em tempo real e 100% no seu navegador. Nenhuma imagem sai do seu dispositivo.
+      - generic [ref=e37]:
+        - link "Começar agora" [ref=e38] [cursor=pointer]:
+          - /url: /para-voce/
+          - generic [ref=e39]: Começar agora
+          - generic [ref=e40]: →
+        - link "Para a minha empresa" [ref=e41] [cursor=pointer]:
+          - /url: /empresas/
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e45]: Humor
+          - generic [ref=e46]: Focado
+        - generic [ref=e47]:
+          - generic [ref=e49]: Postura
+          - generic [ref=e50]: Alinhada
+        - generic [ref=e51]:
+          - generic [ref=e53]: Energia
+          - generic [ref=e54]: 83%
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - paragraph [ref=e58]: 100%
+        - paragraph [ref=e59]: local, no seu navegador
+      - generic [ref=e60]:
+        - paragraph [ref=e61]: "0"
+        - paragraph [ref=e62]: imagens enviadas a servidores
+      - generic [ref=e63]:
+        - paragraph [ref=e64]: "3"
+        - paragraph [ref=e65]: sinais lidos ao vivo
+      - generic [ref=e66]:
+        - paragraph [ref=e67]: Tempo real
+        - paragraph [ref=e68]: humor · postura · energia
+    - generic [ref=e70]:
+      - generic [ref=e72]:
+        - paragraph [ref=e73]: Superfície
+        - heading "Cards que respiram profundidade" [level=3] [ref=e74]
+        - paragraph [ref=e75]: "Mesma linguagem do painel: superfície escura, borda branca a 8%, brilho violeta que dá palco ao conteúdo sem competir com ele."
+      - generic [ref=e77]:
+        - paragraph [ref=e78]: Privacidade
+        - heading "A leitura nunca sai daqui" [level=3] [ref=e79]
+        - paragraph [ref=e80]: Todo o processamento acontece no dispositivo. O site inteiro carrega essa promessa — o diferencial central do produto.
+    - generic [ref=e81]:
+      - generic [ref=e82]:
+        - paragraph [ref=e83]: Planos
+        - heading "Um plano. Quatro ritmos." [level=2] [ref=e84]
+        - paragraph [ref=e85]: Escolha o período que combina com você. Quanto mais longo, mais você economiza.
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - button "Mensal" [ref=e88] [cursor=pointer]
+          - button "Trimestral−11%" [ref=e89] [cursor=pointer]:
+            - text: Trimestral
+            - generic [ref=e90]: −11%
+          - button "Semestral−16%" [ref=e91] [cursor=pointer]:
+            - text: Semestral
+            - generic [ref=e92]: −16%
+          - button "Anual−25%" [ref=e93] [cursor=pointer]:
+            - text: Anual
+            - generic [ref=e95]: −25%
+        - generic [ref=e97]:
+          - paragraph [ref=e98]: Plano único · sem pegadinha
+          - heading "StamFlow Individual" [level=3] [ref=e99]
+          - generic [ref=e100]:
+            - generic [ref=e101]: R$ 22,49
+            - generic [ref=e102]: /mês
+          - paragraph [ref=e103]: R$ 269,90 por ano · você economiza 25%
+          - button "Adicionar ao carrinho" [ref=e104] [cursor=pointer]:
+            - generic [ref=e105]: Adicionar ao carrinho
+          - list [ref=e106]:
+            - listitem [ref=e107]:
+              - img [ref=e108]
+              - generic [ref=e110]: Leitura ao vivo de humor, postura e energia
+            - listitem [ref=e111]:
+              - img [ref=e112]
+              - generic [ref=e114]: Processamento 100% local no seu navegador
+            - listitem [ref=e115]:
+              - img [ref=e116]
+              - generic [ref=e118]: Exercícios guiados
+            - listitem [ref=e119]:
+              - img [ref=e120]
+              - generic [ref=e122]: Pausa Mental
+            - listitem [ref=e123]:
+              - img [ref=e124]
+              - generic [ref=e126]: Modo Foco
+            - listitem [ref=e127]:
+              - img [ref=e128]
+              - generic [ref=e130]: StamFlow University
+            - listitem [ref=e131]:
+              - img [ref=e132]
+              - generic [ref=e134]: Relatórios com histórico
+            - listitem [ref=e135]:
+              - img [ref=e136]
+              - generic [ref=e138]: Conquistas
+            - listitem [ref=e139]:
+              - img [ref=e140]
+              - generic [ref=e142]: Suporte por chamados

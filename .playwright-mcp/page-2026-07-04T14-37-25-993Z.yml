@@ -1,0 +1,23 @@
+- generic [active] [ref=f22e1]:
+  - alert [ref=f22e2]
+  - main [ref=f22e3]:
+    - generic [ref=f22e5]:
+      - generic [ref=f22e6]:
+        - img [ref=f22e8]
+        - generic [ref=f22e10]:
+          - heading "Bem-vindo" [level=1] [ref=f22e11]
+          - paragraph [ref=f22e12]: Otimize sua energia produtiva e bem-estar.
+      - generic [ref=f22e13]:
+        - generic [ref=f22e14]:
+          - generic [ref=f22e15]:
+            - img [ref=f22e16]
+            - textbox "Usuário ou Email" [ref=f22e19]
+          - generic [ref=f22e20]:
+            - img [ref=f22e21]
+            - textbox "Senha" [ref=f22e24]
+            - button "Mostrar senha" [ref=f22e25] [cursor=pointer]
+          - paragraph [ref=f22e28] [cursor=pointer]: Esqueci minha senha
+        - button "Entrar" [ref=f22e29] [cursor=pointer]:
+          - text: Entrar
+          - img [ref=f22e30]
+      - paragraph [ref=f22e36]: Versão 2.5.0 • StamFlow

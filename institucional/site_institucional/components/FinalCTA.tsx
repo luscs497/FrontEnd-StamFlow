@@ -2,12 +2,10 @@
 
 import { motion } from "framer-motion";
 import { BrandMark } from "@/components/Brand";
-import { useModals } from "@/components/Providers";
 import { viewportOnce } from "@/lib/motion";
-import { LOGIN_URL, TRIAL_DAYS } from "@/lib/config";
+import { LOGIN_URL } from "@/lib/config";
 
 export function FinalCTA() {
-  const { openTrial } = useModals();
 
   return (
     <section className="px-6 pb-28 sm:px-10 sm:pb-36">
@@ -33,12 +31,12 @@ export function FinalCTA() {
               Comece a cuidar da sua <span className="text-raio">energia</span> hoje.
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-xl text-slatey">
-              {TRIAL_DAYS} dias com o produto completo, sem cartão. Leva menos de um minuto para começar.
+              Escolha o período que faz sentido para você e libere o StamFlow completo. Leva menos de um minuto.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
-              <button type="button" onClick={openTrial} className="btn-primary px-8 py-4 text-base">
-                Começar teste grátis
-              </button>
+              <a href="/#planos" className="btn-primary px-8 py-4 text-base">
+                Começar a Jornada
+              </a>
               <a href={LOGIN_URL} className="btn-ghost px-8 py-4 text-base">
                 Já tenho conta
               </a>

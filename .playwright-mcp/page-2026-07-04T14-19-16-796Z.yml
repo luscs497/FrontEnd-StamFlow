@@ -1,0 +1,312 @@
+- generic [active] [ref=f12e1]:
+  - banner [ref=f12e2]:
+    - generic [ref=f12e3]:
+      - link "StamFlow — início" [ref=f12e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f12e5]:
+          - text: Stam
+          - img [ref=f12e6]
+          - generic [ref=f12e8]: Flow
+      - navigation "Seções" [ref=f12e9]:
+        - link "Para você" [ref=f12e10] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f12e11] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f12e12] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f12e13] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f12e14]:
+        - button "Carrinho vazio" [ref=f12e16] [cursor=pointer]:
+          - img [ref=f12e17]
+        - link "Entrar" [ref=f12e21] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - link "Começar a Jornada" [ref=f12e22] [cursor=pointer]:
+          - /url: /#planos
+  - main [ref=f12e23]:
+    - generic [ref=f12e25]:
+      - generic [ref=f12e26]:
+        - generic [ref=f12e27]: Postura e humor, lidos em tempo real
+        - heading "Sua energia produtiva, lida ao vivo pela câmera." [level=1] [ref=f12e29]
+        - paragraph [ref=f12e30]: O StamFlow acompanha sua postura e seu humor e transforma isso num índice de energia que cuida de você ao longo do dia. Nenhuma imagem sai do seu computador.
+        - generic [ref=f12e31]:
+          - link "Começar a Jornada" [ref=f12e32] [cursor=pointer]:
+            - /url: /#planos
+          - link "Ver como funciona" [ref=f12e33] [cursor=pointer]:
+            - /url: "#como-funciona"
+        - generic [ref=f12e34]:
+          - generic [ref=f12e35]: 7 dias completos
+          - generic [ref=f12e37]: Sem cartão
+          - generic [ref=f12e39]: Processado no navegador
+      - 'img "Leitura de energia ao vivo: 86 de 100, postura 92, humor Focado." [ref=f12e42]':
+        - generic [ref=f12e48]: Ao vivo
+        - generic [ref=f12e50]:
+          - generic [ref=f12e51]:
+            - paragraph [ref=f12e52]: Energia
+            - paragraph [ref=f12e53]: 86/100
+          - generic [ref=f12e54]: Plena
+        - generic [ref=f12e59]:
+          - generic [ref=f12e60]: Baixa
+          - generic [ref=f12e61]: Atenção
+          - generic [ref=f12e62]: Boa
+          - generic [ref=f12e63]: Plena
+        - generic [ref=f12e64]:
+          - generic [ref=f12e65]:
+            - generic [ref=f12e68]: Postura
+            - paragraph [ref=f12e69]: 92%
+          - generic [ref=f12e70]:
+            - generic [ref=f12e73]: Humor
+            - paragraph [ref=f12e74]: Focado
+        - generic [ref=f12e75]:
+          - generic [ref=f12e76]: Próxima Pausa Mental
+          - generic [ref=f12e77]: em 12 min
+    - generic [ref=f12e79]:
+      - generic [ref=f12e80]:
+        - paragraph [ref=f12e81]: 100%
+        - paragraph [ref=f12e82]: processado no navegador
+      - generic [ref=f12e83]:
+        - paragraph [ref=f12e84]: "0"
+        - paragraph [ref=f12e85]: imagens enviadas a servidores
+      - generic [ref=f12e86]:
+        - paragraph [ref=f12e87]: LGPD
+        - paragraph [ref=f12e88]: privacidade por padrão
+      - generic [ref=f12e89]:
+        - paragraph [ref=f12e90]: 7 dias
+        - paragraph [ref=f12e91]: de teste, sem cartão
+    - generic [ref=f12e92]:
+      - separator [ref=f12e94]
+      - generic [ref=f12e95]:
+        - generic [ref=f12e96]:
+          - generic [ref=f12e97]: Como funciona
+          - heading "Da câmera ao cuidado, em quatro passos" [level=2] [ref=f12e99]
+          - paragraph [ref=f12e100]: Nada sai do seu computador. O que viaja é, no máximo, o seu índice de energia — e só se você quiser sincronizar histórico.
+        - generic [ref=f12e101]:
+          - generic [ref=f12e103]:
+            - generic [ref=f12e104]: "01"
+            - heading "Ligue a câmera quando quiser" [level=3] [ref=f12e105]
+            - paragraph [ref=f12e106]: Você concede acesso só quando vai usar a leitura, e revoga a qualquer momento. Sem instalar nada.
+          - generic [ref=f12e108]:
+            - generic [ref=f12e109]: "02"
+            - heading "O StamFlow lê postura e humor" [level=3] [ref=f12e110]
+            - paragraph [ref=f12e111]: Modelos rodam dentro do navegador, quadro a quadro, e estimam sua postura e seu estado — sem gravar nada.
+          - generic [ref=f12e113]:
+            - generic [ref=f12e114]: "03"
+            - heading "Vira um índice de energia" [level=3] [ref=f12e115]
+            - paragraph [ref=f12e116]: As leituras viram um número simples, no espectro de energia, que você acompanha ao longo do dia.
+          - generic [ref=f12e118]:
+            - generic [ref=f12e119]: "04"
+            - heading "Ele te cuida na hora certa" [level=3] [ref=f12e120]
+            - paragraph [ref=f12e121]: Pausas, respiração e foco entram em cena quando sua energia pede — antes de você chegar no limite.
+    - generic [ref=f12e122]:
+      - separator [ref=f12e124]
+      - generic [ref=f12e126]:
+        - generic [ref=f12e127]:
+          - generic [ref=f12e128]: Privacidade
+          - heading "Sua imagem não é o produto." [level=2] [ref=f12e130]
+          - paragraph [ref=f12e131]: "A maioria das ferramentas de câmera manda tudo para a nuvem. O StamFlow faz o oposto: a leitura nasce e morre no seu dispositivo."
+        - generic [ref=f12e132]:
+          - generic [ref=f12e134]:
+            - img [ref=f12e136]
+            - generic [ref=f12e139]:
+              - heading "Processamento local" [level=3] [ref=f12e140]
+              - paragraph [ref=f12e141]: A leitura de postura e expressão acontece 100% dentro do seu navegador. Nenhum quadro de vídeo é enviado.
+          - generic [ref=f12e143]:
+            - img [ref=f12e145]
+            - generic [ref=f12e148]:
+              - heading "Você no controle da câmera" [level=3] [ref=f12e149]
+              - paragraph [ref=f12e150]: O acesso é concedido por você, quando quiser, e revogável a qualquer instante. Sem gravação.
+          - generic [ref=f12e152]:
+            - img [ref=f12e154]
+            - generic [ref=f12e157]:
+              - heading "Dados sensíveis não viajam" [level=3] [ref=f12e158]
+              - paragraph [ref=f12e159]: O que pode sincronizar é o seu índice de energia — um número — nunca a imagem que o gerou.
+    - generic [ref=f12e160]:
+      - separator [ref=f12e162]
+      - generic [ref=f12e163]:
+        - generic [ref=f12e164]:
+          - generic [ref=f12e165]: Tudo incluído
+          - heading "Um só plano, o produto inteiro" [level=2] [ref=f12e167]
+          - paragraph [ref=f12e168]: Da leitura ao vivo aos relatórios de evolução — sem níveis, sem recurso escondido atrás de upgrade.
+        - generic [ref=f12e169]:
+          - generic [ref=f12e171]:
+            - img [ref=f12e173]
+            - heading "Leitura ao vivo" [level=3] [ref=f12e175]
+            - paragraph [ref=f12e176]: Humor, postura e energia estimados em tempo real pela webcam.
+          - generic [ref=f12e178]:
+            - img [ref=f12e180]
+            - heading "100% no navegador" [level=3] [ref=f12e183]
+            - paragraph [ref=f12e184]: Processamento local — nenhuma imagem sai do seu dispositivo.
+          - generic [ref=f12e186]:
+            - img [ref=f12e188]
+            - heading "Exercícios guiados" [level=3] [ref=f12e190]
+            - paragraph [ref=f12e191]: Pausas ativas com alongamentos curtos ao longo do dia.
+          - generic [ref=f12e193]:
+            - img [ref=f12e195]
+            - heading "Pausa Mental" [level=3] [ref=f12e197]
+            - paragraph [ref=f12e198]: Áudios de respiração e relaxamento para desacelerar.
+          - generic [ref=f12e200]:
+            - img [ref=f12e202]
+            - heading "Modo Foco" [level=3] [ref=f12e206]
+            - paragraph [ref=f12e207]: Trilhas sonoras ambientes para entrar em concentração.
+          - generic [ref=f12e209]:
+            - img [ref=f12e211]
+            - heading "StamFlow University" [level=3] [ref=f12e214]
+            - paragraph [ref=f12e215]: Conteúdo guiado sobre ergonomia, hábito e bem-estar.
+          - generic [ref=f12e217]:
+            - img [ref=f12e219]
+            - heading "Relatórios e tendências" [level=3] [ref=f12e222]
+            - paragraph [ref=f12e223]: Histórico da sua energia com padrões ao longo do tempo.
+          - generic [ref=f12e225]:
+            - img [ref=f12e227]
+            - heading "Conquistas" [level=3] [ref=f12e230]
+            - paragraph [ref=f12e231]: Um sistema de metas para acompanhar sua evolução.
+          - generic [ref=f12e233]:
+            - img [ref=f12e235]
+            - heading "Suporte por chamados" [level=3] [ref=f12e237]
+            - paragraph [ref=f12e238]: Abra chamados direto no painel e acompanhe a resposta.
+    - generic [ref=f12e239]:
+      - separator [ref=f12e241]
+      - generic [ref=f12e245]:
+        - generic [ref=f12e246]:
+          - generic [ref=f12e247]: Para empresas
+          - heading "Bem-estar da equipe, com apoio à NR-1" [level=2] [ref=f12e249]
+          - paragraph [ref=f12e250]: O gestor acompanha a saúde do time de forma agregada — ganha um apoio real ao monitoramento contínuo que a nova NR-1 passa a exigir.
+          - generic [ref=f12e251]:
+            - button "Falar com o time" [ref=f12e252] [cursor=pointer]
+            - link "Conhecer a solução" [ref=f12e253] [cursor=pointer]:
+              - /url: /empresas
+        - list [ref=f12e254]:
+          - listitem [ref=f12e255]:
+            - img [ref=f12e257]
+            - generic [ref=f12e259]: Visão agregada da equipe — nunca a leitura individual de cada pessoa.
+          - listitem [ref=f12e260]:
+            - img [ref=f12e262]
+            - generic [ref=f12e264]: "Apoio à NR-1: acompanhamento contínuo e documentável dos riscos psicossociais."
+          - listitem [ref=f12e265]:
+            - img [ref=f12e267]
+            - generic [ref=f12e269]: Licenças por colaborador e gestor, com valor sob medida.
+    - generic [ref=f12e270]:
+      - separator [ref=f12e272]
+      - generic [ref=f12e273]:
+        - generic [ref=f12e274]:
+          - generic [ref=f12e275]: Planos
+          - heading "Um preço justo pela sua energia" [level=2] [ref=f12e277]
+          - paragraph [ref=f12e278]: O produto completo, sem níveis. Escolha o período — quanto maior, mais você economiza.
+        - radiogroup "Período do plano" [ref=f12e280]:
+          - radio "Mensal" [ref=f12e281] [cursor=pointer]
+          - radio "Trimestral−11%" [checked] [ref=f12e282] [cursor=pointer]:
+            - text: Trimestral
+            - generic [ref=f12e284]: −11%
+          - radio "Semestral−16%" [ref=f12e285] [cursor=pointer]:
+            - text: Semestral
+            - generic [ref=f12e286]: −16%
+          - radio "Anual−25%" [ref=f12e287] [cursor=pointer]:
+            - text: Anual
+            - generic [ref=f12e288]: −25%
+    - generic [ref=f12e303]:
+      - separator [ref=f12e305]
+      - generic [ref=f12e307]:
+        - generic [ref=f12e308]:
+          - generic [ref=f12e309]: Dúvidas
+          - heading "Perguntas frequentes" [level=2] [ref=f12e311]
+          - paragraph [ref=f12e312]: Não achou o que procurava? Fale com a gente — respondemos rápido.
+        - generic [ref=f12e313]:
+          - generic [ref=f12e314]:
+            - heading "O StamFlow envia o meu vídeo para algum servidor?" [level=3] [ref=f12e315]:
+              - button "O StamFlow envia o meu vídeo para algum servidor?" [expanded] [ref=f12e316] [cursor=pointer]:
+                - generic [ref=f12e317]: O StamFlow envia o meu vídeo para algum servidor?
+                - img [ref=f12e319]
+            - paragraph [ref=f12e322]: Não. A leitura de postura e de expressão acontece inteiramente dentro do seu navegador. Nenhum quadro de vídeo, foto ou imagem sai do seu computador — o que viaja é, no máximo, o seu índice de energia, e só se você quiser sincronizar histórico.
+          - heading "Preciso instalar alguma coisa?" [level=3] [ref=f12e324]:
+            - button "Preciso instalar alguma coisa?" [ref=f12e325] [cursor=pointer]:
+              - generic [ref=f12e326]: Preciso instalar alguma coisa?
+              - img [ref=f12e328]
+          - heading "Como funciona o teste grátis?" [level=3] [ref=f12e331]:
+            - button "Como funciona o teste grátis?" [ref=f12e332] [cursor=pointer]:
+              - generic [ref=f12e333]: Como funciona o teste grátis?
+              - img [ref=f12e335]
+          - heading "Qual a diferença entre o plano individual e o empresarial?" [level=3] [ref=f12e338]:
+            - button "Qual a diferença entre o plano individual e o empresarial?" [ref=f12e339] [cursor=pointer]:
+              - generic [ref=f12e340]: Qual a diferença entre o plano individual e o empresarial?
+              - img [ref=f12e342]
+          - heading "O gestor consegue ver os dados de cada pessoa da equipe?" [level=3] [ref=f12e345]:
+            - button "O gestor consegue ver os dados de cada pessoa da equipe?" [ref=f12e346] [cursor=pointer]:
+              - generic [ref=f12e347]: O gestor consegue ver os dados de cada pessoa da equipe?
+              - img [ref=f12e349]
+          - heading "O que tem além da leitura de energia?" [level=3] [ref=f12e352]:
+            - button "O que tem além da leitura de energia?" [ref=f12e353] [cursor=pointer]:
+              - generic [ref=f12e354]: O que tem além da leitura de energia?
+              - img [ref=f12e356]
+          - heading "Já tenho conta. Onde eu entro?" [level=3] [ref=f12e359]:
+            - button "Já tenho conta. Onde eu entro?" [ref=f12e360] [cursor=pointer]:
+              - generic [ref=f12e361]: Já tenho conta. Onde eu entro?
+              - img [ref=f12e363]
+    - generic [ref=f12e365]:
+      - separator [ref=f12e367]
+      - generic [ref=f12e369]:
+        - heading "Comece a cuidar da sua energia hoje" [level=2] [ref=f12e371]
+        - paragraph [ref=f12e372]: 7 dias com o produto completo, sem cartão. A leitura acontece no seu navegador — o cuidado, no seu ritmo.
+        - generic [ref=f12e373]:
+          - link "Começar a Jornada" [ref=f12e374] [cursor=pointer]:
+            - /url: /#planos
+          - link "Já tenho conta" [ref=f12e375] [cursor=pointer]:
+            - /url: https://login.stamflow.com.br
+  - contentinfo [ref=f12e376]:
+    - separator [ref=f12e378]
+    - generic [ref=f12e379]:
+      - generic [ref=f12e380]:
+        - generic [ref=f12e381]:
+          - text: Stam
+          - img [ref=f12e382]
+          - generic [ref=f12e384]: Flow
+        - paragraph [ref=f12e385]: Sua energia produtiva, lida em tempo real — e cuidada ao longo do dia. Processamento 100% no seu navegador.
+        - generic [ref=f12e386]:
+          - link "Instagram" [ref=f12e387] [cursor=pointer]:
+            - /url: https://instagram.com
+            - img [ref=f12e388]
+          - link "LinkedIn" [ref=f12e392] [cursor=pointer]:
+            - /url: https://linkedin.com
+            - img [ref=f12e393]
+          - link "YouTube" [ref=f12e396] [cursor=pointer]:
+            - /url: https://youtube.com
+            - img [ref=f12e397]
+      - generic [ref=f12e400]:
+        - heading "Produto" [level=3] [ref=f12e401]
+        - list [ref=f12e402]:
+          - listitem [ref=f12e403]:
+            - link "Para você" [ref=f12e404] [cursor=pointer]:
+              - /url: /para-voce
+          - listitem [ref=f12e405]:
+            - link "Planos" [ref=f12e406] [cursor=pointer]:
+              - /url: /#planos
+          - listitem [ref=f12e407]:
+            - link "Como funciona" [ref=f12e408] [cursor=pointer]:
+              - /url: /#como-funciona
+          - listitem [ref=f12e409]:
+            - link "Privacidade" [ref=f12e410] [cursor=pointer]:
+              - /url: /#privacidade
+      - generic [ref=f12e411]:
+        - heading "Empresas" [level=3] [ref=f12e412]
+        - list [ref=f12e413]:
+          - listitem [ref=f12e414]:
+            - link "Para empresas" [ref=f12e415] [cursor=pointer]:
+              - /url: /empresas
+          - listitem [ref=f12e416]:
+            - link "Apoio à NR-1" [ref=f12e417] [cursor=pointer]:
+              - /url: /empresas#nr1
+          - listitem [ref=f12e418]:
+            - link "Dúvidas" [ref=f12e419] [cursor=pointer]:
+              - /url: /#duvidas
+      - generic [ref=f12e420]:
+        - heading "Acesso" [level=3] [ref=f12e421]
+        - list [ref=f12e422]:
+          - listitem [ref=f12e423]:
+            - link "Entrar" [ref=f12e424] [cursor=pointer]:
+              - /url: https://login.stamflow.com.br
+          - listitem [ref=f12e425]:
+            - button "Falar com vendas" [ref=f12e426] [cursor=pointer]
+    - generic [ref=f12e427]:
+      - separator [ref=f12e428]
+      - generic [ref=f12e429]:
+        - paragraph [ref=f12e430]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f12e431]: Feito com cuidado — sua energia, no seu ritmo.

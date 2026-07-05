@@ -1,0 +1,159 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link "StamFlow — início" [ref=f1e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f1e5]:
+          - text: Stam
+          - img [ref=f1e6]
+          - generic [ref=f1e8]: Flow
+      - navigation "Seções" [ref=f1e9]:
+        - link "Como funciona" [ref=f1e10] [cursor=pointer]:
+          - /url: /#como-funciona
+        - link "Privacidade" [ref=f1e11] [cursor=pointer]:
+          - /url: /#privacidade
+        - link "Para você" [ref=f1e12] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f1e13] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f1e14] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f1e15] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f1e16]:
+        - link "Entrar" [ref=f1e17] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - button "Começar teste grátis" [ref=f1e18] [cursor=pointer]
+  - main [ref=f1e19]:
+    - generic [ref=f1e21]:
+      - paragraph [ref=f1e22]: StamFlow para você
+      - heading "Sua energia produtiva, lida pela câmera." [level=1] [ref=f1e24]
+      - paragraph [ref=f1e25]: O StamFlow acompanha seu humor, sua postura e sua energia enquanto você trabalha — e sugere o exercício, o foco ou a pausa certa na hora certa. Tudo processado no seu navegador, só para os seus olhos.
+      - generic [ref=f1e26]:
+        - button "Começar teste grátis de 7 dias" [ref=f1e27] [cursor=pointer]
+        - link "Ver o que você ganha" [ref=f1e28] [cursor=pointer]:
+          - /url: "#recursos"
+      - paragraph [ref=f1e29]: Sem cartão para começar · funciona no seu computador · leitura 100% local
+    - generic [ref=f1e32]:
+      - generic [ref=f1e33]:
+        - paragraph [ref=f1e34]: Soa familiar?
+        - heading "Seu corpo dá sinais o dia todo. Você só não os vê." [level=2] [ref=f1e36]
+        - paragraph [ref=f1e37]: Trabalhar horas na frente da tela cobra um preço silencioso — na postura, no humor, na energia. O StamFlow existe para tornar esses sinais visíveis, no momento em que ainda dá para agir.
+      - list [ref=f1e39]:
+        - listitem [ref=f1e40]: A tarde chega e a energia despenca, mas você só percebe quando já rendeu menos.
+        - listitem [ref=f1e42]: Horas na mesma posição — e a conta chega em dor nas costas e no pescoço.
+        - listitem [ref=f1e44]: Você esquece de pausar, respirar, levantar. O dia passa no automático.
+        - listitem [ref=f1e46]: No fim, fica a sensação de cansaço sem saber exatamente o porquê.
+    - generic [ref=f1e49]:
+      - generic [ref=f1e51]:
+        - paragraph [ref=f1e52]: Como o StamFlow ajuda
+        - heading "Do sinal à ação, sem esforço." [level=2] [ref=f1e54]
+        - paragraph [ref=f1e55]: Você não precisa parar para anotar nada. O StamFlow observa, entende e sugere — você só aproveita.
+      - generic [ref=f1e56]:
+        - generic [ref=f1e57]:
+          - text: "01"
+          - heading "Abra e deixe rodar" [level=3] [ref=f1e58]
+          - paragraph [ref=f1e59]: Com a câmera ligada, o StamFlow lê sua expressão e sua postura em tempo real enquanto você trabalha — sem tirar seu foco.
+        - generic [ref=f1e60]:
+          - text: "02"
+          - heading "Receba o empurrão certo" [level=3] [ref=f1e61]
+          - paragraph [ref=f1e62]: Energia caindo? Postura torta há tempo demais? Ele sugere um exercício, uma pausa mental ou um bloco de foco no momento em que faz diferença.
+        - generic [ref=f1e63]:
+          - text: "03"
+          - heading "Veja sua evolução" [level=3] [ref=f1e64]
+          - paragraph [ref=f1e65]: Seu painel mostra como seu humor e sua energia variam ao longo dos dias — e as conquistas que você desbloqueia mantendo o hábito.
+    - generic [ref=f1e67]:
+      - generic [ref=f1e69]:
+        - paragraph [ref=f1e70]: Tudo o que você ganha
+        - heading "Um estúdio de bem-estar dentro do seu dia." [level=2] [ref=f1e72]
+      - generic [ref=f1e73]:
+        - generic [ref=f1e74]:
+          - img [ref=f1e76]
+          - heading "Leitura ao vivo de humor e energia" [level=3] [ref=f1e78]
+          - paragraph [ref=f1e79]: A câmera acompanha sua expressão e traduz em um retrato de como você está agora — não só como você acha que está.
+        - generic [ref=f1e80]:
+          - img [ref=f1e82]
+          - heading "Alerta de postura" [level=3] [ref=f1e84]
+          - paragraph [ref=f1e85]: Passou tempo demais torto ou curvado? O StamFlow avisa antes de virar dor.
+        - generic [ref=f1e86]:
+          - img [ref=f1e88]
+          - heading "Exercícios guiados" [level=3] [ref=f1e90]
+          - paragraph [ref=f1e91]: Alongamentos e pausas ativas rápidas, para fazer sem sair da mesa.
+        - generic [ref=f1e92]:
+          - img [ref=f1e94]
+          - heading "Pausa Mental" [level=3] [ref=f1e96]
+          - paragraph [ref=f1e97]: Áudios de respiração e relaxamento para descomprimir em poucos minutos.
+        - generic [ref=f1e98]:
+          - img [ref=f1e100]
+          - heading "Modo Foco" [level=3] [ref=f1e102]
+          - paragraph [ref=f1e103]: Trilhas sonoras pensadas para entrar no ritmo e sustentar a concentração.
+        - generic [ref=f1e104]:
+          - img [ref=f1e106]
+          - heading "StamFlow University" [level=3] [ref=f1e108]
+          - paragraph [ref=f1e109]: Conteúdos curtos sobre ergonomia, energia e bem-estar no trabalho.
+        - generic [ref=f1e110]:
+          - img [ref=f1e112]
+          - heading "Seu painel de evolução" [level=3] [ref=f1e114]
+          - paragraph [ref=f1e115]: Humor, energia e melhores dias ao longo do tempo — o seu histórico, só seu.
+        - generic [ref=f1e116]:
+          - img [ref=f1e118]
+          - heading "Conquistas" [level=3] [ref=f1e120]
+          - paragraph [ref=f1e121]: Pequenas metas que transformam o cuidado com você em hábito que gruda.
+    - generic [ref=f1e125]:
+      - paragraph [ref=f1e126]: A parte mais importante
+      - heading "Sua câmera nunca sai do seu computador." [level=2] [ref=f1e128]
+      - paragraph [ref=f1e129]: Toda a leitura de humor e postura acontece 100% dentro do seu navegador. Nenhuma imagem ou vídeo é enviado, gravado ou armazenado — nem por nós. O que fica com você é só o retrato da sua energia, para você entender melhor os seus dias.
+    - generic [ref=f1e133]:
+      - heading "Comece a cuidar da sua energia hoje." [level=2] [ref=f1e134]
+      - paragraph [ref=f1e135]: 7 dias grátis, com tudo liberado e sem cartão. Se fizer sentido para você, é só continuar.
+      - button "Começar teste grátis de 7 dias" [ref=f1e137] [cursor=pointer]
+  - contentinfo [ref=f1e138]:
+    - generic [ref=f1e139]:
+      - generic [ref=f1e140]:
+        - generic [ref=f1e141]:
+          - generic [ref=f1e142]:
+            - text: Stam
+            - img [ref=f1e143]
+            - generic [ref=f1e145]: Flow
+          - paragraph [ref=f1e146]: Postura e humor lidos em tempo real, no seu navegador, para cuidar da sua energia ao longo do dia.
+        - generic [ref=f1e147]:
+          - paragraph [ref=f1e148]: Produto
+          - list [ref=f1e149]:
+            - listitem [ref=f1e150]:
+              - link "Como funciona" [ref=f1e151] [cursor=pointer]:
+                - /url: "#como-funciona"
+            - listitem [ref=f1e152]:
+              - link "Privacidade" [ref=f1e153] [cursor=pointer]:
+                - /url: "#privacidade"
+            - listitem [ref=f1e154]:
+              - link "Recursos" [ref=f1e155] [cursor=pointer]:
+                - /url: "#recursos"
+            - listitem [ref=f1e156]:
+              - link "Planos" [ref=f1e157] [cursor=pointer]:
+                - /url: "#planos"
+        - generic [ref=f1e158]:
+          - paragraph [ref=f1e159]: Conta
+          - list [ref=f1e160]:
+            - listitem [ref=f1e161]:
+              - link "Entrar" [ref=f1e162] [cursor=pointer]:
+                - /url: https://login.stamflow.com.br
+            - listitem [ref=f1e163]:
+              - button "Teste grátis" [ref=f1e164] [cursor=pointer]
+            - listitem [ref=f1e165]:
+              - link "Para empresas" [ref=f1e166] [cursor=pointer]:
+                - /url: "#empresas"
+            - listitem [ref=f1e167]:
+              - button "Falar com vendas" [ref=f1e168] [cursor=pointer]
+        - generic [ref=f1e169]:
+          - paragraph [ref=f1e170]: Ajuda
+          - list [ref=f1e171]:
+            - listitem [ref=f1e172]:
+              - link "Dúvidas" [ref=f1e173] [cursor=pointer]:
+                - /url: "#duvidas"
+            - listitem [ref=f1e174]:
+              - link "Recuperar acesso" [ref=f1e175] [cursor=pointer]:
+                - /url: https://login.stamflow.com.br
+      - generic [ref=f1e176]:
+        - paragraph [ref=f1e177]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f1e178]: Feito com energia — e sem enviar o seu vídeo a lugar nenhum.
+  - alert [ref=f1e179]

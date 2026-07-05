@@ -1,0 +1,212 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - generic [ref=f2e3]:
+      - link "StamFlow — início" [ref=f2e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f2e5]:
+          - text: Stam
+          - img [ref=f2e6]
+          - generic [ref=f2e8]: Flow
+      - navigation "Seções" [ref=f2e9]:
+        - link "Como funciona" [ref=f2e10] [cursor=pointer]:
+          - /url: /#como-funciona
+        - link "Privacidade" [ref=f2e11] [cursor=pointer]:
+          - /url: /#privacidade
+        - link "Para você" [ref=f2e12] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f2e13] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f2e14] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f2e15] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f2e16]:
+        - link "Entrar" [ref=f2e17] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - button "Começar teste grátis" [ref=f2e18] [cursor=pointer]
+  - main [ref=f2e19]:
+    - generic [ref=f2e21]:
+      - paragraph [ref=f2e22]: StamFlow para empresas
+      - heading "Você, conectado com a sua empresa." [level=1] [ref=f2e24]
+      - paragraph [ref=f2e25]: Cada colaborador cuida da própria energia no dia a dia. O gestor acompanha a saúde do time de forma agregada — e ganha um apoio real para o monitoramento contínuo que a nova NR-1 passa a exigir.
+      - generic [ref=f2e26]:
+        - button "Agendar demonstração ao vivo" [ref=f2e27] [cursor=pointer]
+        - link "Ver como funciona" [ref=f2e28] [cursor=pointer]:
+          - /url: "#como-funciona"
+      - paragraph [ref=f2e29]: Atendimento consultivo · pacotes por licença · sem cartão para conversar
+    - generic [ref=f2e33]:
+      - generic [ref=f2e34]: Nova NR-1 · vigência a partir de 26/05/2026
+      - heading "Saúde mental virou obrigação legal. E precisa ser documentada." [level=2] [ref=f2e35]
+      - generic [ref=f2e36]:
+        - paragraph [ref=f2e37]:
+          - text: A atualização da NR-1 (Portaria MTE 1.419/2024) passa a exigir que
+          - strong [ref=f2e38]: todas as empresas com empregados CLT
+          - text: identifiquem, avaliem e gerenciem os riscos psicossociais do trabalho — sobrecarga, pressão por metas, exaustão — no mesmo nível dos riscos físicos. A partir de 26 de maio de 2026, a fiscalização passa a ter caráter punitivo.
+        - paragraph [ref=f2e39]:
+          - text: Na prática, a norma pede um processo
+          - strong [ref=f2e40]: contínuo e documentado
+          - text: ": escuta dos trabalhadores, acompanhamento de indicadores e registro ao longo do tempo. É exatamente aí que o StamFlow ajuda — gerando um acompanhamento recorrente e dados agregados que apoiam esse monitoramento."
+      - paragraph [ref=f2e41]: O StamFlow é um instrumento de apoio ao acompanhamento do bem-estar da equipe. Ele não substitui o PGR, o laudo técnico nem a atuação do SESMT/medicina do trabalho — ele complementa esse processo com dados contínuos e agregados que ajudam a sustentar a gestão de riscos psicossociais.
+      - button "Entender como aplicamos na sua empresa" [ref=f2e42] [cursor=pointer]
+    - generic [ref=f2e44]:
+      - generic [ref=f2e46]:
+        - paragraph [ref=f2e47]: Como funciona
+        - heading "Dois lados, um só cuidado." [level=2] [ref=f2e49]
+        - paragraph [ref=f2e50]: "Do colaborador ao gestor: cada um enxerga o que faz sentido para o seu papel, com a privacidade preservada em todas as camadas."
+      - generic [ref=f2e51]:
+        - generic [ref=f2e52]:
+          - text: "01"
+          - heading "Cada colaborador recebe o próprio painel" [level=3] [ref=f2e53]
+          - paragraph [ref=f2e54]: "No dia a dia, a pessoa acompanha humor, postura e energia em tempo real pela câmera — com exercícios guiados, pausas mentais e foco. A leitura é 100% no navegador dela: nenhuma imagem sai do dispositivo."
+        - generic [ref=f2e55]:
+          - text: "02"
+          - heading "O gestor enxerga a equipe de forma agregada" [level=3] [ref=f2e56]
+          - paragraph [ref=f2e57]: Um painel próprio mostra a energia média do time, distribuição de humor, indicadores de ergonomia e engajamento (exercícios e pausas realizados) — sempre do grupo, nunca a leitura individual de uma pessoa específica.
+        - generic [ref=f2e58]:
+          - text: "03"
+          - heading "Relatórios que acompanham a evolução" [level=3] [ref=f2e59]
+          - paragraph [ref=f2e60]: A aba de relatórios reúne tendências ao longo do tempo — melhores e piores períodos, evolução do engajamento — o tipo de registro contínuo que dá suporte ao acompanhamento exigido pela NR-1.
+        - generic [ref=f2e61]:
+          - text: "04"
+          - heading "Gestão por licenças, simples de administrar" [level=3] [ref=f2e62]
+          - paragraph [ref=f2e63]: Você contrata licenças para colaboradores e gestores. Convida a equipe, acompanha o uso e ajusta conforme o time cresce — tudo pelo painel de gestão.
+    - generic [ref=f2e65]:
+      - generic [ref=f2e67]:
+        - paragraph [ref=f2e68]: O que a sua empresa recebe
+        - heading "Tudo o que o time precisa, nada que exponha ninguém." [level=2] [ref=f2e70]
+      - generic [ref=f2e71]:
+        - generic [ref=f2e72]:
+          - img [ref=f2e74]
+          - heading "Painel individual para cada pessoa" [level=3] [ref=f2e76]
+          - paragraph [ref=f2e77]: Acompanhamento ao vivo, exercícios, Pausa Mental, Modo Foco e University — o produto completo para o colaborador.
+        - generic [ref=f2e78]:
+          - img [ref=f2e80]
+          - heading "Painel de gestão com visão do time" [level=3] [ref=f2e82]
+          - paragraph [ref=f2e83]: Energia média, humor e ergonomia agregados, engajamento da equipe e uso de licenças, em um só lugar.
+        - generic [ref=f2e84]:
+          - img [ref=f2e86]
+          - heading "Relatórios e histórico" [level=3] [ref=f2e88]
+          - paragraph [ref=f2e89]: Tendências ao longo do tempo para embasar decisões e sustentar o monitoramento contínuo dos riscos psicossociais.
+        - generic [ref=f2e90]:
+          - img [ref=f2e92]
+          - heading "Dados sempre agregados" [level=3] [ref=f2e94]
+          - paragraph [ref=f2e95]: O gestor nunca vê a leitura sensível e individual de uma pessoa — só o retrato do grupo. Cuidado coletivo, privacidade preservada.
+        - generic [ref=f2e96]:
+          - img [ref=f2e98]
+          - heading "Onboarding do time" [level=3] [ref=f2e100]
+          - paragraph [ref=f2e101]: Convites por e-mail, ativação simples e acompanhamento de quem já está usando.
+        - generic [ref=f2e102]:
+          - img [ref=f2e104]
+          - heading "Suporte e acompanhamento" [level=3] [ref=f2e106]
+          - paragraph [ref=f2e107]: Canal de chamados e apoio do nosso time para a equipe extrair valor desde o primeiro dia.
+    - generic [ref=f2e110]:
+      - generic [ref=f2e111]:
+        - paragraph [ref=f2e112]: Privacidade em primeiro lugar
+        - heading "Cuidar do time não é vigiar o time." [level=2] [ref=f2e114]
+        - paragraph [ref=f2e115]: A leitura de humor, postura e energia acontece 100% no navegador do colaborador — nenhuma imagem ou vídeo sai do dispositivo dele. Para o gestor, só chega o retrato agregado da equipe. É assim que o StamFlow entrega cuidado coletivo sem transformar bem-estar em vigilância.
+        - list [ref=f2e116]:
+          - listitem [ref=f2e117]:
+            - img [ref=f2e119]
+            - text: Processamento da câmera 100% local, no dispositivo da pessoa
+          - listitem [ref=f2e121]:
+            - img [ref=f2e123]
+            - text: Gestor vê o agregado do time, nunca a leitura individual sensível
+          - listitem [ref=f2e125]:
+            - img [ref=f2e127]
+            - text: Alinhado ao espírito da LGPD e da própria NR-1, que pedem indicadores coletivos
+      - generic [ref=f2e129]:
+        - paragraph [ref=f2e130]: Energia média da equipe
+        - generic [ref=f2e131]:
+          - generic [ref=f2e132]: "72"
+          - generic [ref=f2e133]: /100
+        - generic [ref=f2e134]:
+          - generic [ref=f2e136]:
+            - generic [ref=f2e137]: Bem-estar
+            - generic [ref=f2e138]: 78%
+          - generic [ref=f2e141]:
+            - generic [ref=f2e142]: Ergonomia (postura)
+            - generic [ref=f2e143]: 65%
+          - generic [ref=f2e146]:
+            - generic [ref=f2e147]: Engajamento
+            - generic [ref=f2e148]: 81%
+        - paragraph [ref=f2e150]: Ilustração de painel agregado. Nenhum dado individual é exibido ao gestor.
+    - generic [ref=f2e152]:
+      - generic [ref=f2e154]:
+        - paragraph [ref=f2e155]: Como começamos
+        - heading "Um processo consultivo, do primeiro contato à implantação." [level=2] [ref=f2e157]
+        - paragraph [ref=f2e158]: "Fechamos pacotes empresariais de forma direta: você conversa com o nosso time e agenda uma demonstração ao vivo."
+      - generic [ref=f2e159]:
+        - generic [ref=f2e160]:
+          - text: "01"
+          - heading "Você fala com a gente" [level=3] [ref=f2e161]
+          - paragraph [ref=f2e162]: Conta o tamanho do time e o contexto. Em poucos minutos entendemos se faz sentido para a sua realidade.
+        - generic [ref=f2e163]:
+          - text: "02"
+          - heading "Demonstração ao vivo" [level=3] [ref=f2e164]
+          - paragraph [ref=f2e165]: Mostramos o produto funcionando de verdade — painel do colaborador e visão do gestor — e respondemos tudo.
+        - generic [ref=f2e166]:
+          - text: "03"
+          - heading "Pacote sob medida" [level=3] [ref=f2e167]
+          - paragraph [ref=f2e168]: Montamos as licenças de colaboradores e gestores conforme a sua equipe, com valor fechado para o seu caso.
+        - generic [ref=f2e169]:
+          - text: "04"
+          - heading "Implantação e acompanhamento" [level=3] [ref=f2e170]
+          - paragraph [ref=f2e171]: Ajudamos no convite do time e no primeiro uso, e seguimos por perto para a equipe extrair valor.
+      - button "Falar com o nosso time" [ref=f2e173] [cursor=pointer]
+    - generic [ref=f2e177]:
+      - heading "Prepare a sua equipe — e a sua empresa — para a nova NR-1." [level=2] [ref=f2e178]
+      - paragraph [ref=f2e179]: Agende uma demonstração ao vivo e veja, na prática, como o StamFlow cuida do time e apoia o seu monitoramento contínuo de bem-estar.
+      - generic [ref=f2e180]:
+        - button "Agendar demonstração ao vivo" [ref=f2e181] [cursor=pointer]
+        - link "Já sou cliente — entrar" [ref=f2e182] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+  - contentinfo [ref=f2e183]:
+    - generic [ref=f2e184]:
+      - generic [ref=f2e185]:
+        - generic [ref=f2e186]:
+          - generic [ref=f2e187]:
+            - text: Stam
+            - img [ref=f2e188]
+            - generic [ref=f2e190]: Flow
+          - paragraph [ref=f2e191]: Postura e humor lidos em tempo real, no seu navegador, para cuidar da sua energia ao longo do dia.
+        - generic [ref=f2e192]:
+          - paragraph [ref=f2e193]: Produto
+          - list [ref=f2e194]:
+            - listitem [ref=f2e195]:
+              - link "Como funciona" [ref=f2e196] [cursor=pointer]:
+                - /url: "#como-funciona"
+            - listitem [ref=f2e197]:
+              - link "Privacidade" [ref=f2e198] [cursor=pointer]:
+                - /url: "#privacidade"
+            - listitem [ref=f2e199]:
+              - link "Recursos" [ref=f2e200] [cursor=pointer]:
+                - /url: "#recursos"
+            - listitem [ref=f2e201]:
+              - link "Planos" [ref=f2e202] [cursor=pointer]:
+                - /url: "#planos"
+        - generic [ref=f2e203]:
+          - paragraph [ref=f2e204]: Conta
+          - list [ref=f2e205]:
+            - listitem [ref=f2e206]:
+              - link "Entrar" [ref=f2e207] [cursor=pointer]:
+                - /url: https://login.stamflow.com.br
+            - listitem [ref=f2e208]:
+              - button "Teste grátis" [ref=f2e209] [cursor=pointer]
+            - listitem [ref=f2e210]:
+              - link "Para empresas" [ref=f2e211] [cursor=pointer]:
+                - /url: "#empresas"
+            - listitem [ref=f2e212]:
+              - button "Falar com vendas" [ref=f2e213] [cursor=pointer]
+        - generic [ref=f2e214]:
+          - paragraph [ref=f2e215]: Ajuda
+          - list [ref=f2e216]:
+            - listitem [ref=f2e217]:
+              - link "Dúvidas" [ref=f2e218] [cursor=pointer]:
+                - /url: "#duvidas"
+            - listitem [ref=f2e219]:
+              - link "Recuperar acesso" [ref=f2e220] [cursor=pointer]:
+                - /url: https://login.stamflow.com.br
+      - generic [ref=f2e221]:
+        - paragraph [ref=f2e222]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f2e223]: Feito com energia — e sem enviar o seu vídeo a lugar nenhum.
+  - alert [ref=f2e224]

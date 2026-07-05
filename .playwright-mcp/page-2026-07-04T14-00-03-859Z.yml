@@ -1,0 +1,90 @@
+- generic [active] [ref=f5e1]:
+  - banner [ref=f5e2]:
+    - generic [ref=f5e3]:
+      - link "StamFlow — início" [ref=f5e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f5e5]:
+          - text: Stam
+          - img [ref=f5e6]
+          - generic [ref=f5e8]: Flow
+      - navigation "Seções" [ref=f5e9]:
+        - link "Como funciona" [ref=f5e10] [cursor=pointer]:
+          - /url: /#como-funciona
+        - link "Privacidade" [ref=f5e11] [cursor=pointer]:
+          - /url: /#privacidade
+        - link "Para você" [ref=f5e12] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f5e13] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f5e14] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f5e15] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f5e16]:
+        - link "Entrar" [ref=f5e17] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - button "Começar teste grátis" [ref=f5e18] [cursor=pointer]
+  - main [ref=f5e19]:
+    - generic [ref=f5e20]:
+      - img [ref=f5e22]
+      - heading "Que bom te ver de volta!" [level=1] [ref=f5e24]
+      - paragraph [ref=f5e25]: Parece que a sua assinatura expirou. Que tal renovar e voltar a acompanhar a sua energia, com tudo o que o StamFlow oferece?
+      - generic [ref=f5e26]:
+        - link "Renovar minha assinatura" [ref=f5e27] [cursor=pointer]:
+          - /url: /#planos
+        - link "Voltar ao site principal" [ref=f5e28] [cursor=pointer]:
+          - /url: /
+      - paragraph [ref=f5e29]:
+        - text: Acha que isso é um engano?
+        - link "Entrar com outra conta" [ref=f5e30] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+  - contentinfo [ref=f5e31]:
+    - generic [ref=f5e32]:
+      - generic [ref=f5e33]:
+        - generic [ref=f5e34]:
+          - generic [ref=f5e35]:
+            - text: Stam
+            - img [ref=f5e36]
+            - generic [ref=f5e38]: Flow
+          - paragraph [ref=f5e39]: Postura e humor lidos em tempo real, no seu navegador, para cuidar da sua energia ao longo do dia.
+        - generic [ref=f5e40]:
+          - paragraph [ref=f5e41]: Produto
+          - list [ref=f5e42]:
+            - listitem [ref=f5e43]:
+              - link "Como funciona" [ref=f5e44] [cursor=pointer]:
+                - /url: "#como-funciona"
+            - listitem [ref=f5e45]:
+              - link "Privacidade" [ref=f5e46] [cursor=pointer]:
+                - /url: "#privacidade"
+            - listitem [ref=f5e47]:
+              - link "Recursos" [ref=f5e48] [cursor=pointer]:
+                - /url: "#recursos"
+            - listitem [ref=f5e49]:
+              - link "Planos" [ref=f5e50] [cursor=pointer]:
+                - /url: "#planos"
+        - generic [ref=f5e51]:
+          - paragraph [ref=f5e52]: Conta
+          - list [ref=f5e53]:
+            - listitem [ref=f5e54]:
+              - link "Entrar" [ref=f5e55] [cursor=pointer]:
+                - /url: https://login.stamflow.com.br
+            - listitem [ref=f5e56]:
+              - button "Teste grátis" [ref=f5e57] [cursor=pointer]
+            - listitem [ref=f5e58]:
+              - link "Para empresas" [ref=f5e59] [cursor=pointer]:
+                - /url: "#empresas"
+            - listitem [ref=f5e60]:
+              - button "Falar com vendas" [ref=f5e61] [cursor=pointer]
+        - generic [ref=f5e62]:
+          - paragraph [ref=f5e63]: Ajuda
+          - list [ref=f5e64]:
+            - listitem [ref=f5e65]:
+              - link "Dúvidas" [ref=f5e66] [cursor=pointer]:
+                - /url: "#duvidas"
+            - listitem [ref=f5e67]:
+              - link "Recuperar acesso" [ref=f5e68] [cursor=pointer]:
+                - /url: https://login.stamflow.com.br
+      - generic [ref=f5e69]:
+        - paragraph [ref=f5e70]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f5e71]: Feito com energia — e sem enviar o seu vídeo a lugar nenhum.
+  - alert [ref=f5e72]

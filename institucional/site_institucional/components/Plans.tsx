@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Reveal, SectionHeading } from "@/components/ui/Section";
 import { Alert } from "@/components/ui/Alert";
-import { useModals } from "@/components/Providers";
+import { useCart, useModals } from "@/components/Providers";
 import {
   fetchAvulsoPlan,
   formatBRL,
@@ -18,7 +18,8 @@ import { fadeUp } from "@/lib/motion";
 type LoadState = "loading" | "error" | "success";
 
 export function Plans() {
-  const { openTrial, openEnterprise } = useModals();
+  const { openEnterprise } = useModals();
+  const { addToCart, item: cartItem } = useCart();
   const [state, setState] = useState<LoadState>("loading");
   const [plan, setPlan] = useState<Plan | null>(null);
   const [period, setPeriod] = useState<Period>(PERIODS[3]); // anual por padrão
@@ -48,10 +49,10 @@ export function Plans() {
             eyebrow="Planos"
             title={
               <>
-                Comece grátis. <span className="text-raio">Continue no seu ritmo.</span>
+                Um plano. <span className="text-raio">Toda a sua energia.</span>
               </>
             }
-            description="Sete dias com tudo liberado. Depois, um único plano com tudo incluído — escolha só por quanto tempo."
+            description="Um único plano com tudo incluído — escolha só por quanto tempo. Cancele quando quiser."
           />
         </Reveal>
 
@@ -112,7 +113,12 @@ export function Plans() {
           )}
 
           {state === "success" && plan && (
-            <AvulsoCard plan={plan} period={period} onChoose={openTrial} />
+            <AvulsoCard
+              plan={plan}
+              period={period}
+              inCart={cartItem?.periodId === period.id}
+              onAdd={() => addToCart(period.id)}
+            />
           )}
         </div>
 
@@ -146,11 +152,13 @@ export function Plans() {
 function AvulsoCard({
   plan,
   period,
-  onChoose,
+  inCart,
+  onAdd,
 }: {
   plan: Plan;
   period: Period;
-  onChoose: () => void;
+  inCart: boolean;
+  onAdd: () => void;
 }) {
   const price = priceFor(period);
 
@@ -199,10 +207,16 @@ function AvulsoCard({
             </p>
           </div>
 
-          <button type="button" onClick={onChoose} className="btn-primary mt-9 w-full sm:w-auto sm:px-10">
-            Começar teste grátis de 7 dias
-          </button>
-          <p className="mt-3 text-sm text-muted">Sem compromisso — você só escolhe o plano depois.</p>
+          {inCart ? (
+            <a href="/checkout/" className="btn-primary mt-9 w-full text-center sm:w-auto sm:px-10">
+              No carrinho — concluir compra
+            </a>
+          ) : (
+            <button type="button" onClick={onAdd} className="btn-primary mt-9 w-full sm:w-auto sm:px-10">
+              Adicionar ao carrinho
+            </button>
+          )}
+          <p className="mt-3 text-sm text-muted">Pagamento seguro pelo Mercado Pago · cancele quando quiser.</p>
         </div>
 
         {/* Coluna direita: features, em duas colunas para ocupar o espaço */}

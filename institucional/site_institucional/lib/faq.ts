@@ -13,8 +13,8 @@ export const FAQ: FaqItem[] = [
     a: "Não. O StamFlow roda no navegador. Você concede acesso à câmera quando quiser usar a leitura, e pode revogar a qualquer momento. Sem extensão, sem download.",
   },
   {
-    q: "Como funciona o teste grátis?",
-    a: "São 7 dias com o produto completo, não uma versão demonstrativa limitada. Você cria a conta com nome, e-mail e senha, e já entra usando tudo. Sem cobrança durante o teste.",
+    q: "Como faço para assinar?",
+    a: "Na seção de planos, escolha o período que preferir e adicione ao carrinho. No checkout você cria sua conta (ou entra) e é levado ao pagamento seguro pelo Mercado Pago. A assinatura é recorrente e você pode cancelar quando quiser.",
   },
   {
     q: "Qual a diferença entre o plano individual e o empresarial?",

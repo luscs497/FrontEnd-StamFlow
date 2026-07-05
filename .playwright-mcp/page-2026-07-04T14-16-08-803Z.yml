@@ -1,0 +1,121 @@
+- generic [active] [ref=f6e1]:
+  - banner [ref=f6e2]:
+    - generic [ref=f6e3]:
+      - link "StamFlow — início" [ref=f6e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f6e5]:
+          - text: Stam
+          - img [ref=f6e6]
+          - generic [ref=f6e8]: Flow
+      - navigation "Seções" [ref=f6e9]:
+        - link "Para você" [ref=f6e10] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f6e11] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f6e12] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f6e13] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f6e14]:
+        - button "Carrinho vazio" [ref=f6e16] [cursor=pointer]:
+          - img [ref=f6e17]
+        - link "Entrar" [ref=f6e21] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - link "Começar a Jornada" [ref=f6e22] [cursor=pointer]:
+          - /url: /#planos
+  - main [ref=f6e23]:
+    - generic [ref=f6e25]:
+      - generic [ref=f6e26]:
+        - generic [ref=f6e27]: Postura e humor, lidos em tempo real
+        - heading "Sua energia produtiva, lida ao vivo pela câmera." [level=1] [ref=f6e29]
+        - paragraph [ref=f6e30]: O StamFlow acompanha sua postura e seu humor e transforma isso num índice de energia que cuida de você ao longo do dia. Nenhuma imagem sai do seu computador.
+        - generic [ref=f6e31]:
+          - link "Começar a Jornada" [ref=f6e32] [cursor=pointer]:
+            - /url: /#planos
+          - link "Ver como funciona" [ref=f6e33] [cursor=pointer]:
+            - /url: "#como-funciona"
+        - generic [ref=f6e34]:
+          - generic [ref=f6e35]: 7 dias completos
+          - generic [ref=f6e37]: Sem cartão
+          - generic [ref=f6e39]: Processado no navegador
+      - 'img "Leitura de energia ao vivo: 86 de 100, postura 92, humor Focado." [ref=f6e42]':
+        - generic [ref=f6e48]: Ao vivo
+        - generic [ref=f6e50]:
+          - generic [ref=f6e51]:
+            - paragraph [ref=f6e52]: Energia
+            - paragraph [ref=f6e53]: 86/100
+          - generic [ref=f6e54]: Plena
+        - generic [ref=f6e59]:
+          - generic [ref=f6e60]: Baixa
+          - generic [ref=f6e61]: Atenção
+          - generic [ref=f6e62]: Boa
+          - generic [ref=f6e63]: Plena
+        - generic [ref=f6e64]:
+          - generic [ref=f6e65]:
+            - generic [ref=f6e68]: Postura
+            - paragraph [ref=f6e69]: 92%
+          - generic [ref=f6e70]:
+            - generic [ref=f6e73]: Humor
+            - paragraph [ref=f6e74]: Focado
+        - generic [ref=f6e75]:
+          - generic [ref=f6e76]: Próxima Pausa Mental
+          - generic [ref=f6e77]: em 12 min
+  - contentinfo [ref=f6e78]:
+    - separator [ref=f6e80]
+    - generic [ref=f6e81]:
+      - generic [ref=f6e82]:
+        - generic [ref=f6e83]:
+          - text: Stam
+          - img [ref=f6e84]
+          - generic [ref=f6e86]: Flow
+        - paragraph [ref=f6e87]: Sua energia produtiva, lida em tempo real — e cuidada ao longo do dia. Processamento 100% no seu navegador.
+        - generic [ref=f6e88]:
+          - link "Instagram" [ref=f6e89] [cursor=pointer]:
+            - /url: https://instagram.com
+            - img [ref=f6e90]
+          - link "LinkedIn" [ref=f6e94] [cursor=pointer]:
+            - /url: https://linkedin.com
+            - img [ref=f6e95]
+          - link "YouTube" [ref=f6e98] [cursor=pointer]:
+            - /url: https://youtube.com
+            - img [ref=f6e99]
+      - generic [ref=f6e102]:
+        - heading "Produto" [level=3] [ref=f6e103]
+        - list [ref=f6e104]:
+          - listitem [ref=f6e105]:
+            - link "Para você" [ref=f6e106] [cursor=pointer]:
+              - /url: /para-voce
+          - listitem [ref=f6e107]:
+            - link "Planos" [ref=f6e108] [cursor=pointer]:
+              - /url: /#planos
+          - listitem [ref=f6e109]:
+            - link "Como funciona" [ref=f6e110] [cursor=pointer]:
+              - /url: /#como-funciona
+          - listitem [ref=f6e111]:
+            - link "Privacidade" [ref=f6e112] [cursor=pointer]:
+              - /url: /#privacidade
+      - generic [ref=f6e113]:
+        - heading "Empresas" [level=3] [ref=f6e114]
+        - list [ref=f6e115]:
+          - listitem [ref=f6e116]:
+            - link "Para empresas" [ref=f6e117] [cursor=pointer]:
+              - /url: /empresas
+          - listitem [ref=f6e118]:
+            - link "Apoio à NR-1" [ref=f6e119] [cursor=pointer]:
+              - /url: /empresas#nr1
+          - listitem [ref=f6e120]:
+            - link "Dúvidas" [ref=f6e121] [cursor=pointer]:
+              - /url: /#duvidas
+      - generic [ref=f6e122]:
+        - heading "Acesso" [level=3] [ref=f6e123]
+        - list [ref=f6e124]:
+          - listitem [ref=f6e125]:
+            - link "Entrar" [ref=f6e126] [cursor=pointer]:
+              - /url: https://login.stamflow.com.br
+          - listitem [ref=f6e127]:
+            - button "Falar com vendas" [ref=f6e128] [cursor=pointer]
+    - generic [ref=f6e129]:
+      - separator [ref=f6e130]
+      - generic [ref=f6e131]:
+        - paragraph [ref=f6e132]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f6e133]: Feito com cuidado — sua energia, no seu ritmo.

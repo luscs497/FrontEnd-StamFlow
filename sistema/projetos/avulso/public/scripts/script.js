@@ -157,9 +157,55 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Sanitiza antes de inserir no DOM (previne XSS)
         if (inpNome) inpNome.value = String(user.nome_completo || "");
         if (inpEmail) inpEmail.value = String(user.email || "");
+
+        // Banner de e-mail não verificado
+        _renderEmailBanners(user);
       }
     } catch (error) {
       console.error("Erro de conexão perfil:", error);
+    }
+  }
+
+  function _renderEmailBanners(user) {
+    // Remove banners anteriores para evitar duplicação
+    document.querySelectorAll(".stamflow-email-banner").forEach((el) => el.remove());
+
+    const container = document.getElementById("modal-perfil") || document.body;
+    const insertBefore = document.getElementById("perfil-nome")?.closest("label") || null;
+
+    function _banner(html) {
+      const div = document.createElement("div");
+      div.className = "stamflow-email-banner";
+      div.style.cssText =
+        "margin:0 0 14px 0;padding:12px 16px;border-radius:12px;font-size:13.5px;line-height:1.55;";
+      div.innerHTML = html;
+      if (insertBefore && insertBefore.parentNode) {
+        insertBefore.parentNode.insertBefore(div, insertBefore);
+      } else {
+        container.prepend(div);
+      }
+      return div;
+    }
+
+    if (!user.email_verificado) {
+      const b = _banner(
+        `<span style="color:#f59e0b;font-weight:600;">⚠ Verifique seu e-mail</span>
+         <br><span style="color:#94a3b8;">Enviamos um link para <strong style="color:#e2e8f0;">${user.email}</strong>.
+         Clique nele para liberar todos os recursos da conta.</span>`
+      );
+      b.style.background = "rgba(245,158,11,0.08)";
+      b.style.border = "1px solid rgba(245,158,11,0.25)";
+    }
+
+    if (user.pending_email) {
+      const b = _banner(
+        `<span style="color:#38bdf8;font-weight:600;">✉ Troca de e-mail pendente</span>
+         <br><span style="color:#94a3b8;">Enviamos um link de confirmação para
+         <strong style="color:#e2e8f0;">${user.pending_email}</strong>.
+         Verifique sua caixa de entrada para concluir a alteração.</span>`
+      );
+      b.style.background = "rgba(56,189,248,0.06)";
+      b.style.border = "1px solid rgba(56,189,248,0.2)";
     }
   }
 
@@ -216,7 +262,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (res.ok) {
-          alert("Perfil atualizado com sucesso!");
+          const data = await res.json().catch(() => ({}));
+          if (data.email_change_pending) {
+            alert(
+              "Perfil atualizado!\n\nEnviamos um link de confirmação para o novo e-mail.\nVerifique sua caixa de entrada para concluir a troca."
+            );
+          } else {
+            alert("Perfil atualizado com sucesso!");
+          }
+          // Recarrega os banners de verificação com os novos dados
+          carregarDadosPerfil();
         } else {
           const err = await res.json().catch(() => ({}));
           alert(err.detail || "Erro ao atualizar perfil.");
@@ -591,8 +646,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     slider.style.background = `linear-gradient(to right, ${corAtiva} 0%, ${corAtiva} ${valuePct}%, #374151 ${valuePct}%, #374151 100%)`;
   }
 
+  // Flag para garantir que a conquista só é registrada na 1ª conclusão
+  // de cada faixa (não repete a cada loop). Resetada em loadAndPlayTrack.
+  let conquistaRegistrada = false;
+
   function loadAndPlayTrack(track) {
     currentTrack = track;
+    conquistaRegistrada = false; // reseta para nova faixa poder registrar conquista
     stopAudio({ resetTime: true });
     audioEl.src = track.dados.audioPath;
     audioEl.play().then(() => setPlayIcon(true)).catch(() => setPlayIcon(false));
@@ -602,16 +662,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     audioEl.addEventListener("timeupdate", () => { if (!isSeeking) updateSliderUI(); });
     audioEl.addEventListener("loadedmetadata", updateSliderUI);
     audioEl.addEventListener("ended", () => {
-      setPlayIcon(false);
-      if (slider) { slider.value = 0; paintSliderWithActiveColor(0); }
+      // Loop: ao terminar, volta ao início e continua tocando.
+      audioEl.currentTime = 0;
+      audioEl.play().then(() => setPlayIcon(true)).catch(() => {
+        setPlayIcon(false);
+        if (slider) { slider.value = 0; paintSliderWithActiveColor(0); }
+      });
     });
     audioEl.addEventListener("error", () => {
       console.warn("Erro ao carregar áudio:", audioEl.src);
       setPlayIcon(false);
     });
 
-    // Conquistas ao terminar o áudio
+    // Conquistas ao terminar o áudio pela PRIMEIRA vez (não repete no loop).
     audioEl.addEventListener("ended", async () => {
+      if (conquistaRegistrada) return;
+      conquistaRegistrada = true;
       const categoria = modalAudio?.getAttribute("categoria");
       if (typeof window.syncConquista !== "function") return;
       if (categoria === "exercicios") await window.syncConquista({ exercicios: 1 });

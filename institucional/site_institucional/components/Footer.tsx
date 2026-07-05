@@ -5,7 +5,7 @@ import { useModals } from "@/components/Providers";
 import { LOGIN_URL } from "@/lib/config";
 
 export function Footer() {
-  const { openTrial, openEnterprise } = useModals();
+  const { openEnterprise } = useModals();
   const year = new Date().getFullYear();
 
   return (
@@ -28,8 +28,8 @@ export function Footer() {
 
           <FooterCol title="Conta">
             <FooterLink href={LOGIN_URL}>Entrar</FooterLink>
-            <FooterButton onClick={openTrial}>Teste grátis</FooterButton>
-            <FooterLink href="#empresas">Para empresas</FooterLink>
+            <FooterLink href="/#planos">Começar a Jornada</FooterLink>
+            <FooterLink href="/empresas">Para empresas</FooterLink>
             <FooterButton onClick={openEnterprise}>Falar com vendas</FooterButton>
           </FooterCol>
 

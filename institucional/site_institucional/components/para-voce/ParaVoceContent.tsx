@@ -2,14 +2,13 @@
 
 import { motion } from "framer-motion";
 import { Reveal, SectionHeading } from "@/components/ui/Section";
-import { useModals } from "@/components/Providers";
-import { TRIAL_DAYS } from "@/lib/config";
+import { Plans } from "@/components/Plans";
 import { fadeUp, viewportOnce } from "@/lib/motion";
 
 /**
  * Landing dedicada B2C (/para-voce). Diferente da página de empresas, aqui a
- * conversão é self-service: o CTA principal abre o TrialModal (começar o
- * teste grátis na hora), não um contato de vendas. O ângulo é pessoal —
+ * conversão é self-service: os CTAs levam à seção de planos da home, onde a
+ * pessoa adiciona o plano ao carrinho e finaliza a compra. O ângulo é pessoal —
  * energia no dia a dia, home office, autoconhecimento — e não gestão/lei.
  *
  * As features descrevem o que o painel individual entrega de verdade:
@@ -17,23 +16,22 @@ import { fadeUp, viewportOnce } from "@/lib/motion";
  * Mental, Modo Foco, University, dashboard pessoal e conquistas.
  */
 export function ParaVoceContent() {
-  const { openTrial } = useModals();
-
   return (
     <main id="topo">
-      <ParaVoceHero onCta={openTrial} />
+      <ParaVoceHero />
       <ProblemaSection />
       <ComoAjuda />
       <Recursos />
       <PrivacidadePessoal />
-      <ParaVoceFinalCTA onCta={openTrial} />
+      <Plans />
+      <ParaVoceFinalCTA />
     </main>
   );
 }
 
 /* ─────────────────────────────  HERO  ───────────────────────────── */
 
-function ParaVoceHero({ onCta }: { onCta: () => void }) {
+function ParaVoceHero() {
   return (
     <section className="relative overflow-hidden pt-36 pb-24 sm:pt-44 sm:pb-32">
       <div
@@ -76,9 +74,9 @@ function ParaVoceHero({ onCta }: { onCta: () => void }) {
           transition={{ duration: 0.45, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
-          <button type="button" onClick={onCta} className="btn-primary px-8 py-4 text-base">
-            Começar teste grátis de {TRIAL_DAYS} dias
-          </button>
+          <a href="#planos" className="btn-primary px-8 py-4 text-base">
+            Começar a Jornada
+          </a>
           <a href="#recursos" className="btn-ghost px-8 py-4 text-base">
             Ver o que você ganha
           </a>
@@ -90,7 +88,7 @@ function ParaVoceHero({ onCta }: { onCta: () => void }) {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="mt-5 text-sm text-muted"
         >
-          Sem cartão para começar · funciona no seu computador · leitura 100% local
+          Funciona no seu computador · leitura 100% local · cancele quando quiser
         </motion.p>
       </div>
     </section>
@@ -104,7 +102,6 @@ function ProblemaSection() {
     "A tarde chega e a energia despenca, mas você só percebe quando já rendeu menos.",
     "Horas na mesma posição — e a conta chega em dor nas costas e no pescoço.",
     "Você esquece de pausar, respirar, levantar. O dia passa no automático.",
-    "No fim, fica a sensação de cansaço sem saber exatamente o porquê.",
   ];
 
   return (
@@ -220,24 +217,16 @@ function Recursos() {
       body: "Alongamentos e pausas ativas rápidas, para fazer sem sair da mesa.",
     },
     {
-      title: "Pausa Mental",
-      body: "Áudios de respiração e relaxamento para descomprimir em poucos minutos.",
-    },
-    {
-      title: "Modo Foco",
-      body: "Trilhas sonoras pensadas para entrar no ritmo e sustentar a concentração.",
-    },
-    {
-      title: "StamFlow University",
-      body: "Conteúdos curtos sobre ergonomia, energia e bem-estar no trabalho.",
+      title: "Pausa Mental e Foco",
+      body: "Áudios de respiração para descomprimir e trilhas sonoras para entrar no ritmo.",
     },
     {
       title: "Seu painel de evolução",
       body: "Humor, energia e melhores dias ao longo do tempo — o seu histórico, só seu.",
     },
     {
-      title: "Conquistas",
-      body: "Pequenas metas que transformam o cuidado com você em hábito que gruda.",
+      title: "Conquistas que viram hábito",
+      body: "Pequenas metas que transformam o cuidado com você em rotina que gruda.",
     },
   ];
 
@@ -256,7 +245,7 @@ function Recursos() {
           />
         </Reveal>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((it, i) => (
             <motion.div
               key={it.title}
@@ -264,7 +253,7 @@ function Recursos() {
               initial="hidden"
               whileInView="show"
               viewport={viewportOnce}
-              transition={{ delay: (i % 4) * 0.05 }}
+              transition={{ delay: (i % 3) * 0.05 }}
               className="rounded-3xl border border-hairline bg-surface/50 p-6"
             >
               <div className="mb-4 grid h-11 w-11 place-items-center rounded-2xl bg-raio/12 text-raio">
@@ -327,7 +316,7 @@ function PrivacidadePessoal() {
 
 /* ─────────────────────────────  CTA FINAL  ──────────────────────── */
 
-function ParaVoceFinalCTA({ onCta }: { onCta: () => void }) {
+function ParaVoceFinalCTA() {
   return (
     <section className="pb-28 pt-8 sm:pb-36">
       <div className="mx-auto max-w-[72rem] px-6 sm:px-10">
@@ -344,16 +333,16 @@ function ParaVoceFinalCTA({ onCta }: { onCta: () => void }) {
           />
           <div className="relative">
             <h2 className="mx-auto max-w-3xl font-display text-3xl font-bold leading-tight text-cloud sm:text-5xl">
-              Comece a cuidar da sua energia hoje.
+              Sua energia merece esse cuidado.
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slatey">
-              {TRIAL_DAYS} dias grátis, com tudo liberado e sem cartão. Se fizer
-              sentido para você, é só continuar.
+              Escolha o período que faz sentido para você — com tudo incluído e
+              pagamento seguro pelo Mercado Pago. Cancele quando quiser.
             </p>
             <div className="mt-9 flex justify-center">
-              <button type="button" onClick={onCta} className="btn-primary px-10 py-4 text-base">
-                Começar teste grátis de {TRIAL_DAYS} dias
-              </button>
+              <a href="#planos" className="btn-primary px-10 py-4 text-base">
+                Escolher meu plano
+              </a>
             </div>
           </div>
         </motion.div>

@@ -1,0 +1,206 @@
+- generic [active] [ref=f14e1]:
+  - banner [ref=f14e2]:
+    - generic [ref=f14e3]:
+      - link "StamFlow — início" [ref=f14e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f14e5]:
+          - text: Stam
+          - img [ref=f14e6]
+          - generic [ref=f14e8]: Flow
+      - navigation "Seções" [ref=f14e9]:
+        - link "Para você" [ref=f14e10] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f14e11] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f14e12] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f14e13] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f14e14]:
+        - button "Carrinho vazio" [ref=f14e16] [cursor=pointer]:
+          - img [ref=f14e17]
+        - link "Entrar" [ref=f14e21] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - link "Começar a Jornada" [ref=f14e22] [cursor=pointer]:
+          - /url: /#planos
+  - main [ref=f14e23]:
+    - generic [ref=f14e25]:
+      - generic [ref=f14e26]:
+        - generic [ref=f14e27]: StamFlow para você
+        - heading "Seu corpo dá sinais o dia todo. Agora você os vê." [level=1] [ref=f14e29]
+        - paragraph [ref=f14e30]: O StamFlow acompanha seu humor, sua postura e sua energia enquanto você trabalha — e sugere o exercício, o foco ou a pausa certa na hora certa. Tudo no seu navegador, só para os seus olhos.
+        - generic [ref=f14e31]:
+          - link "Ver planos" [ref=f14e32] [cursor=pointer]:
+            - /url: "#planos"
+          - link "Ver o que você ganha" [ref=f14e33] [cursor=pointer]:
+            - /url: "#recursos"
+        - paragraph [ref=f14e34]: 7 dias de teste · sem cartão · leitura 100% local
+      - 'img "Leitura de energia ao vivo: 78 de 100, postura 88, humor Tranquilo." [ref=f14e36]':
+        - generic [ref=f14e42]: Ao vivo
+        - generic [ref=f14e44]:
+          - generic [ref=f14e45]:
+            - paragraph [ref=f14e46]: Energia
+            - paragraph [ref=f14e47]: 78/100
+          - generic [ref=f14e48]: Plena
+        - generic [ref=f14e53]:
+          - generic [ref=f14e54]: Baixa
+          - generic [ref=f14e55]: Atenção
+          - generic [ref=f14e56]: Boa
+          - generic [ref=f14e57]: Plena
+        - generic [ref=f14e58]:
+          - generic [ref=f14e59]:
+            - generic [ref=f14e62]: Postura
+            - paragraph [ref=f14e63]: 88%
+          - generic [ref=f14e64]:
+            - generic [ref=f14e67]: Humor
+            - paragraph [ref=f14e68]: Tranquilo
+        - generic [ref=f14e69]:
+          - generic [ref=f14e70]: Próxima Pausa Mental
+          - generic [ref=f14e71]: em 12 min
+    - generic [ref=f14e72]:
+      - separator [ref=f14e74]
+      - generic [ref=f14e76]:
+        - generic [ref=f14e77]:
+          - generic [ref=f14e78]: Soa familiar?
+          - heading "Trabalhar na tela cobra um preço silencioso." [level=2] [ref=f14e80]
+          - paragraph [ref=f14e81]: Na postura, no humor, na energia. O StamFlow torna esses sinais visíveis — no momento em que ainda dá para agir.
+        - list [ref=f14e83]:
+          - listitem [ref=f14e84]: A tarde chega e a energia despenca, mas você só percebe quando já rendeu menos.
+          - listitem [ref=f14e86]: Horas na mesma posição — e a conta chega em dor nas costas e no pescoço.
+          - listitem [ref=f14e88]: Você esquece de pausar, respirar, levantar. O dia passa no automático.
+          - listitem [ref=f14e90]: No fim, fica a sensação de cansaço sem saber exatamente o porquê.
+    - generic [ref=f14e92]:
+      - separator [ref=f14e94]
+      - generic [ref=f14e95]:
+        - generic [ref=f14e96]:
+          - generic [ref=f14e97]: Como o StamFlow ajuda
+          - heading "Do sinal à ação, sem esforço" [level=2] [ref=f14e99]
+          - paragraph [ref=f14e100]: Você não precisa parar para anotar nada. Ele observa, entende e sugere — você só aproveita.
+        - generic [ref=f14e101]:
+          - generic [ref=f14e103]:
+            - generic [ref=f14e104]: "01"
+            - heading "Abra e deixe rodar" [level=3] [ref=f14e105]
+            - paragraph [ref=f14e106]: Com a câmera ligada, o StamFlow lê sua expressão e postura em tempo real — sem tirar seu foco.
+          - generic [ref=f14e108]:
+            - generic [ref=f14e109]: "02"
+            - heading "Receba o empurrão certo" [level=3] [ref=f14e110]
+            - paragraph [ref=f14e111]: Energia caindo? Postura torta demais? Ele sugere um exercício, uma pausa ou um bloco de foco na hora certa.
+          - generic [ref=f14e113]:
+            - generic [ref=f14e114]: "03"
+            - heading "Veja sua evolução" [level=3] [ref=f14e115]
+            - paragraph [ref=f14e116]: Seu painel mostra como humor e energia variam ao longo dos dias — e as conquistas que você desbloqueia.
+    - generic [ref=f14e117]:
+      - separator [ref=f14e119]
+      - generic [ref=f14e120]:
+        - generic [ref=f14e121]:
+          - generic [ref=f14e122]: Tudo o que você ganha
+          - heading "Um estúdio de bem-estar dentro do seu dia" [level=2] [ref=f14e124]
+        - generic [ref=f14e125]:
+          - generic [ref=f14e127]:
+            - img [ref=f14e129]
+            - generic [ref=f14e131]: Leitura ao vivo de humor e energia
+          - generic [ref=f14e133]:
+            - img [ref=f14e135]
+            - generic [ref=f14e137]: Alerta de postura antes de virar dor
+          - generic [ref=f14e139]:
+            - img [ref=f14e141]
+            - generic [ref=f14e143]: Exercícios guiados sem sair da mesa
+          - generic [ref=f14e145]:
+            - img [ref=f14e147]
+            - generic [ref=f14e149]: "Pausa Mental: respiração e relaxamento"
+          - generic [ref=f14e151]:
+            - img [ref=f14e153]
+            - generic [ref=f14e155]: Modo Foco com trilhas sonoras
+          - generic [ref=f14e157]:
+            - img [ref=f14e159]
+            - generic [ref=f14e161]: "StamFlow University: ergonomia e hábito"
+          - generic [ref=f14e163]:
+            - img [ref=f14e165]
+            - generic [ref=f14e167]: Seu painel de evolução, só seu
+          - generic [ref=f14e169]:
+            - img [ref=f14e171]
+            - generic [ref=f14e173]: Conquistas que viram hábito
+    - generic [ref=f14e174]:
+      - separator [ref=f14e176]
+      - generic [ref=f14e177]:
+        - generic [ref=f14e178]:
+          - generic [ref=f14e179]: Planos
+          - heading "Um preço justo pela sua energia" [level=2] [ref=f14e181]
+          - paragraph [ref=f14e182]: O produto completo, sem níveis. Escolha o período — quanto maior, mais você economiza.
+        - radiogroup "Período do plano" [ref=f14e184]:
+          - radio "Mensal" [ref=f14e185] [cursor=pointer]
+          - radio "Trimestral−11%" [checked] [ref=f14e186] [cursor=pointer]:
+            - text: Trimestral
+            - generic [ref=f14e188]: −11%
+          - radio "Semestral−16%" [ref=f14e189] [cursor=pointer]:
+            - text: Semestral
+            - generic [ref=f14e190]: −16%
+          - radio "Anual−25%" [ref=f14e191] [cursor=pointer]:
+            - text: Anual
+            - generic [ref=f14e192]: −25%
+    - generic [ref=f14e207]:
+      - separator [ref=f14e209]
+      - generic [ref=f14e211]:
+        - heading "Comece a cuidar da sua energia hoje" [level=2] [ref=f14e213]
+        - paragraph [ref=f14e214]: 7 dias grátis, com tudo liberado e sem cartão. Se fizer sentido para você, é só continuar.
+        - link "Ver planos" [ref=f14e216] [cursor=pointer]:
+          - /url: "#planos"
+  - contentinfo [ref=f14e217]:
+    - separator [ref=f14e219]
+    - generic [ref=f14e220]:
+      - generic [ref=f14e221]:
+        - generic [ref=f14e222]:
+          - text: Stam
+          - img [ref=f14e223]
+          - generic [ref=f14e225]: Flow
+        - paragraph [ref=f14e226]: Sua energia produtiva, lida em tempo real — e cuidada ao longo do dia. Processamento 100% no seu navegador.
+        - generic [ref=f14e227]:
+          - link "Instagram" [ref=f14e228] [cursor=pointer]:
+            - /url: https://instagram.com
+            - img [ref=f14e229]
+          - link "LinkedIn" [ref=f14e233] [cursor=pointer]:
+            - /url: https://linkedin.com
+            - img [ref=f14e234]
+          - link "YouTube" [ref=f14e237] [cursor=pointer]:
+            - /url: https://youtube.com
+            - img [ref=f14e238]
+      - generic [ref=f14e241]:
+        - heading "Produto" [level=3] [ref=f14e242]
+        - list [ref=f14e243]:
+          - listitem [ref=f14e244]:
+            - link "Para você" [ref=f14e245] [cursor=pointer]:
+              - /url: /para-voce
+          - listitem [ref=f14e246]:
+            - link "Planos" [ref=f14e247] [cursor=pointer]:
+              - /url: /#planos
+          - listitem [ref=f14e248]:
+            - link "Como funciona" [ref=f14e249] [cursor=pointer]:
+              - /url: /#como-funciona
+          - listitem [ref=f14e250]:
+            - link "Privacidade" [ref=f14e251] [cursor=pointer]:
+              - /url: /#privacidade
+      - generic [ref=f14e252]:
+        - heading "Empresas" [level=3] [ref=f14e253]
+        - list [ref=f14e254]:
+          - listitem [ref=f14e255]:
+            - link "Para empresas" [ref=f14e256] [cursor=pointer]:
+              - /url: /empresas
+          - listitem [ref=f14e257]:
+            - link "Apoio à NR-1" [ref=f14e258] [cursor=pointer]:
+              - /url: /empresas#nr1
+          - listitem [ref=f14e259]:
+            - link "Dúvidas" [ref=f14e260] [cursor=pointer]:
+              - /url: /#duvidas
+      - generic [ref=f14e261]:
+        - heading "Acesso" [level=3] [ref=f14e262]
+        - list [ref=f14e263]:
+          - listitem [ref=f14e264]:
+            - link "Entrar" [ref=f14e265] [cursor=pointer]:
+              - /url: https://login.stamflow.com.br
+          - listitem [ref=f14e266]:
+            - button "Falar com vendas" [ref=f14e267] [cursor=pointer]
+    - generic [ref=f14e268]:
+      - separator [ref=f14e269]
+      - generic [ref=f14e270]:
+        - paragraph [ref=f14e271]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f14e272]: Feito com cuidado — sua energia, no seu ritmo.

@@ -1,0 +1,152 @@
+- generic [active] [ref=f15e1]:
+  - banner [ref=f15e2]:
+    - generic [ref=f15e3]:
+      - link "StamFlow — início" [ref=f15e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f15e5]:
+          - text: Stam
+          - img [ref=f15e6]
+          - generic [ref=f15e8]: Flow
+      - navigation "Seções" [ref=f15e9]:
+        - link "Para você" [ref=f15e10] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f15e11] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f15e12] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f15e13] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f15e14]:
+        - button "Carrinho vazio" [ref=f15e16] [cursor=pointer]:
+          - img [ref=f15e17]
+        - link "Entrar" [ref=f15e21] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - link "Começar a Jornada" [ref=f15e22] [cursor=pointer]:
+          - /url: /#planos
+  - main [ref=f15e23]:
+    - generic [ref=f15e25]:
+      - generic [ref=f15e26]: StamFlow para empresas
+      - heading "Bem-estar da equipe, com apoio à NR-1." [level=1] [ref=f15e28]
+      - paragraph [ref=f15e29]: Cada colaborador cuida da própria energia no dia a dia. O gestor acompanha a saúde do time de forma agregada — e ganha um apoio real ao monitoramento contínuo que a nova NR-1 exige.
+      - generic [ref=f15e30]:
+        - button "Falar com o nosso time" [ref=f15e31] [cursor=pointer]
+        - link "Entender a NR-1" [ref=f15e32] [cursor=pointer]:
+          - /url: "#nr1"
+      - paragraph [ref=f15e33]: Atendimento consultivo · licenças por colaborador · sem cartão para conversar
+    - generic [ref=f15e34]:
+      - separator [ref=f15e36]
+      - generic [ref=f15e39]:
+        - generic [ref=f15e40]: Nova NR-1 · vigência a partir de 26/05/2026
+        - heading "Saúde mental virou obrigação legal — e precisa ser documentada" [level=2] [ref=f15e42]
+        - generic [ref=f15e43]:
+          - paragraph [ref=f15e44]: A atualização da NR-1 (Portaria MTE 1.419/2024) passa a exigir que todas as empresas com empregados CLT identifiquem, avaliem e gerenciem os riscos psicossociais do trabalho — sobrecarga, pressão por metas, exaustão — no mesmo nível dos riscos físicos.
+          - paragraph [ref=f15e45]: "Na prática, a norma pede um processo contínuo e documentado: escuta dos trabalhadores, acompanhamento de indicadores e registro ao longo do tempo. É exatamente aí que o StamFlow ajuda — gerando um acompanhamento recorrente e dados agregados."
+        - generic [ref=f15e46]: "O StamFlow é um instrumento de apoio ao acompanhamento do bem-estar da equipe. Ele não substitui o PGR, o laudo técnico nem a atuação do SESMT/medicina do trabalho — é complemento: gera dados contínuos e agregados que ajudam a sustentar a gestão de riscos psicossociais."
+    - generic [ref=f15e47]:
+      - separator [ref=f15e49]
+      - generic [ref=f15e50]:
+        - generic [ref=f15e51]:
+          - generic [ref=f15e52]: Por que o StamFlow
+          - heading "Cuidar do time e cumprir a norma, no mesmo movimento" [level=2] [ref=f15e54]
+        - generic [ref=f15e55]:
+          - generic [ref=f15e57]:
+            - img [ref=f15e59]
+            - heading "Visão agregada, nunca individual" [level=3] [ref=f15e61]
+            - paragraph [ref=f15e62]: O gestor acompanha tendências do time — nunca a leitura sensível de cada pessoa. Privacidade por design.
+          - generic [ref=f15e64]:
+            - img [ref=f15e66]
+            - heading "Acompanhamento contínuo" [level=3] [ref=f15e68]
+            - paragraph [ref=f15e69]: "Dados recorrentes ao longo do tempo, no formato que a NR-1 pede: processo, não foto pontual."
+          - generic [ref=f15e71]:
+            - img [ref=f15e73]
+            - heading "Adoção que a equipe quer usar" [level=3] [ref=f15e75]
+            - paragraph [ref=f15e76]: Para o colaborador é uma ferramenta de autocuidado — não vigilância. Por isso ele volta.
+          - generic [ref=f15e78]:
+            - img [ref=f15e80]
+            - heading "Licenças sob medida" [level=3] [ref=f15e82]
+            - paragraph [ref=f15e83]: Preço por número de colaboradores e gestores, ajustado ao tamanho da sua operação.
+    - generic [ref=f15e84]:
+      - separator [ref=f15e86]
+      - generic [ref=f15e87]:
+        - generic [ref=f15e88]:
+          - generic [ref=f15e89]: Como começa
+          - heading "Do primeiro contato ao time cuidado" [level=2] [ref=f15e91]
+        - generic [ref=f15e92]:
+          - generic [ref=f15e94]:
+            - generic [ref=f15e95]: "01"
+            - heading "Conversa consultiva" [level=3] [ref=f15e96]
+            - paragraph [ref=f15e97]: Entendemos o tamanho do time, o contexto e o que a sua empresa precisa registrar.
+          - generic [ref=f15e99]:
+            - generic [ref=f15e100]: "02"
+            - heading "Implantação simples" [level=3] [ref=f15e101]
+            - paragraph [ref=f15e102]: Convites por colaborador, gestores com o painel agregado. Sem instalar nada.
+          - generic [ref=f15e104]:
+            - generic [ref=f15e105]: "03"
+            - heading "Acompanhamento contínuo" [level=3] [ref=f15e106]
+            - paragraph [ref=f15e107]: Indicadores agregados ao longo do tempo, prontos para sustentar a gestão de riscos.
+    - generic [ref=f15e108]:
+      - separator [ref=f15e110]
+      - generic [ref=f15e112]:
+        - heading "Vamos cuidar da energia da sua equipe" [level=2] [ref=f15e113]
+        - paragraph [ref=f15e114]: Conte pra gente sobre o seu time. Montamos juntos o formato certo — e a conversa segue no WhatsApp, sem compromisso.
+        - button "Falar com o nosso time" [ref=f15e116] [cursor=pointer]
+  - contentinfo [ref=f15e117]:
+    - separator [ref=f15e119]
+    - generic [ref=f15e120]:
+      - generic [ref=f15e121]:
+        - generic [ref=f15e122]:
+          - text: Stam
+          - img [ref=f15e123]
+          - generic [ref=f15e125]: Flow
+        - paragraph [ref=f15e126]: Sua energia produtiva, lida em tempo real — e cuidada ao longo do dia. Processamento 100% no seu navegador.
+        - generic [ref=f15e127]:
+          - link "Instagram" [ref=f15e128] [cursor=pointer]:
+            - /url: https://instagram.com
+            - img [ref=f15e129]
+          - link "LinkedIn" [ref=f15e133] [cursor=pointer]:
+            - /url: https://linkedin.com
+            - img [ref=f15e134]
+          - link "YouTube" [ref=f15e137] [cursor=pointer]:
+            - /url: https://youtube.com
+            - img [ref=f15e138]
+      - generic [ref=f15e141]:
+        - heading "Produto" [level=3] [ref=f15e142]
+        - list [ref=f15e143]:
+          - listitem [ref=f15e144]:
+            - link "Para você" [ref=f15e145] [cursor=pointer]:
+              - /url: /para-voce
+          - listitem [ref=f15e146]:
+            - link "Planos" [ref=f15e147] [cursor=pointer]:
+              - /url: /#planos
+          - listitem [ref=f15e148]:
+            - link "Como funciona" [ref=f15e149] [cursor=pointer]:
+              - /url: /#como-funciona
+          - listitem [ref=f15e150]:
+            - link "Privacidade" [ref=f15e151] [cursor=pointer]:
+              - /url: /#privacidade
+      - generic [ref=f15e152]:
+        - heading "Empresas" [level=3] [ref=f15e153]
+        - list [ref=f15e154]:
+          - listitem [ref=f15e155]:
+            - link "Para empresas" [ref=f15e156] [cursor=pointer]:
+              - /url: /empresas
+          - listitem [ref=f15e157]:
+            - link "Apoio à NR-1" [ref=f15e158] [cursor=pointer]:
+              - /url: /empresas#nr1
+          - listitem [ref=f15e159]:
+            - link "Dúvidas" [ref=f15e160] [cursor=pointer]:
+              - /url: /#duvidas
+      - generic [ref=f15e161]:
+        - heading "Acesso" [level=3] [ref=f15e162]
+        - list [ref=f15e163]:
+          - listitem [ref=f15e164]:
+            - link "Entrar" [ref=f15e165] [cursor=pointer]:
+              - /url: https://login.stamflow.com.br
+          - listitem [ref=f15e166]:
+            - button "Falar com vendas" [ref=f15e167] [cursor=pointer]
+    - generic [ref=f15e168]:
+      - separator [ref=f15e169]
+      - generic [ref=f15e170]:
+        - paragraph [ref=f15e171]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f15e172]: Feito com cuidado — sua energia, no seu ritmo.
+  - alert [ref=f15e173]

@@ -1,0 +1,90 @@
+- generic [active] [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - link "StamFlow — início" [ref=f4e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f4e5]:
+          - text: Stam
+          - img [ref=f4e6]
+          - generic [ref=f4e8]: Flow
+      - navigation "Seções" [ref=f4e9]:
+        - link "Como funciona" [ref=f4e10] [cursor=pointer]:
+          - /url: /#como-funciona
+        - link "Privacidade" [ref=f4e11] [cursor=pointer]:
+          - /url: /#privacidade
+        - link "Para você" [ref=f4e12] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f4e13] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f4e14] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f4e15] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f4e16]:
+        - link "Entrar" [ref=f4e17] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - button "Começar teste grátis" [ref=f4e18] [cursor=pointer]
+  - main [ref=f4e19]:
+    - generic [ref=f4e20]:
+      - img [ref=f4e22]
+      - heading "Sua conta está sem assinatura ativa." [level=1] [ref=f4e26]
+      - paragraph [ref=f4e27]: Para acessar o seu painel, você precisa de um plano ativo. Escolha o período que faz mais sentido para você e libere o StamFlow completo — leitura ao vivo, exercícios, foco, pausas e seus relatórios.
+      - generic [ref=f4e28]:
+        - link "Ver planos e assinar" [ref=f4e29] [cursor=pointer]:
+          - /url: /#planos
+        - link "Voltar ao site principal" [ref=f4e30] [cursor=pointer]:
+          - /url: /
+      - paragraph [ref=f4e31]:
+        - text: Acha que isso é um engano?
+        - link "Entrar com outra conta" [ref=f4e32] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+  - contentinfo [ref=f4e33]:
+    - generic [ref=f4e34]:
+      - generic [ref=f4e35]:
+        - generic [ref=f4e36]:
+          - generic [ref=f4e37]:
+            - text: Stam
+            - img [ref=f4e38]
+            - generic [ref=f4e40]: Flow
+          - paragraph [ref=f4e41]: Postura e humor lidos em tempo real, no seu navegador, para cuidar da sua energia ao longo do dia.
+        - generic [ref=f4e42]:
+          - paragraph [ref=f4e43]: Produto
+          - list [ref=f4e44]:
+            - listitem [ref=f4e45]:
+              - link "Como funciona" [ref=f4e46] [cursor=pointer]:
+                - /url: "#como-funciona"
+            - listitem [ref=f4e47]:
+              - link "Privacidade" [ref=f4e48] [cursor=pointer]:
+                - /url: "#privacidade"
+            - listitem [ref=f4e49]:
+              - link "Recursos" [ref=f4e50] [cursor=pointer]:
+                - /url: "#recursos"
+            - listitem [ref=f4e51]:
+              - link "Planos" [ref=f4e52] [cursor=pointer]:
+                - /url: "#planos"
+        - generic [ref=f4e53]:
+          - paragraph [ref=f4e54]: Conta
+          - list [ref=f4e55]:
+            - listitem [ref=f4e56]:
+              - link "Entrar" [ref=f4e57] [cursor=pointer]:
+                - /url: https://login.stamflow.com.br
+            - listitem [ref=f4e58]:
+              - button "Teste grátis" [ref=f4e59] [cursor=pointer]
+            - listitem [ref=f4e60]:
+              - link "Para empresas" [ref=f4e61] [cursor=pointer]:
+                - /url: "#empresas"
+            - listitem [ref=f4e62]:
+              - button "Falar com vendas" [ref=f4e63] [cursor=pointer]
+        - generic [ref=f4e64]:
+          - paragraph [ref=f4e65]: Ajuda
+          - list [ref=f4e66]:
+            - listitem [ref=f4e67]:
+              - link "Dúvidas" [ref=f4e68] [cursor=pointer]:
+                - /url: "#duvidas"
+            - listitem [ref=f4e69]:
+              - link "Recuperar acesso" [ref=f4e70] [cursor=pointer]:
+                - /url: https://login.stamflow.com.br
+      - generic [ref=f4e71]:
+        - paragraph [ref=f4e72]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f4e73]: Feito com energia — e sem enviar o seu vídeo a lugar nenhum.
+  - alert [ref=f4e74]

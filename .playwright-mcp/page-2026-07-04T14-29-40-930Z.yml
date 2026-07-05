@@ -1,0 +1,99 @@
+- generic [active] [ref=f19e1]:
+  - banner [ref=f19e2]:
+    - generic [ref=f19e3]:
+      - link "StamFlow — início" [ref=f19e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f19e5]:
+          - text: Stam
+          - img [ref=f19e6]
+          - generic [ref=f19e8]: Flow
+      - navigation "Seções" [ref=f19e9]:
+        - link "Para você" [ref=f19e10] [cursor=pointer]:
+          - /url: /para-voce
+        - link "Para empresas" [ref=f19e11] [cursor=pointer]:
+          - /url: /empresas
+        - link "Planos" [ref=f19e12] [cursor=pointer]:
+          - /url: /#planos
+        - link "Dúvidas" [ref=f19e13] [cursor=pointer]:
+          - /url: /#duvidas
+      - generic [ref=f19e14]:
+        - button "Carrinho vazio" [ref=f19e16] [cursor=pointer]:
+          - img [ref=f19e17]
+        - link "Entrar" [ref=f19e21] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+        - link "Começar a Jornada" [ref=f19e22] [cursor=pointer]:
+          - /url: /#planos
+  - main [ref=f19e23]:
+    - generic [ref=f19e25]:
+      - img [ref=f19e27]
+      - heading "O plano da sua empresa expirou." [level=1] [ref=f19e29]
+      - paragraph [ref=f19e30]: Fale com o gestor da sua empresa para renovar o acesso da equipe — ou, se preferir, assine um plano individual e continue usando o StamFlow por conta própria.
+      - generic [ref=f19e31]:
+        - link "Assinar plano individual" [ref=f19e32] [cursor=pointer]:
+          - /url: /#planos
+        - link "Voltar ao site principal" [ref=f19e33] [cursor=pointer]:
+          - /url: /
+      - paragraph [ref=f19e34]:
+        - text: Acha que isso é um engano?
+        - link "Entrar com outra conta" [ref=f19e35] [cursor=pointer]:
+          - /url: https://login.stamflow.com.br
+  - contentinfo [ref=f19e36]:
+    - separator [ref=f19e38]
+    - generic [ref=f19e39]:
+      - generic [ref=f19e40]:
+        - generic [ref=f19e41]:
+          - text: Stam
+          - img [ref=f19e42]
+          - generic [ref=f19e44]: Flow
+        - paragraph [ref=f19e45]: Sua energia produtiva, lida em tempo real — e cuidada ao longo do dia. Processamento 100% no seu navegador.
+        - generic [ref=f19e46]:
+          - link "Instagram" [ref=f19e47] [cursor=pointer]:
+            - /url: https://instagram.com
+            - img [ref=f19e48]
+          - link "LinkedIn" [ref=f19e52] [cursor=pointer]:
+            - /url: https://linkedin.com
+            - img [ref=f19e53]
+          - link "YouTube" [ref=f19e56] [cursor=pointer]:
+            - /url: https://youtube.com
+            - img [ref=f19e57]
+      - generic [ref=f19e60]:
+        - heading "Produto" [level=3] [ref=f19e61]
+        - list [ref=f19e62]:
+          - listitem [ref=f19e63]:
+            - link "Para você" [ref=f19e64] [cursor=pointer]:
+              - /url: /para-voce
+          - listitem [ref=f19e65]:
+            - link "Planos" [ref=f19e66] [cursor=pointer]:
+              - /url: /#planos
+          - listitem [ref=f19e67]:
+            - link "Como funciona" [ref=f19e68] [cursor=pointer]:
+              - /url: /#como-funciona
+          - listitem [ref=f19e69]:
+            - link "Privacidade" [ref=f19e70] [cursor=pointer]:
+              - /url: /#privacidade
+      - generic [ref=f19e71]:
+        - heading "Empresas" [level=3] [ref=f19e72]
+        - list [ref=f19e73]:
+          - listitem [ref=f19e74]:
+            - link "Para empresas" [ref=f19e75] [cursor=pointer]:
+              - /url: /empresas
+          - listitem [ref=f19e76]:
+            - link "Apoio à NR-1" [ref=f19e77] [cursor=pointer]:
+              - /url: /empresas#nr1
+          - listitem [ref=f19e78]:
+            - link "Dúvidas" [ref=f19e79] [cursor=pointer]:
+              - /url: /#duvidas
+      - generic [ref=f19e80]:
+        - heading "Acesso" [level=3] [ref=f19e81]
+        - list [ref=f19e82]:
+          - listitem [ref=f19e83]:
+            - link "Entrar" [ref=f19e84] [cursor=pointer]:
+              - /url: https://login.stamflow.com.br
+          - listitem [ref=f19e85]:
+            - button "Falar com vendas" [ref=f19e86] [cursor=pointer]
+    - generic [ref=f19e87]:
+      - separator [ref=f19e88]
+      - generic [ref=f19e89]:
+        - paragraph [ref=f19e90]: © 2026 StamFlow. Todos os direitos reservados.
+        - paragraph [ref=f19e91]: Feito com cuidado — sua energia, no seu ritmo.
+  - alert [ref=f19e92]

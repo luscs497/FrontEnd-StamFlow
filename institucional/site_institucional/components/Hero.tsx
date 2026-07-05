@@ -1,12 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useModals } from "@/components/Providers";
 import { fadeUp, stagger } from "@/lib/motion";
-import { TRIAL_DAYS } from "@/lib/config";
 
 export function Hero() {
-  const { openTrial } = useModals();
   const reduce = useReducedMotion();
 
   return (
@@ -41,16 +38,16 @@ export function Hero() {
             variants={fadeUp}
             className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
-            <button type="button" onClick={openTrial} className="btn-primary px-7 py-3.5 text-base">
-              Começar teste grátis
-            </button>
+            <a href="#planos" className="btn-primary px-7 py-3.5 text-base">
+              Começar a Jornada
+            </a>
             <a href="#como-funciona" className="btn-ghost px-7 py-3.5 text-base">
               Ver como funciona
             </a>
           </motion.div>
 
           <motion.p variants={fadeUp} className="mt-5 text-sm text-muted">
-            {TRIAL_DAYS} dias completos · sem cartão · processado no seu navegador
+            Processado 100% no seu navegador · cancele quando quiser
           </motion.p>
         </motion.div>
       </div>
