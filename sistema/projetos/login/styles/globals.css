@@ -243,6 +243,25 @@ main {
   color: rgb(100, 116, 139);
 }
 
+.legal-links {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.legal-links a {
+  font-size: 14px;
+  color: rgb(100, 116, 139);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.legal-links a:hover {
+  color: rgb(148, 163, 184);
+  text-decoration: underline;
+}
+
 /* ── Popups / Modals ── */
 .password-reminder-popup {
   width: 100%;

@@ -124,6 +124,14 @@ export default function LoginPage() {
                 <div className="line" />
               </div>
               <p className="version">Versão 2.5.0 • StamFlow</p>
+              <div className="legal-links">
+                <a href="https://stamflow.com.br/termos-de-uso/" target="_blank" rel="noopener noreferrer">
+                  Termos de Uso
+                </a>
+                <a href="https://stamflow.com.br/politica-de-privacidade/" target="_blank" rel="noopener noreferrer">
+                  Política de Privacidade
+                </a>
+              </div>
             </div>
           </div>
         </section>

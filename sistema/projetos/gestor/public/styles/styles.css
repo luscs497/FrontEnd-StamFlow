@@ -2842,3 +2842,19 @@ header {
         flex-shrink: 0;
     }
 }
+/* Links legais (Termos / Privacidade) no modal de perfil */
+.perfil-legal-links {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 12.5px;
+  color: #64748b;
+}
+.perfil-legal-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.perfil-legal-links a:hover {
+  color: #e2e8f0;
+  text-decoration: underline;
+}

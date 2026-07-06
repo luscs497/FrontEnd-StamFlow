@@ -362,6 +362,30 @@ export function CheckoutContent() {
                     O CPF é exigido pelo Mercado Pago para assinaturas recorrentes.
                   </p>
                 )}
+
+                {tab === "criar" && (
+                  <p className="mt-2 text-[13px] text-muted">
+                    Ao criar uma conta você concorda com os nossos{" "}
+                    <a
+                      href="/termos-de-uso/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline underline-offset-2 hover:text-cloud"
+                    >
+                      Termos de Uso
+                    </a>{" "}
+                    e a nossa{" "}
+                    <a
+                      href="/politica-de-privacidade/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline underline-offset-2 hover:text-cloud"
+                    >
+                      Política de Privacidade
+                    </a>
+                    .
+                  </p>
+                )}
               </>
             )}
           </motion.section>

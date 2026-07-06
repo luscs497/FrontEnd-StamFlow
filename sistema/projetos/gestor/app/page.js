@@ -825,6 +825,12 @@ export default function PainelGestorPage() {
                     </button>
                     <button className="btn-salvar" id="perfil-salvar" type="submit">Salvar Alterações</button>
                 </div>
+
+                <p className="perfil-legal-links">
+                    <a href="https://stamflow.com.br/termos-de-uso/" target="_blank" rel="noopener noreferrer">Termos de Uso</a>
+                    <span aria-hidden="true"> · </span>
+                    <a href="https://stamflow.com.br/politica-de-privacidade/" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>
+                </p>
             </form>
         </div>
         {/*Modal de Add Colaborador*/}
