@@ -50,7 +50,7 @@ export function PagamentoConcluido() {
               </svg>
             )}
             {isRejected && (
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-raio">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-brand-violet">
                 <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
                 <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
               </svg>
@@ -95,7 +95,7 @@ export function PagamentoConcluido() {
                       <a href={LOGIN_URL} className="font-medium text-raio hover:underline">
                         {LOGIN_URL.replace("https://", "")}
                       </a>{" "}
-                      ou use o link abaixo.
+                      ou use o {isApproved ? "botão" : "link"} abaixo.
                     </>
                   ),
                 },

@@ -60,7 +60,7 @@ export function VerificarEmailContent() {
     error: {
       icon: <ErrorIcon />,
       title: "Link inválido ou expirado",
-      color: "text-raio",
+      color: "text-brand-violet",
     },
   };
 
@@ -73,14 +73,10 @@ export function VerificarEmailContent() {
         className="pointer-events-none absolute -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-raio/10 blur-[120px]"
       />
       <div className="relative mx-auto max-w-[42rem] px-6 text-center sm:px-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-8 grid h-16 w-16 place-items-center rounded-2xl border border-hairline bg-surface/60"
+        <div className="mx-auto mb-8 grid h-16 w-16 place-items-center rounded-2xl border border-hairline bg-surface/60"
         >
           {icon}
-        </motion.div>
+        </div>
 
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
@@ -145,7 +141,7 @@ function CheckIcon() {
 
 function ErrorIcon() {
   return (
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-raio">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-brand-violet">
       <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
       <path d="M12 8v4m0 4h.01" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
     </svg>

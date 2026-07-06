@@ -52,11 +52,7 @@ export function AssinaturaExpiradaContent() {
         className="pointer-events-none absolute -top-40 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-raio/10 blur-[120px]"
       />
       <div className="relative mx-auto max-w-[46rem] px-6 text-center sm:px-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-8 grid h-16 w-16 place-items-center rounded-2xl border border-hairline bg-surface/60 text-raio"
+        <div className="mx-auto mb-8 grid h-16 w-16 place-items-center rounded-2xl border border-hairline bg-surface/60 text-brand-violet"
         >
           {/* ícone de "voltar/renovar" (seta circular) */}
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -68,7 +64,7 @@ export function AssinaturaExpiradaContent() {
               strokeLinejoin="round"
             />
           </svg>
-        </motion.div>
+        </div>
 
         <motion.h1
           initial={{ opacity: 0, y: 18 }}
