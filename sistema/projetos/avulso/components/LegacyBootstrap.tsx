@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { LEGACY_SCRIPTS } from "@/lib/scripts";
+import { LEGACY_SCRIPTS_CORE, LEGACY_SCRIPTS_HEAVY } from "@/lib/scripts";
 
 declare global {
   interface Window {
@@ -198,7 +198,10 @@ export default function LegacyBootstrap() {
       const overlay = document.getElementById("auth-overlay");
       if (overlay) overlay.remove();
 
-      for (const src of LEGACY_SCRIPTS) {
+      // FASE 1 (rápida): Swiper + auth + script.js — o mínimo para renderizar
+      // o onboarding/compliance. Dispara os eventos de inicialização assim que
+      // termina, para a tela aparecer sem esperar as libs pesadas de IA.
+      for (const src of LEGACY_SCRIPTS_CORE) {
         if (cancelled) return;
         await loadScript(src);
       }
@@ -208,6 +211,21 @@ export default function LegacyBootstrap() {
         new Event("DOMContentLoaded", { bubbles: true, cancelable: true })
       );
       window.dispatchEvent(new Event("load"));
+
+      // FASE 2 (pesada): face-api + MediaPipe + camera.js + relatórios.
+      // Carrega em seguida, sem travar a primeira pintura do onboarding.
+      // Só são necessários quando a câmera liga.
+      for (const src of LEGACY_SCRIPTS_HEAVY) {
+        if (cancelled) return;
+        await loadScript(src);
+      }
+      if (cancelled) return;
+
+      // Segundo disparo: agora que as libs de câmera existem, notifica os
+      // scripts que aguardam esses globals (camera.js escuta este evento).
+      document.dispatchEvent(
+        new Event("stamflow:heavy-ready", { bubbles: true })
+      );
     })();
 
     return () => {

@@ -1,10 +1,3 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Página não encontrada — StamFlow",
-  robots: { index: false, follow: false },
-};
-
 export default function NotFound() {
   return (
     <div
@@ -19,7 +12,7 @@ export default function NotFound() {
         textAlign: "center",
         padding: "24px",
         boxSizing: "border-box",
-        background: "#0b1120",
+        background: "#0f172a",
         color: "#f8fafc",
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
@@ -34,7 +27,7 @@ export default function NotFound() {
         O endereço que você tentou acessar não existe ou foi movido.
       </p>
       <a
-        href="/"
+        href="https://login.stamflow.com.br"
         style={{
           display: "inline-block",
           background: "#7c3aed",
@@ -46,7 +39,7 @@ export default function NotFound() {
           textDecoration: "none",
         }}
       >
-        Voltar ao site principal
+        Voltar ao login
       </a>
     </div>
   );

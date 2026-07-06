@@ -238,7 +238,7 @@ function updateDashboardUI(data, titulo, tipoPeriodo = "semana") {
 // ============================================================================
 // 3) INIT
 // ============================================================================
-window.addEventListener("load", async () => {
+async function __getReportsInit() {
   console.log("🚀 get-reports.js iniciado (Cookies Mode)");
 
   // REMOVIDO: Verificação de localStorage. Se não tiver cookie, o fetch falha e tratamos lá.
@@ -433,4 +433,13 @@ window.addEventListener("load", async () => {
       await window.refreshHomeData();
     }
   };
-});
+}
+
+// Inicialização resiliente: o get-reports entra na fase 2 do carregamento,
+// quando o evento "load" já pode ter sido disparado. Chamamos direto se o
+// documento já estiver pronto; senão, aguardamos o load.
+if (document.readyState === "complete") {
+  __getReportsInit();
+} else {
+  window.addEventListener("load", __getReportsInit);
+}

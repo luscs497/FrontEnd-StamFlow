@@ -499,7 +499,22 @@ if (btnSendMetrics) {
   });
 }
 
-window.addEventListener('DOMContentLoaded', startApp);
+// Inicialização da câmera/IA. Como agora os scripts são carregados em duas
+// fases (o camera.js entra na fase 2, DEPOIS do DOMContentLoaded já ter sido
+// disparado), escutamos também o evento "stamflow:heavy-ready" emitido pelo
+// bootstrap ao terminar de carregar as libs pesadas. Um guard evita rodar
+// startApp duas vezes caso ambos os eventos ocorram.
+let __startAppDone = false;
+function __startAppOnce() {
+  if (__startAppDone) return;
+  __startAppDone = true;
+  startApp();
+}
+window.addEventListener('DOMContentLoaded', __startAppOnce);
+document.addEventListener('stamflow:heavy-ready', __startAppOnce);
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  setTimeout(__startAppOnce, 0);
+}
 
 // ============================================================================
 // MAPPEAMENTO

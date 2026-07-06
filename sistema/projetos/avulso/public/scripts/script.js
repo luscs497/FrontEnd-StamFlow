@@ -517,7 +517,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const config = configCategoria[grupo];
         dados.forEach((el, groupIndex) => {
           el.forEach((e, itemIndex) => {
-            const item = gerarHTML(e, config.cor, config.svgs[groupIndex] || config.svgs[0], grupo, groupIndex, itemIndex);
+            const item = gerarHTML(e, config.cor, config.svgs[itemIndex] || config.svgs[0], grupo, groupIndex, itemIndex);
             if (listaAlvo[groupIndex]) listaAlvo[groupIndex].appendChild(item);
           });
         });
@@ -565,7 +565,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     playerState = { categoria, groupIndex: gIndex, itemIndex: iIndex };
     const dadosItem = globalData[categoria][gIndex][iIndex];
     const config = configCategoria[categoria];
-    gerarModalAudio(dadosItem, config.cor, config.svgs[gIndex] || config.svgs[0], categoria);
+    gerarModalAudio(dadosItem, config.cor, config.svgs[iIndex] || config.svgs[0], categoria);
   }
 
   function nextTrack() {

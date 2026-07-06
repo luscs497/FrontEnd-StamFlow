@@ -1,10 +1,3 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Página não encontrada — StamFlow",
-  robots: { index: false, follow: false },
-};
-
 export default function NotFound() {
   return (
     <div
@@ -19,12 +12,12 @@ export default function NotFound() {
         textAlign: "center",
         padding: "24px",
         boxSizing: "border-box",
-        background: "#0b1120",
+        background: "#0f172a",
         color: "#f8fafc",
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
     >
-      <p style={{ fontSize: "clamp(64px, 18vw, 88px)", fontWeight: 800, color: "#7c3aed", margin: "0 0 8px", lineHeight: 1 }}>
+      <p style={{ fontSize: "clamp(64px, 18vw, 88px)", fontWeight: 800, color: "#7264EA", margin: "0 0 8px", lineHeight: 1 }}>
         404
       </p>
       <h1 style={{ fontSize: "clamp(22px, 6vw, 28px)", fontWeight: 700, margin: "0 0 12px", color: "#f1f5f9" }}>
@@ -34,10 +27,10 @@ export default function NotFound() {
         O endereço que você tentou acessar não existe ou foi movido.
       </p>
       <a
-        href="/"
+        href="https://painel.stamflow.com.br"
         style={{
           display: "inline-block",
-          background: "#7c3aed",
+          background: "#7264EA",
           color: "#fff",
           fontWeight: 600,
           fontSize: "15px",
@@ -46,7 +39,7 @@ export default function NotFound() {
           textDecoration: "none",
         }}
       >
-        Voltar ao site principal
+        Voltar ao painel
       </a>
     </div>
   );
