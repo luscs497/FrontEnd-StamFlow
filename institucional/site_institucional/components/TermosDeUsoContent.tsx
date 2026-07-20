@@ -86,7 +86,7 @@ export function TermosDeUsoContent() {
             <ul className="space-y-2">
               <Bullet>
                 O acesso ao StamFlow é por assinatura, disponível em períodos
-                mensal, trimestral, semestral e anual. O preço vigente é o
+                mensal, trimestral e anual. O preço vigente é o
                 exibido no momento da contratação.
               </Bullet>
               <Bullet>

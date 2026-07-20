@@ -1,23 +1,27 @@
 /**
  * Vitrine do plano individual (avulso).
  *
- * Modelo real do produto: existe UM plano individual, contratável em quatro
- * períodos (mensal, trimestral, semestral e anual) — cada período é um
- * registro próprio em GET /subscription_plan/plans (type=individual), com
- * preço total fechado (não é desconto percentual sobre o mensal).
+ * Modelo real do produto: existe UM plano individual, contratável em três
+ * períodos (mensal, trimestral e anual) — cada período é um registro próprio
+ * em GET /subscription_plan/plans (type=individual), com preço total fechado
+ * (não é desconto percentual sobre o mensal).
  *
- * Os valores abaixo espelham os planos reais cadastrados no backend:
- *   Avulso Mensal      R$  29,90  (2990 centavos)
- *   Avulso Trimestral  R$  79,90  (7990)
- *   Avulso Semestral   R$ 149,90  (14990)
- *   Avulso Anual       R$ 269,90  (26990)
+ * Os valores abaixo seguem a tabela do documento de copy da LP B2C:
+ *   Mensal      R$ 59/mês  (5900 centavos no período)
+ *   Trimestral  R$ 39/mês  (11700 no período — "economize 33%")
+ *   Anual       R$ 19/mês  (22800 no período — "economize 67%")
+ *
+ * ATENÇÃO: os planos cadastrados hoje no backend (ids 2–5) usam outra tabela
+ * (29,90 / 79,90 / 149,90 / 269,90, com período semestral). Antes de ligar a
+ * integração real, o cadastro de planos do backend precisa ser alinhado a
+ * esta tabela — ou os backendPlanId abaixo remapeados.
  *
  * A UI continua lendo desta fonte com estados de carregando/erro/sucesso;
  * para integrar de verdade basta trocar fetchAvulsoPlan() pela chamada real
  * ao endpoint e mapear a resposta.
  */
 
-export type PeriodId = "mensal" | "trimestral" | "semestral" | "anual";
+export type PeriodId = "mensal" | "trimestral" | "anual";
 
 export interface Period {
   id: PeriodId;
@@ -30,10 +34,9 @@ export interface Period {
 }
 
 export const PERIODS: Period[] = [
-  { id: "mensal", label: "Mensal", months: 1, priceInCents: 2990, backendPlanId: 2 },
-  { id: "trimestral", label: "Trimestral", months: 3, priceInCents: 7990, backendPlanId: 3 },
-  { id: "semestral", label: "Semestral", months: 6, priceInCents: 14990, backendPlanId: 4 },
-  { id: "anual", label: "Anual", months: 12, priceInCents: 26990, backendPlanId: 5 },
+  { id: "mensal", label: "Mensal", months: 1, priceInCents: 5900, backendPlanId: 2 },
+  { id: "trimestral", label: "Trimestral", months: 3, priceInCents: 11700, backendPlanId: 3 },
+  { id: "anual", label: "Anual", months: 12, priceInCents: 22800, backendPlanId: 5 },
 ];
 
 export interface Plan {
@@ -83,8 +86,9 @@ export function priceFor(period: Period): PriceBreakdown {
   const total = period.priceInCents / 100;
   const perMonth = total / period.months;
   const fullPrice = (MONTHLY_BASE_CENTS * period.months) / 100;
+  // floor, e não round, para bater com a copy oficial ("33%" e "67%").
   const savingsPct =
-    period.months === 1 ? 0 : Math.round((1 - total / fullPrice) * 100);
+    period.months === 1 ? 0 : Math.floor((1 - total / fullPrice) * 100);
   return { perMonth, total, savingsPct };
 }
 

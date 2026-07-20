@@ -17,15 +17,17 @@ export default function Home() {
     <>
       <Header />
       <main>
+        {/* Ordem das seções conforme o doc de copy da LP B2C:
+            planos antes de segurança, e dúvidas por último antes do CTA. */}
         <Hero />
         <TrustStrip />
         <Innovation />
         <Burnout />
         <HowItWorks />
         <Features />
+        <Plans />
         <Privacy />
         <ForCompanies />
-        <Plans />
         <FAQ />
         <FinalCTA />
       </main>

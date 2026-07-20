@@ -16,7 +16,7 @@ export function Privacy() {
                 <span className="eyebrow-tick" /> Segurança e privacidade absoluta
               </p>
               <h2 className="mt-5 font-display font-bold text-huge text-cloud">
-                Nenhum vídeo, imagem ou dado <span className="text-raio">sai do seu computador</span>.
+                Nenhum vídeo, imagem ou dado pessoal <span className="text-raio">sai do seu computador</span>.
               </h2>
               <p className="mt-5 text-xl leading-relaxed text-slatey">
                 A leitura de postura e de expressão acontece inteiramente no seu navegador. Nenhum quadro de

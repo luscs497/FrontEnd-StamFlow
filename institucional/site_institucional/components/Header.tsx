@@ -3,11 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Logo } from "@/components/Brand";
-import { useCart } from "@/components/Providers";
-import { NAV, LOGIN_URL } from "@/lib/config";
+import { useCart, useModals } from "@/components/Providers";
+import { NAV, NAV_EMPRESAS, LOGIN_URL } from "@/lib/config";
 import { formatBRL, priceFor } from "@/lib/plans";
 
-export function Header() {
+/**
+ * Header em duas variantes, seguindo os documentos de copy:
+ * - "default" (LP B2C/home): menu de seções da home + Entrar | Para empresas |
+ *   Escolher meu Plano, com o carrinho do fluxo self-service.
+ * - "empresas" (LP B2B): menu de seções da própria página + Admin Gestor |
+ *   Acesso usuário | Agendar Demonstração (abre o modal de contato). Sem
+ *   carrinho — a conversão corporativa é consultiva.
+ */
+export function Header({ variant = "default" }: { variant?: "default" | "empresas" }) {
+  const isEmpresas = variant === "empresas";
+  const { openEnterprise } = useModals();
+  const nav = isEmpresas ? NAV_EMPRESAS : NAV;
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -38,12 +49,12 @@ export function Header() {
         </a>
 
         {/* Navegação desktop */}
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Seções">
-          {NAV.map((item) => (
+        <nav className="hidden items-center gap-x-5 xl:flex" aria-label="Seções">
+          {nav.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="text-[15px] font-medium text-slatey transition-colors hover:text-cloud"
+              className="text-[14px] font-medium text-slatey transition-colors hover:text-cloud"
             >
               {item.label}
             </a>
@@ -51,25 +62,57 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3 sm:gap-4">
-          {/* Carrinho: visível em todos os tamanhos */}
-          <CartWidget />
+          {/* Carrinho: só no fluxo self-service (B2C) */}
+          {!isEmpresas && <CartWidget />}
 
-          <div className="hidden items-center gap-4 lg:flex">
-            <a
-              href={LOGIN_URL}
-              className="text-[15px] font-semibold text-cloud transition-colors hover:text-brand-cyan"
-            >
-              Entrar
-            </a>
-            <a href="/#planos" className="btn-primary px-6 py-3 text-[15px]">
-              Escolher meu Plano
-            </a>
+          <div className="hidden items-center gap-4 xl:flex">
+            {isEmpresas ? (
+              <>
+                <a
+                  href={LOGIN_URL}
+                  className="text-[15px] font-semibold text-cloud transition-colors hover:text-brand-cyan"
+                >
+                  Admin Gestor
+                </a>
+                <a
+                  href={LOGIN_URL}
+                  className="text-[15px] font-semibold text-cloud transition-colors hover:text-brand-cyan"
+                >
+                  Acesso usuário
+                </a>
+                <button
+                  type="button"
+                  onClick={openEnterprise}
+                  className="btn-primary px-6 py-3 text-[15px]"
+                >
+                  Agendar Demonstração
+                </button>
+              </>
+            ) : (
+              <>
+                <a
+                  href={LOGIN_URL}
+                  className="text-[15px] font-semibold text-cloud transition-colors hover:text-brand-cyan"
+                >
+                  Entrar
+                </a>
+                <a
+                  href="/empresas"
+                  className="text-[15px] font-semibold text-cloud transition-colors hover:text-brand-cyan"
+                >
+                  Para empresas
+                </a>
+                <a href="/#planos" className="btn-primary px-6 py-3 text-[15px]">
+                  Escolher meu Plano
+                </a>
+              </>
+            )}
           </div>
 
           {/* Botão do menu mobile */}
           <button
             type="button"
-            className="grid h-11 w-11 place-items-center rounded-lg border border-hairline text-cloud lg:hidden"
+            className="grid h-11 w-11 place-items-center rounded-lg border border-hairline text-cloud xl:hidden"
             aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
@@ -89,14 +132,14 @@ export function Header() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            className="lg:hidden"
+            className="xl:hidden"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="space-y-1.5 border-t border-hairline bg-ink/95 px-6 py-5 backdrop-blur-md">
-              {NAV.map((item) => (
+              {nav.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
@@ -106,18 +149,46 @@ export function Header() {
                   {item.label}
                 </a>
               ))}
-              <div className="grid gap-3 pt-4">
-                <a href={LOGIN_URL} className="btn-ghost w-full py-3.5 text-base">
-                  Entrar
-                </a>
-                <a
-                  href="/#planos"
-                  onClick={() => setMenuOpen(false)}
-                  className="btn-primary w-full py-3.5 text-base"
-                >
-                  Escolher meu Plano
-                </a>
-              </div>
+              {isEmpresas ? (
+                <div className="grid gap-3 pt-4">
+                  <a href={LOGIN_URL} className="btn-ghost w-full py-3.5 text-base">
+                    Admin Gestor
+                  </a>
+                  <a href={LOGIN_URL} className="btn-ghost w-full py-3.5 text-base">
+                    Acesso usuário
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      openEnterprise();
+                    }}
+                    className="btn-primary w-full py-3.5 text-base"
+                  >
+                    Agendar Demonstração
+                  </button>
+                </div>
+              ) : (
+                <div className="grid gap-3 pt-4">
+                  <a href={LOGIN_URL} className="btn-ghost w-full py-3.5 text-base">
+                    Entrar
+                  </a>
+                  <a
+                    href="/empresas"
+                    onClick={() => setMenuOpen(false)}
+                    className="btn-ghost w-full py-3.5 text-base"
+                  >
+                    Para empresas
+                  </a>
+                  <a
+                    href="/#planos"
+                    onClick={() => setMenuOpen(false)}
+                    className="btn-primary w-full py-3.5 text-base"
+                  >
+                    Escolher meu Plano
+                  </a>
+                </div>
+              )}
             </div>
           </motion.div>
         )}

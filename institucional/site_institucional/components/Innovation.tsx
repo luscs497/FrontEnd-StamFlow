@@ -47,10 +47,10 @@ export function Innovation() {
             eyebrow="Inovação global"
             title={
               <>
-                O sistema de proteção da sua <span className="text-raio">saúde e produtividade</span>.
+                Conheça StamFlow, o sistema de <span className="text-raio">proteção da sua saúde e produtividade</span>, durante a jornada de trabalho no computador.
               </>
             }
-            description="Imagine contar com um fisioterapeuta particular, um personal trainer, um instrutor de meditação mindfulness e um coach de produtividade — te acompanhando todos os dias, da tela do seu computador."
+            description="Imagine contar com um fisioterapeuta particular, atento à sua postura durante todo período de trabalho, mais um personal trainer para fortalecer seus músculos mais usados, um instrutor de meditação mindfulness que entende exatamente a rotina de um trabalhador de computador, e um coach de produtividade. Te acompanhando todos os dias, da tela do seu computador."
           />
         </Reveal>
 

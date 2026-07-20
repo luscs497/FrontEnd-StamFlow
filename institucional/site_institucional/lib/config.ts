@@ -28,17 +28,28 @@ export const SALES_WHATSAPP = "558482002100";
 export const TRIAL_DAYS = 7;
 
 // Âncoras de navegação. Absolutas a partir da raiz para funcionarem de
-// qualquer página (ex.: a partir de /empresas). "Para empresas" aponta para
-// a landing dedicada /empresas, não mais para a seção da home.
-// Navegação enxuta, focada nos caminhos de conversão: os dois públicos
-// (você / empresas), os planos e as dúvidas. "Como funciona" e "Privacidade"
-// seguem acessíveis pela home (seções) e são explicados dentro das landings
-// de cada público, então saíram do topo para reduzir a poluição visual.
+// qualquer página (ex.: a partir de /empresas). A ordem e os rótulos seguem
+// o documento de copy da LP B2C; "Para empresas" vive nos botões do header,
+// ao lado de "Entrar" e "Escolher meu Plano".
 export const NAV = [
+  { label: "Inovação Global", href: "/#inovacao" },
+  { label: "Procrastinação", href: "/#procrastinacao" },
   { label: "Como Funciona", href: "/#como-funciona" },
   { label: "Recursos", href: "/#recursos" },
   { label: "Planos", href: "/#planos" },
   { label: "Segurança", href: "/#privacidade" },
   { label: "Dúvidas", href: "/#duvidas" },
-  { label: "Para empresas", href: "/empresas" },
+] as const;
+
+// Navegação da LP corporativa (/empresas), com âncoras próprias da página,
+// seguindo o documento de copy da LP B2B.
+export const NAV_EMPRESAS = [
+  { label: "Inovação Global", href: "/empresas/#inovacao" },
+  { label: "PGR: NR1, NR28", href: "/empresas/#pgr" },
+  { label: "Crise no RH", href: "/empresas/#crise" },
+  { label: "StamFlow B2B", href: "/empresas/#stamflow-b2b" },
+  { label: "ROI & Compliance", href: "/empresas/#roi" },
+  { label: "Planos Corporativos", href: "/empresas/#planos-corporativos" },
+  { label: "Dúvidas", href: "/empresas/#duvidas" },
+  { label: "Segurança", href: "/empresas/#seguranca" },
 ] as const;

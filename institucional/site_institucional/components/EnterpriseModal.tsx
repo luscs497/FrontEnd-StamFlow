@@ -10,15 +10,16 @@ type Status = "idle" | "loading" | "error" | "success";
 interface Form {
   empresa: string;
   contato: string;
+  /** "sim" | "nao" | "" — a equipe trabalha pelo computador? */
+  pcTeam: string;
   colaboradores: string;
-  gestores: string;
 }
 
 interface FieldErrors {
   empresa?: string;
   contato?: string;
+  pcTeam?: string;
   colaboradores?: string;
-  gestores?: string;
 }
 
 /**
@@ -27,7 +28,7 @@ interface FieldErrors {
  * Integração futura: POST /enterprise/request -> devolve o link + confirmação.
  */
 export function EnterpriseModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [form, setForm] = useState<Form>({ empresa: "", contato: "", colaboradores: "", gestores: "" });
+  const [form, setForm] = useState<Form>({ empresa: "", contato: "", pcTeam: "", colaboradores: "" });
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<Status>("idle");
   const [waLink, setWaLink] = useState("");
@@ -37,7 +38,7 @@ export function EnterpriseModal({ open, onClose }: { open: boolean; onClose: () 
   }
 
   function reset() {
-    setForm({ empresa: "", contato: "", colaboradores: "", gestores: "" });
+    setForm({ empresa: "", contato: "", pcTeam: "", colaboradores: "" });
     setErrors({});
     setStatus("idle");
     setWaLink("");
@@ -51,23 +52,23 @@ export function EnterpriseModal({ open, onClose }: { open: boolean; onClose: () 
   function validate(): boolean {
     const next: FieldErrors = {};
     if (form.empresa.trim().length < 2) next.empresa = "Informe o nome da empresa.";
-    if (form.contato.trim().length < 3) next.contato = "Deixe um e-mail ou telefone de contato.";
-    if (!/^\d+$/.test(form.colaboradores) || Number(form.colaboradores) < 1)
+    if (form.contato.trim().length < 3) next.contato = "Deixe um telefone ou e-mail de contato.";
+    if (form.pcTeam !== "sim" && form.pcTeam !== "nao")
+      next.pcTeam = "Marque sim ou não.";
+    if (form.pcTeam === "sim" && (!/^\d+$/.test(form.colaboradores) || Number(form.colaboradores) < 1))
       next.colaboradores = "Quantos colaboradores? (número)";
-    if (!/^\d+$/.test(form.gestores) || Number(form.gestores) < 1)
-      next.gestores = "Quantas licenças de gestor? (número)";
     setErrors(next);
     return Object.keys(next).length === 0;
   }
 
   function buildWaLink(): string {
     const resumo = [
-      "Olá! Quero falar sobre o StamFlow para empresas.",
+      "Olá! Quero agendar uma demonstração do StamFlow para empresas.",
       "",
       `Empresa: ${form.empresa}`,
       `Contato: ${form.contato}`,
-      `Colaboradores: ${form.colaboradores}`,
-      `Licenças de gestor: ${form.gestores}`,
+      `Equipe trabalha pelo computador: ${form.pcTeam === "sim" ? "sim" : "não"}`,
+      ...(form.colaboradores ? [`Colaboradores pelo computador: ${form.colaboradores}`] : []),
     ].join("\n");
     return `https://wa.me/${SALES_WHATSAPP}?text=${encodeURIComponent(resumo)}`;
   }
@@ -119,49 +120,71 @@ export function EnterpriseModal({ open, onClose }: { open: boolean; onClose: () 
             <span className="eyebrow-tick" /> Para empresas
           </p>
           <h2 id="ent-title" className="font-display text-2xl font-bold">
-            Energia da equipe, sob medida
+            Energia da Equipe, sob medida
           </h2>
           <p className="mt-1.5 text-sm text-slatey">
-            Conte o tamanho do time. Montamos um plano por licenças e seguimos a conversa no WhatsApp.
+            Conheça o sistema e veja a solução ideal para sua equipe.
           </p>
 
           <div className="mt-5 space-y-4">
             <Field
               id="ent-empresa"
-              label="Nome da empresa"
+              label="Nome da Empresa*"
               value={form.empresa}
               onChange={(v) => set("empresa", v)}
               error={errors.empresa}
-              placeholder="Sua empresa"
+              placeholder="Sua Empresa"
             />
             <Field
               id="ent-contato"
-              label="Contato (e-mail ou telefone)"
+              label="Contato de preferência (telefone ou e-mail)*"
               value={form.contato}
               onChange={(v) => set("contato", v)}
               error={errors.contato}
               placeholder="Como falamos com você"
             />
-            <div className="grid grid-cols-2 gap-3">
-              <Field
-                id="ent-colab"
-                label="Colaboradores"
-                value={form.colaboradores}
-                onChange={(v) => set("colaboradores", v.replace(/\D/g, ""))}
-                error={errors.colaboradores}
-                inputMode="numeric"
-                placeholder="Ex.: 40"
-              />
-              <Field
-                id="ent-gestores"
-                label="Licenças de gestor"
-                value={form.gestores}
-                onChange={(v) => set("gestores", v.replace(/\D/g, ""))}
-                error={errors.gestores}
-                inputMode="numeric"
-                placeholder="Ex.: 3"
-              />
-            </div>
+            <fieldset>
+              <legend className="mb-1.5 block text-sm font-medium text-cloud">
+                Sua equipe tem colaboradores que trabalham pelo computador?*
+              </legend>
+              <div className="flex gap-3">
+                {[
+                  { value: "sim", label: "Sim" },
+                  { value: "nao", label: "Não" },
+                ].map((opt) => (
+                  <label
+                    key={opt.value}
+                    className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-field border px-4 py-2.5 text-sm font-medium transition-colors ${
+                      form.pcTeam === opt.value
+                        ? "border-brand-cyan/60 bg-brand-cyan/10 text-cloud"
+                        : "border-hairline text-slatey hover:text-cloud"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="ent-pc-team"
+                      value={opt.value}
+                      checked={form.pcTeam === opt.value}
+                      onChange={() => set("pcTeam", opt.value)}
+                      className="sr-only"
+                    />
+                    {opt.label}
+                  </label>
+                ))}
+              </div>
+              {errors.pcTeam && (
+                <p className="mt-1.5 text-xs text-[rgb(252,165,165)]">{errors.pcTeam}</p>
+              )}
+            </fieldset>
+            <Field
+              id="ent-colab"
+              label="Quantidade de Colaboradores pelo computador"
+              value={form.colaboradores}
+              onChange={(v) => set("colaboradores", v.replace(/\D/g, ""))}
+              error={errors.colaboradores}
+              inputMode="numeric"
+              placeholder="Ex.: 40"
+            />
 
             {status === "error" && (
               <Alert tone="error">Algo falhou ao montar o pedido. Tente novamente.</Alert>

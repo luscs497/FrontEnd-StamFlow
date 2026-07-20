@@ -19,9 +19,9 @@ export const metadata: Metadata = {
 export default function EmpresasPage() {
   return (
     <>
-      <Header />
+      <Header variant="empresas" />
       <EmpresasContent />
-      <Footer />
+      <Footer variant="empresas" />
     </>
   );
 }

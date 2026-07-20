@@ -22,7 +22,7 @@ export function Plans() {
   const { addToCart, item: cartItem } = useCart();
   const [state, setState] = useState<LoadState>("loading");
   const [plan, setPlan] = useState<Plan | null>(null);
-  const [period, setPeriod] = useState<Period>(PERIODS[3]); // anual por padrão
+  const [period, setPeriod] = useState<Period>(PERIODS[2]); // anual por padrão
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export function Plans() {
             eyebrow="Planos"
             title={
               <>
-                Escolha o plano e o período de <span className="text-raio">aumento de performance</span>.
+                Escolha o plano e o período de <span className="text-raio">aumento de performance</span> que deseja.
               </>
             }
             description="Acesso imediato a tudo que o StamFlow oferece. Cancele quando quiser — 7 dias de garantia, com reembolso, em qualquer plano."

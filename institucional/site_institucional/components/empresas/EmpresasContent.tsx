@@ -11,11 +11,9 @@ import { fadeUp, stagger, viewportOnce } from "@/lib/motion";
  * time, agenda uma demonstração ao vivo e fecha um pacote por licenças.
  * Todos os CTAs abrem o EnterpriseModal (contato).
  *
- * Nota sobre a NR-1/NR-28: o texto posiciona o StamFlow como INSTRUMENTO DE
- * APOIO ao monitoramento contínuo dos fatores psicossociais — nunca como algo
- * que "garante conformidade" ou substitui PGR, laudo técnico ou o SESMT/médico
- * do trabalho. Isso é deliberado para não criar promessa juridicamente
- * arriscada num material de venda.
+ * A copy e a ordem das seções seguem o documento oficial
+ * "(Copy) LP Corporativo B2B - StamFlow.docx"; os ids das seções são as
+ * âncoras do menu corporativo (NAV_EMPRESAS em lib/config.ts).
  */
 export function EmpresasContent() {
   const { openEnterprise } = useModals();
@@ -27,11 +25,14 @@ export function EmpresasContent() {
       <TudoRH />
       <BombaRelogio />
       <NR1Section onCta={openEnterprise} />
-      <ComoFunciona />
+      <Guardiao />
+      <BoostsB2B />
       <SolucaoDoisEmUm />
       <ROISection onCta={openEnterprise} />
+      <PlanosCorporativos onCta={openEnterprise} />
+      <TudoIncluidoB2B onCta={openEnterprise} />
+      <DuvidasB2B onCta={openEnterprise} />
       <Privacidade onCta={openEnterprise} />
-      <DuvidasB2B />
       <EmpresasFinalCTA onCta={openEnterprise} />
     </main>
   );
@@ -85,7 +86,7 @@ function EmpresasHero({ onCta }: { onCta: () => void }) {
           <button type="button" onClick={onCta} className="btn-primary px-8 py-4 text-base">
             Agendar demonstração
           </button>
-          <a href="#como-funciona" className="btn-ghost px-8 py-4 text-base">
+          <a href="#stamflow-b2b" className="btn-ghost px-8 py-4 text-base">
             Ver como funciona
           </a>
         </motion.div>
@@ -113,17 +114,17 @@ function Inovacao() {
     "Coach de produtividade, acompanhando cada colaborador todos os dias.",
   ];
   return (
-    <section className="py-24 sm:py-32">
+    <section id="inovacao" className="py-24 sm:py-32">
       <div className="mx-auto max-w-[72rem] px-6 sm:px-10">
         <Reveal>
           <SectionHeading
             eyebrow="Inovação global"
             title={
               <>
-                O sistema de proteção da <span className="text-raio">saúde e produtividade</span> no trabalho.
+                Conheça StamFlow, o sistema de <span className="text-raio">proteção da saúde e produtividade</span>, durante a jornada de trabalho no computador.
               </>
             }
-            description="Imagine que cada colaborador possa contar com um time de especialistas, te acompanhando todos os dias, da tela do computador."
+            description="Imagine que cada colaborador possa contar com um fisioterapeuta particular, atento a sua postura durante todo período de trabalho, mais um personal trainer para fortalecer seus músculos mais usados, um instrutor de meditação mindfulness que entende exatamente a rotina de um trabalhador de computador, e um coach de produtividade. Lhe acompanhando todos os dias, da tela do computador."
           />
         </Reveal>
         <motion.div
@@ -154,33 +155,28 @@ function Inovacao() {
 function TudoRH() {
   const items = [
     {
-      title: "Adequação às NR-1 e NR-28",
-      body: "Canal de denúncias blindado e sigiloso, 100% em conformidade com a LGPD. Gera histórico de evidências de proteção ao funcionário e auxilia no combate ao stress, à sobrecarga e ao assédio.",
+      title: "Adequação às NR1 e NR28",
+      body: "Um sistema que oferece Canal de denúncias blindado e sigiloso, 100% em conformidade com a LGPD. Gerando histórico de evidências de proteção ao funcionário e auxiliando no combate do stress, sobrecarga e assédio.",
     },
     {
       title: "Proteção jurídica",
-      body: "Implementação ou melhoria do Programa de Gerenciamento de Riscos (PGR), tratamento de abusos não reportados e redução do passivo oculto.",
-    },
-    {
-      title: "Indicadores e escuta",
-      body: "Indicadores-chave e recursos inovadores de escuta, proteção e gestão de crise — tudo em um só painel de gestão.",
+      body: "Implementação ou melhoria do Programa de Gerenciamento de Risco (PGR), tratamento de abusos não reportados e redução do passivo oculto.",
     },
   ];
   return (
-    <section className="py-24 sm:py-32">
+    <section id="pgr" className="py-24 sm:py-32">
       <div className="mx-auto max-w-[72rem] px-6 sm:px-10">
         <Reveal>
           <SectionHeading
             eyebrow="Tudo que o RH precisa"
             title={
               <>
-                E não é só isso. <span className="text-raio">O RH ganha um aliado</span>.
+                E não é só isso. StamFlow oferece à <span className="text-raio">gestão dos Recursos Humanos</span>: indicadores-chave e recursos inovadores de escuta, proteção e gestão de crise.
               </>
             }
-            description="O StamFlow oferece à gestão de Recursos Humanos os recursos de proteção, conformidade e gestão de crise que a nova realidade exige."
           />
         </Reveal>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
           {items.map((it, i) => (
             <motion.div
               key={it.title}
@@ -205,7 +201,7 @@ function TudoRH() {
 
 function BombaRelogio() {
   return (
-    <section className="py-24 sm:py-32">
+    <section id="crise" className="py-24 sm:py-32">
       <div className="mx-auto max-w-[72rem] px-6 sm:px-10">
         <Reveal>
           <SectionHeading
@@ -215,7 +211,7 @@ function BombaRelogio() {
                 Há uma <span className="text-raio">epidemia silenciosa</span> se espalhando dentro das empresas.
               </>
             }
-            description="Empresas brasileiras perdem cerca de R$ 100 bilhões por ano em prejuízos por afastamentos do trabalho. Dores nas costas ainda lideram, mas já são seguidas de perto por ansiedade, depressão e burnout."
+            description="Empresas brasileiras perdem R$ 100 bilhões/ano em prejuízos por afastamentos do trabalho. Dores nas costas, hérnias e lombalgias ainda lideram as causas de afastamento, mas já são seguidas de perto pelas crises de ansiedade, depressão, burnout e outras doenças da mente."
           />
         </Reveal>
 
@@ -261,16 +257,17 @@ function NR1Section({ onCta }: { onCta: () => void }) {
               <span className="eyebrow-tick" /> A bomba-relógio tem data para explodir
             </p>
             <h2 className="mt-5 max-w-3xl font-display text-3xl font-bold leading-tight text-cloud sm:text-4xl">
-              A <span className="text-raio">“cegueira gerencial”</span> deixa a gestão do RH e a liderança vulneráveis.
+              A <span className="text-raio">“cegueira gerencial”</span> deixa a gestão do RH e a liderança da empresa vulneráveis.
             </h2>
             <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slatey">
               Sem monitoramento contínuo e ações de prevenção, os problemas só aparecem quando o atestado
-              médico chega — ou quando o colaborador já não consegue mais estar presente. E tende a piorar.
+              médico chega, ou quando o colaborador já não consegue mais estar presente. E vai piorar.
             </p>
             <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slatey">
-              Com o início da fiscalização da NR-1, as empresas passam a ser responsáveis não só pela saúde
-              física, mas também emocional de cada colaborador. Sua empresa está preparada para gerar
-              evidências técnicas de prevenção ao burnout e à sobrecarga, ou está exposta a multas?
+              Início da fiscalização punitiva da NR1: o prazo de adequação às novas normas da NR1 chegou ao
+              fim. Agora as empresas são oficialmente responsáveis não só pela saúde física, mas também
+              emocional de cada colaborador. Sua empresa está preparada para gerar evidências técnicas de
+              prevenção ao burnout e sobrecarga, ou está exposta a multas iminentes?
             </p>
             <div className="mt-8">
               <button type="button" onClick={onCta} className="btn-primary px-7 py-3.5 text-base">
@@ -284,9 +281,9 @@ function NR1Section({ onCta }: { onCta: () => void }) {
   );
 }
 
-/* ─────────────────────────  COMO FUNCIONA  ────────────────────────── */
+/* ────────────────  O GUARDIÃO DO RH, EM TEMPO INTEGRAL  ─────────────── */
 
-function ComoFunciona() {
+function Guardiao() {
   const steps = [
     {
       n: "01",
@@ -306,18 +303,18 @@ function ComoFunciona() {
   ];
 
   return (
-    <section id="como-funciona" className="py-24 sm:py-32">
+    <section id="stamflow-b2b" className="py-24 sm:py-32">
       <div className="mx-auto max-w-[72rem] px-6 sm:px-10">
         <Reveal className="text-center">
           <SectionHeading
             align="center"
-            eyebrow="Como funciona"
+            eyebrow="O guardião do RH, em tempo integral"
             title={
               <>
-                Uma inteligência ativa de biofeedback, <span className="text-raio">que cuida em tempo real</span>.
+                Cuidando individualmente de cada colaborador, com ações preventivas e corretivas: <span className="text-raio">proteção que gera valor</span>.
               </>
             }
-            description="O StamFlow é um sistema inovador de monitoramento preventivo que cuida do colaborador que trabalha no computador, em três etapas."
+            description="O StamFlow é um sistema inovador de monitoramento preventivo. Uma inteligência ativa de biofeedback que cuida em tempo real do colaborador que trabalha no computador. Cuidado em 3 etapas:"
           />
         </Reveal>
 
@@ -343,6 +340,64 @@ function ComoFunciona() {
   );
 }
 
+/* ─────────────────────  SAÚDE E PRODUTIVIDADE (BOOSTS)  ───────────────── */
+
+function BoostsB2B() {
+  const boosts = [
+    {
+      title: "Modo Foco",
+      body: "Trilhas binaurais e ruído branco para blindar o cérebro contra distrações.",
+    },
+    {
+      title: "Corpo Saudável",
+      body: "Protocolos validados de exercícios de fortalecimento e oxigenação.",
+    },
+    {
+      title: "Pausa Mental",
+      body: "Áudios guiados de meditação mindfulness para limpar o “cache” cerebral.",
+    },
+    {
+      title: "StamFlow University",
+      body: "Curadoria com as maiores estratégias mundiais de melhora de hábitos, sono e foco.",
+    },
+  ];
+  return (
+    <section className="py-24 sm:py-32">
+      <div className="mx-auto max-w-[72rem] px-6 sm:px-10">
+        <Reveal className="text-center">
+          <SectionHeading
+            align="center"
+            eyebrow="Saúde e produtividade"
+            title={
+              <>
+                StamFlow auxilia a melhora da postura, o fortalecimento muscular, a oxigenação, a organização e a <span className="text-raio">manutenção do foco no trabalho</span>.
+              </>
+            }
+            description="Os 4 Boosts de Saúde e Alta Performance:"
+          />
+        </Reveal>
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
+          className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {boosts.map((b, i) => (
+            <motion.div key={b.title} variants={fadeUp} className="surface-card p-7">
+              <span className="font-display text-2xl font-bold text-raio tabular-nums">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-3 font-display text-lg font-bold text-cloud">{b.title}</h3>
+              <p className="mt-2.5 text-[15px] leading-relaxed text-slatey">{b.body}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 /* ─────────────────────────  SOLUÇÃO 2 EM 1  ────────────────────────── */
 
 function SolucaoDoisEmUm() {
@@ -353,7 +408,7 @@ function SolucaoDoisEmUm() {
     },
     {
       title: "Escalabilidade total",
-      body: "Cadastro de colaboradores um a um, em massa, ou via planilha CSV para grandes operações.",
+      body: "Cadastro simplificado de colaboradores um a um, em massa, ou via planilha CSV para grandes operações.",
     },
     {
       title: "Canal de denúncias seguro",
@@ -372,10 +427,10 @@ function SolucaoDoisEmUm() {
             eyebrow="Uma solução 2 em 1"
             title={
               <>
-                Gera valor para o <span className="text-raio">colaborador e para o RH</span>.
+                StamFlow é um sistema que gera valor para o <span className="text-raio">colaborador e o RH</span>.
               </>
             }
-            description="Cada colaborador tem seu acesso particular e exclusivo. E o gestor de RH conta com um painel em nível gerencial, com recursos avançados."
+            description="Cada colaborador tem seu acesso particular e exclusivo de seu sistema. E o(s) gestor(es) de RH têm acesso a um painel em nível gerencial, com recursos avançados:"
           />
         </Reveal>
         <motion.div
@@ -403,17 +458,19 @@ function ROISection({ onCta }: { onCta: () => void }) {
   const rows = [
     ["Saúde física", "LER/DORT e afastamentos por hérnias e lombalgias.", "Prevenção da má postura e alertas de correção via IA."],
     ["Saúde mental", "Epidemia de stress, burnout e doenças da mente.", "Detecção precoce de esgotamento e recomendações via IA."],
-    ["Absenteísmo", "Excesso de faltas e atestados por dores físicas.", "Programa de fortalecimento preventivo."],
-    ["Presenteísmo", "Colaborador “logado”, mas exausto e improdutivo.", "Sistema induz o deep work, com pausas e modo foco."],
-    ["Plano de saúde", "Aumento de custos por sinistralidade elevada.", "Redução de exames, pronto atendimento e tratamentos."],
-    ["Turnover", "Perda de talentos e alto custo de recontratação.", "Aumento do eNPS e do senso de pertencimento."],
-    ["Risco jurídico", "Processos por falta de prevenção do risco psicossocial.", "Histórico de evidências de proteção ao funcionário."],
+    ["Absenteísmo", "Excesso de faltas e atestados médicos por dores físicas.", "Programa de fortalecimento preventivo."],
+    ["Presenteísmo (prejuízo até 3x maior que o absenteísmo)", "Colaborador “logado”, mas exausto e improdutivo.", "Sistema induz o deep work, com pausas e modo foco."],
+    ["Plano de saúde", "Aumento dos custos por sinistralidade elevada.", "Redução de exames, pronto atendimento e tratamentos."],
+    ["Turnover", "Perda de talentos e alto custo de recontratação e treinamento.", "Aumento do eNPS, percepção de cuidado e senso de pertencimento."],
+    ["Risco jurídico (ações trabalhistas)", "Processos trabalhistas por falta de prevenção do risco psicossocial.", "Histórico de evidências de proteção ao funcionário."],
     ["Compliance & ética", "Abusos não reportados e passivos ocultos.", "Canal de denúncias blindado e sigiloso."],
-    ["Blindagem PGR", "Ausência ou carência de programa de gestão de riscos.", "Relatórios comparativos para o PGR/compliance."],
+    ["Blindagem PGR", "Ausência ou carência de programa de gerenciamento de riscos.", "Relatórios comparativos de resultados das ações para o PGR/compliance."],
+    ["Risco jurídico (MTE)", "Auditoria incisiva e punitiva do Ministério do Trabalho e Emprego (NR-1 e NR-28).", "Prevenção de multas por negligência ao combate do stress, sobrecarga e assédio."],
+    ["Treinamento RH", "Custo com gestão de crises e atritos.", "Protocolos automáticos para casos graves."],
     ["Ativo ESG", "Baixa valorização perante investidores e mercado.", "Sustentabilidade humana e social."],
   ];
   return (
-    <section className="py-24 sm:py-32">
+    <section id="roi" className="py-24 sm:py-32">
       <div className="mx-auto max-w-[76rem] px-6 sm:px-10">
         <Reveal className="text-center">
           <SectionHeading
@@ -424,7 +481,7 @@ function ROISection({ onCta }: { onCta: () => void }) {
                 ROI 12:1 — o impacto financeiro da <span className="text-raio">proteção dos ativos humanos</span>.
               </>
             }
-            description="Veja onde a sua empresa “sangra” hoje e como o StamFlow reverte cada ponto, reduzindo riscos e potencializando a produtividade."
+            description="Veja como o StamFlow retorna múltiplas vezes o investimento, reduzindo os riscos e potencializando a produtividade:"
           />
         </Reveal>
 
@@ -453,10 +510,10 @@ function ROISection({ onCta }: { onCta: () => void }) {
         </div>
 
         <p className="mt-6 max-w-3xl text-[13px] leading-relaxed text-muted">
-          Estudos de instituições como Deloitte, OMS, OSHA, Harvard Business Review e Washington State L&amp;I
-          indicam que investimentos em prevenção mental, ergonomia ativa e compliance regulatório entregam
-          retornos financeiros expressivos, transformando a saúde ocupacional de um custo passivo em um ativo.
-          Os valores variam conforme o contexto de cada empresa.
+          *Dados de instituições globais como Deloitte, OMS, OSHA, Harvard Business Review e Washington
+          State L&amp;I comprovam que cada dólar investido em prevenção mental, ergonomia ativa e compliance
+          regulatório entrega um retorno financeiro validado de até 18 vezes, transformando a saúde
+          ocupacional de um custo passivo em um ativo de lucro.
         </p>
 
         <div className="mt-9 text-center">
@@ -480,11 +537,195 @@ function BodyCell({ children }: { children: React.ReactNode }) {
   return <div className="bg-surface/40 px-5 py-4 text-[15px] leading-relaxed sm:min-h-full">{children}</div>;
 }
 
+/* ────────────────────  PLANOS PARA EMPRESAS  ──────────────────── */
+
+function PlanosCorporativos({ onCta }: { onCta: () => void }) {
+  const planos = [
+    {
+      name: "Plano Pro",
+      tag: "PMEs",
+      price: "R$ 39,90",
+      priceNote: "/ usuário mês",
+      features: ["Checkup de Postura", "Alertas Inteligentes", "Boosts de Energia", "Relatório por período"],
+      featured: false,
+    },
+    {
+      name: "Plano Corporate",
+      tag: "+100",
+      price: "A partir de R$ 19,90",
+      priceNote: "/ usuário mês",
+      features: ["Tudo do Pro +", "Painel do Gestor", "Gestão de Acessos", "Comparação Evolutiva"],
+      featured: true,
+    },
+    {
+      name: "Plano Enterprise",
+      tag: "",
+      price: "Sob consulta",
+      priceNote: "",
+      features: ["Tudo do Corporate +", "Canal de Denúncias", "Evidência NR-1 Completa", "Treinamento Compliance"],
+      featured: false,
+    },
+  ];
+  return (
+    <section id="planos-corporativos" className="py-24 sm:py-32">
+      <div className="mx-auto max-w-[76rem] px-6 sm:px-10">
+        <Reveal className="text-center">
+          <SectionHeading
+            align="center"
+            eyebrow="Baixo investimento e alto impacto"
+            title={
+              <>
+                Planos para <span className="text-raio">Empresas</span>.
+              </>
+            }
+            description="Proteja seu time, reduza os riscos e aumente a produtividade."
+          />
+        </Reveal>
+
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
+          className="mt-12 grid gap-6 md:grid-cols-3"
+        >
+          {planos.map((p) => (
+            <motion.div
+              key={p.name}
+              variants={fadeUp}
+              className={`surface-card flex flex-col p-8 ${
+                p.featured ? "border-raio/50 shadow-[0_16px_48px_-16px_rgba(124,58,237,0.45)]" : ""
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <h3 className="font-display text-xl font-bold text-cloud">{p.name}</h3>
+                {p.tag && (
+                  <span className="rounded-full border border-hairline bg-surface-2/50 px-2.5 py-1 text-[12px] font-semibold text-brand-cyan">
+                    {p.tag}
+                  </span>
+                )}
+              </div>
+              <p className="mt-5">
+                <span className="font-display text-3xl font-bold text-cloud">{p.price}</span>
+                {p.priceNote && <span className="ml-1.5 text-sm text-muted">{p.priceNote}</span>}
+              </p>
+              <ul className="mt-6 flex-1 space-y-3">
+                {p.features.map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-[15px] leading-relaxed text-slatey">
+                    <span className="mt-0.5 shrink-0 text-signal">
+                      <svg width="16" height="16" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M2.5 7.3l2.6 2.6L11.5 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <Reveal delay={0.05} className="mt-10 text-center">
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-slatey">
+            <strong className="text-cloud">Agende uma demonstração</strong> e veja os dados de saúde e
+            produtividade da sua equipe evoluírem em tempo real.
+          </p>
+          <button type="button" onClick={onCta} className="btn-primary mt-7 px-8 py-4 text-base">
+            Assistir demo do sistema
+          </button>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────  TUDO QUE ESTÁ INCLUÍDO  ──────────────────── */
+
+function TudoIncluidoB2B({ onCta }: { onCta: () => void }) {
+  const colaborador = [
+    "Checkup de postura e energia em tempo real pela webcam",
+    "Alertas de pausas, exercícios e conquistas",
+    "Exercícios: protocolos para fortalecimento muscular e saúde",
+    "Pausa Mental: áudios de respiração, meditação, foco e relaxamento",
+    "Modo Foco: trilhas sonoras para aumento de concentração",
+    "StamFlow University: conteúdo sobre hábitos, sono, foco e bem-estar",
+    "Relatórios com histórico e tendências da sua energia",
+    "Sistema de conquistas para acompanhar sua evolução",
+    "Processamento 100% no seu navegador (nenhuma imagem sai do seu dispositivo)",
+    "Suporte por chamados direto no painel",
+  ];
+  const gestores = [
+    "Dois acessos: um de usuário, outro de gestor",
+    "Controle para incluir/excluir novos usuários",
+    "Visibilidade geral: acessos, engajamento, métricas globais",
+    "Relatórios globais de energia produtiva, ergonomia, indicativos de humor",
+    "Comparação por períodos (dia, semana, mês, trimestre, semestre, ano)",
+    "Função exportar Relatórios (formatos CSV ou PDF)",
+    "Gestão de denúncias anônimas em formato Kanban",
+    "Treinamento de Compliance: como lidar com queixas de diferentes níveis",
+    "Protocolo de Feedbacks para as 50 queixas mais comuns",
+    "Suporte por atendimento de conta",
+  ];
+  return (
+    <section className="py-24 sm:py-32">
+      <div className="mx-auto max-w-[76rem] px-6 sm:px-10">
+        <Reveal className="text-center">
+          <SectionHeading
+            align="center"
+            eyebrow="Tudo que está incluído"
+            title={
+              <>
+                Para cada colaborador <span className="text-raio">e para o(s) gestor(es)</span>.
+              </>
+            }
+          />
+        </Reveal>
+
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {[
+            { title: "Para cada Colaborador", items: colaborador },
+            { title: "Para o(s) Gestor(es)", items: gestores },
+          ].map((col) => (
+            <motion.div
+              key={col.title}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={viewportOnce}
+              className="surface-card p-8"
+            >
+              <h3 className="font-display text-xl font-bold text-cloud">{col.title}</h3>
+              <ul className="mt-6 space-y-3.5">
+                {col.items.map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-[15px] leading-relaxed text-slatey">
+                    <span className="mt-0.5 shrink-0 text-signal">
+                      <svg width="16" height="16" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M2.5 7.3l2.6 2.6L11.5 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-10 text-center">
+          <button type="button" onClick={onCta} className="btn-primary px-8 py-4 text-base">
+            Agendar Demo
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─────────────────────────  PRIVACIDADE  ────────────────────────── */
 
 function Privacidade({ onCta }: { onCta: () => void }) {
   return (
-    <section className="py-24 sm:py-32">
+    <section id="seguranca" className="py-24 sm:py-32">
       <div className="mx-auto max-w-[72rem] px-6 sm:px-10">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
@@ -492,7 +733,7 @@ function Privacidade({ onCta }: { onCta: () => void }) {
               <span className="eyebrow-tick" /> Segurança e privacidade absoluta
             </p>
             <h2 className="mt-5 font-display font-bold text-huge text-cloud">
-              Cuidar do time <span className="text-raio">não é vigiar o time</span>.
+              Nenhum vídeo, imagem ou dado pessoal <span className="text-raio">sai do seu computador</span>.
             </h2>
             <p className="mt-5 text-xl leading-relaxed text-slatey">
               A leitura de postura e de expressão acontece inteiramente no navegador do usuário. Nenhum
@@ -571,35 +812,35 @@ function Privacidade({ onCta }: { onCta: () => void }) {
 
 /* ─────────────────────────  DÚVIDAS B2B  ────────────────────────── */
 
-function DuvidasB2B() {
+function DuvidasB2B({ onCta }: { onCta: () => void }) {
   const faqs = [
     {
       q: "Como a StamFlow garante a conformidade com a LGPD e a privacidade dos colaboradores?",
-      a: "A leitura biomecânica e de expressões é processada 100% localmente no navegador do usuário (edge computing). Nenhuma imagem, foto ou vídeo sai do computador do colaborador ou é enviada para os nossos servidores.",
+      a: "A segurança da informação é nossa prioridade absoluta. A leitura biomecânica e de expressões faciais é realizada via Edge Computing, ou seja, processada 100% localmente no navegador do usuário. Nenhuma imagem, foto ou transmissão de vídeo sai do computador do colaborador ou é enviada para os nossos servidores.",
     },
     {
       q: "Como o sistema auxilia na blindagem jurídica em relação às NRs 1 e 28?",
-      a: "O StamFlow documenta de forma automatizada o engajamento do time nos protocolos e oferece relatórios analíticos que servem como apoio técnico auditável para o PGR (Programa de Gerenciamento de Riscos), ajudando a reduzir o risco de multas por negligência.",
+      a: "O StamFlow documenta de forma automatizada o engajamento do time nos protocolos ergonômicos e oferece relatórios analíticos que servem como prova técnica auditável para o PGR (Programa de Gerenciamento de Riscos), anulando o risco de multas fiscais por negligência.",
     },
     {
-      q: "O canal de denúncias é realmente anônimo?",
-      a: "Sim. O colaborador pode relatar desvios, assédios ou falhas de infraestrutura sem medo de retaliações. O RH gerencia os relatos por um sistema interno de tickets em formato Kanban, respondendo dentro da plataforma sem que a identidade dele seja revelada.",
+      q: "O Canal de Denúncias Seguro é realmente anônimo?",
+      a: "Sim. O sistema utiliza criptografia de ponta a ponta para que o colaborador possa relatar desvios, assédios ou falhas de infraestrutura sem medo de retaliações. O RH gerencia os reports através de um sistema interno de tickets em formato Kanban, respondendo ao usuário dentro da plataforma sem que a identidade dele seja revelada em nenhum momento.",
     },
     {
-      q: "O gestor ou o RH conseguem vigiar individualmente o que o funcionário faz?",
-      a: "De forma nenhuma. O StamFlow foi desenhado para proteger o colaborador e blindar a empresa, não para microgerenciamento. O painel do gestor entrega métricas de forma totalmente agregada e anonimizada.",
+      q: "O Gestor ou o RH conseguem vigiar individualmente o que o funcionário está fazendo?",
+      a: "De forma nenhuma. O StamFlow foi desenhado para proteger o colaborador e blindar a empresa, não para microgerenciamento. O Painel do Gestor entrega métricas de saúde, ergonomia coletiva e mapa de calor emocional de forma totalmente agregada e anonimizada, preservando a relação de confiança entre a liderança e o time.",
     },
     {
-      q: "O software exige instalação complexa ou extensões pesadas?",
-      a: "Não. O StamFlow roda direto no navegador (Chrome, Edge, etc.). Não há downloads ou instalações executáveis. O onboarding é feito via link, com login e senha individuais.",
+      q: "O software exige instalação complexa ou extensões pesadas nas máquinas da empresa?",
+      a: "Não. StamFlow é um sistema 100% em nuvem e roda direto no navegador (Chrome, Edge, etc.). Não há necessidade de downloads, instalações executáveis ou suporte presencial da sua equipe de TI. O onboarding é feito via link, com login e senha individuais.",
     },
     {
       q: "Como funciona o modelo de contratação e faturamento para empresas?",
-      a: "Operamos com contratos baseados no número de licenças ativas (colaboradores + gestores), com tabela de preço progressiva. Após a demonstração e o entendimento da necessidade do time, emitimos uma proposta customizada.",
+      a: "Operamos com contratos anuais baseados no número de licenças ativas (colaboradores + gestores) com tabela de preço progressiva. Após o agendamento da demonstração e entendimento da necessidade do seu time, emitimos uma proposta customizada com faturamento mensal.",
     },
     {
       q: "Qual o prazo de implementação?",
-      a: "Em geral, em poucos dias úteis após a contratação, a arquitetura para sua equipe, as hierarquias de acesso, os logins e o treinamento de onboarding estão concluídos.",
+      a: "Em até 7 dias úteis após a contratação toda a arquitetura do servidor exclusivo para sua equipe, as hierarquias de acessos de gestor(es) e usuários, todos os logins e senhas, e o treinamento de onboarding estarão concluídos.",
     },
   ];
   return (
@@ -631,6 +872,11 @@ function DuvidasB2B() {
             </motion.div>
           ))}
         </div>
+        <div className="mt-10 text-center">
+          <button type="button" onClick={onCta} className="btn-primary px-8 py-4 text-base">
+            Solicitar Demo do sistema
+          </button>
+        </div>
       </div>
     </section>
   );
@@ -655,11 +901,11 @@ function EmpresasFinalCTA({ onCta }: { onCta: () => void }) {
           />
           <div className="relative">
             <h2 className="mx-auto max-w-3xl font-display text-3xl font-bold leading-tight text-cloud sm:text-5xl">
-              Eleve o cuidado com seus colaboradores agora.
+              Eleve o cuidado de seus colaboradores agora.
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slatey">
-              Conte com o apoio da StamFlow para proteger sua equipe do stress, da sobrecarga e do burnout,
-              enquanto eleva a disposição, o foco e a produtividade.
+              Conte com o apoio da StamFlow para proteger sua equipe do stress, sobrecarga e burnout,
+              enquanto eleva a disposição, foco e produtividade.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <button type="button" onClick={onCta} className="btn-primary px-8 py-4 text-base">
