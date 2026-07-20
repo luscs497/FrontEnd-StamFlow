@@ -34,10 +34,6 @@ export function ParaVoceContent() {
 function ParaVoceHero() {
   return (
     <section className="relative overflow-hidden pt-36 pb-24 sm:pt-44 sm:pb-32">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-raio/10 blur-[120px]"
-      />
       <div className="relative mx-auto max-w-[72rem] px-6 text-center sm:px-10">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -290,10 +286,6 @@ function PrivacidadePessoal() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="surface-card relative overflow-hidden p-8 text-center sm:p-14"
         >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-signal/10 blur-3xl"
-          />
           <div className="relative">
             <p className="eyebrow justify-center">
               <span className="eyebrow-tick" /> A parte mais importante
@@ -327,10 +319,6 @@ function ParaVoceFinalCTA() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="surface-card relative overflow-hidden px-8 py-14 text-center sm:px-16 sm:py-20"
         >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 -top-24 mx-auto h-64 w-64 rounded-full bg-raio/15 blur-[100px]"
-          />
           <div className="relative">
             <h2 className="mx-auto max-w-3xl font-display text-3xl font-bold leading-tight text-cloud sm:text-5xl">
               Sua energia merece esse cuidado.

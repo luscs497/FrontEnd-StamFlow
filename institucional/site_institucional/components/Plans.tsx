@@ -170,12 +170,6 @@ function AvulsoCard({
       animate="show"
       className="surface-card relative overflow-hidden p-8 sm:p-12"
     >
-      {/* brilho decorativo sutil no canto */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-raio/10 blur-3xl"
-      />
-
       <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
         {/* Coluna esquerda: identidade + preço + CTA */}
         <div className="flex flex-col">

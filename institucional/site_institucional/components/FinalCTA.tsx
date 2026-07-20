@@ -16,10 +16,14 @@ export function FinalCTA() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="surface-card relative overflow-hidden px-8 py-20 text-center sm:px-14 sm:py-24"
         >
-          {/* Glow de marca contido no topo */}
+          {/* Assinatura: linha fina do espectro de energia no topo do card */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-raio-soft opacity-70 blur-2xl"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, rgba(52,211,153,0.5), rgba(251,191,36,0.45), rgba(248,113,113,0.4), transparent)",
+            }}
           />
 
           <div className="relative">

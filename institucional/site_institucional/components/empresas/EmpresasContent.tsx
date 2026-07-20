@@ -43,10 +43,6 @@ export function EmpresasContent() {
 function EmpresasHero({ onCta }: { onCta: () => void }) {
   return (
     <section className="relative overflow-hidden pt-36 pb-24 sm:pt-44 sm:pb-32">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-raio/10 blur-[120px]"
-      />
       <div className="relative mx-auto max-w-[72rem] px-6 text-center sm:px-10">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -895,10 +891,6 @@ function EmpresasFinalCTA({ onCta }: { onCta: () => void }) {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="surface-card relative overflow-hidden px-8 py-14 text-center sm:px-16 sm:py-20"
         >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 -top-24 mx-auto h-64 w-64 rounded-full bg-raio/15 blur-[100px]"
-          />
           <div className="relative">
             <h2 className="mx-auto max-w-3xl font-display text-3xl font-bold leading-tight text-cloud sm:text-5xl">
               Eleve o cuidado de seus colaboradores agora.
