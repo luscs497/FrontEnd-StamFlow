@@ -34,19 +34,8 @@ export function Hero() {
             <span className="text-cloud">Nenhuma imagem sai do seu computador.</span>
           </motion.p>
 
-          <motion.div
-            variants={fadeUp}
-            className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
-          >
-            <a href="#planos" className="btn-primary px-7 py-3.5 text-base">
-              Escolher meu Plano
-            </a>
-            <a href="#como-funciona" className="btn-ghost px-7 py-3.5 text-base">
-              Ver como funciona
-            </a>
-          </motion.div>
-
-          <motion.p variants={fadeUp} className="mt-5 text-sm text-muted">
+          {/* Guia visual B2C: hero sem botões — o CTA fica no header e nas seções. */}
+          <motion.p variants={fadeUp} className="mt-8 text-sm text-muted">
             Processado 100% no seu navegador · cancele quando quiser
           </motion.p>
         </motion.div>
