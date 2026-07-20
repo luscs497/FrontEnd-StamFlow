@@ -1,9 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BrandMark } from "@/components/Brand";
 import { viewportOnce } from "@/lib/motion";
-import { LOGIN_URL } from "@/lib/config";
+import { ICON_URL, LOGIN_URL } from "@/lib/config";
 
 export function FinalCTA() {
 
@@ -24,8 +23,16 @@ export function FinalCTA() {
           />
 
           <div className="relative">
+            {/* Guia visual B2C: usar o ícone oficial do produto no lugar da chama vetorial. */}
             <div className="mx-auto mb-7 w-fit">
-              <BrandMark size={58} radius={18} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ICON_URL}
+                alt=""
+                width={58}
+                height={58}
+                className="rounded-[18px] border border-hairline"
+              />
             </div>
             <h2 className="mx-auto max-w-2xl font-display font-bold text-huge text-cloud">
               Comece a cuidar da sua <span className="text-raio">energia</span> agora.

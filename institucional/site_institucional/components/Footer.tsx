@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, Logo } from "@/components/Brand";
+import { Logo, Raio } from "@/components/Brand";
 import { useModals } from "@/components/Providers";
 import { LOGIN_URL } from "@/lib/config";
 
@@ -75,7 +75,7 @@ export function Footer({ variant = "default" }: { variant?: "default" | "empresa
         <div className="mt-7 flex flex-col items-start justify-between gap-4 border-t border-hairline pt-7 sm:flex-row sm:items-center">
           <p className="text-xs text-muted">© {year} StamFlow. Todos os direitos reservados.</p>
           <p className="inline-flex items-center gap-1 text-xs text-muted">
-            Feito com Energia, Foco e Flow <Flame size={14} />
+            Feito com Energia, Foco e Flow <Raio size={14} />
           </p>
         </div>
       </div>

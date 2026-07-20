@@ -9,8 +9,10 @@ export function Features() {
   return (
     <section id="recursos" className="py-28 sm:py-36">
       <div className="mx-auto max-w-[88rem] px-6 sm:px-10">
-        <Reveal>
+        {/* Guia visual B2C: seção "Recursos" com cabeçalho centralizado. */}
+        <Reveal className="text-center">
           <SectionHeading
+            align="center"
             eyebrow="Recursos"
             title={
               <>

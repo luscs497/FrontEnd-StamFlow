@@ -49,7 +49,15 @@ export function HowItWorks() {
               className="surface-card group relative p-8 transition-colors duration-300 hover:border-white/20"
             >
               <span className="font-display text-6xl font-bold text-raio/90">{step.n}</span>
-              <h3 className="mt-6 font-display text-2xl font-bold text-cloud">{step.title}</h3>
+              {/* Guia visual B2C: passos com o ícone de tick verde (✅ do doc de copy). */}
+              <h3 className="mt-6 flex items-center gap-2.5 font-display text-2xl font-bold text-cloud">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-signal/15 text-signal">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M2.5 6.2l2.2 2.2L9.5 3.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                {step.title}
+              </h3>
               <p className="mt-3.5 text-base leading-relaxed text-slatey">{step.body}</p>
               <div className="mt-6 flex flex-wrap gap-2.5">
                 {step.detail.map((d) => (

@@ -18,7 +18,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     q: "Qual a diferença entre o plano individual e o empresarial?",
-    a: "O individual é autoatendimento, com preço fixo e recorrente — ideal para uso pessoal. O empresarial é por número de licenças (colaboradores e gestores), com valor sob medida; por isso ele passa por uma conversa rápida em vez de uma tabela fixa.",
+    a: "O individual é autoatendimento, com preço fixo e recorrente, ideal para uso pessoal. O empresarial é por número de licenças (colaboradores e gestores), com valor sob medida; por isso ele passa por uma conversa rápida em vez de uma tabela fixa.",
   },
   {
     q: "O gestor consegue ver os dados de cada pessoa da equipe?",

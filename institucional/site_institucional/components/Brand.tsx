@@ -33,6 +33,30 @@ export function Flame({ size = 26 }: { size?: number }) {
   );
 }
 
+/** O raio do ícone oficial do produto, com o mesmo degradê da marca. */
+export function Raio({ size = 14 }: { size?: number }) {
+  const id = useId().replace(/:/g, "");
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className="shrink-0"
+    >
+      <defs>
+        <linearGradient id={`raio-${id}`} x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#fb7185" />
+          <stop offset="45%" stopColor="#7c3aed" />
+          <stop offset="100%" stopColor="#38bdf8" />
+        </linearGradient>
+      </defs>
+      <path d="M13.5 2L4 13.2h6.2L9.5 22 20 10.4h-6.7L13.5 2Z" fill={`url(#raio-${id})`} />
+    </svg>
+  );
+}
+
 /** Mark autônomo: a chama dentro de um tile arredondado (uso em destaque). */
 export function BrandMark({ size = 36, radius = 12 }: { size?: number; radius?: number }) {
   return (
