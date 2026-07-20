@@ -3,102 +3,122 @@
     {
       "titulo": "Início de Jornada",
       "descricao": "Uma preparação mental para começar o dia com clareza, intenção e presença antes da primeira tarefa.",
-      "audioPath": "/assets/audios/mental/inicio_de_jornada.mp3"
+      "audioPath": "/assets/audios/mental/inicio_de_jornada.mp3",
+      "duracaoSegundos": 196
     },
     {
       "titulo": "Reset Mental Rápido",
       "descricao": "Uma pausa curta para limpar a mente, aliviar a tensão acumulada e retomar o foco em poucos minutos.",
-      "audioPath": "/assets/audios/mental/reset_mental_rapido.mp3"
+      "audioPath": "/assets/audios/mental/reset_mental_rapido.mp3",
+      "duracaoSegundos": 180
     },
     {
       "titulo": "Resgatando a Respiração",
       "descricao": "Reconecte-se com o ritmo natural da sua respiração para desacelerar o corpo e acalmar os pensamentos.",
-      "audioPath": "/assets/audios/mental/resgatando_a_respiracao.mp3"
+      "audioPath": "/assets/audios/mental/resgatando_a_respiracao.mp3",
+      "duracaoSegundos": 170
     },
     {
       "titulo": "Blindagem contra Distrações",
       "descricao": "Fortaleça sua atenção e crie uma barreira mental contra interrupções para manter a concentração.",
-      "audioPath": "/assets/audios/mental/blindagem_contra_distracoes.mp3"
+      "audioPath": "/assets/audios/mental/blindagem_contra_distracoes.mp3",
+      "duracaoSegundos": 222
     },
     {
       "titulo": "Desconexão de Multitarefa (Detox)",
       "descricao": "Limpe o ruído mental de fazer várias coisas ao mesmo tempo e volte a uma única prioridade de cada vez.",
-      "audioPath": "/assets/audios/mental/desconexao_de_multitarefa_detox.mp3"
+      "audioPath": "/assets/audios/mental/desconexao_de_multitarefa_detox.mp3",
+      "duracaoSegundos": 156
     },
     {
       "titulo": "Impulso para Vencer o Bloqueio",
       "descricao": "Supere a procrastinação e a paralisia inicial para dar o primeiro passo em uma tarefa difícil.",
-      "audioPath": "/assets/audios/mental/impulso_venca_o_bloqueio.mp3"
+      "audioPath": "/assets/audios/mental/impulso_venca_o_bloqueio.mp3",
+      "duracaoSegundos": 166
     },
     {
       "titulo": "Desbloqueio Criativo",
       "descricao": "Abra espaço mental para novas ideias, liberando a criatividade travada pela pressão ou pelo cansaço.",
-      "audioPath": "/assets/audios/mental/desbloqueio_criativo.mp3"
+      "audioPath": "/assets/audios/mental/desbloqueio_criativo.mp3",
+      "duracaoSegundos": 172
     },
     {
       "titulo": "Foco Pré-Reunião",
       "descricao": "Centre-se e organize os pensamentos para chegar à reunião presente, atento e com a mente clara.",
-      "audioPath": "/assets/audios/mental/foco_prereuniao.mp3"
+      "audioPath": "/assets/audios/mental/foco_prereuniao.mp3",
+      "duracaoSegundos": 195
     },
     {
       "titulo": "Recuperação Pós-Reunião",
       "descricao": "Descomprima após reuniões intensas, solte a tensão e prepare a mente para retomar o trabalho.",
-      "audioPath": "/assets/audios/mental/recuperacao_posreuniao.mp3"
+      "audioPath": "/assets/audios/mental/recuperacao_posreuniao.mp3",
+      "duracaoSegundos": 182
     },
     {
       "titulo": "Energia e Reconexão Pós-Almoço",
       "descricao": "Combata a sonolência da tarde e recupere a disposição para a segunda metade do dia.",
-      "audioPath": "/assets/audios/mental/energia_e_reconexao_posalmoco.mp3"
+      "audioPath": "/assets/audios/mental/energia_e_reconexao_posalmoco.mp3",
+      "duracaoSegundos": 136
     },
     {
       "titulo": "Clareza na Tomada de Decisão",
       "descricao": "Acalme a ansiedade e organize os pensamentos para decidir com mais consciência e menos impulso.",
-      "audioPath": "/assets/audios/mental/clareza_na_tomada_de_decisao.mp3"
+      "audioPath": "/assets/audios/mental/clareza_na_tomada_de_decisao.mp3",
+      "duracaoSegundos": 150
     },
     {
       "titulo": "Confiança para Apresentação",
       "descricao": "Reduza o nervosismo e fortaleça a autoconfiança antes de falar em público ou apresentar um trabalho.",
-      "audioPath": "/assets/audios/mental/confianca_para_apresentacao.mp3"
+      "audioPath": "/assets/audios/mental/confianca_para_apresentacao.mp3",
+      "duracaoSegundos": 181
     },
     {
       "titulo": "Gerenciando a Pressão do Prazo",
       "descricao": "Transforme a ansiedade de deadlines apertados em foco produtivo, sem deixar o estresse dominar.",
-      "audioPath": "/assets/audios/mental/gerenciando_a_pressao_do_prazo.mp3"
+      "audioPath": "/assets/audios/mental/gerenciando_a_pressao_do_prazo.mp3",
+      "duracaoSegundos": 150
     },
     {
       "titulo": "Alívio de Stress Pós-E-mail",
       "descricao": "Recupere a calma depois de mensagens tensas ou uma caixa de entrada sobrecarregada.",
-      "audioPath": "/assets/audios/mental/alivio_de_stress_pos_email.mp3"
+      "audioPath": "/assets/audios/mental/alivio_de_stress_pos_email.mp3",
+      "duracaoSegundos": 196
     },
     {
       "titulo": "Lidando com a Frustração",
       "descricao": "Acolha e processe a frustração de forma saudável, evitando que ela contamine o resto do dia.",
-      "audioPath": "/assets/audios/mental/lidando_com_a_frustracao.mp3"
+      "audioPath": "/assets/audios/mental/lidando_com_a_frustracao.mp3",
+      "duracaoSegundos": 248
     },
     {
       "titulo": "Calma Após Falha Técnica",
       "descricao": "Recupere a serenidade depois de um problema técnico ou imprevisto que travou o seu trabalho.",
-      "audioPath": "/assets/audios/mental/calma_apos_falha_tecnica.mp3"
+      "audioPath": "/assets/audios/mental/calma_apos_falha_tecnica.mp3",
+      "duracaoSegundos": 175
     },
     {
       "titulo": "Processando Feedback Difícil",
       "descricao": "Absorva críticas e feedbacks duros com equilíbrio, separando a emoção do aprendizado.",
-      "audioPath": "/assets/audios/mental/processando_feedback_dificil.mp3"
+      "audioPath": "/assets/audios/mental/processando_feedback_dificil.mp3",
+      "duracaoSegundos": 233
     },
     {
       "titulo": "Empatia para Conversas Difíceis",
       "descricao": "Prepare a mente e o coração para diálogos delicados, cultivando escuta e compreensão.",
-      "audioPath": "/assets/audios/mental/empatia_para_conversas_dificeis.mp3"
+      "audioPath": "/assets/audios/mental/empatia_para_conversas_dificeis.mp3",
+      "duracaoSegundos": 322
     },
     {
       "titulo": "Descanso Visual Guiado",
       "descricao": "Alivie a fadiga ocular e mental de horas diante da tela com uma pausa restauradora para os olhos.",
-      "audioPath": "/assets/audios/mental/descanso_visual_guiado.mp3"
+      "audioPath": "/assets/audios/mental/descanso_visual_guiado.mp3",
+      "duracaoSegundos": 197
     },
     {
       "titulo": "Deixando o Trabalho no Trabalho",
       "descricao": "Encerre o expediente com um ritual mental para desligar da rotina e recuperar o seu tempo pessoal.",
-      "audioPath": "/assets/audios/mental/deixando_o_trabalho_no_trabalho.mp3"
+      "audioPath": "/assets/audios/mental/deixando_o_trabalho_no_trabalho.mp3",
+      "duracaoSegundos": 178
     }
   ]
 ]

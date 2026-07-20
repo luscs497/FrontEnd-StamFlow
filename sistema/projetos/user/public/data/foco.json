@@ -3,37 +3,44 @@
     {
       "titulo": "Café & Planejamento (Jazz Hop / Coffee Shop Vibe)",
       "descricao": "Uma atmosfera leve, otimista e acolhedora para organizar a agenda e iniciar a jornada com positividade.",
-      "audioPath": "/assets/audios/foco/foco-1-jazz.mp3"
+      "audioPath": "/assets/audios/foco/foco-1-jazz.mp3",
+      "duracaoSegundos": 189
     },
     {
       "titulo": "Foco Contínuo (Lo-fi Zen / Study Beats)",
       "descricao": "Melodias minimalistas e texturas suaves para manter a concentração profunda, desacelerar a mente e aliviar o estresse.",
-      "audioPath": "/assets/audios/foco/foco-2-continuo.mp3"
+      "audioPath": "/assets/audios/foco/foco-2-continuo.mp3",
+      "duracaoSegundos": 1210
     },
     {
       "titulo": "Produtividade Máxima (Binaural Waves)",
       "descricao": "Frequências puras projetadas cientificamente para induzir o cérebro ao estado de flow e resolução de problemas complexos.",
-      "audioPath": "/assets/audios/foco/foco-3-produtividade.mp3"
+      "audioPath": "/assets/audios/foco/foco-3-produtividade.mp3",
+      "duracaoSegundos": 176
     },
     {
       "titulo": "Bloqueio Externo (Ruído Marrom / Roby Brown Noise)",
       "descricao": "Uma frequência grave e constante que amortece o ruído externo e silencia pensamentos dispersos, como no TDAH.",
-      "audioPath": "/assets/audios/foco/foco-4-brown-noise.mp3"
+      "audioPath": "/assets/audios/foco/foco-4-brown-noise.mp3",
+      "duracaoSegundos": 600
     },
     {
       "titulo": "Modo Criativo (Natureza & Piano Minimalista)",
       "descricao": "Sons orgânicos de natureza e pássaros com notas sutis de piano para estimular a imaginação e novas conexões.",
-      "audioPath": "/assets/audios/foco/foco-5-natureza.mp3"
+      "audioPath": "/assets/audios/foco/foco-5-natureza.mp3",
+      "duracaoSegundos": 110
     },
     {
       "titulo": "Energia para Execução (Deep Focus House / Lounge Music)",
       "descricao": "Ritmo constante e energético para impulsionar o cérebro e mantê-lo engajado em tarefas mecânicas e repetitivas.",
-      "audioPath": "/assets/audios/foco/foco-6-energia.mp3"
+      "audioPath": "/assets/audios/foco/foco-6-energia.mp3",
+      "duracaoSegundos": 172
     },
     {
       "titulo": "Calma no Caos (Ambient Drone / Space Music)",
       "descricao": "Texturas ambientes e expansivas para criar uma bolha de tranquilidade e manter a serenidade mesmo sob pressão.",
-      "audioPath": "/assets/audios/foco/foco-7-calma.mp3"
+      "audioPath": "/assets/audios/foco/foco-7-calma.mp3",
+      "duracaoSegundos": 183
     }
   ]
 ]

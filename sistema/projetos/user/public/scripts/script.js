@@ -2,17 +2,31 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
   // ============================================================
-  // CDN de áudio. Os arquivos de Modo Foco e Pausa Mental são
-  // servidos pelo VPS, não empacotados no build — isso mantém o
-  // deploy leve e permite trocar/atualizar áudios sem rebuildar.
-  // Para servir localmente de novo, basta deixar AUDIO_BASE_URL = "".
+  // Áudios protegidos por URL assinada.
+  // O backend confere sessão + assinatura ativa e devolve uma URL válida
+  // por uma janela de tempo. O Nginx do CDN valida a assinatura antes de
+  // servir o arquivo.
   // ============================================================
-  const AUDIO_BASE_URL = "https://cdn.stamflow.com.br";
-  function resolveAudioUrl(path) {
+  const urlAssinadaCache = new Map();
+
+  async function obterUrlAssinada(path) {
     if (!path) return path;
     if (/^https?:\/\//i.test(path)) return path; // já é URL absoluta
-    if (!AUDIO_BASE_URL) return path;              // fallback: serve local
-    return AUDIO_BASE_URL.replace(/\/$/, "") + path;
+
+    const agora = Math.floor(Date.now() / 1000);
+    const cacheado = urlAssinadaCache.get(path);
+    // Margem de 60s: evita usar uma URL que expira no meio do carregamento.
+    if (cacheado && cacheado.expires - 60 > agora) return cacheado.url;
+
+    const resp = await window.authFetch(
+      `https://api.stamflow.com.br/audio/sign?path=${encodeURIComponent(path)}`,
+      { credentials: "include" }
+    );
+    if (!resp.ok) throw new Error(`Falha ao autorizar o áudio (${resp.status})`);
+
+    const dados = await resp.json();
+    urlAssinadaCache.set(path, dados);
+    return dados.url;
   }
   const audioEl = document.getElementById("modal-audio-el");
   const slider = document.getElementById("modal-audio-progres");
@@ -455,6 +469,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let playerState = { categoria: null, groupIndex: 0, itemIndex: 0 };
 
+  function formatarDuracao(segundos) {
+    if (!Number.isFinite(segundos) || segundos <= 0) return "--:--";
+    const min = Math.floor(segundos / 60);
+    const seg = Math.floor(segundos % 60);
+    return `${String(min).padStart(2, "0")}:${String(seg).padStart(2, "0")}`;
+  }
+
   function gerarHTML(dados, cor, svg, categoria, groupIndex, itemIndex) {
     const li = document.createElement("li");
     li.addEventListener("click", () => playTrackByIndex(categoria, groupIndex, itemIndex));
@@ -473,21 +494,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     divRight.classList.add("audio-div-right");
     const tempoAudio = document.createElement("p");
     tempoAudio.classList.add("audio-audio-time");
-    tempoAudio.textContent = "--:--";
-    // Carrega a duração real do áudio a partir dos metadados (sem baixar tudo).
-    if (dados.audioPath) {
-      const meta = new Audio();
-      meta.preload = "metadata";
-      meta.addEventListener("loadedmetadata", () => {
-        const dur = meta.duration;
-        if (Number.isFinite(dur) && dur > 0) {
-          const min = Math.floor(dur / 60);
-          const seg = Math.floor(dur % 60);
-          tempoAudio.textContent = `${String(min).padStart(2, "0")}:${String(seg).padStart(2, "0")}`;
-        }
-      });
-      meta.src = resolveAudioUrl(dados.audioPath);
-    }
+    tempoAudio.textContent = formatarDuracao(dados.duracaoSegundos);
     const audioPlayer = document.createElement("div");
     audioPlayer.classList.add("audio-audio-player");
     audioPlayer.innerHTML =
@@ -680,11 +687,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   // de cada faixa (não repete a cada loop). Resetada em loadAndPlayTrack.
   let conquistaRegistrada = false;
 
-  function loadAndPlayTrack(track) {
+  async function loadAndPlayTrack(track) {
     currentTrack = track;
     conquistaRegistrada = false; // reseta para nova faixa poder registrar conquista
     stopAudio({ resetTime: true });
-    audioEl.src = resolveAudioUrl(track.dados.audioPath);
+
+    try {
+      audioEl.src = await obterUrlAssinada(track.dados.audioPath);
+    } catch (err) {
+      console.error("Não foi possível autorizar o áudio:", err);
+      setPlayIcon(false);
+      return;
+    }
+
     audioEl.play().then(() => setPlayIcon(true)).catch(() => setPlayIcon(false));
   }
 
@@ -699,9 +714,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (slider) { slider.value = 0; paintSliderWithActiveColor(0); }
       });
     });
-    audioEl.addEventListener("error", () => {
+    // Se a URL assinada expirar durante uma sessão longa, o elemento dispara
+    // erro ao buscar o próximo trecho. Renovamos e retomamos do mesmo ponto.
+    audioEl.addEventListener("error", async () => {
       console.warn("Erro ao carregar áudio:", audioEl.src);
-      setPlayIcon(false);
+      if (!currentTrack || !currentTrack.dados || !currentTrack.dados.audioPath) {
+        setPlayIcon(false);
+        return;
+      }
+
+      const posicao = audioEl.currentTime;
+      urlAssinadaCache.delete(currentTrack.dados.audioPath);
+
+      try {
+        audioEl.src = await obterUrlAssinada(currentTrack.dados.audioPath);
+        audioEl.currentTime = posicao;
+        audioEl.play().catch(() => setPlayIcon(false));
+      } catch (err) {
+        console.error("Falha ao renovar a autorização do áudio:", err);
+        setPlayIcon(false);
+      }
     });
 
     // Conquistas ao terminar o áudio pela PRIMEIRA vez (não repete no loop).
