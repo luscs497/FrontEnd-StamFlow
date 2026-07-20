@@ -171,7 +171,7 @@ export function Hero() {
             className="mx-auto mt-7 max-w-3xl text-balance font-display font-bold text-huge text-cloud"
           >
             Cansado de passar o dia com{" "}
-            <span className="text-[#fb8a8a]">dor nas costas</span> e frustrado com seu
+            <span className="text-raio">dor nas costas</span> e frustrado com seu
             rendimento?
           </motion.h1>
 
