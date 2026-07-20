@@ -143,7 +143,7 @@ export function Hero() {
     <section
       id="topo"
       ref={sectionRef}
-      className="relative flex min-h-[88vh] items-center overflow-hidden"
+      className="relative flex min-h-[76vh] items-center overflow-hidden"
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
 
@@ -157,7 +157,7 @@ export function Hero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-32 pt-36 text-center sm:px-8 sm:pt-44">
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-24 pt-32 text-center sm:px-8 sm:pt-36">
         <motion.div variants={stagger} initial="hidden" animate="show">
           <motion.p
             variants={fadeUp}
@@ -168,7 +168,7 @@ export function Hero() {
 
           <motion.h1
             variants={fadeUp}
-            className="mx-auto mt-8 max-w-4xl text-balance font-display font-bold text-giant text-cloud"
+            className="mx-auto mt-7 max-w-3xl text-balance font-display font-bold text-huge text-cloud"
           >
             Cansado de passar o dia com{" "}
             <span className="text-[#fb8a8a]">dor nas costas</span> e frustrado com seu
@@ -177,7 +177,7 @@ export function Hero() {
 
           <motion.p
             variants={fadeUp}
-            className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slatey sm:text-xl"
+            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slatey sm:text-lg"
           >
             Tenha um parceiro leal de produtividade, que te acompanha durante toda sua jornada,
             prevenindo a exaustão antes que ela aconteça e{" "}
@@ -186,7 +186,7 @@ export function Hero() {
 
           <motion.ul
             variants={fadeUp}
-            className="mt-10 flex flex-wrap items-center justify-center gap-3"
+            className="mt-9 flex flex-wrap items-center justify-center gap-3"
           >
             {PILLS.map((pill) => (
               <li
