@@ -30,14 +30,14 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "StamFlow — Sua energia produtiva, lida pela câmera",
+  title: "StamFlow — Eleve seu foco e produtividade",
   description:
-    "O StamFlow lê postura e humor em tempo real, 100% no seu navegador, e transforma isso num índice de energia que cuida de você ao longo do dia.",
+    "Tenha um parceiro leal de produtividade que te acompanha durante toda a jornada, prevenindo a exaustão antes que ela aconteça e protegendo seu foco. Processado 100% no seu navegador.",
   metadataBase: new URL("https://stamflow.com.br"),
   openGraph: {
-    title: "StamFlow — Sua energia produtiva, lida pela câmera",
+    title: "StamFlow — Eleve seu foco e produtividade",
     description:
-      "Postura e humor em tempo real, processados no navegador. Nenhuma imagem sai do seu computador.",
+      "Cuide da sua saúde e performance durante a jornada de trabalho no computador. Nenhuma imagem sai do seu computador.",
     locale: "pt_BR",
     type: "website",
   },

@@ -62,7 +62,7 @@ export function Header() {
               Entrar
             </a>
             <a href="/#planos" className="btn-primary px-6 py-3 text-[15px]">
-              Começar a Jornada
+              Escolher meu Plano
             </a>
           </div>
 
@@ -115,7 +115,7 @@ export function Header() {
                   onClick={() => setMenuOpen(false)}
                   className="btn-primary w-full py-3.5 text-base"
                 >
-                  Começar a Jornada
+                  Escolher meu Plano
                 </a>
               </div>
             </div>

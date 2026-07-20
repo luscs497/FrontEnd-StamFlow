@@ -35,8 +35,10 @@ export const TRIAL_DAYS = 7;
 // seguem acessíveis pela home (seções) e são explicados dentro das landings
 // de cada público, então saíram do topo para reduzir a poluição visual.
 export const NAV = [
-  { label: "Para você", href: "/para-voce" },
-  { label: "Para empresas", href: "/empresas" },
+  { label: "Como Funciona", href: "/#como-funciona" },
+  { label: "Recursos", href: "/#recursos" },
   { label: "Planos", href: "/#planos" },
+  { label: "Segurança", href: "/#privacidade" },
   { label: "Dúvidas", href: "/#duvidas" },
+  { label: "Para empresas", href: "/empresas" },
 ] as const;

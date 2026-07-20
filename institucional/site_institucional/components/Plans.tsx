@@ -49,10 +49,10 @@ export function Plans() {
             eyebrow="Planos"
             title={
               <>
-                Um plano. <span className="text-raio">Toda a sua energia.</span>
+                Escolha o plano e o período de <span className="text-raio">aumento de performance</span>.
               </>
             }
-            description="Um único plano com tudo incluído — escolha só por quanto tempo. Cancele quando quiser."
+            description="Acesso imediato a tudo que o StamFlow oferece. Cancele quando quiser — 7 dias de garantia, com reembolso, em qualquer plano."
           />
         </Reveal>
 

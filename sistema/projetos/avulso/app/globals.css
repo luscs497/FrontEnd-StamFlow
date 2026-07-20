@@ -2367,7 +2367,7 @@ header {
 .on-boarding-container {
     width: 100%;
     max-width: 921.6px;
-    padding: 44.8px;
+    padding: clamp(20px, 4vw, 44.8px);
     background: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
     border-radius: 25.6px;
     border: 0.8px solid rgba(255, 255, 255, 0.1);
@@ -2452,19 +2452,20 @@ header {
 }
 
 .svg-boarding-content {
-    width: 102.4px;
-    height: 102.4px;
+    width: clamp(72px, 15vw, 102.4px);
+    height: clamp(72px, 15vw, 102.4px);
     background-color: rgba(30, 41, 59, 0.8);
     border: 0.8px solid rgba(255, 255, 255, 0.05);
     border-radius: 19.2px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .svg-boarding-content svg {
-    width: 51.2px;
-    height: 51.2px;
+    width: clamp(36px, 7.5vw, 51.2px);
+    height: clamp(36px, 7.5vw, 51.2px);
     color: rgb(96, 165, 250);
 }
 
@@ -2478,13 +2479,13 @@ header {
 
 .on-boarding-card-info h2 {
     line-height: 110%;
-    font-size: 33.6px;
+    font-size: clamp(22px, 5vw, 33.6px);
     font-weight: 700;
 }
 
 .on-boarding-card-info p {
-    line-height: 110%;
-    font-size: 17.6px;
+    line-height: 130%;
+    font-size: clamp(14px, 3.2vw, 17.6px);
     color: rgb(148, 163, 184);
 }
 
@@ -2570,8 +2571,8 @@ header {
 }
 
 .swiper-onboarding {
-    margin-left: -44.8px !important;
-    max-width: 921.6px;
+    width: 100%;
+    max-width: 100%;
 }
 
 .pagination {
@@ -3811,7 +3812,7 @@ header {
 /* Ajuste: em telas menores, o modal precisa "respirar" e virar scroll */
 @media (max-height: 820px) {
   .on-boarding {
-    align-items: flex-start;
+    align-items: center;
     padding: 12.8px;
   }
 
@@ -3830,11 +3831,13 @@ header {
     max-width: 784px;
     padding: 35.2px;
     gap: 25.6px;
+    max-height: calc(100vh - 25.6px);
+    overflow-y: auto;
   }
 
   .swiper-onboarding {
-    margin-left: -35.2px !important;
-    max-width: 784px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .on-boarding-card {
@@ -3900,11 +3903,13 @@ header {
     padding: 27.2px;
     border-radius: 20.8px;
     gap: 22.4px;
+    max-height: calc(100vh - 25.6px);
+    overflow-y: auto;
   }
 
   .swiper-onboarding {
-    margin-left: -27.2px !important;
-    max-width: 688px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .prev {
@@ -3990,7 +3995,7 @@ header {
 @media (max-width: 768px) {
   .on-boarding {
     padding: 11.2px;
-    align-items: flex-start;
+    align-items: center;
   }
 
   .on-boarding-container {
@@ -4004,8 +4009,8 @@ header {
   }
 
   .swiper-onboarding {
-    margin-left: -17.6px !important;
-    max-width: 512px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .on-boarding-header {
@@ -4111,10 +4116,12 @@ header {
     border-radius: 14.4px;
     gap: 14.4px;
     max-height: calc(100vh - 16px);
+    overflow-y: auto;
   }
 
   .swiper-onboarding {
-    margin-left: -12.8px !important;
+    width: 100%;
+    max-width: 100%;
   }
 
   .prev {

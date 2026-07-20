@@ -13,14 +13,14 @@ export function Privacy() {
             {/* Lado do texto */}
             <Reveal>
               <p className="eyebrow">
-                <span className="eyebrow-tick" /> Privacidade por construção
+                <span className="eyebrow-tick" /> Segurança e privacidade absoluta
               </p>
               <h2 className="mt-5 font-display font-bold text-huge text-cloud">
-                Seu vídeo <span className="text-raio">nunca sai</span> do seu computador.
+                Nenhum vídeo, imagem ou dado <span className="text-raio">sai do seu computador</span>.
               </h2>
               <p className="mt-5 text-xl leading-relaxed text-slatey">
                 A leitura de postura e de expressão acontece inteiramente no seu navegador. Nenhum quadro de
-                vídeo, nenhuma foto, nenhuma imagem é enviada para servidor algum — nem para o nosso.
+                vídeo, nenhuma foto, nenhuma imagem ou dado é enviada para servidor algum — nem mesmo para o nosso.
               </p>
               <ul className="mt-8 space-y-3.5">
                 {[

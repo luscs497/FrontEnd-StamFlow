@@ -1,69 +1,75 @@
 [
   {
-    "categoria": "Financeiro e Benefícios",
-    "cor": "red",
+    "categoria": "Diretriz Fundamental: O Princípio do Anonimato",
+    "cor": "purple",
     "itens": [
       {
-        "pergunta": "Atraso ou divergência no pagamento de salário",
-        "resposta": "Confirme com o financeiro a data de processamento da folha antes de responder. Informe ao colaborador o prazo real de regularização, sem prometer datas que você não pode garantir. Se a divergência for de valor, peça o holerite do colaborador para comparar antes de afirmar que está correto ou incorreto."
-      },
-      {
-        "pergunta": "Dúvida sobre reembolso de despesas",
-        "resposta": "Peça que o colaborador anexe (por fora do sistema, se necessário) o comprovante da despesa. Confirme se o tipo de gasto está dentro da política de reembolso da empresa antes de aprovar. Se não estiver, explique o motivo de forma clara, citando a regra, em vez de só negar."
-      },
-      {
-        "pergunta": "Dúvida ou reclamação sobre benefícios (plano de saúde, vale-refeição, etc.)",
-        "resposta": "Verifique primeiro se é uma dúvida de elegibilidade (ex: período de carência) ou um problema operacional (ex: cartão não chegou, plano não está ativo). Direcione para o RH quando for uma falha do fornecedor do benefício — você não deve tentar resolver isso sozinho, mas deve manter o colaborador informado do andamento."
+        "pergunta": "Como funciona o anonimato no canal?",
+        "resposta": "O anonimato absoluto existe na entrada da denúncia. Na condução, o anonimato é garantido até onde a tipicidade do caso permitir.\n\nQueixas Leves (Operacional/Cultural): o anonimato é mantido em 100% do processo.\n\nQueixas Graves (Assédio/Crimes): o anonimato inicial serve para abrir a investigação. Para punições legais ou demissões por justa causa, o compliance/gestor precisará de evidências robustas. O papel do gestor não é expor o denunciante, mas sim criar um ambiente seguro (blindagem) para que ele aceite se identificar voluntariamente à assessoria jurídica/RH em um segundo momento, ou construir o caso por meio de outras provas testemunhais e documentais sem precisar expô-lo."
       }
     ]
   },
   {
-    "categoria": "Relacionamento e Ambiente de Trabalho",
-    "cor": "orange",
-    "itens": [
-      {
-        "pergunta": "Conflito entre colegas de equipe",
-        "resposta": "Nunca tente resolver o conflito só pela troca de mensagens do Report. Marque uma conversa (mesmo que rápida) com as partes envolvidas, individualmente primeiro. Responda ao Report confirmando que a situação está sendo tratada, sem dar detalhes do que foi discutido com a outra parte."
-      },
-      {
-        "pergunta": "Queixa sobre comportamento de outro colaborador (assédio, discriminação, conduta inadequada)",
-        "resposta": "Trate como prioridade máxima — responda rapidamente confirmando o recebimento, mesmo que a investigação leve mais tempo. Não minimize nem peça para o colaborador 'deixar passar'. Se a empresa tiver um canal de Compliance/RH específico para isso, oriente o colaborador a também registrar lá, sem deixar de tratar o caso pelo Report."
-      },
-      {
-        "pergunta": "Reclamação sobre carga de trabalho ou prazos excessivos",
-        "resposta": "Evite responder só com 'vou verificar' sem prazo. Analise com o colaborador quais entregas estão pesando mais, e dê um retorno concreto (redistribuir tarefa, ajustar prazo, ou explicar por que não é possível ajustar agora). Esse tipo de Report costuma se repetir se não houver uma ação visível."
-      }
-    ]
-  },
-  {
-    "categoria": "Operacional e Uso da Plataforma",
+    "categoria": "1. Matriz de Classificação e Triagem (A Regra das 3 TAGs)",
     "cor": "blue",
     "itens": [
       {
-        "pergunta": "Dificuldade técnica para usar o StamFlow (login, câmera, exercícios não carregam)",
-        "resposta": "Peça print da tela ou descrição exata do erro antes de escalar para o suporte técnico. Muitos problemas comuns (câmera não habilitada, navegador desatualizado) podem ser resolvidos só orientando o colaborador, sem precisar abrir chamado."
+        "pergunta": "Nível 1: Verde (Operacional / Trivial)",
+        "resposta": "Tipo de queixa: problemas de infraestrutura, processos, suprimentos e ferramentas.\n\nExemplos práticos: falta de copos, lâmpada queimada, VPN instável, ar-condicionado quebrado, lentidão de computadores.\n\nPrazo de solução (sugerido): 72 horas úteis.\n\nCanal de resolução: acionamento direto de Facilities, TI, Compras, ou Manutenção."
       },
       {
-        "pergunta": "Dúvida sobre como a Stamina/postura é avaliada",
-        "resposta": "Explique de forma simples que a pontuação combina postura (peso maior) e estado emocional captado durante o uso, e que isso serve para sugerir pausas e exercícios — não é uma avaliação de desempenho profissional. Esse esclarecimento evita que o colaborador sinta que está sendo 'vigiado' ou avaliado injustamente."
+        "pergunta": "Nível 2: Amarelo (Cultura / Gestão / RH)",
+        "resposta": "Tipo de queixa: conflitos de relacionamento, liderança ineficiente, metas abusivas, desvio de função, quebra de Work-Life Balance.\n\nExemplos práticos: microgerenciamento, mensagens fora do horário, favoritismo, desvio de função, \"reuniãoite\".\n\nPrazo de solução (sugerido): 15 a 30 dias.\n\nCanal de resolução: alinhamento com o RH, Business Partner (RHBP) e mentoria/advertência interna de gestores."
       },
       {
-        "pergunta": "Solicitação de exclusão de dados ou da conta",
-        "resposta": "Não exclua a conta diretamente pelo Report. Confirme a identidade do solicitante e siga o processo formal de desligamento/exclusão de dados da empresa (LGPD), direcionando para o RH ou TI quando aplicável. Documente que a solicitação foi recebida e a data."
+        "pergunta": "Nível 3: Vermelho (Grave / Legal / Criminal)",
+        "resposta": "Tipo de queixa: violações éticas, condutas criminosas, abusos graves de poder e discriminação.\n\nExemplos práticos: assédio sexual, assédio moral crônico, racismo, homofobia, fraudes financeiras, vazamento de dados.\n\nPrazo de solução (sugerido): investigação imediata.\n\nCanal de resolução: Comitê de Ética, Compliance, Assessoria Jurídica, Presidência."
       }
     ]
   },
   {
-    "categoria": "Políticas Internas",
+    "categoria": "2. Protocolo de Atendimento e Investigação por Nível",
     "cor": "green",
     "itens": [
       {
-        "pergunta": "Dúvida sobre política de férias, faltas ou home office",
-        "resposta": "Responda com base na política oficial vigente da empresa — se você não tem certeza da regra atual, confirme com o RH antes de responder, em vez de dar uma resposta informal que pode gerar expectativa errada para o colaborador."
+        "pergunta": "Fluxo para Queixas Nível 1 (Verde) — Anonimato 100% Preservado",
+        "resposta": "Ação: o gestor da ouvidoria extrai o problema e repassa a demanda para a área responsável (Facilities, TI, Suprimentos, Manutenção).\n\nExemplo de abordagem interna: \"Recebemos múltiplos alertas no canal de que o andar X está sem copos e com oscilação na lâmpada Y. Favor regularizar.\" (Nunca diga se foi uma queixa única ou o texto exato escrito pelo colaborador).\n\nFechamento: assim que resolvido, o gestor publica uma nota geral nos canais de comunicação da empresa (Slack/Teams/Mural/Grupo de WhatsApp): \"Identificamos demandas sobre insumos no andar X via canal de escuta. Informamos que os copos foram repostos e a manutenção foi feita.\" (Isso valida o canal perante a equipe)."
       },
       {
-        "pergunta": "Sugestão de melhoria ou feedback sobre processos da empresa",
-        "resposta": "Mesmo quando não for uma queixa, vale agradecer o retorno e dar um direcionamento (vai ser avaliado, foi implementado, ou não é viável e por quê). Reports desse tipo não devem ficar sem resposta só porque não são urgentes — isso desmotiva quem contribui."
+        "pergunta": "Fluxo para Queixas Nível 2 (Amarelo) — Investigação Indireta",
+        "resposta": "Ação: não confronte o gestor denunciado usando o texto da denúncia (padrões de escrita podem revelar o autor). O gestor do canal deve acionar o RH para realizar uma Auditoria de Clima Silenciosa no setor.\n\nTécnica de investigação: o RH agenda entrevistas de rotina de 1 em 1 com vários membros daquela equipe sob o pretexto de \"mapeamento de processos\" ou \"pesquisa de pulso trimestral\". Durante a conversa, extrai-se se as metas estão abusivas ou se há mensagens de madrugada.\n\nResolução: se a queixa for confirmada pelas entrevistas gerais, o gestor denunciado recebe um feedback formal ou passa por um treinamento de liderança, sem nunca saber que houve uma denúncia anônima específica contra ele."
+      },
+      {
+        "pergunta": "Fluxo para Queixas Nível 3 (Vermelho) — Protocolo Crítico de Assédio/Crime",
+        "resposta": "Nota de treinamento importante: o maior erro de um gestor de canal é chamar o acusado para perguntar \"Você assediou fulano?\". Isso gera retaliação imediata e destruição de provas.\n\nFluxograma ideal: Entrada da Denúncia → Análise de Evidências Iniciais → Blindagem da Vítima → Entrevista Segura/Coleta de Consistências → Ação Legal/RH.\n\n1. Varredura Passiva: antes de falar com qualquer pessoa, o gestor de conformidade (compliance) deve buscar rastros digitais. Se a denúncia menciona racismo ou assédio no Slack, Teams, e-mails ou WhatsApp corporativo, a TI deve fazer uma auditoria interna dessas mensagens (com autorização da diretoria/jurídico).\n\n2. O Dilema da Identificação: se a denúncia anônima for vaga (ex: \"O diretor X assedia as estagiárias\"), o gestor deve responder dentro da plataforma anônima solicitando mais dados: \"Agradecemos e nos preocupamos com o relato. Para podermos agir com o rigor jurídico que a questão exige, precisamos de informações mais detalhadas como datas, locais ou indicação de testemunhas. Tenha confiança que garantiremos sua proteção integral.\"\n\n3. Acolhimento e Blindagem (transição do anonimato): se a vítima decidir se identificar privadamente para o gestor do canal — Garantia de Não-Retaliação: assinar um termo interno de proteção ao denunciante. Durante a investigação, se necessário, afasta-se o acusado de suas funções com remuneração, ou transfere-se a vítima de setor (se for do desejo dela) para que não fiquem no mesmo ambiente. Condução Jurídica: o depoimento é colhido pelo comitê de ética e pelo jurídico. Explique à vítima que a identificação dela só será usada nos autos confidenciais do processo administrativo de demissão por justa causa ou em âmbito policial, sendo blindada ao máximo dentro da empresa."
+      }
+    ]
+  },
+  {
+    "categoria": "3. Script de Postura e Respostas do Gestor",
+    "cor": "orange",
+    "itens": [
+      {
+        "pergunta": "O que o Gestor NUNCA deve fazer",
+        "resposta": "Expressar ceticismo: \"Tem certeza que não foi um mal-entendido?\" ou \"Mas ele é nosso principal diretor, sempre entregou resultados\".\n\nInvestigar o autor: ficar tentando adivinhar quem escreveu usando termos como \"Esse vocabulário me parece muito com o do Fulano...\".\n\nCompartilhar prints: enviar o print da tela da denúncia para terceiros. O texto deve ser copiado e sintetizado em tópicos neutros para evitar o reconhecimento da escrita."
+      },
+      {
+        "pergunta": "O que o Gestor DEVE fazer (Frases de Acolhimento na Ouvidoria)",
+        "resposta": "\"Sua denúncia foi registrada e receberá andamento. Ela será tratada com absoluto sigilo e imparcialidade.\"\n\n\"Entendemos a gravidade do seu relato. Para que possamos tomar medidas punitivas severas e incontestáveis perante a lei, você teria interesse em conversar com nosso comitê de compliance de forma estritamente confidencial?\"\n\n\"O canal é 100% seguro. Sua queixa será tratada de forma anônima e nenhuma tentativa de identificação por nenhuma parte envolvida será tolerada pela diretoria.\""
+      }
+    ]
+  },
+  {
+    "categoria": "4. Governança e Transparência (Auditoria Interna)",
+    "cor": "purple",
+    "itens": [
+      {
+        "pergunta": "Relatório de Transparência",
+        "resposta": "Para o canal manter a credibilidade e funcionamento a longo prazo, a empresa precisa publicar um Relatório de Transparência (semestral ou anual) entre a liderança. Obviamente, sem nomes ou dados identificáveis.\n\nExemplo de layout do relatório para a empresa:\n\nNo último semestre, o canal recebeu 42 relatos. 25 eram Nível 1 (Infraestrutura): 100% resolvidos (compras de novas cadeiras e manutenção de ar-condicionado). 14 eram Nível 2 (Processos e Gestão): resultaram na readequação de metas do setor comercial e desligamento de 1 gestor por desalinhamento cultural. 3 eram Nível 3 (Abusos graves): resultaram em 2 demissões por justa causa após auditoria interna de conformidade."
+      },
+      {
+        "pergunta": "Mensagem Final do Treinamento",
+        "resposta": "O sucesso da aplicação deste Manual e do Canal de Denúncias e Ouvidoria Anônima depende da importância atribuída pela liderança ao processo.\n\nAbrir as portas para a escuta ativa é um ato de coragem e maturidade institucional, mas, acima de tudo, uma necessidade inegociável para a sustentabilidade do negócio. Além de mitigar riscos jurídicos severos e garantir a segurança da empresa perante as exigências e proteções legais da NR-1 (Gerenciamento de Riscos Ocupacionais), o canal atua como um motor de melhoria contínua.\n\nAo acolher e solucionar as dores do time, a empresa fortalece sua cultura interna e constrói um ambiente de trabalho psicologicamente saudável e produtivo. Como consequência direta, pavimenta o caminho para o aumento da produtividade e o alcance de resultados sólidos, impulsionados por uma equipe motivada e protegida.\n\nPara que essa engrenagem funcione com integridade e inspire confiança, é vital a atuação ativa de um gestor dedicado à governança do canal, operando com estratégia, total segurança e autonomia, e munido do respaldo, da autoridade e da participação incondicional da alta liderança."
       }
     ]
   }

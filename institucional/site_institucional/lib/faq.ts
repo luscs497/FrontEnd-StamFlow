@@ -6,7 +6,7 @@ export interface FaqItem {
 export const FAQ: FaqItem[] = [
   {
     q: "O StamFlow envia o meu vídeo para algum servidor?",
-    a: "Não. A leitura de postura e de expressão acontece inteiramente dentro do seu navegador. Nenhum quadro de vídeo, foto ou imagem sai do seu computador — o que viaja é, no máximo, o seu índice de energia, e só se você quiser sincronizar histórico.",
+    a: "Não. A leitura de postura e de expressão acontece inteiramente dentro do seu navegador. Nenhum quadro de vídeo, foto ou imagem sai do seu computador.",
   },
   {
     q: "Preciso instalar alguma coisa?",
@@ -26,7 +26,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     q: "O que tem além da leitura de energia?",
-    a: "Quatro trilhas guiadas: Exercícios (alongamentos curtos), Pausa Mental (respiração guiada), Foco (trilhas ambientes para concentrar) e StamFlow University (resumos guiados sobre atenção, hábito e energia).",
+    a: "Quatro trilhas guiadas: Exercícios (alongamentos, fortalecimento e oxigenação), Pausa Mental (respiração guiada mindfulness), Foco (trilhas ambientes para concentrar) e StamFlow University (resumos guiados sobre atenção, hábito e energia).",
   },
   {
     q: "Já tenho conta. Onde eu entro?",

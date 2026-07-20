@@ -54,14 +54,15 @@ const AVULSO_PLAN: Plan = {
   tagline:
     "Acesso completo a tudo que o StamFlow oferece — do acompanhamento ao vivo aos relatórios de evolução.",
   features: [
-    "Leitura de humor, postura e energia em tempo real pela webcam",
-    "Processamento 100% no seu navegador — nenhuma imagem sai do seu dispositivo",
-    "Exercícios guiados para pausas ativas ao longo do dia",
-    "Pausa Mental: áudios de respiração e relaxamento",
-    "Modo Foco: trilhas sonoras para concentração",
-    "StamFlow University: conteúdo sobre ergonomia e bem-estar",
+    "Checkup de postura e energia em tempo real pela webcam",
+    "Alertas de pausas, exercícios e conquistas",
+    "Exercícios: protocolos para fortalecimento muscular e saúde",
+    "Pausa Mental: áudios de respiração, meditação, foco e relaxamento",
+    "Modo Foco: trilhas sonoras para aumento de concentração",
+    "StamFlow University: conteúdo sobre hábitos, sono, foco e bem-estar",
     "Relatórios com histórico e tendências da sua energia",
     "Sistema de conquistas para acompanhar sua evolução",
+    "Processamento 100% no seu navegador (nenhuma imagem sai do seu dispositivo)",
     "Suporte por chamados direto no painel",
   ],
 };

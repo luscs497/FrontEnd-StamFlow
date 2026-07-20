@@ -20,9 +20,9 @@ export function Footer() {
           </div>
 
           <FooterCol title="Produto">
-            <FooterLink href="#como-funciona">Como funciona</FooterLink>
-            <FooterLink href="#recursos">Recursos</FooterLink>
-            <FooterLink href="#planos">Planos</FooterLink>
+            <FooterLink href="/#como-funciona">Como funciona</FooterLink>
+            <FooterLink href="/#recursos">Recursos</FooterLink>
+            <FooterLink href="/#planos">Planos</FooterLink>
           </FooterCol>
 
           <FooterCol title="Conta">
@@ -33,7 +33,7 @@ export function Footer() {
           </FooterCol>
 
           <FooterCol title="Ajuda">
-            <FooterLink href="#duvidas">Dúvidas</FooterLink>
+            <FooterLink href="/#duvidas">Dúvidas</FooterLink>
             <FooterLink href={LOGIN_URL}>Recuperar acesso</FooterLink>
             <FooterLink href="/politica-de-privacidade">Política de Privacidade</FooterLink>
             <FooterLink href="/termos-de-uso">Termos de Uso</FooterLink>

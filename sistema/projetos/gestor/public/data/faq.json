@@ -1,173 +1,249 @@
 [
   {
-    "categoria": "Painel Principal e Estatísticas",
-    "cor": "purple",
-    "itens": [
-      {
-        "pergunta": "Como funciona o seletor de período no Painel do Gestor?",
-        "resposta": "Você escolhe uma data de início e uma data de fim no campo de seleção de período, e os números são recalculados automaticamente a cada alteração — não existe botão 'Aplicar'. Se você selecionar a data final antes da inicial, o sistema reordena as duas automaticamente, então não há erro mesmo invertendo a ordem de seleção."
-      },
-      {
-        "pergunta": "O que significa a Stamina Coletiva mostrada no painel?",
-        "resposta": "É um indicador agregado da equipe, calculado a partir da postura (70% do peso) e do humor (30% do peso) registrados no período. O sistema separa o resultado em quatro faixas: Excelente (75-100%), Boa (50-74%), Atenção (25-49%) e Crítica (0-24%). Cada barra do card mostra a porcentagem de tempo da equipe em cada uma dessas faixas."
-      },
-      {
-        "pergunta": "Por que os status de Ergonomia da Equipe (ombros, cabeça, dorso) aparecem como '------' às vezes?",
-        "resposta": "Esse traço aparece quando não há nenhum dado de postura registrado para aquela articulação no período selecionado — geralmente porque a equipe não usou o sistema de captura postural naquele intervalo. Quando há dados, o rótulo muda para Excelente, Boa, Atenção ou Crítica, seguindo a mesma régua de 25% usada na Stamina Coletiva."
-      },
-      {
-        "pergunta": "O que é 'Sistema Ativo' no card de Engajamento?",
-        "resposta": "É o tempo total de uso do StamFlow pela equipe dentro do período selecionado (ex.: '2h 15min'), não uma porcentagem. Esse valor é somado a cada sincronização de métricas feita pelos colaboradores enquanto usam o sistema."
-      },
-      {
-        "pergunta": "Como são contadas as Pausas Mentais e os Exercícios no painel?",
-        "resposta": "São contagens brutas de quantas vezes a equipe completou uma pausa mental ou um exercício dentro do período selecionado — não é porcentagem nem média. Cada conclusão de exercício ou pausa soma 1 ao total do dia para aquele colaborador, e o painel exibe a soma de toda a equipe no intervalo escolhido."
-      },
-      {
-        "pergunta": "O número de 'Queixa/Report' no painel principal é o mesmo da aba Reports?",
-        "resposta": "Sim. Esse número conta todos os Reports da empresa cuja data (criação ou última atualização) cai dentro do período selecionado no Painel Principal — é a mesma base de dados da aba Gestão de Reports, só que filtrada pelo intervalo de datas escolhido ali, e não pelo status do ticket."
-      },
-      {
-        "pergunta": "Por que às vezes os números do painel demoram para atualizar depois que mudo as datas?",
-        "resposta": "A troca de período dispara três buscas ao mesmo tempo (dados da equipe, conquistas do período e contagem de Reports), e o painel só atualiza a tela depois que todas elas voltarem. Em conexões mais lentas ou períodos muito longos, pode haver um pequeno atraso antes dos números mudarem."
-      }
-    ]
-  },
-  {
-    "categoria": "Comparação de Períodos",
+    "categoria": "1. Infraestrutura, Equipamentos e Recursos",
     "cor": "blue",
     "itens": [
       {
-        "pergunta": "Como funciona o botão Comparar?",
-        "resposta": "Ele troca a visão principal por duas colunas lado a lado, Período A e Período B, cada uma com seu próprio seletor de datas. Ao abrir a comparação pela primeira vez, o sistema já preenche um padrão: Período A como hoje e Período B como os últimos 7 dias, mas você pode trocar livremente as datas de cada lado depois."
+        "pergunta": "Equipamentos obsoletos ou lentos",
+        "resposta": "O que é: Computadores, celulares, tablets, impressoras, ou outros aparelhos, eletrônicos ou não, travando, que reduzem a produtividade e geram estresse diário.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre o instrumento de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "O que o botão Cancelar faz na tela de comparação?",
-        "resposta": "Ele fecha a visão de comparação e volta para a visão principal (não comparativa). Ele não apaga nem desfaz nenhum dado — só troca qual painel está visível na tela."
+        "pergunta": "Falta de ergonomia (Home Office)",
+        "resposta": "O que é: Falta de estrutura ergonômica de trabalho no lar, causando dores físicas momentâneas ou crônicas. Inclui questões sobre cadeiras adequadas, suportes de monitor, teclados, mouses ergonômicos, ou outros itens fornecidos pela empresa que têm benefício Home Office.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a condição de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Os Períodos A e B da comparação usam os mesmos dados do painel principal?",
-        "resposta": "Sim, exatamente a mesma fonte de dados (equipe, conquistas e Reports), só que buscada de forma independente para cada coluna, com as datas que você escolher em cada uma. Por isso é possível, por exemplo, comparar 'esta semana' contra 'a mesma semana do mês passado' definindo as datas manualmente em cada lado."
+        "pergunta": "Falta de ergonomia (Presencial)",
+        "resposta": "O que é: Falta de estrutura ergonômica de trabalho no escritório da empresa, causando dores físicas momentâneas ou crônicas. Inclui questões sobre cadeiras adequadas, mesas, suportes de monitor, teclados, mouses ergonômicos, ou outros itens fornecidos pela empresa.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a condição de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Internet e VPN instáveis",
+        "resposta": "O que é: Ferramentas de acessos remotos lentas, com queda ou travamento constantemente, impedindo a execução fluida do trabalho.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a condição de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Softwares e ferramentas obsoletas",
+        "resposta": "O que é: Assinaturas de softwares de mercado que são parte do dia a dia dos colaboradores vencida, atrasada, expirada, ou recusa por parte da empresa em assinar ferramentas necessárias para melhorar produtividade e performance dos colaboradores.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a ferramenta de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Falta de insumos básicos (manutenção cotidiana)",
+        "resposta": "O que é: Reclamações sobre falta de itens triviais, como copos descartáveis, papel higiênico, sabonete, café, etc; demora prolongada para resolver problemas como manutenção em ar-condicionado, lâmpadas, eletrônicos, higienização de banheiros, ou outros.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa já foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Incômodos, barulho, improdutividade, falta de privacidade ou foco no presencial",
+        "resposta": "O que é: Escritórios e ambientes de trabalho onde é impossível se concentrar, fazer reuniões ou tarefas sem interrupções ou desconcentração.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a condição de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       }
     ]
   },
   {
-    "categoria": "Exportação de Relatórios",
+    "categoria": "2. Equilíbrio entre Vida Profissional e Pessoal",
     "cor": "green",
     "itens": [
       {
-        "pergunta": "Quais formatos de exportação estão disponíveis?",
-        "resposta": "CSV e PDF, através do botão Exportar no canto da Visão Principal. O arquivo gerado é baixado automaticamente pelo navegador, com um nome no formato 'relatorio_stamflow_DATA-INICIO_DATA-FIM.formato'."
+        "pergunta": "Desrespeito ao tempo de descanso",
+        "resposta": "O que é: Mensagens e demandas, urgentes ou não, enviadas por WhatsApp/Slack/e-mail ou outro canal de comunicação, tarde da noite, em finais de semana ou feriados, com expectativa de resposta imediata, ou execução de tarefa em tempo de descanso.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre o desrespeito ao tempo de descanso foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "A exportação usa qual período de datas?",
-        "resposta": "Sempre as datas que estiverem selecionadas na Visão Principal no momento do clique em Exportar — não as datas da tela de Comparação, mesmo que ela esteja aberta. Se nenhuma data tiver sido escolhida ainda, o sistema usa o dia de hoje como período padrão."
+        "pergunta": "Carga horária excessiva velada",
+        "resposta": "O que é: Cobrança invisível para trabalhar além do horário contratual para dar conta da demanda, sem o pagamento de horas extras ou banco de horas.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a carga excedente de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Por que recebi uma mensagem dizendo que não há dados para exportar?",
-        "resposta": "Isso acontece quando não existe nenhum registro de atividade da equipe no período de datas selecionado — não é um erro do sistema. Os relatórios só existem depois que pelo menos um colaborador usa o StamFlow (faz pausas, exercícios ou tem postura/humor registrados) dentro daquele intervalo."
+        "pergunta": "Cultura da \"reuniãoite\"",
+        "resposta": "O que é: Excesso de reuniões de baixa relevância que preenchem parte significativa da jornada, forçando o colaborador a fazer o trabalho real fora do horário de expediente.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre o excesso de reuniões e impacto negativo na produtividade foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Interrupção de férias",
+        "resposta": "O que é: Ser acionado para resolver problemas, tirar dúvidas ou participar de alinhamentos durante o período de férias legítimas.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a interrupção do período de férias é válida e certamente será revista com a devida atenção. Lhe desejamos um descanso de qualidade."
+      },
+      {
+        "pergunta": "Pressão durante afastamentos médicos",
+        "resposta": "O que é: Cobrança por entregas ou contato constante, quando o colaborador está de atestado médico ou licença por motivos de repouso para melhora da saúde.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a interrupção do período de repouso para melhora da saúde será revista com a devida atenção. Lhe desejamos boa recuperação."
       }
     ]
   },
   {
-    "categoria": "Gestão de Reports",
-    "cor": "red",
+    "categoria": "3. Modelo de Trabalho, Flexibilidade e Regras",
+    "cor": "blue",
     "itens": [
       {
-        "pergunta": "O que diferencia os status Aberto, Em Andamento e Concluído de um Report?",
-        "resposta": "Aberto é o estado inicial de todo Report novo, criado pelo colaborador. Em Andamento indica que o gestor já respondeu pelo menos uma vez àquele caso. Concluído é definido manualmente pelo gestor através dos botões de status dentro do modal de detalhes do Report, ao marcar o caso como resolvido."
+        "pergunta": "Incoerência no modelo híbrido",
+        "resposta": "O que é: Obrigatoriedade de ida presencial ao escritório X dias por semana apenas para sentar sozinho e fazer reuniões por videochamada, apenas para estar com o corpo presente e trabalhar aos olhos da gestão.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Se eu responder um Report sem marcar nenhum status manualmente, o que acontece com ele?",
-        "resposta": "Ele muda automaticamente para Em Andamento assim que você envia a resposta — mesmo que você não tenha clicado em nenhum dos botões de status (Solucionado / Em Andamento / Aberto) no modal. Isso vale mesmo se o Report estivesse marcado como Concluído antes: qualquer resposta do gestor reabre o caso para Em Andamento."
+        "pergunta": "Inflexibilidade de horários",
+        "resposta": "O que é: Impossibilidade de ajuste de horário de trabalho que permita consultas médicas, odontológicas, psicológicas, ou outras necessidades que só possam ser sanadas em horário comercial.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a dificuldade de agendamento de atividade pessoal necessária foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "O que acontece se o colaborador enviar uma nova mensagem em um Report já Concluído?",
-        "resposta": "O Report é reaberto automaticamente para Em Andamento. Já se o colaborador enviar mensagem em um Report que já estava Aberto ou Em Andamento, o status permanece o mesmo — só a resposta do gestor (ou a reabertura de um Concluído) muda o status do ticket."
+        "pergunta": "Assimetria de regras",
+        "resposta": "O que é: Privilégios concedidos para parte da equipe, sejam diretores, gerentes, membros da liderança, ou colaboradores com mais tempo de casa ou afinidade, como trabalhar de onde quiserem e no horário que quiserem, enquanto a base sofre controle rígido de ponto, presença e regras.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre as regras de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Por que às vezes o botão de Responder no Report está bloqueado com a mensagem 'Aguarde a resposta do cliente'?",
-        "resposta": "O painel não permite duas respostas seguidas do gestor no mesmo Report sem uma nova mensagem do colaborador no meio. Se a última mensagem do histórico já foi sua (gestor), o sistema bloqueia um novo envio até o colaborador responder."
+        "pergunta": "Falta de auxílio ou reembolso para o Home Office",
+        "resposta": "O que é: Ausência de ajuda de custo para internet, energia e infraestrutura para quem trabalha em regime remoto ou híbrido.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação aos benefícios foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Qual é a diferença entre o status do Report e a categoria/tag dele (Operacional, Gestão RH, Legal/Jurídico)?",
-        "resposta": "O status (Aberto/Em Andamento/Concluído) indica o andamento do atendimento. A tag é uma classificação por assunto, escolhida inicialmente pelo colaborador ao abrir o Report, mas que o gestor pode reclassificar a qualquer momento pelo seletor de categoria dentro do modal de detalhes — ela serve só para organização interna, não muda o fluxo de atendimento."
-      },
-      {
-        "pergunta": "Quem aparece como autor de cada mensagem dentro de um Report?",
-        "resposta": "O painel identifica a ordem das mensagens dentro do ticket: as mensagens em posição par (1ª, 3ª, 5ª...) são sempre do colaborador, e as em posição ímpar (2ª, 4ª, 6ª...) são sempre do gestor — porque toda conversa começa com a mensagem inicial do colaborador que abriu o Report."
-      },
-      {
-        "pergunta": "É possível saber a identidade do colaborador que abriu um Report?",
-        "resposta": "Não pela tela de Gestão de Reports. A resposta do gestor é tratada como anônima (o próprio modal indica isso no campo de resposta), e a lista de Reports não exibe nome nem e-mail de quem abriu o caso — apenas o assunto, o tempo desde a última atualização e a categoria."
-      },
-      {
-        "pergunta": "Como o painel calcula o texto 'Há 2h', 'Há 3 dias' etc. nos Reports?",
-        "resposta": "É o tempo desde a última atualização do ticket (não desde a criação). Para menos de 1 minuto mostra 'Agora mesmo', para menos de 1 hora mostra minutos, para menos de 24h mostra horas, para menos de 7 dias mostra dias, e a partir de 7 dias o painel passa a mostrar a data exata (dia/mês) em vez do tempo relativo."
+        "pergunta": "Falta de ajuda de custo para o deslocamento (Híbrido)",
+        "resposta": "O que é: Custos elevados de transporte/estacionamento que não são cobertos adequadamente nos dias obrigatórios de escritório, ou em regime 100% presencial.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação aos benefícios foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       }
     ]
   },
   {
-    "categoria": "Colaboradores e Licenças",
+    "categoria": "4. Desvio de Funções, Metas e Salários",
     "cor": "orange",
     "itens": [
       {
-        "pergunta": "Qual é a diferença entre um colaborador 'Ativo' e um 'Inativo' na lista de Colaboradores?",
-        "resposta": "Ativo significa que a pessoa já concluiu o cadastro e tem uma conta de fato no StamFlow. Inativo significa que um convite foi enviado para aquele e-mail, mas a pessoa ainda não terminou de criar a conta — não tem relação com a pessoa estar 'desativada' ou ter saído da empresa."
+        "pergunta": "Desvio de função acumulativo",
+        "resposta": "O que é: Executar tarefas de um cargo superior ou de outra área sem a devida adequação contratual ou remuneração.\n\nFeedback sugerido: Sua manifestação foi registrada. A divergência entre as suas atribuições e o seu escopo contratual foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Por que não vejo todos os colaboradores da empresa, só os que eu mesmo convidei?",
-        "resposta": "Na verdade você deveria ver todos: a lista de Colaboradores é compartilhada entre todos os gestores da mesma empresa, e não filtrada por quem enviou o convite. Se algum colaborador não aparece, vale checar o filtro de busca por e-mail/nome e os botões Todos/Ativos/Inativos no topo da lista, que podem estar restringindo a visualização."
+        "pergunta": "\"Job description\" incongruente",
+        "resposta": "O que é: Realidade do dia a dia desalinhada com o que foi prometido na descrição da vaga ou no contrato de trabalho.\n\nFeedback sugerido: Sua manifestação foi registrada. Lamentamos que a realidade do seu dia a dia esteja desalinhada com a proposta inicial e descrição da ocupação. A liderança do setor será acionada para revisar o escopo da função. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "O que significa o número em 'VAGAS DE FUNCIONÁRIO'?",
-        "resposta": "É o uso atual da licença contratada pela empresa, no formato 'usadas/total' (ex.: '8/10'). Esse número conta tanto os colaboradores já Ativos quanto os convites ainda pendentes (Inativos) — ou seja, uma vaga já é reservada no momento em que o convite é enviado, antes mesmo da pessoa terminar o cadastro."
+        "pergunta": "Metas irreais ou inalcançáveis",
+        "resposta": "O que é: Cobranças por metas baseadas em métricas arbitrárias, sem histórico de dados, ferramentas ou recursos para atingi-las.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação à metas irreais/inalcançáveis foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Por que o indicador de vagas fica com uma cor diferente (laranja ou vermelho)?",
-        "resposta": "O indicador muda de cor sozinho conforme o uso se aproxima do limite contratado: fica em alerta a partir de 80% das vagas ocupadas, e indica licença cheia quando todas as vagas já estão em uso ou quando a assinatura da empresa não está ativa. Servem como aviso antes de você tentar convidar alguém e ser bloqueado por falta de vaga."
+        "pergunta": "Mudança constante de regras de composição de ganhos",
+        "resposta": "O que é: Alteração de metas ou regras de comissionamento/bonificação de modo constante e injustificado.\n\nFeedback sugerido: Sua manifestação foi registrada. Compreendemos a sua frustração, pois regras de comissionamento, metas, bonificações e composição de ganhos exigem previsibilidade. Sua queixa foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "O que acontece se eu tentar convidar um colaborador sem vagas de licença disponíveis?",
-        "resposta": "O backend bloqueia o convite e devolve uma mensagem informando que o limite de funcionários foi atingido, antes mesmo de gerar o convite ou enviar o e-mail. Nesse caso é necessário liberar uma vaga (excluindo um colaborador inativo ou um convite pendente, por exemplo) ou ampliar o plano contratado."
+        "pergunta": "Incompatibilidade salarial interna",
+        "resposta": "O que é: Constatar que colegas na mesma função, com mesmo nível de capacitação e entrega, ganham significativamente mais, ou questionar falta de plano de cargos e salários claro.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa de incompatibilidade salarial foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Por quanto tempo um convite de colaborador fica válido antes de expirar?",
-        "resposta": "24 horas a partir do envio. Depois desse prazo, o link de cadastro enviado por e-mail deixa de funcionar e é necessário enviar um novo convite para aquele e-mail."
+        "pergunta": "Falta de perspectiva de crescimento",
+        "resposta": "O que é: Ausência de Plano de Desenvolvimento Individual (PDI) ou prática comum de promoções baseadas puramente em favoritismo.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa de falta de perspectiva de crescimento foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Como funciona o envio de convites em massa (texto colado ou CSV)?",
-        "resposta": "Em qualquer um dos dois modos, o painel primeiro extrai automaticamente todos os endereços de e-mail válidos encontrados no texto ou no arquivo, ignorando duplicados, e só então envia tudo de uma vez. Se algum e-mail da lista já estiver cadastrado no StamFlow, o backend pula apenas aquele e-mail e segue convidando os demais, informando ao final quais foram ignorados."
-      },
-      {
-        "pergunta": "Por que ao excluir colaboradores selecionados às vezes recebo mais de um aviso de erro?",
-        "resposta": "Porque colaboradores Ativos e convites pendentes (Inativos) são removidos por duas operações separadas no backend. Se você selecionar uma mistura dos dois tipos e uma das duas operações falhar, o painel mostra o erro daquela parte especificamente, mesmo que a outra parte da exclusão tenha funcionado normalmente."
-      },
-      {
-        "pergunta": "O botão 'Desfazer seleção' cancela alguma exclusão que eu já confirmei?",
-        "resposta": "Não. Ele só limpa quais colaboradores estão marcados na tela antes de você clicar em Excluir Selecionados — é como um 'cancelar seleção', não um desfazer de exclusão já realizada. Depois que a exclusão é confirmada e processada pelo backend, ela não pode ser revertida pelo painel."
-      },
-      {
-        "pergunta": "Por que o número de colaboradores no cabeçalho ('VIDAS ATIVAS') às vezes não muda na hora depois que eu importo novos e-mails?",
-        "resposta": "Esse número só conta colaboradores com status Ativo (cadastro concluído), então convites recém-enviados não entram nessa contagem até a pessoa convidada efetivamente criar a conta — eles aparecem como Inativos na lista, mas já contam para o uso de licença em 'VAGAS DE FUNCIONÁRIO'."
+        "pergunta": "Estagnação salarial crônica",
+        "resposta": "O que é: Falta de reajustes reais acima da inflação por anos, mesmo com o aumento das responsabilidades.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa de estagnação salarial foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       }
     ]
   },
   {
-    "categoria": "Navegação Geral do Painel",
+    "categoria": "5. Processos, Comunicação e Organização",
     "cor": "purple",
     "itens": [
       {
-        "pergunta": "Como acesso o submenu de Reports (Gestão de Reports, Treinamento Compliance e FAQ)?",
-        "resposta": "Clique no item 'Reports' no menu lateral para expandir a lista com as três opções; clicar de novo no cabeçalho recolhe a lista sem trocar de tela. Enquanto qualquer uma das três telas do submenu estiver aberta, o cabeçalho 'Reports' permanece destacado e a lista fica expandida, para você não perder a referência de onde está navegando."
+        "pergunta": "Falta de processos definidos",
+        "resposta": "O que é: Fluxos de trabalho caóticos onde colaboradores não sabem de quem é a responsabilidade por cada etapa, gerando retrabalho e discussões.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação aos processos de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "Por que, ao navegar em outra seção do menu (como Estatísticas ou Equipe), o submenu de Reports fecha sozinho?",
-        "resposta": "O submenu só fica aberto enquanto um dos seus três itens (Gestão de Reports, Treinamento Compliance ou FAQ) estiver selecionado. Ao clicar em qualquer item fora desse submenu, ele se recolhe automaticamente, já que nenhum dos filhos dele continua ativo."
+        "pergunta": "Comunicação descentralizada e confusa",
+        "resposta": "O que é: Informações cruciais espalhadas por WhatsApp, e-mail, Slack e Notion, ou verbalmente em reuniões, fazendo com que prazos e alinhamentos se percam.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação ao fluxo de informações foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
       },
       {
-        "pergunta": "No celular, por que não consigo ver o menu lateral completo?",
-        "resposta": "Em telas estreitas, o menu lateral fica escondido por padrão e é aberto pelo ícone de menu (as três linhas, tipo 'hamburguer') no topo da tela. Tocar nele expande o menu completo, incluindo o submenu de Reports; navegar para qualquer seção fecha esse menu automaticamente, para liberar espaço de tela no celular."
+        "pergunta": "Exclusão de quem está remoto",
+        "resposta": "O que é: Decisões importantes tomadas informalmente no cafezinho do escritório pelos presentes, deixando os colaboradores remotos \"no escuro\".\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação à priorização dos presenciais foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Falta de transparência da liderança",
+        "resposta": "O que é: Mudanças drásticas na estratégia da empresa ou demissões em massa comunicadas de forma fria, tardia ou sem explicações.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação à transparência e ética será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Onboarding ineficiente",
+        "resposta": "O que é: Novos contratados iniciados na operação sem treinamento, sem acessos às ferramentas e sem direcionamento sobre as tarefas à executar, causando insegurança e erros.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação ao treinamento e capacitação foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Burocracia excessiva",
+        "resposta": "O que é: Processos internos lentos travando o andamento de projetos inovadores, gerando frustração e morosidade excessiva.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação ao fluxo de trabalho foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      }
+    ]
+  },
+  {
+    "categoria": "6. Relacionamentos Interpessoais",
+    "cor": "orange",
+    "itens": [
+      {
+        "pergunta": "Fofocas e comentários destrutivos",
+        "resposta": "O que é: Ambientes onde comentários maliciosos sobre a vida pessoal ou desempenho de colegas são tolerados ou incentivados.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre o ambiente de trabalho e relação interpessoal foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Competitividade tóxica entre colegas",
+        "resposta": "O que é: Falta de colaboração, retenção proposital de informações para prejudicar o colega e sabotagem velada.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre a competitividade exacerbada foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Exclusão social e isolamento",
+        "resposta": "O que é: Grupos fechados que excluem determinados colaboradores de projetos, tarefas, ou ambientes de convivência, como almoços, cafés ou conversas, gerando sentimentos de rejeição e prejudicando a participação em projetos relevantes para a empresa.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre o ambiente de trabalho e relação interpessoal foi encaminhada para a liderança e será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Passividade-agressividade na comunicação",
+        "resposta": "O que é: Uso de tons ásperos, cobranças ríspidas ou ironias em comunicações verbais ou textuais.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre o ambiente de trabalho e a comunicação interna será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Microgerenciamento excessivo",
+        "resposta": "O que é: Gestores que exigem atualizações de modo sufocante, controlam o status do Teams/Slack/WhatsApp (manter \"verde\"/online), presença frente ao computador ou relatórios excessivos de atividades realizadas.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre o gerenciamento das atividades será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Favoritismo",
+        "resposta": "O que é: Promoções, bônus e melhores projetos direcionados aos \"amigos dos líderes\", ignorando critérios de meritocracia técnica.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre os critérios de promoções e bonificações será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Cultura do medo",
+        "resposta": "O que é: Medo de dar feedbacks honestos, opiniões pessoais, ou reportar problemas devido a ameaças veladas de demissão ou retaliação.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa sobre o ambiente de trabalho e a comunicação interna será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      }
+    ]
+  },
+  {
+    "categoria": "7. Benefícios, RH e Políticas Internas",
+    "cor": "blue",
+    "itens": [
+      {
+        "pergunta": "Plano de saúde inadequado",
+        "resposta": "O que é: Ausência de plano de saúde, convênio médico com rede credenciada ruim, coparticipação abusiva ou falta de cobertura na região onde o colaborador mora.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação aos benefícios será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Atrasos frequentes em reembolsos",
+        "resposta": "O que é: Demora excessiva do RH ou financeiro para reembolsar despesas de viagens, visitas/reuniões com clientes, ferramentas compradas ou gastos do colaborador para a empresa.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação aos reembolsos será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Benefícios inflexíveis",
+        "resposta": "O que é: Vale-refeição/alimentação com valores defasados frente à inflação, região onde trabalha e se alimenta, ou impossibilidade de flexibilizar os benefícios (ex: trocar vale-transporte por auxílio combustível).\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação aos benefícios será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "RH parcial ou \"defensor exclusivo do CNPJ\"",
+        "resposta": "O que é: Sensação de que o RH ignora as dores dos colaboradores e sempre protege abusos da gestão.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação à postura do RH será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Falta de suporte à saúde mental",
+        "resposta": "O que é: Ausência de ações reais de acolhimento, apoio ou tratamento psicológico, para combate do burnout e outras doenças da mente.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação ao apoio à saúde mental será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Políticas de \"Dress Code\" ultrapassadas",
+        "resposta": "O que é: Cobrança por roupas formais para funções que não têm contato com o cliente final, gerando desconforto e gastos desnecessários.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação à política de vestimenta será analisada com a devida atenção. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Inconsistência na aplicação do compliance",
+        "resposta": "O que é: Discurso do canal de atendimento ao colaborador desalinhado com as ações práticas de investigação e solucionamento de queixas.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação ao nosso processo de atendimento de solicitações especiais é extremamente importante e será analisada com a devida atenção e seriedade. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      },
+      {
+        "pergunta": "Falta de transparência de clima organizacional",
+        "resposta": "O que é: Realização de pesquisas de clima organizacional com resultados não compartilhados com os colaboradores e omissão de planos de ação de melhorias.\n\nFeedback sugerido: Sua manifestação foi registrada. Sua queixa em relação à transparência de nosso processo de mensuração de clima organizacional e planos de ação de melhorias será analisada com a devida atenção e seriedade. Lhe trarei um posicionamento nos próximos dias e, caso sejam necessárias mais informações, solicito por este mesmo canal. Havendo uma conclusão positiva do seu report, essa manifestação será alterada para o status Concluído. Se ao final você considerar que a situação não foi efetivamente solucionada, sinta-se totalmente à vontade para reabrir ou incrementar esta queixa a qualquer momento."
+      }
+    ]
+  },
+  {
+    "categoria": "8. Abusos, Intolerâncias, Opressões (Casos Graves a Crimes)",
+    "cor": "red",
+    "itens": [
+      {
+        "pergunta": "Assédio moral",
+        "resposta": "O que é: Humilhações públicas, ironias, ofensas ou exposição de erros do colaborador em público ou canais de comunicação, como: Meet/Slack/Teams/Grupo de WhatsApp.\n\nFeedback sugerido: Sua manifestação foi registrada com máxima prioridade. O assédio moral viola gravemente nosso código de conduta e a legislação vigente, e sua denúncia será encaminhada imediatamente para uma investigação rigorosa e confidencial. Traremos um posicionamento o mais breve possível. Caso possua evidências adicionais (como e-mails, mensagens ou nomes de testemunhas), solicitamos que envie por este canal para robustecer a análise. Ressaltamos que, para medidas administrativas e jurídicas mais severas contra o agressor, o seu relato detalhado e, se você se sentir seguro(a), a identificação confidencial ao nosso time jurídico, pode ser fundamental para a sua total proteção e resolução do caso. Havendo o encerramento da apuração e aplicação das medidas cabíveis, esta manifestação será alterada para o status Concluído. Se a qualquer momento você sentir necessidade de relatar novos desdobramentos ou buscar apoio, utilize este canal imediatamente."
+      },
+      {
+        "pergunta": "Assédio sexual",
+        "resposta": "O que é: Abordagens inadequadas, piadas de cunho sexual, contato físico indesejado, convites insistentes, chantagens ou intimidação velada valendo-se da hierarquia.\n\nFeedback sugerido: Sua manifestação foi registrada com o mais alto nível de urgência, sigilo e respeito. Repudiamos veementemente qualquer forma de assédio sexual, uma conduta que configura crime dentro ou fora da empresa. Seu relato foi direcionado diretamente à nossa liderança de conformidade para que medidas de proteção e afastamento preventivo, se aplicáveis, sejam avaliadas de imediato. Entraremos em contato por aqui nos próximos dias. Devido à natureza gravíssima deste ato, caso você deseje e se sinta confortável, a empresa disponibilizará apoio jurídico e psicológico. Para que possamos agir com toda a força da lei e punir o responsável (inclusive na esfera criminal), a transição do anonimato para um canal restrito e protegido com o nosso jurídico é opcional, mas altamente eficaz. Esta manifestação mudará para Concluído apenas após a devida apuração e tomada de ações punitivas. Sinta-se totalmente seguro(a) para complementar este relato a qualquer instante."
+      },
+      {
+        "pergunta": "Racismo e discriminação estrutural",
+        "resposta": "O que é: Comentários preconceituosos diretos ou disfarçados de \"piada\", exclusão de ambientes e processos de promoção ou tratamento diferenciado, por questões de raça e etnia.\n\nFeedback sugerido: Sua manifestação foi registrada com muito pesar. O racismo é crime inafiançável e imprescritível, e nossa tolerância para com este ato é zero. Jamais será permitido. Sua denúncia sobre discriminação foi encaminhada em caráter de urgência para a liderança. Iniciaremos uma auditoria interna e apuração dos fatos com a seriedade e o rigor que a situação exige. Traremos um posicionamento nos próximos dias. Para que possamos aplicar as sanções legais e corporativas cabíveis ao(s) envolvido(s), o envio de provas ou nomes por este canal é de extrema importância. Reiteramos que a empresa está pronta para prestar todo apoio cabível, caso você decida levar o caso adiante e opte por se identificar formalmente para este fim. O status será alterado para Concluído somente quando as medidas corretivas e punitivas forem efetivadas. Este canal permanece permanentemente aberto para você."
+      },
+      {
+        "pergunta": "Homofobia/Transfobia",
+        "resposta": "O que é: Desrespeito, piadas homofóbicas, apelidos, exposições vexatórias, coação, violência psicológica ou exclusão social no ambiente de trabalho, por conta de orientação sexual.\n\nFeedback sugerido: Sua manifestação foi registrada com total prioridade e confidencialidade. As discriminações em função de orientação sexual não possuem qualquer espaço em nossa cultura. Sua queixa foi enviada para nossa liderança e será apurada de imediato. Manteremos você informado(a) por este canal nos próximos dias. Garantimos que sua identidade está protegida, mas ressaltamos que, caso você decida formalizar uma queixa-crime ou processo cível contra o autor da agressão, estaremos à disposição para orientar e apoiar as medidas legais cabíveis. Esta manifestação só será alterada para Concluído após a apuração completa e aplicação das punições devidas. Você pode incrementar este chamado com novas informações ou desabafos a qualquer momento."
+      },
+      {
+        "pergunta": "Roubo de crédito intelectual/mérito",
+        "resposta": "O que é: Gestores ou colegas que assumem a autoria de ideias, projetos ou apresentações criadas pelo denunciante.\n\nFeedback sugerido: Sua manifestação foi registrada e encaminhada de imediato para a liderança. A apropriação indébita de autoria e o roubo de propriedade intelectual são infrações graves ao nosso código de ética e podem configurar ilícitos cíveis e criminais. Garantimos que uma investigação técnica detalhada será realizada para rastrear a autoria dos projetos e entregas citados, e os méritos reconhecidos. Traremos um posicionamento nos próximos dias. Para acelerar a auditoria, solicitamos que anexe por este canal quaisquer evidências de autoria (como históricos de arquivos, e-mails anteriores ou códigos). Lembramos que, para que seja possível reverter a autoria formalmente ou iniciar um processo de reparação de danos, a quebra do anonimato estritamente para a liderança da empresa poderá ser necessária no futuro. O status desta manifestação será atualizado para Concluído assim que a investigação for finalizada e as medidas de correção de mérito e sanções forem aplicadas. O canal segue aberto para novas evidências."
       }
     ]
   }

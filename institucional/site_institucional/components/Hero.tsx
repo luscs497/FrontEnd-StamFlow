@@ -14,7 +14,7 @@ export function Hero() {
       <div className="relative mx-auto max-w-5xl px-5 pb-20 pt-36 text-center sm:px-8 sm:pb-28 sm:pt-44">
         <motion.div variants={stagger} initial="hidden" animate="show">
           <motion.p variants={fadeUp} className="eyebrow justify-center">
-            <span className="eyebrow-tick" /> Postura e humor, lidos em tempo real
+            <span className="eyebrow-tick" /> Eleve seu foco e produtividade
           </motion.p>
 
           {/* Headline em escala "Happly": ousada, com keyword em gradiente */}
@@ -22,15 +22,15 @@ export function Hero() {
             variants={fadeUp}
             className="mx-auto mt-6 max-w-4xl text-balance font-display font-bold text-giant text-cloud"
           >
-            Sua <span className="text-raio">energia</span> produtiva, lida pela câmera.
+            Cansado de passar o dia com <span className="text-raio">dor nas costas</span> e frustrado com seu rendimento?
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
             className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slatey sm:text-xl"
           >
-            O StamFlow acompanha sua postura e seu humor pela câmera e transforma isso num índice
-            de energia que cuida de você ao longo do dia.{" "}
+            Tenha um parceiro leal de produtividade, que te acompanha durante toda sua jornada,
+            prevenindo a exaustão antes que ela aconteça e protegendo seu foco nas tarefas.{" "}
             <span className="text-cloud">Nenhuma imagem sai do seu computador.</span>
           </motion.p>
 
@@ -39,7 +39,7 @@ export function Hero() {
             className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
             <a href="#planos" className="btn-primary px-7 py-3.5 text-base">
-              Começar a Jornada
+              Escolher meu Plano
             </a>
             <a href="#como-funciona" className="btn-ghost px-7 py-3.5 text-base">
               Ver como funciona

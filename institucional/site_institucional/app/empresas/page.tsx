@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Cada colaborador com seu painel de bem-estar; o gestor acompanha a energia da equipe de forma agregada. Um instrumento de apoio ao monitoramento contínuo exigido pela nova NR-1. Agende uma demonstração ao vivo.",
   alternates: { canonical: "/empresas" },
   openGraph: {
-    title: "StamFlow para Empresas — Você, conectado com a sua empresa",
+    title: "StamFlow para Empresas — Saúde, segurança e produtividade da equipe",
     description:
       "Painéis individuais, visão agregada para o gestor e apoio ao monitoramento contínuo da NR-1. Fale com o nosso time e agende uma demonstração ao vivo.",
     url: "https://stamflow.com.br/empresas",

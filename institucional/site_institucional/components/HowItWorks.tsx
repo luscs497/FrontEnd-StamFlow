@@ -7,21 +7,21 @@ import { fadeUp } from "@/lib/motion";
 const STEPS = [
   {
     n: "01",
-    title: "A câmera lê o seu corpo",
-    body: "Ombros, cabeça, coluna e rotação do tronco — cada um com seu próprio status — além da sua expressão facial. Tudo a cada poucos segundos.",
-    detail: ["Postura", "Rotação", "Expressão"],
+    title: "Protege",
+    body: "O Checkup Scan analisa em tempo real, via webcam, sua ergonomia e biomecânica — com processamento local, 100% de privacidade e segurança.",
+    detail: ["Checkup Scan", "Ergonomia", "Tempo real"],
   },
   {
     n: "02",
-    title: "Vira um índice de energia",
-    body: "Esses sinais se condensam num número só: a sua stamina do momento. Simples de ler, fácil de acompanhar ao longo do dia.",
-    detail: ["Stamina ao vivo", "Tendência", "Histórico"],
+    title: "Engaja",
+    body: "A Barra de Stamina gamefica seu bem-estar e energia produtiva, de forma simples. O sistema entende, em segundos, quando você precisa de uma recarga.",
+    detail: ["Barra de Stamina", "Energia", "Bem-estar"],
   },
   {
     n: "03",
-    title: "Você recebe o cuidado certo",
-    body: "Quando a energia cai, o StamFlow sugere a pausa, a respiração, o exercício ou a trilha de foco que faz sentido para aquele instante.",
-    detail: ["Pausa", "Respiração", "Foco"],
+    title: "Intervém",
+    body: "Antes da dor ou da fadiga surgirem, o StamFlow sugere breves pausas estratégicas que recarregam sua energia física e emocional.",
+    detail: ["Pausas", "Recarga", "Prevenção"],
   },
 ];
 
@@ -34,10 +34,10 @@ export function HowItWorks() {
             eyebrow="Como funciona"
             title={
               <>
-                Da câmera ao cuidado, <span className="text-raio">em três passos</span>.
+                O seu <span className="text-raio">guardião de performance</span> em tempo real.
               </>
             }
-            description="Um fluxo contínuo que roda em silêncio enquanto você trabalha. Nada para configurar, nada para pensar."
+            description="O StamFlow é um sistema inovador de monitoramento preventivo — uma inteligência ativa de biofeedback que cuida de você enquanto você trabalha."
           />
         </Reveal>
 

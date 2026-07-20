@@ -11,13 +11,13 @@ export function Features() {
       <div className="mx-auto max-w-[88rem] px-6 sm:px-10">
         <Reveal>
           <SectionHeading
-            eyebrow="O que o StamFlow enxerga"
+            eyebrow="Recursos"
             title={
               <>
-                Quatro pontos do corpo, <span className="text-raio">um ritmo</span> só.
+                Os 4 Boosts de <span className="text-raio">saúde e alta performance</span>.
               </>
             }
-            description="Ombros, cabeça, coluna e rotação do tronco — cada um com seu próprio status. Juntos, formam um retrato honesto de como está a sua energia agora."
+            description="Um ecossistema completo de potencialização da sua saúde e produtividade, pronto quando a energia pedir uma pausa de verdade."
           />
         </Reveal>
 
@@ -107,17 +107,17 @@ export function Features() {
                 <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
                 <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.6" opacity="0.5" />
               </Glyph>
-              <h3 className="font-display text-2xl font-bold text-cloud">Trilhas para recuperar o ritmo</h3>
+              <h3 className="font-display text-2xl font-bold text-cloud">Um ecossistema para recuperar o ritmo</h3>
             </div>
             <p className="mt-3.5 max-w-xl text-base leading-relaxed text-slatey">
-              Quatro espaços guiados, prontos quando a energia pedir uma pausa de verdade.
+              Quatro trilhas guiadas, prontas quando a energia pedir uma pausa de verdade.
             </p>
             <div className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                { t: "Exercícios", d: "Alongamentos curtos para pescoço, ombros e costas." },
-                { t: "Pausa Mental", d: "Respiração guiada por áudio, em poucos minutos." },
-                { t: "Foco", d: "Trilhas ambientes para entrar no ritmo de trabalho." },
-                { t: "StamFlow University", d: "Resumos guiados sobre atenção, hábito e energia." },
+                { t: "Modo Foco", d: "Trilhas binaurais e ruído branco para blindar o cérebro contra distrações." },
+                { t: "Corpo Saudável", d: "Protocolos validados de exercícios de fortalecimento e oxigenação." },
+                { t: "Pausa Mental", d: "Áudios guiados de meditação mindfulness para limpar o \u201ccache\u201d cerebral." },
+                { t: "StamFlow University", d: "Curadoria com as maiores estratégias mundiais de melhora de hábitos, sono e foco." },
               ].map((item) => (
                 <div key={item.t} className="rounded-field border border-hairline bg-surface-2/40 p-5">
                   <p className="text-[15px] font-semibold text-cloud">{item.t}</p>

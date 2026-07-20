@@ -28,14 +28,14 @@ export function FinalCTA() {
               <BrandMark size={58} radius={18} />
             </div>
             <h2 className="mx-auto max-w-2xl font-display font-bold text-huge text-cloud">
-              Comece a cuidar da sua <span className="text-raio">energia</span> hoje.
+              Comece a cuidar da sua <span className="text-raio">energia</span> agora.
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-xl text-slatey">
-              Escolha o período que faz sentido para você e libere o StamFlow completo. Leva menos de um minuto.
+              Escolha o período que faz sentido para você e proteja sua saúde e performance.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
               <a href="/#planos" className="btn-primary px-8 py-4 text-base">
-                Começar a Jornada
+                Escolher meu Plano
               </a>
               <a href={LOGIN_URL} className="btn-ghost px-8 py-4 text-base">
                 Já tenho conta
