@@ -1,34 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Raio } from "@/components/Brand";
+import { WaveField } from "@/components/WaveField";
 import { fadeUp, stagger } from "@/lib/motion";
 
 /**
  * Hero "ondas de energia": canvas com linhas luminosas contínuas que reagem
- * ao mouse (adaptação do padrão glowy-waves para o sistema StamFlow — sem
- * shadcn/lucide; tokens e ícones da casa). As ondas usam as cores do produto:
- * o espectro de energia (verde/âmbar) somado à marca (ciano/violeta).
- * Conteúdo centralizado, sem botões, conforme o doc de copy da LP B2C.
+ * ao mouse (WaveField). Conteúdo centralizado, sem botões, conforme o doc de
+ * copy da LP B2C.
  */
-
-interface Wave {
-  offset: number;
-  amplitude: number;
-  frequency: number;
-  /** "r,g,b" — a alpha entra por onda. */
-  rgb: string;
-  alpha: number;
-}
-
-const WAVES: Wave[] = [
-  { offset: 0, amplitude: 46, frequency: 0.003, rgb: "56,189,248", alpha: 0.5 }, // ciano (marca)
-  { offset: Math.PI / 2, amplitude: 64, frequency: 0.0024, rgb: "124,58,237", alpha: 0.42 }, // violeta (marca)
-  { offset: Math.PI, amplitude: 40, frequency: 0.0036, rgb: "52,211,153", alpha: 0.4 }, // verde (energia alta)
-  { offset: Math.PI * 1.5, amplitude: 54, frequency: 0.0021, rgb: "251,191,36", alpha: 0.2 }, // âmbar (atenção)
-  { offset: Math.PI * 2, amplitude: 32, frequency: 0.0042, rgb: "148,163,184", alpha: 0.14 }, // slate neutro
-];
 
 const PILLS = [
   "Processado 100% no seu navegador",
@@ -37,115 +18,9 @@ const PILLS = [
 ] as const;
 
 export function Hero() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const canvas = canvasRef.current;
-    if (!section || !canvas) return undefined;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return undefined;
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const mouseInfluence = reduce ? 8 : 64;
-    const influenceRadius = reduce ? 150 : 320;
-    const smoothing = reduce ? 0.04 : 0.1;
-
-    let raf = 0;
-    let time = 0;
-    let width = 0;
-    let height = 0;
-    let dpr = 1;
-
-    const mouse = { x: 0, y: 0 };
-    const target = { x: 0, y: 0 };
-
-    const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = section.offsetWidth;
-      height = section.offsetHeight;
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      mouse.x = target.x = width / 2;
-      mouse.y = target.y = height / 2;
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      const rect = section.getBoundingClientRect();
-      target.x = e.clientX - rect.left;
-      target.y = e.clientY - rect.top;
-    };
-    const onMouseLeave = () => {
-      target.x = width / 2;
-      target.y = height / 2;
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", onMouseMove);
-    document.documentElement.addEventListener("mouseleave", onMouseLeave);
-
-    const drawWave = (wave: Wave, baseY: number) => {
-      ctx.save();
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += 4) {
-        const dx = x - mouse.x;
-        const dy = baseY - mouse.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const influence = Math.max(0, 1 - distance / influenceRadius);
-        const mouseEffect =
-          influence * mouseInfluence * Math.sin(time * 0.001 + x * 0.01 + wave.offset);
-
-        const y =
-          baseY +
-          Math.sin(x * wave.frequency + time * 0.002 + wave.offset) * wave.amplitude +
-          Math.sin(x * wave.frequency * 0.4 + time * 0.003) * (wave.amplitude * 0.45) +
-          mouseEffect;
-
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      const color = `rgba(${wave.rgb},${wave.alpha})`;
-      ctx.lineWidth = 2.25;
-      ctx.strokeStyle = color;
-      ctx.shadowBlur = 32;
-      ctx.shadowColor = color;
-      ctx.stroke();
-      ctx.restore();
-    };
-
-    const animate = () => {
-      time += 1;
-      mouse.x += (target.x - mouse.x) * smoothing;
-      mouse.y += (target.y - mouse.y) * smoothing;
-
-      ctx.clearRect(0, 0, width, height);
-      // As ondas correm no quarto inferior, na zona das pills (que têm fundo
-      // próprio) — longe da headline e da sub-headline.
-      const baseY = height * 0.78;
-      WAVES.forEach((w) => drawWave(w, baseY));
-
-      raf = window.requestAnimationFrame(animate);
-    };
-    raf = window.requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", onMouseMove);
-      document.documentElement.removeEventListener("mouseleave", onMouseLeave);
-      window.cancelAnimationFrame(raf);
-    };
-  }, []);
-
   return (
-    <section
-      id="topo"
-      ref={sectionRef}
-      className="relative flex min-h-[76vh] items-center overflow-hidden"
-    >
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
+    <section id="topo" className="relative flex min-h-[76vh] items-center overflow-hidden">
+      <WaveField />
 
       {/* Véu sutil atrás do bloco de texto, para leitura sobre as ondas */}
       <div

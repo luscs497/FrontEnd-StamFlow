@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Reveal, SectionHeading } from "@/components/ui/Section";
+import { Raio } from "@/components/Brand";
+import { WaveField } from "@/components/WaveField";
 import { Plans } from "@/components/Plans";
-import { fadeUp, viewportOnce } from "@/lib/motion";
+import { fadeUp, stagger, viewportOnce } from "@/lib/motion";
 
 /**
  * Landing dedicada B2C (/para-voce). Diferente da página de empresas, aqui a
@@ -33,61 +35,151 @@ export function ParaVoceContent() {
 
 function ParaVoceHero() {
   return (
-    <section className="relative overflow-hidden pt-36 pb-24 sm:pt-44 sm:pb-32">
-      <div className="relative mx-auto max-w-[72rem] px-6 text-center sm:px-10">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="eyebrow justify-center"
-        >
-          <span className="eyebrow-tick" /> StamFlow para você
-        </motion.p>
+    <section className="relative overflow-hidden pb-24 pt-32 sm:pt-40 lg:pb-28">
+      <WaveField baseYFactor={0.88} intensity={0.75} />
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mt-6 max-w-4xl font-display text-5xl font-bold leading-[1.05] text-cloud sm:text-6xl"
-        >
-          Sua energia produtiva, <span className="text-raio">lida pela câmera</span>.
-        </motion.h1>
+      <div className="relative mx-auto grid max-w-[88rem] items-center gap-14 px-6 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+        <motion.div variants={stagger} initial="hidden" animate="show">
+          <motion.p
+            variants={fadeUp}
+            className="inline-flex items-center gap-2.5 rounded-full border border-hairline bg-surface/60 px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.22em] text-slatey backdrop-blur-sm"
+          >
+            <Raio size={14} /> StamFlow para você
+          </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mt-6 max-w-2xl text-xl leading-relaxed text-slatey"
-        >
-          O StamFlow acompanha seu humor, sua postura e sua energia enquanto
-          você trabalha — e sugere o exercício, o foco ou a pausa certa na hora
-          certa. Tudo processado no seu navegador, só para os seus olhos.
-        </motion.p>
+          <motion.h1
+            variants={fadeUp}
+            className="mt-7 max-w-xl font-display text-5xl font-bold leading-[1.05] text-cloud sm:text-6xl"
+          >
+            Sua energia produtiva, <span className="text-raio">lida pela câmera</span>.
+          </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
-        >
-          <a href="#planos" className="btn-primary px-8 py-4 text-base">
-            Começar a Jornada
-          </a>
-          <a href="#recursos" className="btn-ghost px-8 py-4 text-base">
-            Ver o que você ganha
-          </a>
+          <motion.p
+            variants={fadeUp}
+            className="mt-6 max-w-xl text-base leading-relaxed text-slatey sm:text-lg"
+          >
+            O StamFlow acompanha seu humor, sua postura e sua energia enquanto
+            você trabalha — e sugere o exercício, o foco ou a pausa certa na hora
+            certa. Tudo processado no seu navegador, só para os seus olhos.
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a href="#planos" className="btn-primary px-8 py-4 text-base">
+              Começar a Jornada
+            </a>
+            <a href="#recursos" className="btn-ghost px-8 py-4 text-base">
+              Ver o que você ganha
+            </a>
+          </motion.div>
+
+          <motion.p variants={fadeUp} className="mt-5 text-sm text-muted">
+            Funciona no seu computador · leitura 100% local · cancele quando quiser
+          </motion.p>
         </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-          className="mt-5 text-sm text-muted"
-        >
-          Funciona no seu computador · leitura 100% local · cancele quando quiser
-        </motion.p>
+        <EnergyMeter />
       </div>
     </section>
+  );
+}
+
+/* ─────────────  ENERGY METER (recorte do painel individual)  ───────────── */
+
+const SPECTRUM =
+  "linear-gradient(90deg, #f87171 0%, #fb923c 26%, #fbbf24 52%, #34d399 100%)";
+
+const BODY_ROWS = [
+  { label: "Ombros", status: "Perfeito", color: "#34d399" },
+  { label: "Cabeça", status: "Bom", color: "#34d399" },
+  { label: "Coluna lombar", status: "Atenção", color: "#fbbf24" },
+] as const;
+
+function EnergyMeter() {
+  const reduce = useReducedMotion();
+  const value = 84;
+
+  return (
+    <motion.div
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+      className="relative mx-auto w-full max-w-md lg:max-w-none"
+    >
+      <div className="surface-card p-7 sm:p-8">
+        <div className="flex items-center justify-between">
+          <span className="text-[13px] font-semibold uppercase tracking-wider text-slatey">
+            Checkup Scan
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-2/60 px-3 py-1.5 text-[12px] font-medium text-slatey">
+            <span className="h-2 w-2 animate-pulse-dot rounded-full bg-signal" />
+            Ao vivo
+          </span>
+        </div>
+
+        <div className="mt-6 flex items-baseline gap-2">
+          <span className="font-display text-[64px] font-bold leading-none text-cloud tabular-nums">
+            {value}
+          </span>
+          <span className="text-lg text-muted">/100</span>
+        </div>
+        <p className="mt-1.5 text-[15px] text-slatey">Sua energia agora</p>
+
+        <div className="relative mt-5">
+          <div className="h-2.5 rounded-full opacity-90" style={{ background: SPECTRUM }} />
+          <motion.span
+            initial={{ left: "6%" }}
+            animate={{ left: `${value}%` }}
+            transition={{ duration: reduce ? 0 : 1.1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute top-1/2 h-[18px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cloud shadow-[0_0_0_3px_rgba(11,17,32,0.9)]"
+          />
+        </div>
+        <div className="mt-2 flex justify-between text-[11px] uppercase tracking-wider text-muted">
+          <span>Crítico</span>
+          <span>Perfeito</span>
+        </div>
+
+        <ul className="mt-6 divide-y divide-hairline border-t border-hairline">
+          {BODY_ROWS.map((row, i) => (
+            <motion.li
+              key={row.label}
+              initial={{ opacity: 0, x: reduce ? 0 : 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35, delay: 0.55 + i * 0.12 }}
+              className="flex items-center justify-between py-3.5"
+            >
+              <span className="text-[15px] text-slatey">{row.label}</span>
+              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-cloud">
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: row.color }} />
+                {row.status}
+              </span>
+            </motion.li>
+          ))}
+        </ul>
+
+        <p className="mt-5 text-[12.5px] text-muted">
+          Leitura feita pela câmera, 100% no seu navegador.
+        </p>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 1.15 }}
+        className="absolute -bottom-5 left-5 right-5 sm:left-auto sm:right-8 sm:w-max"
+      >
+        <div className="flex items-center gap-3 rounded-2xl border border-hairline bg-ink/95 px-4 py-3 shadow-lift backdrop-blur-md">
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-signal/15 text-signal">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M13.5 2L4 13.2h6.2L9.5 22 20 10.4h-6.7L13.5 2Z" fill="currentColor" />
+            </svg>
+          </span>
+          <div className="text-[13px] leading-tight">
+            <p className="font-semibold text-cloud">Boost sugerido</p>
+            <p className="mt-0.5 text-slatey">Pausa Mental · 2 min</p>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -125,7 +217,11 @@ function ProblemaSection() {
                   key={d}
                   className="flex items-start gap-4 rounded-2xl border border-hairline bg-surface/50 p-5 text-[15px] leading-relaxed text-slatey"
                 >
-                  <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-raio" />
+                  <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[rgba(239,68,68,0.1)] text-[rgb(248,113,113)]">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </span>
                   {d}
                 </li>
               ))}
@@ -185,8 +281,15 @@ function ComoAjuda() {
               transition={{ delay: i * 0.06 }}
               className="surface-card p-8"
             >
-              <span className="font-display text-2xl font-bold text-raio tabular-nums">{s.n}</span>
-              <h3 className="mt-3 font-display text-xl font-bold text-cloud">{s.title}</h3>
+              <span className="font-display text-5xl font-bold text-raio/90 tabular-nums">{s.n}</span>
+              <h3 className="mt-4 flex items-center gap-2.5 font-display text-xl font-bold text-cloud">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-signal/15 text-signal">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M2.5 6.2l2.2 2.2L9.5 3.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                {s.title}
+              </h3>
               <p className="mt-2.5 text-[15px] leading-relaxed text-slatey">{s.body}</p>
             </motion.div>
           ))}
@@ -203,26 +306,47 @@ function Recursos() {
     {
       title: "Leitura ao vivo de humor e energia",
       body: "A câmera acompanha sua expressão e traduz em um retrato de como você está agora — não só como você acha que está.",
+      icon: (
+        <>
+          <rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" strokeWidth="1.6" />
+          <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.6" />
+        </>
+      ),
     },
     {
       title: "Alerta de postura",
       body: "Passou tempo demais torto ou curvado? O StamFlow avisa antes de virar dor.",
+      icon: (
+        <path d="M12 5a2 2 0 100-4 2 2 0 000 4Zm-4 5l4-1 4 1M12 9v7m-3 4l3-4 3 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
     {
       title: "Exercícios guiados",
       body: "Alongamentos e pausas ativas rápidas, para fazer sem sair da mesa.",
+      icon: (
+        <path d="M6.5 6.5l11 11M4 9l2-2m12 12l2-2M9 4l-2 2m12 12l-2 2M3 12h2m14 0h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
     {
       title: "Pausa Mental e Foco",
       body: "Áudios de respiração para descomprimir e trilhas sonoras para entrar no ritmo.",
+      icon: (
+        <path d="M3 9c3 0 3 2.5 6 2.5S12 9 15 9s3 2.5 6 2.5M3 15c3 0 3 2.5 6 2.5s3-2.5 6-2.5 3 2.5 6 2.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      ),
     },
     {
       title: "Seu painel de evolução",
       body: "Humor, energia e melhores dias ao longo do tempo — o seu histórico, só seu.",
+      icon: (
+        <path d="M4 20V10m5.5 10V4m5.5 16v-7M20.5 20v-4M2.5 20h19" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      ),
     },
     {
       title: "Conquistas que viram hábito",
       body: "Pequenas metas que transformam o cuidado com você em rotina que gruda.",
+      icon: (
+        <path d="M8 21h8m-4-4v4m-5-17h10v5a5 5 0 01-10 0V4Zm-3 2h3v3a3 3 0 01-3-3Zm16 0h-3v3a3 3 0 003-3Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
   ];
 
@@ -252,15 +376,9 @@ function Recursos() {
               transition={{ delay: (i % 3) * 0.05 }}
               className="rounded-3xl border border-hairline bg-surface/50 p-6"
             >
-              <div className="mb-4 grid h-11 w-11 place-items-center rounded-2xl bg-raio/12 text-raio">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <path
-                    d="M4 10.5l3.5 3.5L16 5.5"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+              <div className="mb-4 grid h-11 w-11 place-items-center rounded-2xl border border-hairline bg-surface-2/50 text-brand-cyan">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  {it.icon}
                 </svg>
               </div>
               <h3 className="font-display text-base font-bold text-cloud">{it.title}</h3>
@@ -286,7 +404,20 @@ function PrivacidadePessoal() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="surface-card relative overflow-hidden p-8 text-center sm:p-14"
         >
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, rgba(52,211,153,0.5), rgba(56,189,248,0.4), transparent)",
+            }}
+          />
           <div className="relative">
+            <span className="mx-auto mb-6 grid h-12 w-12 place-items-center rounded-2xl bg-signal/15 text-signal">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3l7 3v5c0 4.4-3 8.4-7 9.5C8 19.4 5 15.4 5 11V6l7-3Zm-3 8.5l2.2 2.2L15.5 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
             <p className="eyebrow justify-center">
               <span className="eyebrow-tick" /> A parte mais importante
             </p>
@@ -319,6 +450,15 @@ function ParaVoceFinalCTA() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="surface-card relative overflow-hidden px-8 py-14 text-center sm:px-16 sm:py-20"
         >
+          {/* Assinatura: linha fina do espectro de energia no topo do card */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, rgba(52,211,153,0.5), rgba(251,191,36,0.45), rgba(248,113,113,0.4), transparent)",
+            }}
+          />
           <div className="relative">
             <h2 className="mx-auto max-w-3xl font-display text-3xl font-bold leading-tight text-cloud sm:text-5xl">
               Sua energia merece esse cuidado.

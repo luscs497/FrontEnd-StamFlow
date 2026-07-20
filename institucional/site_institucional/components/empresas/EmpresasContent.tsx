@@ -1,7 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Reveal, SectionHeading } from "@/components/ui/Section";
+import { Raio } from "@/components/Brand";
+import { WaveField } from "@/components/WaveField";
 import { useModals } from "@/components/Providers";
 import { LOGIN_URL } from "@/lib/config";
 import { fadeUp, stagger, viewportOnce } from "@/lib/motion";
@@ -42,61 +45,140 @@ export function EmpresasContent() {
 
 function EmpresasHero({ onCta }: { onCta: () => void }) {
   return (
-    <section className="relative overflow-hidden pt-36 pb-24 sm:pt-44 sm:pb-32">
-      <div className="relative mx-auto max-w-[72rem] px-6 text-center sm:px-10">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="eyebrow justify-center"
-        >
-          <span className="eyebrow-tick" /> Saúde, segurança e produtividade
-        </motion.p>
+    <section className="relative overflow-hidden pb-24 pt-32 sm:pt-40 lg:pb-28">
+      <WaveField baseYFactor={0.88} intensity={0.75} />
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mt-6 max-w-4xl font-display text-4xl font-bold leading-[1.08] text-cloud sm:text-5xl"
-        >
-          Cuidar da saúde e segurança psicossocial da equipe, enquanto entrega{" "}
-          <span className="text-raio">resultados para a empresa</span>, é um desafio para o seu RH?
-        </motion.h1>
+      <div className="relative mx-auto grid max-w-[88rem] items-center gap-14 px-6 sm:px-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+        <motion.div variants={stagger} initial="hidden" animate="show">
+          <motion.p
+            variants={fadeUp}
+            className="inline-flex items-center gap-2.5 rounded-full border border-hairline bg-surface/60 px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.22em] text-slatey backdrop-blur-sm"
+          >
+            <Raio size={14} /> Saúde, segurança e produtividade
+          </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mt-6 max-w-2xl text-xl leading-relaxed text-slatey"
-        >
-          Conte com o apoio de um sistema inteligente e inovador para proteger sua equipe do stress,
-          sobrecarga e burnout, enquanto eleva a disposição, o foco e a produtividade.
-        </motion.p>
+          <motion.h1
+            variants={fadeUp}
+            className="mt-7 max-w-2xl font-display text-4xl font-bold leading-[1.08] text-cloud sm:text-5xl"
+          >
+            Cuidar da saúde e segurança psicossocial da equipe, enquanto entrega{" "}
+            <span className="text-raio">resultados para a empresa</span>, é um desafio para o seu RH?
+          </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
-        >
-          <button type="button" onClick={onCta} className="btn-primary px-8 py-4 text-base">
-            Agendar demonstração
-          </button>
-          <a href="#stamflow-b2b" className="btn-ghost px-8 py-4 text-base">
-            Ver como funciona
-          </a>
+          <motion.p
+            variants={fadeUp}
+            className="mt-6 max-w-xl text-base leading-relaxed text-slatey sm:text-lg"
+          >
+            Conte com o apoio de um sistema inteligente e inovador para proteger sua equipe do stress,
+            sobrecarga e burnout, enquanto eleva a disposição, o foco e a produtividade.
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <button type="button" onClick={onCta} className="btn-primary px-8 py-4 text-base">
+              Agendar demonstração
+            </button>
+            <a href="#stamflow-b2b" className="btn-ghost px-8 py-4 text-base">
+              Ver como funciona
+            </a>
+          </motion.div>
+
+          <motion.p variants={fadeUp} className="mt-5 text-sm text-muted">
+            Atendimento consultivo · pacotes por licença · sem cartão para conversar
+          </motion.p>
         </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-          className="mt-5 text-sm text-muted"
-        >
-          Atendimento consultivo · pacotes por licença · sem cartão para conversar
-        </motion.p>
+        <RelatorioPanel />
       </div>
     </section>
+  );
+}
+
+/* Painel ilustrativo da hero: a aba Relatório Comparativo do gestor
+   (a "[IMAGEM DO SISTEMA]" indicada no doc de copy para esta seção). */
+function RelatorioPanel() {
+  const rows = [
+    { label: "Energia produtiva", before: 58, after: 74 },
+    { label: "Ergonomia (postura)", before: 61, after: 79 },
+    { label: "Indicativo de humor", before: 64, after: 81 },
+  ];
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+      className="relative mx-auto w-full max-w-md lg:max-w-none"
+    >
+      <div className="surface-card p-7 sm:p-8">
+        <div className="flex items-center justify-between">
+          <span className="text-[13px] font-semibold uppercase tracking-wider text-slatey">
+            Relatório comparativo
+          </span>
+          <span className="rounded-full border border-hairline bg-surface-2/60 px-3 py-1.5 text-[12px] font-medium text-slatey">
+            Trimestre × trimestre
+          </span>
+        </div>
+
+        <div className="mt-7 space-y-6">
+          {rows.map((row, i) => (
+            <div key={row.label}>
+              <div className="mb-2 flex items-center justify-between text-[13.5px]">
+                <span className="text-slatey">{row.label}</span>
+                <span className="tabular-nums text-muted">
+                  {row.before} → <span className="font-semibold text-cloud">{row.after}</span>
+                </span>
+              </div>
+              <div className="space-y-1.5">
+                <div className="h-2 overflow-hidden rounded-full bg-white/5">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${row.before}%` }}
+                    transition={{ duration: 0.7, delay: 0.45 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                    className="h-full rounded-full bg-slatey/40"
+                  />
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-white/5">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${row.after}%` }}
+                    transition={{ duration: 0.7, delay: 0.6 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                    className="h-full rounded-full bg-raio"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-7 flex items-center justify-between border-t border-hairline pt-5">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-signal/15 px-3 py-1.5 text-[13px] font-semibold text-signal">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 9l3.5-3.5L8 8l4-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            +16 pts de energia média
+          </span>
+          <span className="text-[12px] text-muted">Dados agregados</span>
+        </div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 1.2 }}
+        className="absolute -bottom-5 left-5 right-5 sm:left-auto sm:right-8 sm:w-max"
+      >
+        <div className="flex items-center gap-3 rounded-2xl border border-hairline bg-ink/95 px-4 py-3 shadow-lift backdrop-blur-md">
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-signal/15 text-signal">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 12.5l5 5L20 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+          <div className="text-[13px] leading-tight">
+            <p className="font-semibold text-cloud">Evidência para o PGR</p>
+            <p className="mt-0.5 text-slatey">Exportada em PDF ou CSV</p>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -104,10 +186,33 @@ function EmpresasHero({ onCta }: { onCta: () => void }) {
 
 function Inovacao() {
   const roles = [
-    "Fisioterapeuta particular, atento à postura durante todo o período de trabalho.",
-    "Personal trainer para fortalecer os músculos mais usados no dia a dia.",
-    "Instrutor de meditação mindfulness, que entende a rotina de quem trabalha no computador.",
-    "Coach de produtividade, acompanhando cada colaborador todos os dias.",
+    {
+      text: "Fisioterapeuta particular, atento à postura durante todo o período de trabalho.",
+      icon: (
+        <path d="M12 5a2 2 0 100-4 2 2 0 000 4Zm-4 5l4-1 4 1M12 9v7m-3 4l3-4 3 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
+    },
+    {
+      text: "Personal trainer para fortalecer os músculos mais usados no dia a dia.",
+      icon: (
+        <path d="M6.5 6.5l11 11M4 9l2-2m12 12l2-2M9 4l-2 2m12 12l-2 2M3 12h2m14 0h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
+    },
+    {
+      text: "Instrutor de meditação mindfulness, que entende a rotina de quem trabalha no computador.",
+      icon: (
+        <>
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M8.5 14.5s1.3 1.5 3.5 1.5 3.5-1.5 3.5-1.5M9 9.5h.01M15 9.5h.01" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </>
+      ),
+    },
+    {
+      text: "Coach de produtividade, acompanhando cada colaborador todos os dias.",
+      icon: (
+        <path d="M13.5 2L4 13.2h6.2L9.5 22 20 10.4h-6.7L13.5 2Z" fill="currentColor" />
+      ),
+    },
   ];
   return (
     <section id="inovacao" className="py-24 sm:py-32">
@@ -131,13 +236,13 @@ function Inovacao() {
           className="mt-12 grid gap-5 sm:grid-cols-2"
         >
           {roles.map((r) => (
-            <motion.div key={r} variants={fadeUp} className="surface-card flex items-start gap-3.5 p-6">
-              <span className="mt-0.5 shrink-0 text-brand-cyan">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+            <motion.div key={r.text} variants={fadeUp} className="surface-card flex items-start gap-4 p-6">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-hairline bg-surface-2/50 text-brand-cyan">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  {r.icon}
                 </svg>
               </span>
-              <p className="text-[15px] leading-relaxed text-slatey">{r}</p>
+              <p className="pt-1 text-[15px] leading-relaxed text-slatey">{r.text}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -153,10 +258,16 @@ function TudoRH() {
     {
       title: "Adequação às NR1 e NR28",
       body: "Um sistema que oferece Canal de denúncias blindado e sigiloso, 100% em conformidade com a LGPD. Gerando histórico de evidências de proteção ao funcionário e auxiliando no combate do stress, sobrecarga e assédio.",
+      icon: (
+        <path d="M12 3l7 3v5c0 4.4-3 8.4-7 9.5C8 19.4 5 15.4 5 11V6l7-3Zm-3 8.5l2.2 2.2L15.5 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
     {
       title: "Proteção jurídica",
       body: "Implementação ou melhoria do Programa de Gerenciamento de Risco (PGR), tratamento de abusos não reportados e redução do passivo oculto.",
+      icon: (
+        <path d="M12 3v18M5 21h14M7 7l-3 6h6l-3-6Zm10 0l-3 6h6l-3-6ZM8 7h8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
   ];
   return (
@@ -183,7 +294,12 @@ function TudoRH() {
               transition={{ delay: i * 0.05 }}
               className="surface-card p-8"
             >
-              <h3 className="font-display text-xl font-bold text-cloud">{it.title}</h3>
+              <span className="grid h-12 w-12 place-items-center rounded-2xl border border-hairline bg-surface-2/50 text-brand-cyan">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  {it.icon}
+                </svg>
+              </span>
+              <h3 className="mt-5 font-display text-xl font-bold text-cloud">{it.title}</h3>
               <p className="mt-3 text-[15px] leading-relaxed text-slatey">{it.body}</p>
             </motion.div>
           ))}
@@ -211,19 +327,27 @@ function BombaRelogio() {
           />
         </Reveal>
 
+        {/* Cores do espectro de energia: âmbar (atenção) para a dor física,
+            vermelho (crítico) para a saúde emocional. */}
         <div className="mt-12 grid gap-6 md:grid-cols-2">
-          <div className="surface-card p-8">
-            <p className="eyebrow"><span className="eyebrow-tick" /> Ergonomia</p>
+          <div className="surface-card relative overflow-hidden p-8">
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#fbbf24]/50 to-transparent" />
+            <p className="eyebrow">
+              <span className="h-[6px] w-[6px] rounded-full bg-[#fbbf24] shadow-[0_0_10px_rgba(251,191,36,0.7)]" /> Ergonomia
+            </p>
             <ul className="mt-5 space-y-4">
-              <StatLine value="Nº 1" text="Dor nas costas é a maior causa de incapacidade do mundo." />
-              <StatLine value="70–85%" text="da população sofre ou sofrerá com hérnias e lombalgias." />
+              <StatLine tone="#fbbf24" value="Nº 1" text="Dor nas costas é a maior causa de incapacidade do mundo." />
+              <StatLine tone="#fbbf24" value="70–85%" text="da população sofre ou sofrerá com hérnias e lombalgias." />
             </ul>
           </div>
-          <div className="surface-card p-8">
-            <p className="eyebrow"><span className="eyebrow-tick" /> Saúde emocional</p>
+          <div className="surface-card relative overflow-hidden p-8">
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f87171]/50 to-transparent" />
+            <p className="eyebrow">
+              <span className="h-[6px] w-[6px] rounded-full bg-[#f87171] shadow-[0_0_10px_rgba(248,113,113,0.7)]" /> Saúde emocional
+            </p>
             <ul className="mt-5 space-y-4">
-              <StatLine value="8 em 10" text="brasileiros enfrentam estresse no trabalho." />
-              <StatLine value="32%" text="dos profissionais apresentam sintomas de burnout." />
+              <StatLine tone="#f87171" value="8 em 10" text="brasileiros enfrentam estresse no trabalho." />
+              <StatLine tone="#f87171" value="32%" text="dos profissionais apresentam sintomas de burnout." />
             </ul>
           </div>
         </div>
@@ -232,10 +356,15 @@ function BombaRelogio() {
   );
 }
 
-function StatLine({ value, text }: { value: string; text: string }) {
+function StatLine({ value, text, tone }: { value: string; text: string; tone?: string }) {
   return (
     <li className="flex items-baseline gap-4">
-      <span className="min-w-[5.5rem] font-display text-2xl font-bold text-raio tabular-nums">{value}</span>
+      <span
+        className="min-w-[5.5rem] font-display text-2xl font-bold tabular-nums"
+        style={tone ? { color: tone } : undefined}
+      >
+        {value}
+      </span>
       <span className="text-[15px] leading-relaxed text-slatey">{text}</span>
     </li>
   );
@@ -247,10 +376,18 @@ function NR1Section({ onCta }: { onCta: () => void }) {
   return (
     <section className="py-24 sm:py-32">
       <div className="mx-auto max-w-[72rem] px-6 sm:px-10">
-        <div className="surface-card overflow-hidden p-9 sm:p-14">
+        <div className="surface-card relative overflow-hidden p-9 sm:p-14">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, rgba(248,113,113,0.55), rgba(251,191,36,0.4), transparent)",
+            }}
+          />
           <Reveal>
             <p className="eyebrow">
-              <span className="eyebrow-tick" /> A bomba-relógio tem data para explodir
+              <span className="h-[6px] w-[6px] rounded-full bg-[#f87171] shadow-[0_0_10px_rgba(248,113,113,0.7)]" /> A bomba-relógio tem data para explodir
             </p>
             <h2 className="mt-5 max-w-3xl font-display text-3xl font-bold leading-tight text-cloud sm:text-4xl">
               A <span className="text-raio">“cegueira gerencial”</span> deixa a gestão do RH e a liderança da empresa vulneráveis.
@@ -325,8 +462,15 @@ function Guardiao() {
               transition={{ delay: i * 0.05 }}
               className="surface-card p-8"
             >
-              <span className="font-display text-2xl font-bold text-raio tabular-nums">{s.n}</span>
-              <h3 className="mt-3 font-display text-xl font-bold text-cloud">{s.title}</h3>
+              <span className="font-display text-5xl font-bold text-raio/90 tabular-nums">{s.n}</span>
+              <h3 className="mt-4 flex items-center gap-2.5 font-display text-xl font-bold text-cloud">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-signal/15 text-signal">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M2.5 6.2l2.2 2.2L9.5 3.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                {s.title}
+              </h3>
               <p className="mt-2.5 text-[15px] leading-relaxed text-slatey">{s.body}</p>
             </motion.div>
           ))}
@@ -343,18 +487,33 @@ function BoostsB2B() {
     {
       title: "Modo Foco",
       body: "Trilhas binaurais e ruído branco para blindar o cérebro contra distrações.",
+      icon: (
+        <>
+          <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
+          <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.6" opacity="0.5" />
+        </>
+      ),
     },
     {
       title: "Corpo Saudável",
       body: "Protocolos validados de exercícios de fortalecimento e oxigenação.",
+      icon: (
+        <path d="M6.5 6.5l11 11M4 9l2-2m12 12l2-2M9 4l-2 2m12 12l-2 2M3 12h2m14 0h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
     {
       title: "Pausa Mental",
       body: "Áudios guiados de meditação mindfulness para limpar o “cache” cerebral.",
+      icon: (
+        <path d="M3 9c3 0 3 2.5 6 2.5S12 9 15 9s3 2.5 6 2.5M3 15c3 0 3 2.5 6 2.5s3-2.5 6-2.5 3 2.5 6 2.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      ),
     },
     {
       title: "StamFlow University",
       body: "Curadoria com as maiores estratégias mundiais de melhora de hábitos, sono e foco.",
+      icon: (
+        <path d="M4 6.5A2.5 2.5 0 016.5 4H20v13.5H6.5A2.5 2.5 0 004 20V6.5Zm0 11V20M8 8h8M8 11.5h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
   ];
   return (
@@ -381,10 +540,17 @@ function BoostsB2B() {
         >
           {boosts.map((b, i) => (
             <motion.div key={b.title} variants={fadeUp} className="surface-card p-7">
-              <span className="font-display text-2xl font-bold text-raio tabular-nums">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-3 font-display text-lg font-bold text-cloud">{b.title}</h3>
+              <div className="flex items-center justify-between">
+                <span className="grid h-11 w-11 place-items-center rounded-2xl border border-hairline bg-surface-2/50 text-brand-cyan">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    {b.icon}
+                  </svg>
+                </span>
+                <span className="font-display text-lg font-bold text-muted tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <h3 className="mt-4 font-display text-lg font-bold text-cloud">{b.title}</h3>
               <p className="mt-2.5 text-[15px] leading-relaxed text-slatey">{b.body}</p>
             </motion.div>
           ))}
@@ -401,18 +567,30 @@ function SolucaoDoisEmUm() {
     {
       title: "Painel do Gestor (Relatórios)",
       body: "Visão macro anonimizada. Monitore o mapa de calor emocional da equipe e a ergonomia coletiva sem ferir a privacidade individual (LGPD friendly).",
+      icon: (
+        <path d="M4 20V10m5.5 10V4m5.5 16v-7M20.5 20v-4M2.5 20h19" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      ),
     },
     {
       title: "Escalabilidade total",
       body: "Cadastro simplificado de colaboradores um a um, em massa, ou via planilha CSV para grandes operações.",
+      icon: (
+        <path d="M9 11a3 3 0 100-6 3 3 0 000 6Zm-6 9c0-3 2.5-5 6-5s6 2 6 5M16.5 5.5a3 3 0 011.5 5.6M18 15.5c2.2.5 3.5 2 3.5 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
     {
       title: "Canal de denúncias seguro",
       body: "Ferramenta sigilosa e anônima para relatos de assédio ou infraestrutura, com gestão prática dos tickets (compliance e ESG).",
+      icon: (
+        <path d="M12 3l7 3v5c0 4.4-3 8.4-7 9.5C8 19.4 5 15.4 5 11V6l7-3Zm0 5v4m0 3h.01" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
     {
       title: "Treinamento de compliance",
       body: "Biblioteca com protocolos para a liderança conduzir situações delicadas de forma ética e eficiente.",
+      icon: (
+        <path d="M4 6.5A2.5 2.5 0 016.5 4H20v13.5H6.5A2.5 2.5 0 004 20V6.5Zm0 11V20M8 8h8M8 11.5h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      ),
     },
   ];
   return (
@@ -438,7 +616,12 @@ function SolucaoDoisEmUm() {
         >
           {items.map((it) => (
             <motion.div key={it.title} variants={fadeUp} className="surface-card p-7">
-              <h3 className="font-display text-lg font-bold text-cloud">{it.title}</h3>
+              <span className="grid h-11 w-11 place-items-center rounded-2xl border border-hairline bg-surface-2/50 text-brand-cyan">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  {it.icon}
+                </svg>
+              </span>
+              <h3 className="mt-4 font-display text-lg font-bold text-cloud">{it.title}</h3>
               <p className="mt-2.5 text-[15px] leading-relaxed text-slatey">{it.body}</p>
             </motion.div>
           ))}
@@ -853,21 +1036,7 @@ function DuvidasB2B({ onCta }: { onCta: () => void }) {
             }
           />
         </Reveal>
-        <div className="mt-12 space-y-4">
-          {faqs.map((f, i) => (
-            <motion.div
-              key={f.q}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.35, delay: (i % 4) * 0.04 }}
-              className="surface-card p-6"
-            >
-              <h3 className="font-display text-lg font-bold text-cloud">{f.q}</h3>
-              <p className="mt-2.5 text-[15px] leading-relaxed text-slatey">{f.a}</p>
-            </motion.div>
-          ))}
-        </div>
+        <FaqAccordion faqs={faqs} />
         <div className="mt-10 text-center">
           <button type="button" onClick={onCta} className="btn-primary px-8 py-4 text-base">
             Solicitar Demo do sistema
@@ -875,6 +1044,62 @@ function DuvidasB2B({ onCta }: { onCta: () => void }) {
         </div>
       </div>
     </section>
+  );
+}
+
+/* Acordeão no mesmo padrão do FAQ da home, para consistência visual. */
+function FaqAccordion({ faqs }: { faqs: { q: string; a: string }[] }) {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <Reveal delay={0.05} className="mt-12 divide-y divide-hairline border-y border-hairline">
+      {faqs.map((item, i) => {
+        const isOpen = open === i;
+        const panelId = `b2b-faq-panel-${i}`;
+        const btnId = `b2b-faq-btn-${i}`;
+        return (
+          <div key={item.q}>
+            <h3>
+              <button
+                id={btnId}
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                onClick={() => setOpen(isOpen ? null : i)}
+                className="flex w-full items-center justify-between gap-4 py-6 text-left"
+              >
+                <span className="text-lg font-semibold text-cloud">{item.q}</span>
+                <span
+                  className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border border-hairline text-slatey transition-transform duration-300 ${
+                    isOpen ? "rotate-45 border-brand-cyan/50 text-brand-cyan" : ""
+                  }`}
+                  aria-hidden="true"
+                >
+                  <svg width="15" height="15" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 2v10M2 7h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
+                </span>
+              </button>
+            </h3>
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={btnId}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="overflow-hidden"
+                >
+                  <p className="pb-7 pr-10 text-base leading-relaxed text-slatey">{item.a}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        );
+      })}
+    </Reveal>
   );
 }
 
@@ -891,6 +1116,15 @@ function EmpresasFinalCTA({ onCta }: { onCta: () => void }) {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="surface-card relative overflow-hidden px-8 py-14 text-center sm:px-16 sm:py-20"
         >
+          {/* Assinatura: linha fina do espectro de energia no topo do card */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, rgba(52,211,153,0.5), rgba(251,191,36,0.45), rgba(248,113,113,0.4), transparent)",
+            }}
+          />
           <div className="relative">
             <h2 className="mx-auto max-w-3xl font-display text-3xl font-bold leading-tight text-cloud sm:text-5xl">
               Eleve o cuidado de seus colaboradores agora.
