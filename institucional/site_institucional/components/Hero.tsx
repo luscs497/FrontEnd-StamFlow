@@ -1,171 +1,204 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { Raio } from "@/components/Brand";
 import { fadeUp, stagger } from "@/lib/motion";
 
 /**
- * Hero assimétrica ("espectro de energia"): texto à esquerda e, à direita,
- * o EnergyMeter — um recorte do produto real (aba Checkup Scan) com a leitura
- * de energia ao vivo. A assinatura visual é o espectro verde→âmbar→vermelho
- * do próprio sistema, no lugar do degradê centralizado genérico.
+ * Hero "ondas de energia": canvas com linhas luminosas contínuas que reagem
+ * ao mouse (adaptação do padrão glowy-waves para o sistema StamFlow — sem
+ * shadcn/lucide; tokens e ícones da casa). As ondas usam as cores do produto:
+ * o espectro de energia (verde/âmbar) somado à marca (ciano/violeta).
+ * Conteúdo centralizado, sem botões, conforme o doc de copy da LP B2C.
  */
+
+interface Wave {
+  offset: number;
+  amplitude: number;
+  frequency: number;
+  /** "r,g,b" — a alpha entra por onda. */
+  rgb: string;
+  alpha: number;
+}
+
+const WAVES: Wave[] = [
+  { offset: 0, amplitude: 46, frequency: 0.003, rgb: "56,189,248", alpha: 0.5 }, // ciano (marca)
+  { offset: Math.PI / 2, amplitude: 64, frequency: 0.0024, rgb: "124,58,237", alpha: 0.42 }, // violeta (marca)
+  { offset: Math.PI, amplitude: 40, frequency: 0.0036, rgb: "52,211,153", alpha: 0.4 }, // verde (energia alta)
+  { offset: Math.PI * 1.5, amplitude: 54, frequency: 0.0021, rgb: "251,191,36", alpha: 0.2 }, // âmbar (atenção)
+  { offset: Math.PI * 2, amplitude: 32, frequency: 0.0042, rgb: "148,163,184", alpha: 0.14 }, // slate neutro
+];
+
+const PILLS = [
+  "Processado 100% no seu navegador",
+  "Leitura pela câmera, ao vivo",
+  "Cancele quando quiser",
+] as const;
+
 export function Hero() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const canvas = canvasRef.current;
+    if (!section || !canvas) return undefined;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return undefined;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const mouseInfluence = reduce ? 8 : 64;
+    const influenceRadius = reduce ? 150 : 320;
+    const smoothing = reduce ? 0.04 : 0.1;
+
+    let raf = 0;
+    let time = 0;
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+    const mouse = { x: 0, y: 0 };
+    const target = { x: 0, y: 0 };
+
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = section.offsetWidth;
+      height = section.offsetHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      mouse.x = target.x = width / 2;
+      mouse.y = target.y = height / 2;
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      target.x = e.clientX - rect.left;
+      target.y = e.clientY - rect.top;
+    };
+    const onMouseLeave = () => {
+      target.x = width / 2;
+      target.y = height / 2;
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+    window.addEventListener("mousemove", onMouseMove);
+    document.documentElement.addEventListener("mouseleave", onMouseLeave);
+
+    const drawWave = (wave: Wave, baseY: number) => {
+      ctx.save();
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 4) {
+        const dx = x - mouse.x;
+        const dy = baseY - mouse.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const influence = Math.max(0, 1 - distance / influenceRadius);
+        const mouseEffect =
+          influence * mouseInfluence * Math.sin(time * 0.001 + x * 0.01 + wave.offset);
+
+        const y =
+          baseY +
+          Math.sin(x * wave.frequency + time * 0.002 + wave.offset) * wave.amplitude +
+          Math.sin(x * wave.frequency * 0.4 + time * 0.003) * (wave.amplitude * 0.45) +
+          mouseEffect;
+
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      const color = `rgba(${wave.rgb},${wave.alpha})`;
+      ctx.lineWidth = 2.25;
+      ctx.strokeStyle = color;
+      ctx.shadowBlur = 32;
+      ctx.shadowColor = color;
+      ctx.stroke();
+      ctx.restore();
+    };
+
+    const animate = () => {
+      time += 1;
+      mouse.x += (target.x - mouse.x) * smoothing;
+      mouse.y += (target.y - mouse.y) * smoothing;
+
+      ctx.clearRect(0, 0, width, height);
+      // As ondas correm no quarto inferior, na zona das pills (que têm fundo
+      // próprio) — longe da headline e da sub-headline.
+      const baseY = height * 0.78;
+      WAVES.forEach((w) => drawWave(w, baseY));
+
+      raf = window.requestAnimationFrame(animate);
+    };
+    raf = window.requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMouseMove);
+      document.documentElement.removeEventListener("mouseleave", onMouseLeave);
+      window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
-    <section id="topo" className="relative overflow-hidden">
-      {/* Linha de horizonte no espectro de energia — única marca de cor do fundo. */}
+    <section
+      id="topo"
+      ref={sectionRef}
+      className="relative flex min-h-[88vh] items-center overflow-hidden"
+    >
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
+
+      {/* Véu sutil atrás do bloco de texto, para leitura sobre as ondas */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px"
+        className="pointer-events-none absolute inset-x-0 top-0 h-2/3"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(52,211,153,0.45), rgba(251,191,36,0.4), rgba(248,113,113,0.35), transparent)",
+            "radial-gradient(52% 60% at 50% 38%, rgba(11,17,32,0.72), transparent 75%)",
         }}
       />
 
-      <div className="mx-auto grid max-w-[88rem] items-center gap-14 px-6 pb-20 pt-32 sm:px-10 sm:pt-40 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:pb-28">
-        {/* Coluna de texto */}
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-32 pt-36 text-center sm:px-8 sm:pt-44">
         <motion.div variants={stagger} initial="hidden" animate="show">
-          <motion.p variants={fadeUp} className="eyebrow">
-            <span className="eyebrow-tick" /> Eleve seu foco e produtividade
+          <motion.p
+            variants={fadeUp}
+            className="mx-auto inline-flex items-center gap-2.5 rounded-full border border-hairline bg-surface/60 px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.22em] text-slatey backdrop-blur-sm"
+          >
+            <Raio size={14} /> Eleve seu foco e produtividade
           </motion.p>
 
           <motion.h1
             variants={fadeUp}
-            className="mt-6 max-w-xl text-balance font-display font-bold text-huge text-cloud"
+            className="mx-auto mt-8 max-w-4xl text-balance font-display font-bold text-giant text-cloud"
           >
             Cansado de passar o dia com{" "}
-            <span className="text-[#fb8a8a]">dor nas costas</span> e frustrado
-            com seu rendimento?
+            <span className="text-[#fb8a8a]">dor nas costas</span> e frustrado com seu
+            rendimento?
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="mt-7 max-w-xl text-lg leading-relaxed text-slatey sm:text-xl"
+            className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slatey sm:text-xl"
           >
             Tenha um parceiro leal de produtividade, que te acompanha durante toda sua jornada,
             prevenindo a exaustão antes que ela aconteça e{" "}
             <span className="text-cloud">protegendo seu foco nas tarefas</span>.
           </motion.p>
 
-          <motion.p variants={fadeUp} className="mt-8 text-sm text-muted">
-            Processado 100% no seu navegador · cancele quando quiser
-          </motion.p>
+          <motion.ul
+            variants={fadeUp}
+            className="mt-10 flex flex-wrap items-center justify-center gap-3"
+          >
+            {PILLS.map((pill) => (
+              <li
+                key={pill}
+                className="rounded-full border border-hairline bg-surface/60 px-4 py-2 text-[13px] font-medium text-slatey backdrop-blur-sm"
+              >
+                {pill}
+              </li>
+            ))}
+          </motion.ul>
         </motion.div>
-
-        {/* Coluna do produto */}
-        <EnergyMeter />
       </div>
     </section>
-  );
-}
-
-/* ─────────────────────  ENERGY METER (recorte do produto)  ───────────────── */
-
-const SPECTRUM =
-  "linear-gradient(90deg, #f87171 0%, #fb923c 26%, #fbbf24 52%, #34d399 100%)";
-
-const BODY_ROWS = [
-  { label: "Ombros", status: "Perfeito", color: "#34d399" },
-  { label: "Cabeça", status: "Bom", color: "#34d399" },
-  { label: "Coluna lombar", status: "Atenção", color: "#fbbf24" },
-] as const;
-
-function EnergyMeter() {
-  const reduce = useReducedMotion();
-  const value = 84;
-
-  return (
-    <motion.div
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-      className="relative mx-auto w-full max-w-md lg:max-w-none"
-    >
-      <div className="surface-card p-7 sm:p-8">
-        {/* Cabeçalho do painel: a aba do sistema + leitura ao vivo */}
-        <div className="flex items-center justify-between">
-          <span className="text-[13px] font-semibold uppercase tracking-wider text-slatey">
-            Checkup Scan
-          </span>
-          <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-2/60 px-3 py-1.5 text-[12px] font-medium text-slatey">
-            <span className="h-2 w-2 animate-pulse-dot rounded-full bg-signal" />
-            Ao vivo
-          </span>
-        </div>
-
-        {/* Índice de energia */}
-        <div className="mt-6 flex items-baseline gap-2">
-          <span className="font-display text-[64px] font-bold leading-none text-cloud tabular-nums">
-            {value}
-          </span>
-          <span className="text-lg text-muted">/100</span>
-        </div>
-        <p className="mt-1.5 text-[15px] text-slatey">Sua energia agora</p>
-
-        {/* Barra do espectro com o marcador da leitura */}
-        <div className="relative mt-5">
-          <div
-            className="h-2.5 rounded-full opacity-90"
-            style={{ background: SPECTRUM }}
-          />
-          <motion.span
-            initial={{ left: "6%" }}
-            animate={{ left: `${value}%` }}
-            transition={{ duration: reduce ? 0 : 1.1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute top-1/2 h-[18px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cloud shadow-[0_0_0_3px_rgba(11,17,32,0.9)]"
-          />
-        </div>
-        <div className="mt-2 flex justify-between text-[11px] uppercase tracking-wider text-muted">
-          <span>Crítico</span>
-          <span>Perfeito</span>
-        </div>
-
-        {/* Status por parte do corpo, como no produto */}
-        <ul className="mt-6 divide-y divide-hairline border-t border-hairline">
-          {BODY_ROWS.map((row, i) => (
-            <motion.li
-              key={row.label}
-              initial={{ opacity: 0, x: reduce ? 0 : 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.35, delay: 0.55 + i * 0.12 }}
-              className="flex items-center justify-between py-3.5"
-            >
-              <span className="text-[15px] text-slatey">{row.label}</span>
-              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-cloud">
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{ backgroundColor: row.color }}
-                />
-                {row.status}
-              </span>
-            </motion.li>
-          ))}
-        </ul>
-
-        <p className="mt-5 text-[12.5px] text-muted">
-          Leitura feita pela câmera, 100% no seu navegador.
-        </p>
-      </div>
-
-      {/* Chip de intervenção: o produto agindo antes da dor */}
-      <motion.div
-        initial={{ opacity: 0, y: reduce ? 0 : 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 1.15 }}
-        className="absolute -bottom-5 left-5 right-5 sm:left-auto sm:right-8 sm:w-max"
-      >
-        <div className="flex items-center gap-3 rounded-2xl border border-hairline bg-ink/95 px-4 py-3 shadow-lift backdrop-blur-md">
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-signal/15 text-signal">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M13.5 2L4 13.2h6.2L9.5 22 20 10.4h-6.7L13.5 2Z" fill="currentColor" />
-            </svg>
-          </span>
-          <div className="text-[13px] leading-tight">
-            <p className="font-semibold text-cloud">Boost sugerido</p>
-            <p className="mt-0.5 text-slatey">Pausa Mental · 2 min</p>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
   );
 }
