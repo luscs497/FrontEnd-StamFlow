@@ -687,9 +687,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   // de cada faixa (não repete a cada loop). Resetada em loadAndPlayTrack.
   let conquistaRegistrada = false;
 
+  // Conta tentativas de renovação da URL assinada para a faixa atual. Zerada
+  // a cada nova faixa; limitada no listener de "error" abaixo para não
+  // martelar /audio/sign quando o erro não é expiração (ex.: arquivo
+  // ausente, CSP bloqueando) e a renovação nunca vai resolver.
+  let tentativasRenovacao = 0;
+
   async function loadAndPlayTrack(track) {
     currentTrack = track;
     conquistaRegistrada = false; // reseta para nova faixa poder registrar conquista
+    tentativasRenovacao = 0;
     stopAudio({ resetTime: true });
 
     try {
@@ -722,6 +729,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         setPlayIcon(false);
         return;
       }
+      if (tentativasRenovacao >= 1) {
+        // Já tentamos renovar uma vez para esta faixa; se falhou de novo não
+        // é expiração — é um erro persistente. Desiste para não martelar o
+        // endpoint de assinatura.
+        console.error("Erro persistente ao carregar áudio; desistindo da renovação automática.");
+        setPlayIcon(false);
+        return;
+      }
+      tentativasRenovacao++;
 
       const posicao = audioEl.currentTime;
       urlAssinadaCache.delete(currentTrack.dados.audioPath);
