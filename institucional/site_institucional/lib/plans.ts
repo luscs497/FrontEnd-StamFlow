@@ -55,7 +55,7 @@ const AVULSO_PLAN: Plan = {
   id: "avulso",
   name: "StamFlow Individual",
   tagline:
-    "Acesso completo a tudo que o StamFlow oferece — do acompanhamento ao vivo aos relatórios de evolução.",
+    "Acesso completo a tudo que o StamFlow oferece, do acompanhamento ao vivo aos relatórios de evolução.",
   features: [
     "Checkup de postura e energia em tempo real pela webcam",
     "Alertas de pausas, exercícios e conquistas",

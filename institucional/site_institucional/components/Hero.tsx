@@ -30,8 +30,8 @@ export function Hero() {
             className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slatey sm:text-xl"
           >
             Tenha um parceiro leal de produtividade, que te acompanha durante toda sua jornada,
-            prevenindo a exaustão antes que ela aconteça e protegendo seu foco nas tarefas.{" "}
-            <span className="text-cloud">Nenhuma imagem sai do seu computador.</span>
+            prevenindo a exaustão antes que ela aconteça e{" "}
+            <span className="text-cloud">protegendo seu foco nas tarefas</span>.
           </motion.p>
 
           {/* Guia visual B2C: hero sem botões — o CTA fica no header e nas seções. */}

@@ -912,7 +912,7 @@ function EmpresasFinalCTA({ onCta }: { onCta: () => void }) {
                 Assistir demo do sistema
               </button>
               <a href={LOGIN_URL} className="btn-ghost px-8 py-4 text-base">
-                Já sou cliente — entrar
+                Já sou cliente
               </a>
             </div>
           </div>

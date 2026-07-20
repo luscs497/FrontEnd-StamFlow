@@ -20,7 +20,7 @@ export function Privacy() {
               </h2>
               <p className="mt-5 text-xl leading-relaxed text-slatey">
                 A leitura de postura e de expressão acontece inteiramente no seu navegador. Nenhum quadro de
-                vídeo, nenhuma foto, nenhuma imagem ou dado é enviada para servidor algum — nem mesmo para o nosso.
+                vídeo, nenhuma foto, nenhuma imagem ou dado é enviada para servidor algum (nem mesmo para o nosso).
               </p>
               <ul className="mt-8 space-y-3.5">
                 {[
@@ -38,6 +38,10 @@ export function Privacy() {
                   </li>
                 ))}
               </ul>
+              {/* Doc de copy B2C: "Botão: Escolher meu Plano (scroll para cima)". */}
+              <a href="/#planos" className="btn-primary mt-8 inline-flex px-7 py-3.5 text-base">
+                Escolher meu Plano
+              </a>
             </Reveal>
 
             {/* Lado do diagrama: o limite do dispositivo */}

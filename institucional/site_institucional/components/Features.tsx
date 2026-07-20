@@ -19,7 +19,7 @@ export function Features() {
                 Os 4 Boosts de <span className="text-raio">saúde e alta performance</span>.
               </>
             }
-            description="Um ecossistema completo de potencialização da sua saúde e produtividade, pronto quando a energia pedir uma pausa de verdade."
+            description="Um ecossistema completo de potencialização da sua saúde e produtividade."
           />
         </Reveal>
 

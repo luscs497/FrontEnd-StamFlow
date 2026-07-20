@@ -52,7 +52,7 @@ export function Plans() {
                 Escolha o plano e o período de <span className="text-raio">aumento de performance</span> que deseja.
               </>
             }
-            description="Acesso imediato a tudo que o StamFlow oferece. Cancele quando quiser — 7 dias de garantia, com reembolso, em qualquer plano."
+            description="Acesso imediato a tudo que o StamFlow oferece. 7 dias de garantia (reembolso garantido), em qualquer plano."
           />
         </Reveal>
 

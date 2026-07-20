@@ -7,21 +7,21 @@ import { fadeUp } from "@/lib/motion";
 const STEPS = [
   {
     n: "01",
-    title: "Protege",
-    body: "O Checkup Scan analisa em tempo real, via webcam, sua ergonomia e biomecânica — com processamento local, 100% de privacidade e segurança.",
-    detail: ["Checkup Scan", "Ergonomia", "Tempo real"],
+    title: "Protege (Checkup Scan)",
+    body: "Analisa em tempo real via webcam (processamento local, com 100% de privacidade e segurança) sua ergonomia e biomecânica.",
+    detail: ["Ergonomia", "Tempo real"],
   },
   {
     n: "02",
-    title: "Engaja",
-    body: "A Barra de Stamina gamefica seu bem-estar e energia produtiva, de forma simples. O sistema entende, em segundos, quando você precisa de uma recarga.",
-    detail: ["Barra de Stamina", "Energia", "Bem-estar"],
+    title: "Engaja (Barra de Stamina)",
+    body: "Gamefica seu bem-estar e energia produtiva, de forma simples. O sistema entende em segundos, quando precisa de uma recarga.",
+    detail: ["Energia", "Bem-estar"],
   },
   {
     n: "03",
-    title: "Intervém",
-    body: "Antes da dor ou da fadiga surgirem, o StamFlow sugere breves pausas estratégicas que recarregam sua energia física e emocional.",
-    detail: ["Pausas", "Recarga", "Prevenção"],
+    title: "Intervém (Boosts de Energia)",
+    body: "Antes da dor ou fadiga surgirem, StamFlow te sugere breves pausas estratégicas que recarregam sua energia física e emocional.",
+    detail: ["Pausas", "Prevenção"],
   },
 ];
 
@@ -37,7 +37,7 @@ export function HowItWorks() {
                 O seu <span className="text-raio">guardião de performance</span> em tempo real.
               </>
             }
-            description="O StamFlow é um sistema inovador de monitoramento preventivo — uma inteligência ativa de biofeedback que cuida de você enquanto você trabalha."
+            description="StamFlow é um sistema inovador de monitoramento preventivo. Uma inteligência ativa de biofeedback que cuida de você enquanto você trabalha."
           />
         </Reveal>
 

@@ -72,6 +72,13 @@ export function FAQ() {
             );
           })}
         </Reveal>
+
+        {/* Doc de copy B2C: "Botão: Escolher meu Plano (scroll para cima)". */}
+        <div className="mt-10 text-center">
+          <a href="/#planos" className="btn-primary inline-flex px-7 py-3.5 text-base">
+            Escolher meu Plano
+          </a>
+        </div>
       </div>
     </section>
   );
