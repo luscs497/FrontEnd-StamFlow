@@ -63,6 +63,13 @@ export function CheckoutContent() {
   // para que um retry da mesma tentativa não gere cobrança duplicada.
   const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
 
+  // SDK do Mercado Pago
+  const mpRef = useRef<any>(null);
+  const fieldsRef = useRef<any[]>([]);
+  const [mpReady, setMpReady] = useState(false);
+
+  const logged = !!profile || authStep === "done";
+
   function resetPayment() {
     setPayError(null);
     setIdempotencyKey(crypto.randomUUID());
@@ -89,6 +96,70 @@ export function CheckoutContent() {
 
   // Limpa o intervalo do cooldown ao desmontar
   useEffect(() => () => { if (cooldownRef.current) clearInterval(cooldownRef.current); }, []);
+
+  /**
+   * Inicializa o SDK e monta os Secure Fields — só depois do login, que é
+   * quando os containers `#mp-*` passam a existir no DOM. O `mount()` exige o
+   * elemento já renderizado, então os containers não podem depender de mpReady.
+   */
+  useEffect(() => {
+    if (!logged) return;
+
+    let cancelled = false;
+    let poll: ReturnType<typeof setInterval> | null = null;
+
+    function unmountFields() {
+      for (const field of fieldsRef.current) {
+        try { field.unmount(); } catch { /* já desmontado pelo SDK */ }
+      }
+      fieldsRef.current = [];
+    }
+
+    async function initMP() {
+      try {
+        const res = await fetch(`${API_BASE}/subscription/config`);
+        if (!res.ok) throw new Error("Não foi possível carregar o checkout.");
+        const { mp_public_key } = await res.json();
+        if (cancelled) return;
+
+        mpRef.current = new (window as any).MercadoPago(mp_public_key, { locale: "pt-BR" });
+
+        fieldsRef.current = [
+          mpRef.current.fields.create("cardNumber", { placeholder: "Número do cartão" }).mount("mp-card-number"),
+          mpRef.current.fields.create("expirationDate", { placeholder: "MM/AA" }).mount("mp-expiration-date"),
+          mpRef.current.fields.create("securityCode", { placeholder: "CVV" }).mount("mp-security-code"),
+        ];
+
+        // O efeito pode ter sido limpo enquanto os fields eram criados; nesse
+        // caso o cleanup já rodou e não veria estes fields.
+        if (cancelled) { unmountFields(); return; }
+        setMpReady(true);
+      } catch (e) {
+        if (cancelled) return;
+        setPayError(e instanceof Error ? e.message : "Erro ao carregar o checkout.");
+      }
+    }
+
+    if ((window as any).MercadoPago) {
+      initMP();
+    } else {
+      poll = setInterval(() => {
+        if ((window as any).MercadoPago) {
+          clearInterval(poll!);
+          poll = null;
+          initMP();
+        }
+      }, 100);
+    }
+
+    return () => {
+      cancelled = true;
+      if (poll) clearInterval(poll);
+      unmountFields();
+      mpRef.current = null;
+      setMpReady(false);
+    };
+  }, [logged]);
 
   function startCooldown(seconds = 60) {
     setResendCooldown(seconds);
@@ -237,7 +308,6 @@ export function CheckoutContent() {
   }
 
   const price = priceFor(period);
-  const logged = !!profile || authStep === "done";
 
   return (
     <main className="relative overflow-hidden pb-28 pt-32 sm:pt-40">
