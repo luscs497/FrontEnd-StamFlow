@@ -25,6 +25,32 @@ type AuthTab = "entrar" | "criar";
 // "idle" = formulário | "awaiting_code" = input do código | "done" = logado
 type AuthStep = "idle" | "awaiting_code" | "done";
 
+/**
+ * Estilo do texto dentro dos iframes dos Secure Fields. Os valores precisam ser
+ * literais: o conteúdo é servido por mercadopago.com e não enxerga as CSS vars,
+ * os tokens do Tailwind nem a webfont da página. Os hex espelham text-cloud
+ * (#f8fafc) e text-muted (#64748b), que são os mesmos do componente Field.
+ */
+const MP_FIELD_STYLE = {
+  color: "#f8fafc",
+  "placeholder-color": "#64748b",
+  "font-size": "15px",
+  "font-family": "Inter, system-ui, sans-serif",
+};
+
+/**
+ * Classe única dos três containers. A altura do iframe é fixada aqui porque o
+ * SDK o injeta com height="100%" e, sem altura definida no container, ele cai
+ * no default de 150px de elemento substituído. Fixa também deixa a caixa
+ * estável enquanto o usuário digita.
+ *
+ * A altura vai em px, e não em rem: o texto dentro do iframe tem tamanho fixo
+ * (MP_FIELD_STYLE), então uma altura em rem encolheria abaixo dele se o root
+ * font-size mudasse — e aqui ele já é 20px, não 16px.
+ */
+const MP_FIELD_CLASS =
+  "w-full min-h-[48px] rounded-field border border-hairline bg-surface/60 px-4 py-3 text-[15px] text-cloud [&>iframe]:block [&>iframe]:h-[22px]";
+
 function getCookie(name: string): string {
   const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
   return match ? decodeURIComponent(match[1]) : "";
@@ -130,9 +156,15 @@ export function CheckoutContent() {
         mpRef.current = new (window as any).MercadoPago(mp_public_key, { locale: "pt-BR" });
 
         fieldsRef.current = [
-          mpRef.current.fields.create("cardNumber", { placeholder: "Número do cartão" }).mount("mp-card-number"),
-          mpRef.current.fields.create("expirationDate", { placeholder: "MM/AA" }).mount("mp-expiration-date"),
-          mpRef.current.fields.create("securityCode", { placeholder: "CVV" }).mount("mp-security-code"),
+          mpRef.current.fields
+            .create("cardNumber", { placeholder: "Número do cartão", style: MP_FIELD_STYLE })
+            .mount("mp-card-number"),
+          mpRef.current.fields
+            .create("expirationDate", { placeholder: "MM/AA", style: MP_FIELD_STYLE })
+            .mount("mp-expiration-date"),
+          mpRef.current.fields
+            .create("securityCode", { placeholder: "CVV", style: MP_FIELD_STYLE })
+            .mount("mp-security-code"),
         ];
 
         // O efeito pode ter sido limpo enquanto os fields eram criados; nesse
@@ -570,11 +602,7 @@ export function CheckoutContent() {
                       <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
                         Número do cartão
                       </span>
-                      <div
-                        id="mp-card-number"
-                        className="w-full rounded-field border border-hairline bg-surface/60 px-4 py-3 text-[15px] text-cloud"
-                        style={{ minHeight: "48px" }}
-                      />
+                      <div id="mp-card-number" className={MP_FIELD_CLASS} />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -582,21 +610,13 @@ export function CheckoutContent() {
                         <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
                           Validade
                         </span>
-                        <div
-                          id="mp-expiration-date"
-                          className="w-full rounded-field border border-hairline bg-surface/60 px-4 py-3 text-[15px] text-cloud"
-                          style={{ minHeight: "48px" }}
-                        />
+                        <div id="mp-expiration-date" className={MP_FIELD_CLASS} />
                       </div>
                       <div>
                         <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
                           CVV
                         </span>
-                        <div
-                          id="mp-security-code"
-                          className="w-full rounded-field border border-hairline bg-surface/60 px-4 py-3 text-[15px] text-cloud"
-                          style={{ minHeight: "48px" }}
-                        />
+                        <div id="mp-security-code" className={MP_FIELD_CLASS} />
                       </div>
                     </div>
 
