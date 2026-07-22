@@ -15,7 +15,7 @@ import { formatBRL, priceFor } from "@/lib/plans";
  *   2. Backend cria a conta, gera código 6 dígitos (hash), envia por e-mail.
  *   3. Tela vira: input de 6 dígitos + botão "Verificar".
  *   4. Código correto → email_verificado=true → faz login automático.
- *   5. Botão "Ir para o pagamento" é liberado.
+ *   5. Formulário de cartão (Secure Fields do Mercado Pago) é liberado.
  *
  * Fluxo "Já tenho conta": login direto, sem etapa de código.
  */
@@ -547,34 +547,124 @@ export function CheckoutContent() {
               </div>
             </div>
 
-            {payError && <div className="mt-4"><Alert tone="error">{payError}</Alert></div>}
+            {logged && (
+              <div className="mt-7">
+                <h2 className="font-display text-xl font-bold text-cloud">3. Dados do cartão</h2>
 
-            <button
-              type="button" onClick={handlePay}
-              disabled={!logged || payBusy || checkingSession || authStep === "awaiting_code"}
-              className="btn-primary mt-5 w-full py-4 text-base disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {payBusy ? "Abrindo pagamento seguro..." : "Ir para o pagamento"}
-            </button>
+                {/* Os containers dos Secure Fields precisam existir no DOM antes
+                    do mount() do SDK, então ficam sempre montados aqui; o
+                    skeleton apenas os cobre enquanto o SDK não está pronto. */}
+                <div className="relative mt-4">
+                  {!mpReady && (
+                    <div
+                      className="absolute inset-0 z-10 animate-pulse rounded-2xl bg-white/5"
+                      aria-hidden="true"
+                    />
+                  )}
+
+                  <div
+                    className={`grid gap-4 transition-opacity duration-200 ${mpReady ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                    aria-hidden={!mpReady}
+                  >
+                    <div>
+                      <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
+                        Número do cartão
+                      </span>
+                      <div
+                        id="mp-card-number"
+                        className="w-full rounded-field border border-hairline bg-surface/60 px-4 py-3 text-[15px] text-cloud"
+                        style={{ minHeight: "48px" }}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
+                          Validade
+                        </span>
+                        <div
+                          id="mp-expiration-date"
+                          className="w-full rounded-field border border-hairline bg-surface/60 px-4 py-3 text-[15px] text-cloud"
+                          style={{ minHeight: "48px" }}
+                        />
+                      </div>
+                      <div>
+                        <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
+                          CVV
+                        </span>
+                        <div
+                          id="mp-security-code"
+                          className="w-full rounded-field border border-hairline bg-surface/60 px-4 py-3 text-[15px] text-cloud"
+                          style={{ minHeight: "48px" }}
+                        />
+                      </div>
+                    </div>
+
+                    <Field
+                      label="Nome impresso no cartão"
+                      value={cardHolder}
+                      onChange={setCardHolder}
+                      autoComplete="cc-name"
+                      placeholder="Exatamente como no cartão"
+                    />
+
+                    <div className="grid grid-cols-[auto_1fr] items-end gap-3">
+                      <div>
+                        <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
+                          Tipo
+                        </span>
+                        <select
+                          value={cardDocType}
+                          onChange={(e) => setCardDocType(e.target.value)}
+                          className="rounded-field border border-hairline bg-surface/60 px-3 py-3 text-[15px] text-cloud focus:border-raio/60 focus:outline-none focus:ring-2 focus:ring-raio/25"
+                        >
+                          <option value="CPF">CPF</option>
+                          <option value="CNPJ">CNPJ</option>
+                        </select>
+                      </div>
+                      <Field
+                        label="Documento do titular"
+                        value={cardDoc}
+                        onChange={setCardDoc}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        placeholder={cardDocType === "CPF" ? "000.000.000-00" : "00.000.000/0001-00"}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {payError && <div className="mt-4"><Alert tone="error">{payError}</Alert></div>}
+
+                <button
+                  type="button"
+                  onClick={handlePay}
+                  disabled={!mpReady || payBusy || !cardHolder.trim() || !cardDoc.trim()}
+                  className="btn-primary mt-5 w-full py-4 text-base disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {payBusy ? "Processando pagamento..." : `Pagar ${formatBRL(price.total)}`}
+                </button>
+
+                <p className="mt-4 flex items-center justify-center gap-2 text-[13px] text-muted">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="5" y="10.5" width="14" height="9.5" rx="2" stroke="currentColor" strokeWidth="1.6" />
+                    <path d="M8 10.5V7.5a4 4 0 018 0v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
+                  Dados do cartão tokenizados pelo Mercado Pago · nunca tocam nosso servidor
+                </p>
+              </div>
+            )}
 
             {!logged && !checkingSession && authStep !== "awaiting_code" && (
-              <p className="mt-3 text-center text-[13px] text-muted">
+              <p className="mt-6 text-center text-[13px] text-muted">
                 Identifique-se ao lado para liberar o pagamento.
               </p>
             )}
             {authStep === "awaiting_code" && (
-              <p className="mt-3 text-center text-[13px] text-muted">
+              <p className="mt-6 text-center text-[13px] text-muted">
                 Verifique o e-mail ao lado para liberar o pagamento.
               </p>
             )}
-
-            <p className="mt-4 flex items-center justify-center gap-2 text-[13px] text-muted">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <rect x="5" y="10.5" width="14" height="9.5" rx="2" stroke="currentColor" strokeWidth="1.6" />
-                <path d="M8 10.5V7.5a4 4 0 018 0v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
-              Pagamento processado pelo Mercado Pago · cartão de crédito
-            </p>
           </motion.aside>
         </div>
       </div>
