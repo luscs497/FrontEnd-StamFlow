@@ -59,6 +59,14 @@ export function CheckoutContent() {
   // Pagamento
   const [payBusy, setPayBusy] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
+  // Uma chave por tentativa: gerada no mount e renovada a cada nova tentativa,
+  // para que um retry da mesma tentativa não gere cobrança duplicada.
+  const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
+
+  function resetPayment() {
+    setPayError(null);
+    setIdempotencyKey(crypto.randomUUID());
+  }
 
   const fetchProfile = useCallback(async () => {
     try {
