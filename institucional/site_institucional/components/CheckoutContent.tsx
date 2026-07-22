@@ -68,6 +68,11 @@ export function CheckoutContent() {
   const fieldsRef = useRef<any[]>([]);
   const [mpReady, setMpReady] = useState(false);
 
+  // Dados do cartão que não passam pelos Secure Fields
+  const [cardHolder, setCardHolder] = useState("");
+  const [cardDoc, setCardDoc] = useState("");
+  const [cardDocType, setCardDocType] = useState("CPF");
+
   const logged = !!profile || authStep === "done";
 
   function resetPayment() {
@@ -267,26 +272,74 @@ export function CheckoutContent() {
   }
 
   async function handlePay() {
-    if (!period) return;
+    if (!period || !mpReady) return;
     setPayError(null);
     setPayBusy(true);
     try {
+      // 1. Tokeniza o cartão no próprio Mercado Pago — os dados digitados nos
+      //    Secure Fields nunca chegam ao nosso servidor.
+      let token: any;
+      try {
+        token = await mpRef.current.fields.createCardToken({
+          cardholderName: cardHolder.trim(),
+          identificationType: cardDocType,
+          identificationNumber: cardDoc.replace(/\D/g, ""),
+        });
+      } catch (e: any) {
+        // O SDK rejeita com objeto simples, não com Error.
+        const msg =
+          e?.message ||
+          e?.cause?.[0]?.description ||
+          "Dados do cartão inválidos.";
+        throw new Error(msg);
+      }
+
+      if (!token?.id) throw new Error("Não foi possível tokenizar o cartão.");
+
+      // 2. Cobrança, já com o token de uso único.
       const res = await fetch(`${API_BASE}/subscription/checkout/subscribe`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-CSRF-Token": getCookie("csrf_token"),
         },
-        body: JSON.stringify({ plan_id: period.backendPlanId }),
+        body: JSON.stringify({
+          plan_id: period.backendPlanId,
+          card_token_id: token.id,
+          idempotency_key: idempotencyKey,
+          managers_quantity: 0,
+          employees_quantity: 0,
+        }),
         credentials: "include",
       });
+
       const data = await res.json().catch(() => null);
-      const url = data?.checkout_url || data?.url;
-      if (url) { clearCart(); window.location.href = url; return; }
-      if (res.status === 401) { setProfile(null); throw new Error("Sessão expirada. Entre novamente."); }
-      throw new Error(data?.detail || data?.message || "Não foi possível iniciar o pagamento.");
+
+      if (res.ok) {
+        clearCart();
+        window.location.href = "/pagamento-concluido/";
+        return;
+      }
+
+      if (res.status === 401) {
+        setProfile(null);
+        throw new Error("Sessão expirada. Entre novamente.");
+      }
+
+      // Cartão recusado: o detail vem como { message, status_detail }.
+      if (res.status === 400 && data?.detail && typeof data.detail === "object") {
+        throw new Error(data.detail.message || "Pagamento recusado pela operadora.");
+      }
+
+      throw new Error(
+        typeof data?.detail === "string"
+          ? data.detail
+          : data?.message || "Não foi possível processar o pagamento.",
+      );
     } catch (e) {
       setPayError(e instanceof Error ? e.message : "Algo deu errado. Tente de novo.");
+      // Tentativa nova = chave nova; o token anterior também já foi queimado.
+      setIdempotencyKey(crypto.randomUUID());
     } finally {
       setPayBusy(false);
     }
