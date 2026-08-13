@@ -53,10 +53,7 @@ interface CartApi {
   dismissNotice: () => void;
 }
 
-// Exportado para permitir um provider aninhado que sobrescreve o carrinho em
-// rotas específicas (ex.: /checkout-teste injeta um plano fixo). O provider raiz
-// em layout.tsx segue sendo a fonte do carrinho real em todo o resto do site.
-export const CartContext = createContext<CartApi | null>(null);
+const CartContext = createContext<CartApi | null>(null);
 
 export function useCart(): CartApi {
   const ctx = useContext(CartContext);

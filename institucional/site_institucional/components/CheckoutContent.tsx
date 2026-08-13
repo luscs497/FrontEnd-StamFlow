@@ -15,7 +15,7 @@ import { formatBRL, priceFor } from "@/lib/plans";
  *   2. Backend cria a conta, gera código 6 dígitos (hash), envia por e-mail.
  *   3. Tela vira: input de 6 dígitos + botão "Verificar".
  *   4. Código correto → email_verificado=true → faz login automático.
- *   5. Formulário de cartão (Secure Fields do Mercado Pago) é liberado.
+ *   5. Botão "Ir para o pagamento" é liberado.
  *
  * Fluxo "Já tenho conta": login direto, sem etapa de código.
  */
@@ -24,32 +24,6 @@ type Profile = { nome?: string; email?: string } | null;
 type AuthTab = "entrar" | "criar";
 // "idle" = formulário | "awaiting_code" = input do código | "done" = logado
 type AuthStep = "idle" | "awaiting_code" | "done";
-
-/**
- * Estilo do texto dentro dos iframes dos Secure Fields. Os valores precisam ser
- * literais: o conteúdo é servido por mercadopago.com e não enxerga as CSS vars,
- * os tokens do Tailwind nem a webfont da página. Os hex espelham text-cloud
- * (#f8fafc) e text-muted (#64748b), que são os mesmos do componente Field.
- */
-const MP_FIELD_STYLE = {
-  color: "#f8fafc",
-  "placeholder-color": "#64748b",
-  "font-size": "15px",
-  "font-family": "Inter, system-ui, sans-serif",
-};
-
-/**
- * Classe única dos três containers. A altura do iframe é fixada aqui porque o
- * SDK o injeta com height="100%" e, sem altura definida no container, ele cai
- * no default de 150px de elemento substituído. Fixa também deixa a caixa
- * estável enquanto o usuário digita.
- *
- * A altura vai em px, e não em rem: o texto dentro do iframe tem tamanho fixo
- * (MP_FIELD_STYLE), então uma altura em rem encolheria abaixo dele se o root
- * font-size mudasse — e aqui ele já é 20px, não 16px.
- */
-const MP_FIELD_CLASS =
-  "w-full min-h-[48px] rounded-field border border-hairline bg-surface/60 px-4 py-3 text-[15px] text-cloud [&>iframe]:block [&>iframe]:h-[22px]";
 
 function getCookie(name: string): string {
   const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
@@ -85,26 +59,6 @@ export function CheckoutContent() {
   // Pagamento
   const [payBusy, setPayBusy] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
-  // Uma chave por tentativa: gerada no mount e renovada a cada nova tentativa,
-  // para que um retry da mesma tentativa não gere cobrança duplicada.
-  const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
-
-  // SDK do Mercado Pago
-  const mpRef = useRef<any>(null);
-  const fieldsRef = useRef<any[]>([]);
-  const [mpReady, setMpReady] = useState(false);
-
-  // Dados do cartão que não passam pelos Secure Fields
-  const [cardHolder, setCardHolder] = useState("");
-  const [cardDoc, setCardDoc] = useState("");
-  const [cardDocType, setCardDocType] = useState("CPF");
-
-  const logged = !!profile || authStep === "done";
-
-  function resetPayment() {
-    setPayError(null);
-    setIdempotencyKey(crypto.randomUUID());
-  }
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -127,76 +81,6 @@ export function CheckoutContent() {
 
   // Limpa o intervalo do cooldown ao desmontar
   useEffect(() => () => { if (cooldownRef.current) clearInterval(cooldownRef.current); }, []);
-
-  /**
-   * Inicializa o SDK e monta os Secure Fields — só depois do login, que é
-   * quando os containers `#mp-*` passam a existir no DOM. O `mount()` exige o
-   * elemento já renderizado, então os containers não podem depender de mpReady.
-   */
-  useEffect(() => {
-    if (!logged) return;
-
-    let cancelled = false;
-    let poll: ReturnType<typeof setInterval> | null = null;
-
-    function unmountFields() {
-      for (const field of fieldsRef.current) {
-        try { field.unmount(); } catch { /* já desmontado pelo SDK */ }
-      }
-      fieldsRef.current = [];
-    }
-
-    async function initMP() {
-      try {
-        const res = await fetch(`${API_BASE}/subscription/config`);
-        if (!res.ok) throw new Error("Não foi possível carregar o checkout.");
-        const { mp_public_key } = await res.json();
-        if (cancelled) return;
-
-        mpRef.current = new (window as any).MercadoPago(mp_public_key, { locale: "pt-BR" });
-
-        fieldsRef.current = [
-          mpRef.current.fields
-            .create("cardNumber", { placeholder: "Número do cartão", style: MP_FIELD_STYLE })
-            .mount("mp-card-number"),
-          mpRef.current.fields
-            .create("expirationDate", { placeholder: "MM/AA", style: MP_FIELD_STYLE })
-            .mount("mp-expiration-date"),
-          mpRef.current.fields
-            .create("securityCode", { placeholder: "CVV", style: MP_FIELD_STYLE })
-            .mount("mp-security-code"),
-        ];
-
-        // O efeito pode ter sido limpo enquanto os fields eram criados; nesse
-        // caso o cleanup já rodou e não veria estes fields.
-        if (cancelled) { unmountFields(); return; }
-        setMpReady(true);
-      } catch (e) {
-        if (cancelled) return;
-        setPayError(e instanceof Error ? e.message : "Erro ao carregar o checkout.");
-      }
-    }
-
-    if ((window as any).MercadoPago) {
-      initMP();
-    } else {
-      poll = setInterval(() => {
-        if ((window as any).MercadoPago) {
-          clearInterval(poll!);
-          poll = null;
-          initMP();
-        }
-      }, 100);
-    }
-
-    return () => {
-      cancelled = true;
-      if (poll) clearInterval(poll);
-      unmountFields();
-      mpRef.current = null;
-      setMpReady(false);
-    };
-  }, [logged]);
 
   function startCooldown(seconds = 60) {
     setResendCooldown(seconds);
@@ -304,74 +188,26 @@ export function CheckoutContent() {
   }
 
   async function handlePay() {
-    if (!period || !mpReady) return;
+    if (!period) return;
     setPayError(null);
     setPayBusy(true);
     try {
-      // 1. Tokeniza o cartão no próprio Mercado Pago — os dados digitados nos
-      //    Secure Fields nunca chegam ao nosso servidor.
-      let token: any;
-      try {
-        token = await mpRef.current.fields.createCardToken({
-          cardholderName: cardHolder.trim(),
-          identificationType: cardDocType,
-          identificationNumber: cardDoc.replace(/\D/g, ""),
-        });
-      } catch (e: any) {
-        // O SDK rejeita com objeto simples, não com Error.
-        const msg =
-          e?.message ||
-          e?.cause?.[0]?.description ||
-          "Dados do cartão inválidos.";
-        throw new Error(msg);
-      }
-
-      if (!token?.id) throw new Error("Não foi possível tokenizar o cartão.");
-
-      // 2. Cobrança, já com o token de uso único.
       const res = await fetch(`${API_BASE}/subscription/checkout/subscribe`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-CSRF-Token": getCookie("csrf_token"),
         },
-        body: JSON.stringify({
-          plan_id: period.backendPlanId,
-          card_token_id: token.id,
-          idempotency_key: idempotencyKey,
-          managers_quantity: 0,
-          employees_quantity: 0,
-        }),
+        body: JSON.stringify({ plan_id: period.backendPlanId }),
         credentials: "include",
       });
-
       const data = await res.json().catch(() => null);
-
-      if (res.ok) {
-        clearCart();
-        window.location.href = "/pagamento-concluido/";
-        return;
-      }
-
-      if (res.status === 401) {
-        setProfile(null);
-        throw new Error("Sessão expirada. Entre novamente.");
-      }
-
-      // Cartão recusado: o detail vem como { message, status_detail }.
-      if (res.status === 400 && data?.detail && typeof data.detail === "object") {
-        throw new Error(data.detail.message || "Pagamento recusado pela operadora.");
-      }
-
-      throw new Error(
-        typeof data?.detail === "string"
-          ? data.detail
-          : data?.message || "Não foi possível processar o pagamento.",
-      );
+      const url = data?.checkout_url || data?.url;
+      if (url) { clearCart(); window.location.href = url; return; }
+      if (res.status === 401) { setProfile(null); throw new Error("Sessão expirada. Entre novamente."); }
+      throw new Error(data?.detail || data?.message || "Não foi possível iniciar o pagamento.");
     } catch (e) {
       setPayError(e instanceof Error ? e.message : "Algo deu errado. Tente de novo.");
-      // Tentativa nova = chave nova; o token anterior também já foi queimado.
-      setIdempotencyKey(crypto.randomUUID());
     } finally {
       setPayBusy(false);
     }
@@ -393,6 +229,7 @@ export function CheckoutContent() {
   }
 
   const price = priceFor(period);
+  const logged = !!profile || authStep === "done";
 
   return (
     <main className="relative overflow-hidden pb-28 pt-32 sm:pt-40">
@@ -579,112 +416,34 @@ export function CheckoutContent() {
               </div>
             </div>
 
-            {logged && (
-              <div className="mt-7">
-                <h2 className="font-display text-xl font-bold text-cloud">3. Dados do cartão</h2>
+            {payError && <div className="mt-4"><Alert tone="error">{payError}</Alert></div>}
 
-                {/* Os containers dos Secure Fields precisam existir no DOM antes
-                    do mount() do SDK, então ficam sempre montados aqui; o
-                    skeleton apenas os cobre enquanto o SDK não está pronto. */}
-                <div className="relative mt-4">
-                  {!mpReady && (
-                    <div
-                      className="absolute inset-0 z-10 animate-pulse rounded-2xl bg-white/5"
-                      aria-hidden="true"
-                    />
-                  )}
-
-                  <div
-                    className={`grid gap-4 transition-opacity duration-200 ${mpReady ? "opacity-100" : "pointer-events-none opacity-0"}`}
-                    aria-hidden={!mpReady}
-                  >
-                    <div>
-                      <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
-                        Número do cartão
-                      </span>
-                      <div id="mp-card-number" className={MP_FIELD_CLASS} />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
-                          Validade
-                        </span>
-                        <div id="mp-expiration-date" className={MP_FIELD_CLASS} />
-                      </div>
-                      <div>
-                        <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
-                          CVV
-                        </span>
-                        <div id="mp-security-code" className={MP_FIELD_CLASS} />
-                      </div>
-                    </div>
-
-                    <Field
-                      label="Nome impresso no cartão"
-                      value={cardHolder}
-                      onChange={setCardHolder}
-                      autoComplete="cc-name"
-                      placeholder="Exatamente como no cartão"
-                    />
-
-                    <div className="grid grid-cols-[auto_1fr] items-end gap-3">
-                      <div>
-                        <span className="mb-1.5 block text-[13.5px] font-medium text-slatey">
-                          Tipo
-                        </span>
-                        <select
-                          value={cardDocType}
-                          onChange={(e) => setCardDocType(e.target.value)}
-                          className="rounded-field border border-hairline bg-surface/60 px-3 py-3 text-[15px] text-cloud focus:border-raio/60 focus:outline-none focus:ring-2 focus:ring-raio/25"
-                        >
-                          <option value="CPF">CPF</option>
-                          <option value="CNPJ">CNPJ</option>
-                        </select>
-                      </div>
-                      <Field
-                        label="Documento do titular"
-                        value={cardDoc}
-                        onChange={setCardDoc}
-                        inputMode="numeric"
-                        autoComplete="off"
-                        placeholder={cardDocType === "CPF" ? "000.000.000-00" : "00.000.000/0001-00"}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {payError && <div className="mt-4"><Alert tone="error">{payError}</Alert></div>}
-
-                <button
-                  type="button"
-                  onClick={handlePay}
-                  disabled={!mpReady || payBusy || !cardHolder.trim() || !cardDoc.trim()}
-                  className="btn-primary mt-5 w-full py-4 text-base disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {payBusy ? "Processando pagamento..." : `Pagar ${formatBRL(price.total)}`}
-                </button>
-
-                <p className="mt-4 flex items-center justify-center gap-2 text-[13px] text-muted">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <rect x="5" y="10.5" width="14" height="9.5" rx="2" stroke="currentColor" strokeWidth="1.6" />
-                    <path d="M8 10.5V7.5a4 4 0 018 0v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  </svg>
-                  Dados do cartão tokenizados pelo Mercado Pago · nunca tocam nosso servidor
-                </p>
-              </div>
-            )}
+            <button
+              type="button" onClick={handlePay}
+              disabled={!logged || payBusy || checkingSession || authStep === "awaiting_code"}
+              className="btn-primary mt-5 w-full py-4 text-base disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {payBusy ? "Abrindo pagamento seguro..." : "Ir para o pagamento"}
+            </button>
 
             {!logged && !checkingSession && authStep !== "awaiting_code" && (
-              <p className="mt-6 text-center text-[13px] text-muted">
+              <p className="mt-3 text-center text-[13px] text-muted">
                 Identifique-se ao lado para liberar o pagamento.
               </p>
             )}
             {authStep === "awaiting_code" && (
-              <p className="mt-6 text-center text-[13px] text-muted">
+              <p className="mt-3 text-center text-[13px] text-muted">
                 Verifique o e-mail ao lado para liberar o pagamento.
               </p>
             )}
+
+            <p className="mt-4 flex items-center justify-center gap-2 text-[13px] text-muted">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="5" y="10.5" width="14" height="9.5" rx="2" stroke="currentColor" strokeWidth="1.6" />
+                <path d="M8 10.5V7.5a4 4 0 018 0v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+              Pagamento processado pelo Mercado Pago · cartão de crédito
+            </p>
           </motion.aside>
         </div>
       </div>
