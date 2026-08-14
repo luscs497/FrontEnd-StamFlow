@@ -609,7 +609,7 @@ header {
     /* 12px -> 8px */
     padding-bottom: 9.6px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    /* Garante respiro entre o nome (Excelente/Felicidade/...) e a barra de
+    /* Garante respiro entre o nome (Excelente/Entusiasmo/...) e a barra de
        porcentagem mesmo quando o espaço aperta — sem isso, space-between
        deixa a barra crescer até colar no texto em telas estreitas. */
     gap: 12px;

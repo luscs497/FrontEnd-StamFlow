@@ -190,7 +190,7 @@ header.clicado .perfil {
 }
 
 /* 5) Barras: max-width menor que o desktop para sobrar espaço ao label
-   (Excelente/Felicidade/...) no card mais estreito do mobile — max-width:
+   (Excelente/Entusiasmo/...) no card mais estreito do mobile — max-width:
    none deixava a barra crescer até colar no texto. */
 .barra-porcentagem {
   max-width: 140px;

@@ -217,19 +217,19 @@ export default function PainelGestorPage() {
                             </div>
                             <ul className="especificidades gap-16">
                                 <li className="space-btw">
-                                    <h3>Rotação lateral dos ombros</h3>
+                                    <h3>Rotação lateral</h3>
                                     <p className="classificacao-status" id="status-lombro" dados="dados">------</p>
                                 </li>
                                 <li className="space-btw">
-                                    <h3>Inclinação dos ombros</h3>
+                                    <h3>Alinhamento dos ombros</h3>
                                     <p className="classificacao-status" id="status-iombros" dados="dados">------</p>
                                 </li>
                                 <li className="space-btw">
-                                    <h3>Projeção da cabeça</h3>
+                                    <h3>Inclinação da cabeça</h3>
                                     <p className="classificacao-status" id="status-pcabeca" dados="dados">------</p>
                                 </li>
                                 <li className="space-btw">
-                                <h3>    Inclinação do dorso</h3>
+                                    <h3>Inclinação do tronco</h3>
                                     <p className="classificacao-status" id="status-dorso" dados="dados">------</p>
                                 </li>
                             </ul>
@@ -245,21 +245,21 @@ export default function PainelGestorPage() {
                             </div>
                             <ul className="especificidades gap-16">
                                 <li className="space-btw">
-                                    <h3>😊 Felicidade</h3>
-                                    <div className="barra-porcentagem">
-                                        <div className="barra">
-                                            <div className="barra-preenchida" id="alegria-bar-preenchida" dados="dados"></div>
-                                        </div>
-                                        <p className="porcentagem color-excelente" dados="dados">45%</p>
-                                    </div>
-                                </li>
-                                <li className="space-btw">
                                     <h3>😑 Neutro</h3>
                                     <div className="barra-porcentagem">
                                         <div className="barra">
                                             <div className="barra-preenchida" id="neutro-bar-preenchida" dados="dados"></div>
                                         </div>
                                         <p className="porcentagem color-azul" dados="dados">45%</p>
+                                    </div>
+                                </li>
+                                <li className="space-btw">
+                                    <h3>😊 Entusiasmo</h3>
+                                    <div className="barra-porcentagem">
+                                        <div className="barra">
+                                            <div className="barra-preenchida" id="alegria-bar-preenchida" dados="dados"></div>
+                                        </div>
+                                        <p className="porcentagem color-excelente" dados="dados">45%</p>
                                     </div>
                                 </li>
                                 <li className="space-btw">
@@ -422,19 +422,19 @@ export default function PainelGestorPage() {
                                 </div>
                                 <ul className="especificidades gap-16">
                                     <li className="space-btw">
-                                        <h3>Rotação lateral dos ombros</h3>
+                                        <h3>Rotação lateral</h3>
                                         <p className="classificacao-status" id="status-lombro">------</p>
                                     </li>
                                     <li className="space-btw">
-                                        <h3>Inclinação dos ombros</h3>
+                                        <h3>Alinhamento dos ombros</h3>
                                         <p className="classificacao-status" id="status-iombros">------</p>
                                     </li>
                                     <li className="space-btw">
-                                        <h3>Projeção da cabeça</h3>
+                                        <h3>Inclinação da cabeça</h3>
                                         <p className="classificacao-status" id="status-pcabeca">------</p>
                                     </li>
                                     <li className="space-btw">
-                                        <h3>Inclinação do dorso</h3>
+                                        <h3>Inclinação do tronco</h3>
                                         <p className="classificacao-status" id="status-dorso">------</p>
                                     </li>
                                 </ul>
@@ -451,19 +451,19 @@ export default function PainelGestorPage() {
                                 </div>
                                 <ul className="especificidades gap-16">
                                     <li className="space-btw">
-                                        <h3>Rotação lateral dos ombros</h3>
+                                        <h3>Rotação lateral</h3>
                                         <p className="classificacao-status" id="status-lombro">------</p>
                                     </li>
                                     <li className="space-btw">
-                                        <h3>Inclinação dos ombros</h3>
+                                        <h3>Alinhamento dos ombros</h3>
                                         <p className="classificacao-status" id="status-iombros">------</p>
                                     </li>
                                     <li className="space-btw">
-                                        <h3>Projeção da cabeça</h3>
+                                        <h3>Inclinação da cabeça</h3>
                                         <p className="classificacao-status" id="status-pcabeca">------</p>
                                     </li>
                                     <li className="space-btw">
-                                        <h3>Inclinação do dorso</h3>
+                                        <h3>Inclinação do tronco</h3>
                                         <p className="classificacao-status" id="status-dorso">------</p>
                                     </li>
                                 </ul>
@@ -480,12 +480,12 @@ export default function PainelGestorPage() {
                                 </div>
                                 <ul className="especificidades gap-16">
                                     <li className="space-btw">
-                                        <h3>😊 Felicidade</h3>
-                                        <div className="barra-porcentagem"><div className="barra"><div className="barra-preenchida" id="alegria-bar-preenchida"></div></div><p className="porcentagem color-excelente">0%</p></div>
-                                    </li>
-                                    <li className="space-btw">
                                         <h3>😑 Neutro</h3>
                                         <div className="barra-porcentagem"><div className="barra"><div className="barra-preenchida" id="neutro-bar-preenchida"></div></div><p className="porcentagem color-azul">0%</p></div>
+                                    </li>
+                                    <li className="space-btw">
+                                        <h3>😊 Entusiasmo</h3>
+                                        <div className="barra-porcentagem"><div className="barra"><div className="barra-preenchida" id="alegria-bar-preenchida"></div></div><p className="porcentagem color-excelente">0%</p></div>
                                     </li>
                                     <li className="space-btw">
                                         <h3>😠 Raiva</h3>
@@ -509,12 +509,12 @@ export default function PainelGestorPage() {
                                 </div>
                                 <ul className="especificidades gap-16">
                                     <li className="space-btw">
-                                        <h3>😊 Felicidade</h3>
-                                        <div className="barra-porcentagem"><div className="barra"><div className="barra-preenchida" id="alegria-bar-preenchida"></div></div><p className="porcentagem color-excelente">0%</p></div>
-                                    </li>
-                                    <li className="space-btw">
                                         <h3>😑 Neutro</h3>
                                         <div className="barra-porcentagem"><div className="barra"><div className="barra-preenchida" id="neutro-bar-preenchida"></div></div><p className="porcentagem color-azul">0%</p></div>
+                                    </li>
+                                    <li className="space-btw">
+                                        <h3>😊 Entusiasmo</h3>
+                                        <div className="barra-porcentagem"><div className="barra"><div className="barra-preenchida" id="alegria-bar-preenchida"></div></div><p className="porcentagem color-excelente">0%</p></div>
                                     </li>
                                     <li className="space-btw">
                                         <h3>😠 Raiva</h3>

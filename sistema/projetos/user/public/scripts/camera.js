@@ -546,7 +546,7 @@ function getEmotionLabelForSync(emotionType, val0to1) {
         return 'perfeito';
     }
 
-    // Felicidade (happy): positiva, escala com a intensidade.
+    // Entusiasmo (happy): positiva, escala com a intensidade.
     if (pct <= 25) return 'ruim';
     if (pct <= 50) return 'bom';
     return 'perfeito';
