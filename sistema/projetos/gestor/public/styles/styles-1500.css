@@ -43,7 +43,10 @@ header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
+    /* flex-start + .perfil com margin-top: auto (styles.css): mantém o perfil
+       colado no rodapé sem que ele seja redistribuído quando a navegação passa
+       da altura da tela. */
+    justify-content: flex-start;
     width: 100%;
     max-width: 300px;
     background-color: rgb(31, 29, 43);
@@ -146,7 +149,8 @@ header.nav-mini {
 header.nav-mini .logo {
     width: calc(100% + 1.2rem);
     margin-left: -0.6rem;
-    padding: 0rem 0rem 1rem;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 /* --- Navegação --- */

@@ -52,13 +52,20 @@ header {
     min-height: 100vh;
     max-height: 100vh;
     align-self: flex-start;
-    overflow-y: auto;
+    /*
+      Quem rola é a .nav-bar, não o header. Com `overflow-y: auto` +
+      `justify-content: space-between` aqui, assim que o conteúdo passava da
+      altura do header (menu com sub-lista aberta, tela baixa, zoom) tudo
+      deslizava junto: o logo saía por cima e o perfil subia. Deixando o header
+      sem scroll próprio e ancorando o perfil com `margin-top: auto`, os dois
+      ficam imóveis e só a lista de navegação rola.
+    */
+    overflow-y: clip;
     overflow-x: clip;
-    overscroll-behavior: contain;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 100%;
     /* 400px * 0.67 */
     max-width: 320px;
@@ -80,6 +87,10 @@ header {
     /* 2rem -> 1.34rem */
     gap: 1.6rem;
     width: 100%;
+    /* Ocupa a altura livre entre o topo e o perfil. Quem rola é a .nav-links
+       (abaixo), para que o logo e a seta fiquem ancorados no topo. */
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 .logo {
@@ -170,9 +181,12 @@ header {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    /* 48px -> 32px, mesma escala do .svg-logo */
-    width: 38.4px;
-    height: 38.4px;
+    /* Casa com a altura da imagem do logo (36.8px). Não pode passar disso: como
+       os dois são irmãos no .logo (align-items: center), qualquer pixel a mais
+       estica a linha e muda a altura do cabeçalho — inclusive no estado
+       colapsado, onde só o botão sobra. */
+    width: 36.8px;
+    height: 36.8px;
     padding: 0;
     background-color: transparent;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -212,7 +226,11 @@ header.nav-mini {
 header.nav-mini .logo {
     width: calc(100% + 1.6rem);
     margin-left: -0.8rem;
-    padding: 0rem 0rem 0.96rem;
+    /* Só o padding horizontal zera. O vertical fica com o valor do breakpoint
+       em vigor, para a altura da linha do logo continuar idêntica à original
+       tanto expandida quanto colapsada. */
+    padding-left: 0;
+    padding-right: 0;
     justify-content: center;
     gap: 0;
 }
@@ -298,6 +316,13 @@ header.nav-mini .imagem-usuario {
     flex-direction: column;
     /* 1rem -> 0.67rem */
     gap: 0.8rem;
+    /* Única área rolável do header: com a sub-lista aberta em tela baixa, só a
+       lista desliza — logo, seta e perfil ficam parados. min-height: 0 é o que
+       permite um filho flex encolher abaixo do próprio conteúdo. */
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .nav-item {
@@ -411,6 +436,10 @@ header.nav-mini .imagem-usuario {
 .perfil {
     display: flex;
     width: 100%;
+    /* Ancorado no rodapé do header sem depender de space-between: assim ele não
+       é redistribuído (nem sobe) quando a navegação passa da altura da tela. */
+    margin-top: auto;
+    flex-shrink: 0;
     align-items: center;
     justify-content: flex-start;
     /* 1rem -> 0.67rem */

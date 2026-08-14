@@ -67,6 +67,18 @@ header.nav-mini {
     align-items: stretch;
 }
 
+/* Restaura o .logo aos valores da folha base: sem isso, um navMini salvo no
+   localStorage deixaria a linha do logo centralizada e sem padding lateral
+   também no mobile, mudando a altura/alinhamento do cabeçalho. */
+header.nav-mini .logo {
+    width: calc(100% + 3.2rem);
+    margin-left: -1.6rem;
+    padding-left: 1.44rem;
+    padding-right: 1.6rem;
+    justify-content: flex-start;
+    gap: 0.6rem;
+}
+
 /* --- Estilização Interna do Header --- */
 .logo {
     padding: 0.8rem 1.6rem 0.8rem 1.44rem;
