@@ -673,7 +673,7 @@ export default function PainelGestorPage() {
                         </div>
                         <div className="collaborators-info-quantity-small" id="license-usage-box">
                             <h3 id="license-usage-text">–</h3>
-                            <p>VAGAS DE FUNCIONÁRIO</p>
+                            <p>VAGAS DE COLABORADOR</p>
                         </div>
                     </div>
 

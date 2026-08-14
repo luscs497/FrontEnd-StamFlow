@@ -1,9 +1,9 @@
 import Script from "next/script";
 
 export const metadata = {
-  title: "Power Dash AI",
+  title: "StamFlow",
   description:
-    "Power Dash AI - Monitor your productivity with stamina tracking, posture checks, guided exercises, and mental breaks. Optimize your well-being and focus.",
+    "StamFlow - Monitor your productivity with stamina tracking, posture checks, guided exercises, and mental breaks. Optimize your well-being and focus.",
 };
 
 export const viewport = {

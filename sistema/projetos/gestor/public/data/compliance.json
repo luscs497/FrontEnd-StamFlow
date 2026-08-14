@@ -11,7 +11,7 @@
   },
   {
     "categoria": "1. Matriz de Classificação e Triagem (A Regra das 3 TAGs)",
-    "cor": "blue",
+    "cor": "red",
     "itens": [
       {
         "pergunta": "Nível 1: Verde (Operacional / Trivial)",
