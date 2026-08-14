@@ -1,5 +1,7 @@
 import Script from "next/script";
 
+import { comVersao } from "./assetVersion";
+
 export const metadata = {
   title: "StamFlow",
   description:
@@ -21,35 +23,35 @@ export default function RootLayout({ children }) {
           They live in /public/styles and are referenced verbatim so the
           cascade and breakpoint behavior is byte-for-byte identical.
         */}
-        <link rel="stylesheet" href="/styles/styles.css" />
+        <link rel="stylesheet" href={comVersao("/styles/styles.css")} />
         <link
           rel="stylesheet"
-          href="/styles/styles.css"
+          href={comVersao("/styles/styles.css")}
           media="screen and (min-width: 1501px)"
         />
         <link
           rel="stylesheet"
-          href="/styles/styles-1500.css"
+          href={comVersao("/styles/styles-1500.css")}
           media="screen and (max-width: 1500px) and (min-width: 1201px)"
         />
         <link
           rel="stylesheet"
-          href="/styles/styles-1200.css"
+          href={comVersao("/styles/styles-1200.css")}
           media="screen and (max-width: 1200px) and (min-width: 993px)"
         />
         <link
           rel="stylesheet"
-          href="/styles/styles-992.css"
+          href={comVersao("/styles/styles-992.css")}
           media="screen and (max-width: 992px) and (min-width: 769px)"
         />
         <link
           rel="stylesheet"
-          href="/styles/styles-768.css"
+          href={comVersao("/styles/styles-768.css")}
           media="screen and (max-width: 768px) and (min-width: 469px)"
         />
         <link
           rel="stylesheet"
-          href="/styles/styles-468.css"
+          href={comVersao("/styles/styles-468.css")}
           media="screen and (max-width: 468px)"
         />
 

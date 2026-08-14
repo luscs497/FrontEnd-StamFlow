@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { LEGACY_SCRIPTS_CORE, LEGACY_SCRIPTS_HEAVY } from "@/lib/scripts";
+import { LEGACY_SCRIPTS_CORE, LEGACY_SCRIPTS_HEAVY, comVersao } from "@/lib/scripts";
 
 declare global {
   interface Window {
@@ -180,7 +180,7 @@ export default function LegacyBootstrap() {
           return;
         }
         const s = document.createElement("script");
-        s.src = src;
+        s.src = comVersao(src);
         s.async = false; // preserva a ordem de execução
         s.defer = false;
         s.dataset.legacy = src;

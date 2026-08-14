@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 
+import { comVersao } from "../assetVersion";
+
 /*
   LegacyScripts (com gate de autenticação/autorização)
 
@@ -162,7 +164,7 @@ export default function LegacyScripts() {
       }
       const src = SCRIPTS[index];
       const s = document.createElement("script");
-      s.src = src;
+      s.src = comVersao(src);
       s.async = false;
       s.dataset.legacy = "true";
       s.onload = () => loadSequential(index + 1);

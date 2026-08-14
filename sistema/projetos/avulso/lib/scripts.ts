@@ -41,3 +41,22 @@ export const LEGACY_SCRIPTS: string[] = [
   ...LEGACY_SCRIPTS_CORE,
   ...LEGACY_SCRIPTS_HEAVY,
 ];
+
+/*
+  Versão dos assets legados (/public/scripts).
+
+  Diferente dos bundles do Next, esses arquivos são servidos com URL fixa, sem
+  hash no nome — então o navegador e o cache do Hostinger continuam entregando a
+  cópia antiga depois de um deploy. Foi isso que deixou o botão de colapso da
+  sidebar inerte em produção no gestor: o CSS novo chegava e o script.js velho,
+  sem o handler do clique, permanecia em cache.
+
+  BUMPAR A CADA DEPLOY que altere qualquer arquivo em /public/scripts.
+*/
+export const ASSET_VERSION = "20260814";
+
+/** Anexa ?v= apenas a assets locais (CDNs já versionam na própria URL). */
+export function comVersao(src: string): string {
+  if (!src.startsWith("/")) return src;
+  return `${src}${src.includes("?") ? "&" : "?"}v=${ASSET_VERSION}`;
+}
