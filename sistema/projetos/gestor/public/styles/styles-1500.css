@@ -133,6 +133,22 @@ header {
 .abrir-header.ativo .linha2 { opacity: 0; }
 .abrir-header.ativo .linha3 { transform: translateY(-3px) rotate(-45deg); }
 
+/* --- Sidebar colapsável (mini-sidebar) ---
+   Só os ajustes de escala deste breakpoint; o comportamento vem de styles.css.
+   Aqui o header tem padding 1rem (não 1.6rem), então a faixa fecha um pouco
+   mais e o calc do .logo acompanha. */
+header.nav-mini {
+    max-width: 64px;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+}
+
+header.nav-mini .logo {
+    width: calc(100% + 1.2rem);
+    margin-left: -0.6rem;
+    padding: 0rem 0rem 1rem;
+}
+
 /* --- Navegação --- */
 .nav-links {
     display: flex;

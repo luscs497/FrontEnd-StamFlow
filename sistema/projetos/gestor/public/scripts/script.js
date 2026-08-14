@@ -175,6 +175,44 @@
     });
   }
 
+  // --------------------------------------------------------------------------
+  // Sidebar colapsável no desktop (mini-sidebar só com ícones).
+  // Estado próprio (.nav-mini), separado do hamburguer mobile (.clicado) para
+  // os dois não disputarem as mesmas regras de CSS. Persistido em localStorage.
+  // localStorage pode lançar (modo privado / cookies bloqueados), daí os try.
+  // --------------------------------------------------------------------------
+  const toggleNavDesktop = document.querySelector(".toggle-nav-desktop");
+
+  function sincronizarToggleNavDesktop() {
+    if (!toggleNavDesktop || !header) return;
+    const mini = header.classList.contains("nav-mini");
+    toggleNavDesktop.setAttribute("aria-expanded", String(!mini));
+    toggleNavDesktop.setAttribute("aria-label", mini ? "Expandir menu" : "Recolher menu");
+    toggleNavDesktop.setAttribute("title", mini ? "Expandir menu" : "Recolher menu");
+  }
+
+  if (header) {
+    let navMiniSalvo = null;
+    try {
+      navMiniSalvo = localStorage.getItem("navMini");
+    } catch (_) {}
+    if (navMiniSalvo === "true") header.classList.add("nav-mini");
+    sincronizarToggleNavDesktop();
+  }
+
+  // _init roda em DOMContentLoaded e em painelGestorReady; o guard evita ligar
+  // o listener duas vezes (dois toggles por clique se anulariam).
+  if (toggleNavDesktop && header && !toggleNavDesktop.dataset.navMiniBound) {
+    toggleNavDesktop.dataset.navMiniBound = "1";
+    toggleNavDesktop.addEventListener("click", () => {
+      header.classList.toggle("nav-mini");
+      try {
+        localStorage.setItem("navMini", header.classList.contains("nav-mini"));
+      } catch (_) {}
+      sincronizarToggleNavDesktop();
+    });
+  }
+
   // Submenu "Reports" (Gestão de Reports / Treinamento Compliance / FAQ): o
   // cabeçalho (.tem-sub-lista-selector) só expande/colapsa a lista de
   // filhos — a navegação real acontece nos próprios filhos (.li-subitem).

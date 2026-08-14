@@ -47,6 +47,24 @@ header.clicado .perfil {
     display: block;
 }
 
+/* No mobile quem abre/fecha o menu é o hamburguer, então o botão de colapso do
+   desktop some. E como styles.css é servido sem media query, .nav-mini (que lá
+   fixa max-width: 72px) chegaria até aqui e espremeria o header — o reset
+   abaixo garante que um estado salvo no localStorage não vaze para o mobile. */
+/* O botão mora dentro do .logo, que segue visível no mobile (é onde fica o
+   hamburguer), então precisa ser escondido explicitamente aqui. */
+header .toggle-nav-desktop {
+    display: none;
+}
+
+header.nav-mini {
+    max-width: none;
+    padding: 0.8rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    align-items: stretch;
+}
+
 /* Ajustes de Espaçamento e Fontes Mobile */
 .logo {
     padding: 0.8rem 1.6rem 0.8rem 1.44rem;
