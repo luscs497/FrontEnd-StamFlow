@@ -9,9 +9,9 @@ This is **not a single app** — it's a collection of independent Next.js projec
 ```
 institucional/site_institucional/   Public marketing site (statically exported)
 sistema/projetos/login/             Login / auth portal (login.stamflow.com.br)
-sistema/projetos/gestor/            Manager dashboard (painel-gestor)
-sistema/projetos/user/              Employee/user dashboard (painel-empregado)
-sistema/projetos/avulso/            Standalone/individual-subscriber dashboard
+sistema/projetos/gestor/            Manager dashboard (gestor.stamflow.com.br)
+sistema/projetos/user/              Employee/user dashboard (user.stamflow.com.br)
+sistema/projetos/avulso/            Standalone/individual-subscriber dashboard (painel.stamflow.com.br)
 sistema/projetos/demo/              Demo variant of the user dashboard
 sistema/out/                        Zipped production build outputs (artifacts, not source)
 ```
@@ -55,7 +55,7 @@ Auth portal at `login.stamflow.com.br`. Key routes: `/login`, `/register` (requi
 | User type | Redirect |
 |---|---|
 | `manager` | `gestor.stamflow.com.br` |
-| `client` with a company | `painel-empregado.stamflow.com.br` |
+| `client` with a company | `user.stamflow.com.br` |
 | `client` without a company | `painel.stamflow.com.br` |
 
 All auth endpoints live under `https://api.stamflow.com.br/auth/*` (login, register, forgot-password, reset-password).
