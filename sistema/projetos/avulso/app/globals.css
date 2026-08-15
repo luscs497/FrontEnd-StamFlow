@@ -6875,6 +6875,21 @@ header.nav-mini .tem-sub-lista-selector .nav-item.sem-hover {
     align-items: center;
 }
 
+/* O chevron do item com sub-lista sai do fluxo quando a faixa fecha.
+   Ele é irmão do .nav-item que carrega o ícone e, mesmo colapsado por
+   max-width: 0, continuava ocupando ~16px na linha flex — o ícone era
+   centralizado no espaço que sobrava e ficava 8.31px à esquerda do centro,
+   desalinhado dos outros. Fora do fluxo, o ícone centraliza na faixa inteira.
+   Absoluto (em vez de display: none) preserva o fade junto com os labels. */
+header.nav-mini .tem-sub-lista-selector {
+    position: relative;
+}
+
+header.nav-mini .tem-sub-lista-selector > svg {
+    position: absolute;
+    right: 0;
+}
+
 header.nav-mini .perfil {
     justify-content: center;
     gap: 0;
