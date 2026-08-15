@@ -1,0 +1,1665 @@
+/* =============================================================================
+   Detox Mental (Brain Dump) — estilos da aba.
+
+   As utilitárias abaixo (a partir de "UTILITÁRIAS") foram GERADAS pelo Tailwind
+   e commitadas como CSS estático. Não há Tailwind em runtime: o CDN traz o
+   Preflight, um reset global que sobrescreveria o CSS legado do painel.
+
+   Regenerar (só se o markup/JS do detox mudar):
+     content: ["app/_legacy/app-body.html", "public/scripts/detox.js"]
+     corePlugins: { preflight: false }   -> sem reset global
+     important: "#detox-root"            -> prefixa toda regra, escopando no container
+     input.css: @tailwind base; @tailwind utilities;
+     npx tailwindcss@3 -c tailwind.config.js -i input.css -o utils.css
+     Depois: trocar o seletor `*, ::before, ::after` da camada base por
+     `#detox-root, #detox-root *, ...` — com preflight desligado a base traz só
+     os defaults das variáveis --tw-* (gradiente, sombra, transform dependem
+     deles), e o `important` do Tailwind não escopa a camada base.
+
+   Toda regra gerada começa com #detox-root, então nada vaza para o painel.
+   ============================================================================= */
+
+/* =============================================================================
+   UTILITÁRIAS (geradas pelo Tailwind — ver cabeçalho)
+   ============================================================================= */
+
+#detox-root, #detox-root *, #detox-root ::before, #detox-root ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  
+}
+
+#detox-root ::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  
+}
+
+#detox-root .pointer-events-none {
+  pointer-events: none
+}
+
+#detox-root .pointer-events-auto {
+  pointer-events: auto
+}
+
+#detox-root .fixed {
+  position: fixed
+}
+
+#detox-root .absolute {
+  position: absolute
+}
+
+#detox-root .relative {
+  position: relative
+}
+
+#detox-root .inset-0 {
+  inset: 0px
+}
+
+#detox-root .bottom-24 {
+  bottom: 6rem
+}
+
+#detox-root .left-0 {
+  left: 0px
+}
+
+#detox-root .left-1\/2 {
+  left: 50%
+}
+
+#detox-root .right-3\.5 {
+  right: 0.875rem
+}
+
+#detox-root .right-4 {
+  right: 1rem
+}
+
+#detox-root .top-1\/2 {
+  top: 50%
+}
+
+#detox-root .top-3\.5 {
+  top: 0.875rem
+}
+
+#detox-root .top-4 {
+  top: 1rem
+}
+
+#detox-root .top-7 {
+  top: 1.75rem
+}
+
+#detox-root .z-10 {
+  z-index: 10
+}
+
+#detox-root .z-20 {
+  z-index: 20
+}
+
+#detox-root .z-30 {
+  z-index: 30
+}
+
+#detox-root .z-40 {
+  z-index: 40
+}
+
+#detox-root .z-50 {
+  z-index: 50
+}
+
+#detox-root .mx-auto {
+  margin-left: auto;
+  margin-right: auto
+}
+
+#detox-root .mb-1 {
+  margin-bottom: 0.25rem
+}
+
+#detox-root .mb-2 {
+  margin-bottom: 0.5rem
+}
+
+#detox-root .mb-4 {
+  margin-bottom: 1rem
+}
+
+#detox-root .mb-6 {
+  margin-bottom: 1.5rem
+}
+
+#detox-root .ml-1 {
+  margin-left: 0.25rem
+}
+
+#detox-root .mt-1 {
+  margin-top: 0.25rem
+}
+
+#detox-root .mt-2 {
+  margin-top: 0.5rem
+}
+
+#detox-root .mt-2\.5 {
+  margin-top: 0.625rem
+}
+
+#detox-root .mt-6 {
+  margin-top: 1.5rem
+}
+
+#detox-root .inline {
+  display: inline
+}
+
+#detox-root .flex {
+  display: flex
+}
+
+#detox-root .grid {
+  display: grid
+}
+
+#detox-root .hidden {
+  display: none
+}
+
+#detox-root .h-1 {
+  height: 0.25rem
+}
+
+#detox-root .h-16 {
+  height: 4rem
+}
+
+#detox-root .h-5 {
+  height: 1.25rem
+}
+
+#detox-root .h-full {
+  height: 100%
+}
+
+#detox-root .max-h-\[140px\] {
+  max-height: 140px
+}
+
+#detox-root .max-h-\[60vh\] {
+  max-height: 60vh
+}
+
+#detox-root .w-10 {
+  width: 2.5rem
+}
+
+#detox-root .w-16 {
+  width: 4rem
+}
+
+#detox-root .w-5 {
+  width: 1.25rem
+}
+
+#detox-root .w-\[240px\] {
+  width: 240px
+}
+
+#detox-root .w-\[320px\] {
+  width: 320px
+}
+
+#detox-root .w-full {
+  width: 100%
+}
+
+#detox-root .max-w-5xl {
+  max-width: 64rem
+}
+
+#detox-root .max-w-lg {
+  max-width: 32rem
+}
+
+#detox-root .max-w-md {
+  max-width: 28rem
+}
+
+#detox-root .max-w-sm {
+  max-width: 24rem
+}
+
+#detox-root .flex-1 {
+  flex: 1 1 0%
+}
+
+#detox-root .shrink-0 {
+  flex-shrink: 0
+}
+
+#detox-root .-translate-x-1\/2 {
+  --tw-translate-x: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+#detox-root .-translate-y-1\/2 {
+  --tw-translate-y: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+#detox-root .scale-110 {
+  --tw-scale-x: 1.1;
+  --tw-scale-y: 1.1;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+#detox-root .scale-75 {
+  --tw-scale-x: .75;
+  --tw-scale-y: .75;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+#detox-root .scale-95 {
+  --tw-scale-x: .95;
+  --tw-scale-y: .95;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+#detox-root .transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+#detox-root .cursor-crosshair {
+  cursor: crosshair
+}
+
+#detox-root .cursor-grab {
+  cursor: grab
+}
+
+#detox-root .cursor-grabbing {
+  cursor: grabbing
+}
+
+#detox-root .select-none {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none
+}
+
+#detox-root .resize-none {
+  resize: none
+}
+
+#detox-root .list-decimal {
+  list-style-type: decimal
+}
+
+#detox-root .list-disc {
+  list-style-type: disc
+}
+
+#detox-root .grid-cols-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr))
+}
+
+#detox-root .flex-col {
+  flex-direction: column
+}
+
+#detox-root .items-start {
+  align-items: flex-start
+}
+
+#detox-root .items-center {
+  align-items: center
+}
+
+#detox-root .justify-center {
+  justify-content: center
+}
+
+#detox-root .justify-between {
+  justify-content: space-between
+}
+
+#detox-root .gap-1 {
+  gap: 0.25rem
+}
+
+#detox-root .gap-1\.5 {
+  gap: 0.375rem
+}
+
+#detox-root .gap-2 {
+  gap: 0.5rem
+}
+
+#detox-root .gap-2\.5 {
+  gap: 0.625rem
+}
+
+#detox-root .gap-3 {
+  gap: 0.75rem
+}
+
+#detox-root .gap-4 {
+  gap: 1rem
+}
+
+#detox-root :is(.space-y-1\.5 > :not([hidden]) ~ :not([hidden])) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.375rem * var(--tw-space-y-reverse))
+}
+
+#detox-root :is(.space-y-2 > :not([hidden]) ~ :not([hidden])) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse))
+}
+
+#detox-root :is(.space-y-3 > :not([hidden]) ~ :not([hidden])) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse))
+}
+
+#detox-root :is(.space-y-4 > :not([hidden]) ~ :not([hidden])) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse))
+}
+
+#detox-root .overflow-hidden {
+  overflow: hidden
+}
+
+#detox-root .overflow-y-auto {
+  overflow-y: auto
+}
+
+#detox-root .whitespace-nowrap {
+  white-space: nowrap
+}
+
+#detox-root .rounded-2xl {
+  border-radius: 1rem
+}
+
+#detox-root .rounded-3xl {
+  border-radius: 1.5rem
+}
+
+#detox-root .rounded-full {
+  border-radius: 9999px
+}
+
+#detox-root .rounded-lg {
+  border-radius: 0.5rem
+}
+
+#detox-root .rounded-xl {
+  border-radius: 0.75rem
+}
+
+#detox-root .border {
+  border-width: 1px
+}
+
+#detox-root .border-2 {
+  border-width: 2px
+}
+
+#detox-root .border-b {
+  border-bottom-width: 1px
+}
+
+#detox-root .border-t {
+  border-top-width: 1px
+}
+
+#detox-root .border-none {
+  border-style: none
+}
+
+#detox-root .border-\[\#c7ebd5\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(199 235 213 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .border-\[\#cce3fc\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(204 227 252 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .border-\[\#ebdbff\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(235 219 255 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .border-\[\#fde6c7\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 199 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .border-amber-500\/20 {
+  border-color: rgb(245 158 11 / 0.2)
+}
+
+#detox-root .border-blue-800\/40 {
+  border-color: rgb(30 64 175 / 0.4)
+}
+
+#detox-root .border-indigo-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(99 102 241 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .border-indigo-500\/20 {
+  border-color: rgb(99 102 241 / 0.2)
+}
+
+#detox-root .border-indigo-500\/30 {
+  border-color: rgb(99 102 241 / 0.3)
+}
+
+#detox-root .border-orange-800\/40 {
+  border-color: rgb(154 52 18 / 0.4)
+}
+
+#detox-root .border-red-900\/40 {
+  border-color: rgb(127 29 29 / 0.4)
+}
+
+#detox-root .border-rose-800\/20 {
+  border-color: rgb(159 18 57 / 0.2)
+}
+
+#detox-root .border-rose-800\/40 {
+  border-color: rgb(159 18 57 / 0.4)
+}
+
+#detox-root .border-slate-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(226 232 240 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .border-slate-700\/60 {
+  border-color: rgb(51 65 85 / 0.6)
+}
+
+#detox-root .border-slate-800 {
+  --tw-border-opacity: 1;
+  border-color: rgb(30 41 59 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .border-slate-800\/80 {
+  border-color: rgb(30 41 59 / 0.8)
+}
+
+#detox-root .border-transparent {
+  border-color: transparent
+}
+
+#detox-root .bg-\[\#0c0b14\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(12 11 20 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-\[\#12111f\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(18 17 31 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-\[\#12111f\]\/95 {
+  background-color: rgb(18 17 31 / 0.95)
+}
+
+#detox-root .bg-\[\#1b1a2e\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(27 26 46 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-\[\#1e111a\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 17 26 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-\[\#f2f8fe\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(242 248 254 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-\[\#f2f8fe\]\/95 {
+  background-color: rgb(242 248 254 / 0.95)
+}
+
+#detox-root .bg-\[\#f4fbf7\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(244 251 247 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-\[\#f4fbf7\]\/95 {
+  background-color: rgb(244 251 247 / 0.95)
+}
+
+#detox-root .bg-\[\#faf6ff\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 246 255 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-\[\#faf6ff\]\/95 {
+  background-color: rgb(250 246 255 / 0.95)
+}
+
+#detox-root .bg-\[\#fffbf4\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 251 244 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-\[\#fffbf4\]\/95 {
+  background-color: rgb(255 251 244 / 0.95)
+}
+
+#detox-root .bg-amber-500\/10 {
+  background-color: rgb(245 158 11 / 0.1)
+}
+
+#detox-root .bg-blue-950 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(23 37 84 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-indigo-500\/10 {
+  background-color: rgb(99 102 241 / 0.1)
+}
+
+#detox-root .bg-indigo-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(79 70 229 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-indigo-600\/35 {
+  background-color: rgb(79 70 229 / 0.35)
+}
+
+#detox-root .bg-orange-950 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(67 20 7 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-rose-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(225 29 72 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-rose-950 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(76 5 25 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-rose-950\/40 {
+  background-color: rgb(76 5 25 / 0.4)
+}
+
+#detox-root .bg-slate-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-slate-800\/50 {
+  background-color: rgb(30 41 59 / 0.5)
+}
+
+#detox-root .bg-slate-800\/60 {
+  background-color: rgb(30 41 59 / 0.6)
+}
+
+#detox-root .bg-slate-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 23 42 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-slate-950\/80 {
+  background-color: rgb(2 6 23 / 0.8)
+}
+
+#detox-root .bg-transparent {
+  background-color: transparent
+}
+
+#detox-root .bg-white\/95 {
+  background-color: rgb(255 255 255 / 0.95)
+}
+
+#detox-root .bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops))
+}
+
+#detox-root .from-indigo-400 {
+  --tw-gradient-from: #818cf8 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(129 140 248 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)
+}
+
+#detox-root .via-purple-400 {
+  --tw-gradient-to: rgb(192 132 252 / 0)  var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), #c084fc var(--tw-gradient-via-position), var(--tw-gradient-to)
+}
+
+#detox-root .to-pink-400 {
+  --tw-gradient-to: #f472b6 var(--tw-gradient-to-position)
+}
+
+#detox-root .bg-clip-text {
+  -webkit-background-clip: text;
+          background-clip: text
+}
+
+#detox-root .p-0 {
+  padding: 0px
+}
+
+#detox-root .p-1 {
+  padding: 0.25rem
+}
+
+#detox-root .p-1\.5 {
+  padding: 0.375rem
+}
+
+#detox-root .p-2 {
+  padding: 0.5rem
+}
+
+#detox-root .p-2\.5 {
+  padding: 0.625rem
+}
+
+#detox-root .p-3 {
+  padding: 0.75rem
+}
+
+#detox-root .p-4 {
+  padding: 1rem
+}
+
+#detox-root .p-5 {
+  padding: 1.25rem
+}
+
+#detox-root .p-6 {
+  padding: 1.5rem
+}
+
+#detox-root .px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem
+}
+
+#detox-root .px-2\.5 {
+  padding-left: 0.625rem;
+  padding-right: 0.625rem
+}
+
+#detox-root .px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem
+}
+
+#detox-root .px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem
+}
+
+#detox-root .px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem
+}
+
+#detox-root .px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem
+}
+
+#detox-root .py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem
+}
+
+#detox-root .py-1\.5 {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem
+}
+
+#detox-root .py-2\.5 {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem
+}
+
+#detox-root .py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem
+}
+
+#detox-root .py-3\.5 {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem
+}
+
+#detox-root .py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem
+}
+
+#detox-root .py-5 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem
+}
+
+#detox-root .pl-1 {
+  padding-left: 0.25rem
+}
+
+#detox-root .pl-5 {
+  padding-left: 1.25rem
+}
+
+#detox-root .pr-1 {
+  padding-right: 0.25rem
+}
+
+#detox-root .pr-2 {
+  padding-right: 0.5rem
+}
+
+#detox-root .text-left {
+  text-align: left
+}
+
+#detox-root .text-center {
+  text-align: center
+}
+
+#detox-root .text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem
+}
+
+#detox-root .text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem
+}
+
+#detox-root .text-\[10px\] {
+  font-size: 10px
+}
+
+#detox-root .text-\[11px\] {
+  font-size: 11px
+}
+
+#detox-root .text-\[9px\] {
+  font-size: 9px
+}
+
+#detox-root .text-base {
+  font-size: 1rem;
+  line-height: 1.5rem
+}
+
+#detox-root .text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem
+}
+
+#detox-root .text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem
+}
+
+#detox-root .text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem
+}
+
+#detox-root .text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem
+}
+
+#detox-root .font-bold {
+  font-weight: 700
+}
+
+#detox-root .font-medium {
+  font-weight: 500
+}
+
+#detox-root .font-normal {
+  font-weight: 400
+}
+
+#detox-root .font-semibold {
+  font-weight: 600
+}
+
+#detox-root .uppercase {
+  text-transform: uppercase
+}
+
+#detox-root .leading-none {
+  line-height: 1
+}
+
+#detox-root .leading-relaxed {
+  line-height: 1.625
+}
+
+#detox-root .tracking-wide {
+  letter-spacing: 0.025em
+}
+
+#detox-root .tracking-wider {
+  letter-spacing: 0.05em
+}
+
+#detox-root .tracking-widest {
+  letter-spacing: 0.1em
+}
+
+#detox-root .text-\[\#063c61\] {
+  --tw-text-opacity: 1;
+  color: rgb(6 60 97 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-\[\#0b4d2c\] {
+  --tw-text-opacity: 1;
+  color: rgb(11 77 44 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-\[\#3c0c78\] {
+  --tw-text-opacity: 1;
+  color: rgb(60 12 120 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-\[\#874a00\] {
+  --tw-text-opacity: 1;
+  color: rgb(135 74 0 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-amber-400 {
+  --tw-text-opacity: 1;
+  color: rgb(251 191 36 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-amber-500 {
+  --tw-text-opacity: 1;
+  color: rgb(245 158 11 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-blue-400 {
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-indigo-300 {
+  --tw-text-opacity: 1;
+  color: rgb(165 180 252 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-indigo-400 {
+  --tw-text-opacity: 1;
+  color: rgb(129 140 248 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-orange-400 {
+  --tw-text-opacity: 1;
+  color: rgb(251 146 60 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-rose-400 {
+  --tw-text-opacity: 1;
+  color: rgb(251 113 133 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-rose-500 {
+  --tw-text-opacity: 1;
+  color: rgb(244 63 94 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-slate-100 {
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-slate-200 {
+  --tw-text-opacity: 1;
+  color: rgb(226 232 240 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-slate-300 {
+  --tw-text-opacity: 1;
+  color: rgb(203 213 225 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-slate-400 {
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-slate-500 {
+  --tw-text-opacity: 1;
+  color: rgb(100 116 139 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-transparent {
+  color: transparent
+}
+
+#detox-root .text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .placeholder-slate-400::-moz-placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-placeholder-opacity, 1))
+}
+
+#detox-root .placeholder-slate-400::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-placeholder-opacity, 1))
+}
+
+#detox-root .opacity-0 {
+  opacity: 0
+}
+
+#detox-root .opacity-100 {
+  opacity: 1
+}
+
+#detox-root .shadow-2xl {
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+#detox-root .shadow-lg {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+#detox-root .shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+#detox-root .shadow-xl {
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
+#detox-root .shadow-indigo-500\/20 {
+  --tw-shadow-color: rgb(99 102 241 / 0.2);
+  --tw-shadow: var(--tw-shadow-colored)
+}
+
+#detox-root .filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+}
+
+#detox-root .backdrop-blur-sm {
+  --tw-backdrop-blur: blur(4px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)
+}
+
+#detox-root .transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms
+}
+
+#detox-root .transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms
+}
+
+#detox-root .transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms
+}
+
+#detox-root .duration-150 {
+  transition-duration: 150ms
+}
+
+#detox-root .duration-300 {
+  transition-duration: 300ms
+}
+
+#detox-root .hover\:scale-110:hover {
+  --tw-scale-x: 1.1;
+  --tw-scale-y: 1.1;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+#detox-root .hover\:border-indigo-500:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(99 102 241 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .hover\:border-indigo-500\/50:hover {
+  border-color: rgb(99 102 241 / 0.5)
+}
+
+#detox-root .hover\:border-red-800:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(153 27 27 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .hover\:border-slate-600:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(71 85 105 / var(--tw-border-opacity, 1))
+}
+
+#detox-root .hover\:border-slate-700\/80:hover {
+  border-color: rgb(51 65 85 / 0.8)
+}
+
+#detox-root .hover\:bg-\[\#12111f\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(18 17 31 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-\[\#19172e\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 23 46 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-\[\#23213d\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(35 33 61 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-\[\#2b1625\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(43 22 37 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-indigo-500:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(99 102 241 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-indigo-950:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 27 75 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-rose-500:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(244 63 94 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-slate-200\/50:hover {
+  background-color: rgb(226 232 240 / 0.5)
+}
+
+#detox-root .hover\:bg-slate-200\/60:hover {
+  background-color: rgb(226 232 240 / 0.6)
+}
+
+#detox-root .hover\:bg-slate-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(51 65 85 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-slate-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-slate-800\/80:hover {
+  background-color: rgb(30 41 59 / 0.8)
+}
+
+#detox-root .hover\:bg-white\/10:hover {
+  background-color: rgb(255 255 255 / 0.1)
+}
+
+#detox-root .hover\:text-indigo-400:hover {
+  --tw-text-opacity: 1;
+  color: rgb(129 140 248 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .hover\:text-rose-300:hover {
+  --tw-text-opacity: 1;
+  color: rgb(253 164 175 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .hover\:text-rose-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(225 29 72 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .hover\:text-slate-700:hover {
+  --tw-text-opacity: 1;
+  color: rgb(51 65 85 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .focus\:opacity-100:focus {
+  opacity: 1
+}
+
+#detox-root .focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px
+}
+
+#detox-root .focus\:ring-0:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)
+}
+
+#detox-root .focus\:ring-2:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)
+}
+
+#detox-root .focus\:ring-indigo-500\/30:focus {
+  --tw-ring-color: rgb(99 102 241 / 0.3)
+}
+
+#detox-root .active\:scale-95:active {
+  --tw-scale-x: .95;
+  --tw-scale-y: .95;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+#detox-root .active\:cursor-grabbing:active {
+  cursor: grabbing
+}
+
+#detox-root :is(.group:hover .group-hover\:text-indigo-400) {
+  --tw-text-opacity: 1;
+  color: rgb(129 140 248 / var(--tw-text-opacity, 1))
+}
+
+#detox-root :is(.group:hover .group-hover\:opacity-100) {
+  opacity: 1
+}
+
+@media (min-width: 640px) {
+  #detox-root .sm\:w-auto {
+    width: auto
+  }
+
+  #detox-root .sm\:flex-row {
+    flex-direction: row
+  }
+}
+
+@media (min-width: 768px) {
+  #detox-root .md\:p-8 {
+    padding: 2rem
+  }
+
+  #detox-root .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem
+  }
+
+  #detox-root .md\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem
+  }
+}
+
+@media (min-width: 1024px) {
+  #detox-root .lg\:w-auto {
+    width: auto
+  }
+
+  #detox-root .lg\:flex-row {
+    flex-direction: row
+  }
+
+  #detox-root .lg\:items-end {
+    align-items: flex-end
+  }
+
+  #detox-root .lg\:justify-start {
+    justify-content: flex-start
+  }
+
+  #detox-root .lg\:text-left {
+    text-align: left
+  }
+
+  #detox-root .lg\:text-\[15px\] {
+    font-size: 15px
+  }
+
+  #detox-root .lg\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem
+  }
+}
+
+/* =============================================================================
+   AJUSTES DE INTEGRAÇÃO — vêm DEPOIS das utilitárias de propósito.
+   As regras geradas têm a mesma especificidade (#detox-root + 1 classe), então
+   o desempate é por ordem no arquivo: o que estiver aqui embaixo vence.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1) O quadro é o protagonista: ocupa toda a área de conteúdo.
+   A seção usa .container-1700, que traz max-width 1360px e padding — era isso
+   que criava a moldura escura em volta do quadro. Aqui ela é zerada.
+   -------------------------------------------------------------------------- */
+.conteudo-site.detox-secao {
+    max-width: none;
+    padding: 0;
+    gap: 0;
+}
+
+#detox-root {
+    position: relative;
+    display: block;
+    width: 100%;
+    /* altura definida em runtime por detox.js (viewport - topo do container),
+       o que acompanha o content-header em cada breakpoint. */
+    height: calc(100vh - 86px);
+    min-height: 420px;
+    overflow: hidden;
+    border: none;
+    border-radius: 0;
+    background-color: #fcfcfd;
+    font-family: inherit;
+    user-select: none;
+    color: #0f172a;
+}
+
+/* O quadro preenche o container inteiro; cabeçalho e ações flutuam por cima. */
+#detox-root #detox-whiteboard {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    flex: none;
+}
+
+#detox-root .whiteboard-grid {
+    background-color: #fcfcfd;
+    background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+    background-size: 24px 24px;
+}
+
+/* -----------------------------------------------------------------------------
+   2) Cabeçalho e ações flutuando sobre o quadro.
+   Ficam como irmãos do quadro (não filhos): assim um clique neles não borbulha
+   para o handler que cria post-its.
+   -------------------------------------------------------------------------- */
+#detox-root .detox-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    background-color: transparent;
+    border: none;
+}
+
+/* Sobre o fundo branco o texto claro do original some. O :not() preserva o
+   título, que é um span com texto transparente preenchido por gradiente —
+   pintá-lo de cinza apagava o gradiente. */
+#detox-root .detox-header p,
+#detox-root .detox-header span:not(.text-transparent) {
+    color: #475569;
+}
+
+#detox-root .detox-header h1 {
+    white-space: nowrap;
+}
+
+#detox-root .detox-footer {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    left: auto;
+    top: auto;
+    z-index: 20;
+    width: auto;
+    flex-direction: row;
+    gap: 12px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+/* -----------------------------------------------------------------------------
+   3) Botões no padrão do painel (.btn do globals.css), sem as bordas cinzas
+   incompletas do artefato original. A cor de acento muda por contexto.
+   -------------------------------------------------------------------------- */
+#detox-root .detox-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: auto;
+    padding: 0.72rem 1.2rem;
+    font-family: inherit;
+    font-size: 15.2px;
+    font-weight: 700;
+    color: #34d3bb;
+    background-color: #34d3bb04;
+    border: 0.8px solid #34d3bb44;
+    border-radius: 19.2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+#detox-root .detox-btn:hover {
+    background-color: #34d3bb17;
+    border-color: #34d3bb88;
+    color: #34d3bb;
+}
+
+#detox-root .detox-btn svg {
+    color: currentColor;
+    flex-shrink: 0;
+}
+
+#detox-root .detox-btn span {
+    color: currentColor;
+}
+
+/* O "i" do título: mesmo padrão, em formato redondo e compacto. */
+#detox-root .detox-btn-icone {
+    padding: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    box-shadow: none;
+}
+
+/* Eliminar mantém o tom de alerta, mas com o mesmo formato. */
+#detox-root .detox-btn-perigo {
+    color: #f43f5e;
+    background-color: #f43f5e08;
+    border-color: #f43f5e44;
+}
+
+#detox-root .detox-btn-perigo:hover {
+    background-color: #f43f5e1a;
+    border-color: #f43f5e88;
+    color: #f43f5e;
+}
+
+/* -----------------------------------------------------------------------------
+   4) Widget de humor: cantos e borda do padrão do sistema.
+   -------------------------------------------------------------------------- */
+#detox-root #detox-moodWidgetContainer {
+    border: 0.8px solid #34d3bb44;
+    border-radius: 19.2px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+#detox-root #detox-moodWidgetContainer:hover {
+    border-color: #34d3bb88;
+}
+
+/* -----------------------------------------------------------------------------
+   5) Restante do app (inalterado do artefato original).
+   -------------------------------------------------------------------------- */
+
+/* Dissipação lenta usada ao "deixar ir" (notas e widget de humor). */
+#detox-root .fade-out-peaceful {
+    opacity: 0 !important;
+    filter: blur(12px) grayscale(100%);
+    transform: translateY(-24px) scale(0.96) !important;
+    transition: opacity 3.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+                transform 3.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+                filter 3.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    pointer-events: none;
+}
+
+/* Post-it — as cores das notas são identidade do detox e ficam como estão. */
+#detox-root .note-bubble {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease,
+                background-color 0.2s ease;
+}
+
+#detox-root .note-bubble:focus-within {
+    box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.12), 0 10px 10px -5px rgba(99, 102, 241, 0.04);
+    transform: scale(1.01);
+}
+
+#detox-root ::-webkit-scrollbar { width: 6px; height: 6px; }
+#detox-root ::-webkit-scrollbar-track { background: transparent; }
+#detox-root ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+#detox-root ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* Modais e toast são fixed (viewport) e precisam vencer o header sticky do painel. */
+#detox-root #detox-howItWorksModal,
+#detox-root #detox-infoModal,
+#detox-root #detox-downloadModal,
+#detox-root #detox-eliminateModal {
+    z-index: 1000;
+}
+
+#detox-root #detox-toast {
+    z-index: 1001;
+}
+
+/* Em telas estreitas as ações viram coluna para não cobrirem o quadro todo. */
+@media screen and (max-width: 640px) {
+    #detox-root .detox-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px 16px;
+    }
+
+    #detox-root .detox-footer {
+        right: 16px;
+        bottom: 16px;
+        left: 16px;
+        flex-direction: column;
+    }
+}
+
+/* -----------------------------------------------------------------------------
+   6) Botões dos modais no padrão dos pop-ups do painel.
+   Referência: .button-close-embasamento / .btn-salvar / .btn-login do
+   globals.css — todos com `border: none`, cantos arredondados, peso 700 e
+   fundo translúcido no verde-teal do sistema. O artefato original usava
+   bordas cinza de 1px (border-slate-800), que era a "borda incompleta".
+   -------------------------------------------------------------------------- */
+#detox-root .detox-btn-modal,
+#detox-root .detox-btn-modal-secundario,
+#detox-root .detox-btn-modal-perigo,
+#detox-root .detox-btn-formato {
+    font-family: inherit;
+    font-weight: 700;
+    border: none;
+    border-radius: 14.4px;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ação principal do pop-up (Entendido / Começar Detox Mental). */
+#detox-root .detox-btn-modal {
+    background-color: rgba(52, 211, 153, 0.122);
+    background-image: none;
+    color: rgb(52, 211, 153);
+    font-size: 17.6px;
+}
+
+#detox-root .detox-btn-modal:hover {
+    background-color: rgba(52, 211, 153, 0.198);
+    background-image: none;
+    color: rgb(52, 211, 153);
+}
+
+/* Ação neutra (Ainda não). */
+#detox-root .detox-btn-modal-secundario {
+    background-color: rgba(148, 163, 184, 0.12);
+    color: #cbd5e1;
+    font-size: 16px;
+}
+
+#detox-root .detox-btn-modal-secundario:hover {
+    background-color: rgba(148, 163, 184, 0.2);
+    color: #e2e8f0;
+}
+
+/* Ação destrutiva (Sim, deixar ir) — mesmo formato, tom de alerta. */
+#detox-root .detox-btn-modal-perigo {
+    background-color: rgba(244, 63, 94, 0.14);
+    background-image: none;
+    color: #fb7185;
+    font-size: 16px;
+}
+
+#detox-root .detox-btn-modal-perigo:hover {
+    background-color: rgba(244, 63, 94, 0.22);
+    color: #fda4af;
+}
+
+/* Cartões de formato do download (PNG / PDF / DOC). */
+#detox-root .detox-btn-formato {
+    background-color: rgba(148, 163, 184, 0.08);
+    color: #e2e8f0;
+}
+
+#detox-root .detox-btn-formato:hover {
+    background-color: rgba(52, 211, 153, 0.12);
+    border-color: transparent;
+}

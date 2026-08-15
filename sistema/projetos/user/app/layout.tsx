@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+// Aba Detox Mental: utilitárias geradas pelo Tailwind, já escopadas em
+// #detox-root. Fica em arquivo separado por ser gerado — ver o cabeçalho dele.
+import "./detox.css";
 
 export const metadata: Metadata = {
   title: "StamFlow",

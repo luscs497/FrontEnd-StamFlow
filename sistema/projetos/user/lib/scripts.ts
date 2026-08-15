@@ -34,6 +34,17 @@ export const LEGACY_SCRIPTS_HEAVY: string[] = [
   "/scripts/camera.js",
   "/scripts/get-repots.js",
   "/scripts/notifications.js",
+  // Aba Detox Mental. html2canvas e jsPDF só são usados na exportação do quadro
+  // (PNG/PDF); ficam na fase pesada por isso. São libs isoladas, sem reset
+  // global — ao contrário do Tailwind, que foi eliminado do runtime.
+  //
+  // Servidas pelo jsDelivr, não pelo cdnjs: a CSP do .htaccess libera apenas
+  // 'self' e cdn.jsdelivr.net em script-src. Pelo cdnjs (como vinha o artefato
+  // original) o navegador bloqueia os dois em produção e os downloads PNG/PDF
+  // param de funcionar — o dev server não tem CSP, então isso só aparece no ar.
+  "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
+  "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js",
+  "/scripts/detox.js",
 ];
 
 // Mantém compatibilidade: lista completa na ordem final (core → heavy).
@@ -53,7 +64,7 @@ export const LEGACY_SCRIPTS: string[] = [
 
   BUMPAR A CADA DEPLOY que altere qualquer arquivo em /public/scripts.
 */
-export const ASSET_VERSION = "20260815";
+export const ASSET_VERSION = "20260815-2";
 
 /** Anexa ?v= apenas a assets locais (CDNs já versionam na própria URL). */
 export function comVersao(src: string): string {
