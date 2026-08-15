@@ -1663,3 +1663,37 @@
     background-color: rgba(52, 211, 153, 0.12);
     border-color: transparent;
 }
+
+/* -----------------------------------------------------------------------------
+   7) Arraste do widget de humor com a mesma resposta dos post-its.
+
+   Duas coisas deixavam o movimento ruim:
+
+   a) O card vem do artefato com `transition-all duration-150`, que inclui
+      left/top — ao arrastar, ele perseguia o cursor com 150ms de atraso. Os
+      post-its nunca tiveram isso porque .note-bubble só transiciona transform,
+      sombra, borda e fundo.
+
+   b) `transform` também não pode entrar na transição: o card nasce
+      centralizado por `-translate-x-1/2 -translate-y-1/2` e, ao ser pego,
+      troca essas classes por left/top em pixels. Com transform animado, o
+      translate de -50% voltava a zero em 150ms e o card escorregava ~160px
+      logo ao pegar.
+
+   A dissolução do "deixar ir" não depende disto: .fade-out-peaceful declara a
+   própria transition com !important.
+   -------------------------------------------------------------------------- */
+#detox-root #detox-moodWidgetContainer {
+    transition-property: border-color, box-shadow, background-color;
+    /* O card inteiro é área de arraste, como um post-it. */
+    cursor: grab;
+}
+
+#detox-root #detox-moodWidgetContainer:active {
+    cursor: grabbing;
+}
+
+/* Emojis e botões seguem clicáveis. */
+#detox-root #detox-moodWidgetContainer button {
+    cursor: pointer;
+}

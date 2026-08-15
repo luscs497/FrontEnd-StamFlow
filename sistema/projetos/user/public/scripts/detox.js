@@ -196,13 +196,39 @@
   }
 
   function setupMoodWidgetDragging() {
-      const handle = document.getElementById('detox-moodDragHandle');
       const widget = document.getElementById('detox-moodWidgetContainer');
-      if (!handle || !widget) return;
+      if (!widget) return;
 
-      // Suporte para mouse
-      handle.addEventListener('mousedown', function(e) {
-          if (e.target.closest('button')) return; // ignora botões internos
+      // renderMoodWidget() troca só o innerHTML e chama esta função de novo; o
+      // widget em si persiste, então sem o guard os listeners se acumulariam.
+      if (widget.dataset.detoxArrasteLigado) return;
+      widget.dataset.detoxArrasteLigado = "1";
+
+      // O card arrasta por qualquer ponto, como os post-its — antes só a
+      // barrinha de 40x4px pegava, o que tornava o movimento difícil.
+      // Emojis e botões seguem clicáveis.
+      function podeArrastar(alvo) {
+          return !alvo.closest('button');
+      }
+
+      // Enquanto o widget está centralizado por classe (left-1/2 + translate),
+      // escrever style.left/top deixaria o translate de -50% em vigor e o card
+      // saltaria no primeiro arraste. Fixamos a posição atual em pixels antes.
+      function fixarPosicaoAtual() {
+          const board = document.getElementById('detox-whiteboard');
+          if (!board) return;
+          const rect = widget.getBoundingClientRect();
+          const boardRect = board.getBoundingClientRect();
+          widget.classList.remove('left-1/2', 'top-1/2', '-translate-x-1/2', '-translate-y-1/2');
+          widget.style.left = `${rect.left - boardRect.left}px`;
+          widget.style.top = `${rect.top - boardRect.top}px`;
+          moodWidgetPos.x = rect.left - boardRect.left;
+          moodWidgetPos.y = rect.top - boardRect.top;
+      }
+
+      widget.addEventListener('mousedown', function(e) {
+          if (!podeArrastar(e.target)) return;
+          fixarPosicaoAtual();
           activeDragWidget = widget;
           const rect = widget.getBoundingClientRect();
           widgetOffset.x = e.clientX - rect.left;
@@ -210,9 +236,9 @@
           hasDraggedMood = true; // Usuário decidiu arrastar
       });
 
-      // Suporte para touch
-      handle.addEventListener('touchstart', function(e) {
-          if (e.target.closest('button')) return;
+      widget.addEventListener('touchstart', function(e) {
+          if (!podeArrastar(e.target)) return;
+          fixarPosicaoAtual();
           activeDragWidget = widget;
           const rect = widget.getBoundingClientRect();
           const touch = e.touches[0];
