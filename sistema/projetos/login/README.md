@@ -61,5 +61,5 @@ npm start
 | Tipo de usuário         | Destino                                    |
 |-------------------------|--------------------------------------------|
 | `manager`               | `https://gestor.stamflow.com.br/`          |
-| `client` com empresa    | `https://painel-empregado.stamflow.com.br/`|
+| `client` com empresa    | `https://user.stamflow.com.br/`            |
 | `client` sem empresa    | `https://painel.stamflow.com.br/`          |
