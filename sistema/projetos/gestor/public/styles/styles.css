@@ -1470,13 +1470,84 @@ header.nav-mini .imagem-usuario {
     transform: rotate(180deg);
 }
 
+/* As quebras do JSON viram <br> na renderização (faq.js), então aqui o
+   white-space volta a ser normal — com pre-line cada \n contaria duas
+   vezes e a resposta ficaria com o dobro de espaçamento. */
 .faq-item-resposta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
     font-size: 14.4px;
     line-height: 1.6;
     color: rgb(156, 163, 175);
     padding-bottom: 16px;
     padding-right: 36px;
-    white-space: pre-line;
+    white-space: normal;
+}
+
+.faq-item-texto {
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+}
+
+.faq-copiar-feedback {
+    flex-shrink: 0;
+    padding: 8px 14.4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.75);
+    font-family: 'Inter', sans-serif;
+    font-size: 12.8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.faq-copiar-feedback:hover {
+    background-color: rgba(114, 100, 234, 0.15);
+    border-color: rgba(114, 100, 234, 0.4);
+    color: #ffffff;
+}
+
+.faq-copiar-feedback.faq-copiar-erro {
+    border-color: rgba(239, 68, 68, 0.4);
+    color: rgb(239, 68, 68);
+}
+
+/* Barra de busca do FAQ — mesmo formato da busca de Colaboradores. */
+.faq-search-header {
+    display: flex;
+    align-items: center;
+    gap: 15.6px;
+    width: 100%;
+    margin-top: 19.2px;
+    padding: 21.6px 26.4px;
+    background-color: rgb(31, 29, 43);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14.4px;
+}
+
+.faq-search-header input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    font-size: 16.2px;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.faq-search-header input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.faq-sem-resultados {
+    width: 100%;
+    padding-top: 19.2px;
+    font-size: 14.4px;
 }
 
 .pop-ups {
@@ -2807,6 +2878,20 @@ header.nav-mini .imagem-usuario {
     .colab-list-header, 
     .colab-item {
         padding: 19.2px;
+    }
+
+    /* Busca do FAQ — mesmo respiro reduzido da busca de Colaboradores */
+    .faq-search-header {
+        padding: 19.2px;
+    }
+
+    .faq-search-header input {
+        font-size: 14.4px;
+    }
+
+    /* Sem a coluna extra da seta, a resposta ganha a largura toda */
+    .faq-item-resposta {
+        padding-right: 0;
     }
 
     /* Proteção para e-mails muito grandes não quebrarem o layout */
