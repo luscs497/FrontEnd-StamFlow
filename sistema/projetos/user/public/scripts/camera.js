@@ -394,6 +394,12 @@ async function startApp(){
   resetMetricsToInactive();
   _facePresent = false;
 
+  // Permissão de notificação nativa ao ligar a câmera: é aqui que começam a
+  // correr os cronômetros de postura e de tempo sentado, então é o momento
+  // em que os alertas passam a poder disparar. O notifications.js também
+  // pede no load; ambos são no-op se o usuário já decidiu.
+  requestNotificationPermission();
+
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       cameraUnavailable("Seu navegador não suporta acesso à câmera.");
       return;
@@ -720,40 +726,239 @@ setInterval(() => {
 }, NOTIFICATION_INTERVAL_MS);
 
 /* ====================================================================
- * ALERTAS DE BEM-ESTAR (Tipo A) — integrados ao sino de notificações.
+ * ALERTAS DE BEM-ESTAR E POSTURA — integrados ao sino de notificações.
  *
- * Detecta condições ao vivo a partir do estado da câmera e dispara
- * alertas via window.StamflowNotifications.pushLocalAlert (que cuida do
- * pop-up nativo, da lista do sino e da persistência no backend).
+ * Gerencia dois cronômetros a partir do estado ao vivo da câmera e
+ * dispara 4 alertas, cada um UMA ÚNICA VEZ por dia:
  *
- * Regras:
- *   - 3h contínuas de uso (rosto presente)        -> recomenda pausa
- *   - 10 min contínuos em postura crítica         -> recomenda ajuste
- *   - 30 min contínuos em postura de atenção      -> recomenda ajuste
+ *   [1] 30 min de postura ruim acumulada  -> toast que some em 5s
+ *   [2] 60 min de postura ruim acumulada  -> modal + [Ir para exercício]
+ *   [3]  3 h de sessão contínua sentado   -> modal + [Ir para exercícios]
+ *   [4]  4 h de sessão contínua sentado   -> modal + [Pausa mental]
  *
- * "Contínuo" reinicia quando o rosto some por um período (pausa real) ou
- * quando a postura melhora. Cada alerta tem um cooldown para não repetir.
+ * Os dois cronômetros medem coisas diferentes de propósito:
+ *   - sentado: tempo CONTÍNUO com rosto presente. Sumir por mais de
+ *     AUSENCIA_RESET_MS conta como pausa real e zera a sessão.
+ *   - postura ruim: tempo ACUMULADO em "atenção" OU "crítica" (os dois
+ *     níveis somam no mesmo contador). Endireitar a coluna por um
+ *     minuto não apaga o desgaste do que já passou — só uma pausa de
+ *     verdade (a mesma que zera a sessão) reinicia a conta.
+ *
+ * O disparo passa por window.StamflowNotifications.pushLocalAlert, que
+ * já cuida do item no sino, do pop-up nativo do navegador e do
+ * POST /notifications (com credentials e X-CSRF-Token, via o fetch
+ * patchado do auth.js). Ou seja: todo alerta desta tela vira histórico.
+ *
+ * Substitui o bloco anterior (10 min contínuos em crítica / 30 min em
+ * atenção / 3 h sentado, com cooldown e repetição). As regras novas são
+ * outras e conviver com as antigas geraria alerta duplicado.
  * ==================================================================== */
 (function () {
   "use strict";
 
-  const CHECK_INTERVAL_MS = 30 * 1000;     // granularidade da verificação
-  const SENTADO_LIMITE_MS = 3 * 60 * 60 * 1000;   // 3h
-  const CRITICA_LIMITE_MS = 10 * 60 * 1000;       // 10 min
-  const ATENCAO_LIMITE_MS = 30 * 60 * 1000;       // 30 min
-  const COOLDOWN_MS = 15 * 60 * 1000;             // não repetir o mesmo alerta antes disso
-  const AUSENCIA_RESET_MS = 60 * 1000;            // 1 min sem rosto reseta o "sentado contínuo"
+  const TICK_MS = 15 * 1000;              // granularidade da verificação
+  // Aba em segundo plano estrangula timers: sem teto, um tick atrasado
+  // injetaria minutos de uma só vez em quem nem estava na tela.
+  const DELTA_MAX_MS = TICK_MS * 3;
+  const AUSENCIA_RESET_MS = 60 * 1000;    // 1 min sem rosto = pausa real
+  const TOAST_MS = 5000;                  // [1] some sozinho, sem clique
 
-  let _sentadoDesde = null;       // timestamp em que começou o uso contínuo
-  let _ausenteDesde = null;       // timestamp em que o rosto sumiu
-  let _criticaDesde = null;       // timestamp em que a postura ficou crítica
-  let _atencaoDesde = null;       // timestamp em que a postura ficou em atenção
+  const LIMITE_POSTURA_TOAST = 30 * 60 * 1000;
+  const LIMITE_POSTURA_MODAL = 60 * 60 * 1000;
+  const LIMITE_SENTADO_EXERCICIO = 3 * 60 * 60 * 1000;
+  const LIMITE_SENTADO_MENTAL = 4 * 60 * 60 * 1000;
 
-  let _ultimoAlertaPausa = -Infinity;
-  let _ultimoAlertaCritica = -Infinity;
-  let _ultimoAlertaAtencao = -Infinity;
+  const STORAGE_KEY = "stamflow:alertas-bem-estar";
 
-  // Deriva o "nível geral" da postura a partir das 4 partes do corpo.
+  // --- Estado dos cronômetros (só em memória: valem para a sessão) ---
+  let _sentadoMs = 0;
+  let _posturaRuimMs = 0;
+  let _ausenteDesde = null;
+  let _ultimoTick = null;
+
+  // ------------------------------------------------------------------
+  // Flags de "uma vez por dia"
+  //
+  // Ficam no localStorage porque um F5 não pode devolver os 4 alertas do
+  // dia: sem isso, recarregar a página zeraria as flags e o usuário
+  // levaria o mesmo modal de novo assim que os contadores subissem.
+  // ------------------------------------------------------------------
+  function hojeISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+
+  let _dia = hojeISO();
+  let _disparados = lerDisparados();
+
+  function lerDisparados() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {};
+      const dados = JSON.parse(raw);
+      if (!dados || dados.dia !== hojeISO()) return {};
+      return dados.disparados || {};
+    } catch (e) {
+      return {}; // localStorage bloqueado: as flags valem só para a sessão
+    }
+  }
+
+  function jaDisparou(id) {
+    return _disparados[id] === true;
+  }
+
+  function marcarDisparado(id) {
+    _disparados[id] = true;
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ dia: _dia, disparados: _disparados })
+      );
+    } catch (e) { /* sessão anônima/cota cheia: segue só em memória */ }
+  }
+
+  // Vira o dia com a aba aberta (turno da madrugada): libera os 4 de novo.
+  function conferirViradaDeDia() {
+    const agora = hojeISO();
+    if (agora !== _dia) {
+      _dia = agora;
+      _disparados = {};
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // UI — toast e modal
+  // ------------------------------------------------------------------
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+  let _toastTimer = null;
+  let _toastSaida = null;
+
+  function mostrarToast(mensagem) {
+    const toast = el("alerta-bem-estar-toast");
+    const texto = el("alerta-bem-estar-toast-texto");
+    if (!toast || !texto) return;
+
+    clearTimeout(_toastTimer);
+    clearTimeout(_toastSaida);
+    texto.textContent = mensagem;
+
+    // display-none sai primeiro; sem o reflow entre tirar o display e pôr
+    // a classe .visivel, o navegador agrupa as duas mudanças e a transição
+    // de entrada não roda.
+    toast.classList.remove("display-none");
+    void toast.offsetWidth;
+    toast.classList.add("visivel");
+
+    _toastTimer = setTimeout(esconderToast, TOAST_MS);
+  }
+
+  function esconderToast() {
+    const toast = el("alerta-bem-estar-toast");
+    if (!toast) return;
+    toast.classList.remove("visivel");
+    _toastSaida = setTimeout(() => toast.classList.add("display-none"), 320);
+  }
+
+  // Fila: 60 min de postura ruim e 3 h sentado podem cair no mesmo tick.
+  // Empilhar dois modais deixaria um preso atrás do outro.
+  let _filaModais = [];
+  let _modalAberto = false;
+
+  function abrirModal(cfg) {
+    const overlay = el("alerta-bem-estar-overlay");
+    const titulo = el("alerta-bem-estar-titulo");
+    const mensagem = el("alerta-bem-estar-mensagem");
+    const acao = el("alerta-bem-estar-acao");
+    const ignorar = el("alerta-bem-estar-ignorar");
+    if (!overlay || !titulo || !mensagem || !acao || !ignorar) return;
+
+    if (_modalAberto) {
+      _filaModais.push(cfg);
+      return;
+    }
+
+    titulo.textContent = cfg.titulo;
+    mensagem.textContent = cfg.mensagem;
+    acao.textContent = cfg.rotuloAcao;
+
+    // onclick (e não addEventListener) porque o mesmo botão serve os 3
+    // modais: a atribuição substitui o handler anterior em vez de somar.
+    acao.onclick = function () {
+      fecharModal();
+      irParaAba(cfg.aba);
+    };
+    ignorar.onclick = fecharModal;
+
+    overlay.classList.remove("display-none");
+    _modalAberto = true;
+    acao.focus();
+  }
+
+  function fecharModal() {
+    const overlay = el("alerta-bem-estar-overlay");
+    if (overlay) overlay.classList.add("display-none");
+    _modalAberto = false;
+
+    if (_filaModais.length) {
+      const proximo = _filaModais.shift();
+      setTimeout(() => abrirModal(proximo), 400);
+    }
+  }
+
+  // Esc fecha (equivale a Ignorar). Clique no fundo NÃO fecha: o alerta
+  // pede uma decisão, não some por um clique perdido na tela.
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && _modalAberto) fecharModal();
+  });
+
+  // Navega clicando no item de menu, mantendo o app como única fonte de
+  // verdade da navegação (mesma abordagem do notifications.js).
+  function irParaAba(titulo) {
+    const item = Array.from(document.querySelectorAll(".link-nav")).find(
+      (n) => (n.getAttribute("title") || "").trim() === titulo
+    );
+    if (item) item.click();
+  }
+
+  // ------------------------------------------------------------------
+  // Disparo
+  // ------------------------------------------------------------------
+  // Manda para o sino + pop-up nativo + POST /notifications.
+  function registrarNoHistorico(opts) {
+    if (
+      window.StamflowNotifications &&
+      typeof window.StamflowNotifications.pushLocalAlert === "function"
+    ) {
+      window.StamflowNotifications.pushLocalAlert(opts);
+    }
+  }
+
+  function dispararToast(cfg) {
+    marcarDisparado(cfg.id);
+    mostrarToast(cfg.mensagem);
+    registrarNoHistorico({
+      tipo: cfg.tipo,
+      titulo: cfg.titulo,
+      mensagem: cfg.mensagem,
+      link_destino: cfg.destino,
+    });
+  }
+
+  function dispararModal(cfg) {
+    marcarDisparado(cfg.id);
+    abrirModal(cfg);
+    registrarNoHistorico({
+      tipo: cfg.tipo,
+      titulo: cfg.titulo,
+      mensagem: cfg.mensagem,
+      link_destino: cfg.destino,
+    });
+  }
+
+  // Deriva o nível geral da postura a partir das 4 partes do corpo.
   // Conservador: a pior parte define o nível (bem-estar pede alerta cedo).
   function nivelPosturaGeral() {
     try {
@@ -768,77 +973,108 @@ setInterval(() => {
     }
   }
 
-  function alertar(opts) {
-    if (window.StamflowNotifications && typeof window.StamflowNotifications.pushLocalAlert === "function") {
-      window.StamflowNotifications.pushLocalAlert(opts);
-    }
+  function zerarSessao() {
+    _sentadoMs = 0;
+    _posturaRuimMs = 0;
   }
 
+  // ------------------------------------------------------------------
+  // Loop
+  // ------------------------------------------------------------------
   setInterval(function () {
     const agora = Date.now();
+    const delta = _ultimoTick === null ? 0 : Math.min(agora - _ultimoTick, DELTA_MAX_MS);
+    _ultimoTick = agora;
 
-    // --- Presença / uso contínuo ---
-    if (_facePresent) {
-      _ausenteDesde = null;
-      if (_sentadoDesde === null) _sentadoDesde = agora;
+    conferirViradaDeDia();
 
-      // 3h sentado -> pausa
-      if (agora - _sentadoDesde >= SENTADO_LIMITE_MS &&
-          agora - _ultimoAlertaPausa >= COOLDOWN_MS) {
-        _ultimoAlertaPausa = agora;
-        alertar({
-          tipo: "pausa_recomendada",
-          titulo: "Hora de uma pausa",
-          mensagem: "Você está há cerca de 3 horas em frente ao computador. Que tal uma pausa mental para recarregar?",
-          link_destino: "pausa-mental",
-        });
-      }
-    } else {
-      // Rosto ausente: se ficar ausente tempo suficiente, considera pausa real
-      // e zera o contador de uso contínuo.
+    if (!_facePresent) {
       if (_ausenteDesde === null) _ausenteDesde = agora;
-      if (agora - _ausenteDesde >= AUSENCIA_RESET_MS) {
-        _sentadoDesde = null;
-      }
-      // Sem rosto não há postura a avaliar.
-      _criticaDesde = null;
-      _atencaoDesde = null;
+      // Ausência longa = pausa real: reinicia sessão e postura acumulada.
+      if (agora - _ausenteDesde >= AUSENCIA_RESET_MS) zerarSessao();
       return;
     }
 
-    // --- Postura ---
-    const nivel = nivelPosturaGeral();
+    _ausenteDesde = null;
+    _sentadoMs += delta;
 
-    if (nivel === "critico") {
-      _atencaoDesde = null;
-      if (_criticaDesde === null) _criticaDesde = agora;
-      if (agora - _criticaDesde >= CRITICA_LIMITE_MS &&
-          agora - _ultimoAlertaCritica >= COOLDOWN_MS) {
-        _ultimoAlertaCritica = agora;
-        alertar({
-          tipo: "postura_critica",
-          titulo: "Ajuste sua postura",
-          mensagem: "Você está há cerca de 10 minutos em postura crítica. Reposicione-se para evitar dores e fadiga.",
-          link_destino: "checkup",
-        });
-      }
-    } else if (nivel === "atencao") {
-      _criticaDesde = null;
-      if (_atencaoDesde === null) _atencaoDesde = agora;
-      if (agora - _atencaoDesde >= ATENCAO_LIMITE_MS &&
-          agora - _ultimoAlertaAtencao >= COOLDOWN_MS) {
-        _ultimoAlertaAtencao = agora;
-        alertar({
-          tipo: "postura_atencao",
-          titulo: "Atenção à postura",
-          mensagem: "Você está há cerca de 30 minutos em postura de atenção. Um pequeno ajuste agora faz diferença.",
-          link_destino: "checkup",
-        });
-      }
-    } else {
-      // Postura ok: zera os contadores de postura ruim.
-      _criticaDesde = null;
-      _atencaoDesde = null;
+    const nivel = nivelPosturaGeral();
+    if (nivel === "critico" || nivel === "atencao") _posturaRuimMs += delta;
+
+    // [1] 30 min de postura ruim -> toast de 5s
+    if (_posturaRuimMs >= LIMITE_POSTURA_TOAST && !jaDisparou("postura30")) {
+      dispararToast({
+        id: "postura30",
+        tipo: "postura_critica",
+        titulo: "Alerta de Postura",
+        mensagem:
+          "Alerta de postura: você permaneceu 30min em postura de nível crítico. Procure alinhar a postura ou fazer uma pausa",
+        destino: "checkup",
+      });
     }
-  }, CHECK_INTERVAL_MS);
+
+    // [2] 60 min de postura ruim -> modal com [Ir para exercício]
+    if (_posturaRuimMs >= LIMITE_POSTURA_MODAL && !jaDisparou("postura60")) {
+      dispararModal({
+        id: "postura60",
+        tipo: "postura_critica",
+        titulo: "Atenção à sua postura",
+        mensagem:
+          "Atenção: você permaneceu 60min em postura de nível crítico. Faça uma pausa preventiva, fortalecendo seu corpo.",
+        rotuloAcao: "Ir para exercício",
+        aba: "Exercises",
+        destino: "exercicios",
+      });
+    }
+
+    // [3] 3 h sentado -> modal com [Ir para exercícios]
+    if (_sentadoMs >= LIMITE_SENTADO_EXERCICIO && !jaDisparou("sentado3h")) {
+      dispararModal({
+        id: "sentado3h",
+        tipo: "pausa_recomendada",
+        titulo: "Ergonomia ativa",
+        mensagem:
+          "Ergonomia ativa: 3 horas sentado reduz a eficiência vascular. Eleve seu fluxo sanguíneo e disposição",
+        rotuloAcao: "Ir para exercícios",
+        aba: "Exercises",
+        destino: "exercicios",
+      });
+    }
+
+    // [4] 4 h sentado -> modal com [Pausa mental]
+    if (_sentadoMs >= LIMITE_SENTADO_MENTAL && !jaDisparou("sentado4h")) {
+      dispararModal({
+        id: "sentado4h",
+        tipo: "pausa_recomendada",
+        titulo: "Limpar o cache mental",
+        mensagem:
+          "Limpar o cache mental: muito tempo na mesma posição eleva o cortisol silenciosamente. Ative o modo de calma.",
+        rotuloAcao: "Pausa mental",
+        aba: "Mental Pause",
+        destino: "pausa-mental",
+      });
+    }
+  }, TICK_MS);
+
+  // Exposto para depuração e para os testes manuais: permite forçar os
+  // contadores sem esperar 4 horas na frente da câmera.
+  window.StamflowBemEstar = {
+    estado: function () {
+      return {
+        sentadoMs: _sentadoMs,
+        posturaRuimMs: _posturaRuimMs,
+        disparados: Object.assign({}, _disparados),
+        facePresent: typeof _facePresent === "boolean" ? _facePresent : null,
+        nivelPostura: nivelPosturaGeral(),
+      };
+    },
+    simular: function (sentadoMs, posturaRuimMs) {
+      if (typeof sentadoMs === "number") _sentadoMs = sentadoMs;
+      if (typeof posturaRuimMs === "number") _posturaRuimMs = posturaRuimMs;
+    },
+    limparFlags: function () {
+      _disparados = {};
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    },
+  };
 })();

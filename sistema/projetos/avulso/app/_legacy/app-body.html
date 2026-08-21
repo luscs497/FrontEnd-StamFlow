@@ -1805,3 +1805,30 @@
             </ul>
         </div>
     </section>
+
+    <!-- ================================================================
+         Alertas de bem-estar e postura (camera.js).
+         Toast do alerta de 30 min e modal compartilhado pelos alertas de
+         60 min, 3 h e 4 h. Texto e botão de ação são preenchidos em
+         runtime; nascem ocultos.
+         ================================================================ -->
+    <div class="alerta-bem-estar-toast display-none" id="alerta-bem-estar-toast" role="status" aria-live="polite">
+        <div class="alerta-bem-estar-toast-icone">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <p id="alerta-bem-estar-toast-texto"></p>
+    </div>
+
+    <div class="alerta-bem-estar-overlay display-none" id="alerta-bem-estar-overlay">
+        <div class="alerta-bem-estar-modal" role="alertdialog" aria-modal="true" aria-labelledby="alerta-bem-estar-titulo" aria-describedby="alerta-bem-estar-mensagem">
+            <div class="alerta-bem-estar-icone">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <h2 id="alerta-bem-estar-titulo"></h2>
+            <p id="alerta-bem-estar-mensagem"></p>
+            <div class="alerta-bem-estar-acoes">
+                <button type="button" class="btn btn-gray-white" id="alerta-bem-estar-acao"></button>
+                <button type="button" class="btn btn-yellow-svg" id="alerta-bem-estar-ignorar">Ignorar</button>
+            </div>
+        </div>
+    </div>

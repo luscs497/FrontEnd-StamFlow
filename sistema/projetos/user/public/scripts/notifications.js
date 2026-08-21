@@ -22,6 +22,7 @@
   // correspondente (a navegação real é feita simulando clique no menu).
   const DESTINO_TO_MENU_TITLE = {
     "pausa-mental": "Mental Pause",
+    "exercicios": "Exercises",
     "checkup": "Checkup Scan",
     "relatorios": "Insights & Analytics",
     "dashboard": "Dashboard",
