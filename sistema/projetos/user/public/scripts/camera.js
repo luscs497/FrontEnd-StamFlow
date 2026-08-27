@@ -744,6 +744,14 @@ setInterval(() => {
  *     minuto não apaga o desgaste do que já passou — só uma pausa de
  *     verdade (a mesma que zera a sessão) reinicia a conta.
  *
+ * Sumir da câmera nem sempre é pausa: virar para o colega, pegar o copo
+ * ou um frame que o detector perdeu tiram o rosto por poucos segundos.
+ * Por isso a ausência tem duas faixas — até AUSENCIA_RESET_MS os dois
+ * cronômetros só PAUSAM (o tempo fora não entra, mas nada é perdido);
+ * passando disso é pausa real e zera. E toda volta passa por um warm-up
+ * de WARMUP_MS antes de voltar a contar, para quem está se ajeitando na
+ * cadeira não somar tempo nem levar postura crítica pelo movimento.
+ *
  * O disparo passa por window.StamflowNotifications.pushLocalAlert, que
  * já cuida do item no sino, do pop-up nativo do navegador e do
  * POST /notifications (com credentials e X-CSRF-Token, via o fetch
@@ -756,11 +764,18 @@ setInterval(() => {
 (function () {
   "use strict";
 
-  const TICK_MS = 15 * 1000;              // granularidade da verificação
+  // 1s, e não os 15s de antes: a tolerância de ausência (10s) e o
+  // warm-up (2s) são mais curtos que o tick antigo, então com ele um
+  // sumiço de 9s podia cair inteiro entre dois ticks (nunca observado)
+  // e um warm-up de 2s duraria 15s na prática.
+  const TICK_MS = 1000;                   // granularidade da verificação
   // Aba em segundo plano estrangula timers: sem teto, um tick atrasado
-  // injetaria minutos de uma só vez em quem nem estava na tela.
-  const DELTA_MAX_MS = TICK_MS * 3;
-  const AUSENCIA_RESET_MS = 60 * 1000;    // 1 min sem rosto = pausa real
+  // injetaria minutos de uma só vez em quem nem estava na tela. O teto
+  // é absoluto (e não TICK_MS * 3) para continuar valendo os mesmos 45s
+  // de antes — atrelado ao tick novo, passaria a descontar tempo real.
+  const DELTA_MAX_MS = 45 * 1000;
+  const AUSENCIA_RESET_MS = 10 * 1000;    // 10s sem rosto = pausa real
+  const WARMUP_MS = 2 * 1000;             // na volta, 2s para se acomodar
   const TOAST_MS = 5000;                  // [1] some sozinho, sem clique
 
   const LIMITE_POSTURA_TOAST = 30 * 60 * 1000;
@@ -774,6 +789,7 @@ setInterval(() => {
   let _sentadoMs = 0;
   let _posturaRuimMs = 0;
   let _ausenteDesde = null;
+  let _retornoDesde = null;
   let _ultimoTick = null;
 
   // ------------------------------------------------------------------
@@ -990,12 +1006,28 @@ setInterval(() => {
 
     if (!_facePresent) {
       if (_ausenteDesde === null) _ausenteDesde = agora;
-      // Ausência longa = pausa real: reinicia sessão e postura acumulada.
+      // Curta: só pausa — sair sem somar delta já segura os cronômetros
+      // onde estavam. Longa: pausa real, reinicia sessão e postura.
       if (agora - _ausenteDesde >= AUSENCIA_RESET_MS) zerarSessao();
+      // Qualquer sumiço, por menor que seja, reabre o warm-up na volta.
+      _retornoDesde = null;
       return;
     }
 
-    _ausenteDesde = null;
+    // Rosto de volta: marca o instante do retorno para o warm-up correr.
+    if (_ausenteDesde !== null) {
+      _retornoDesde = agora;
+      _ausenteDesde = null;
+    }
+
+    // Warm-up: enquanto a pessoa se acomoda, o tempo não corre e a
+    // postura não é lida — é justamente aí que ela aparece "crítica"
+    // por estar se ajeitando, e viraria falso positivo.
+    if (_retornoDesde !== null) {
+      if (agora - _retornoDesde < WARMUP_MS) return;
+      _retornoDesde = null;
+    }
+
     _sentadoMs += delta;
 
     const nivel = nivelPosturaGeral();
@@ -1065,6 +1097,8 @@ setInterval(() => {
         posturaRuimMs: _posturaRuimMs,
         disparados: Object.assign({}, _disparados),
         facePresent: typeof _facePresent === "boolean" ? _facePresent : null,
+        ausenteHaMs: _ausenteDesde === null ? 0 : Date.now() - _ausenteDesde,
+        emWarmup: _retornoDesde !== null,
         nivelPostura: nivelPosturaGeral(),
       };
     },
