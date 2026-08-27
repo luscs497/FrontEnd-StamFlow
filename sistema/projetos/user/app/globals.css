@@ -7805,3 +7805,57 @@ header {
   color: #e2e8f0;
   text-decoration: underline;
 }
+
+
+/* ====================================================================
+   ESTABILIDADE HORIZONTAL DO LAYOUT (sem "layout shift" lateral)
+
+   Sintoma: filtrar uma lista até zero resultados (a busca do FAQ é o
+   caso relatado) encurta a página, a barra de rolagem vertical some e a
+   viewport ganha ~15px de largura. Como o header tem largura fixa, os
+   15px caem inteiros na .site-content: ela salta de 1125px para 1140px
+   e o conteúdo centralizado dentro dela anda ~7px para a direita.
+
+   [1] Calha da barra sempre reservada. `overflow-y: scroll` é a base
+       que qualquer navegador entende, mas deixa a barra desenhada mesmo
+       sem ter o que rolar; onde `scrollbar-gutter: stable` existe ele
+       reserva o mesmo espaço sem a barra permanente, então assume — e
+       nele o overflow-y volta a `visible` de propósito: declarar `auto`
+       aqui faria o `overflow-x: clip` que já existe no topo do arquivo
+       degradar para `hidden` (regra de pareamento dos dois eixos),
+       tornando o html um container de rolagem e trocando a semântica de
+       clip por uma que aceita rolagem horizontal programática.
+
+   [2] .site-content ocupa o que sobra de forma estável. `flex-grow: 1`
+       (e não o atalho `flex: 1`, que zeraria a flex-basis e mudaria a
+       altura no mobile, onde o body vira coluna) amarra a largura a "o
+       que sobrou do header" em vez de deixá-la a cargo do encolhimento.
+       `min-width: 0` remove o piso de min-content automático dos itens
+       flex — sem ele um conteúdo largo trava o encolhimento e a largura
+       volta a depender do que está na tela, que é justamente o que muda
+       quando a lista esvazia.
+
+   O seletor é `body .site-content` de propósito, e por duas razões:
+   os arquivos de breakpoint redeclaram `.site-content` e alguns carregam
+   depois deste, então a especificidade a mais garante a regra em todas
+   as faixas; e ele precisa ser DESCENDENTE, não filho (`>`), porque em
+   user/avulso o markup legado entra por um wrapper `display: contents`
+   (LegacyMarkup) — a .site-content continua sendo item flex do body para
+   o layout, mas no DOM o pai dela é a div do wrapper, e `body > ...` não
+   casaria. No gestor o markup é JSX direto no body e casa dos dois jeitos.
+   ==================================================================== */
+html {
+    overflow-y: scroll;
+}
+
+@supports (scrollbar-gutter: stable) {
+    html {
+        overflow-y: visible;
+        scrollbar-gutter: stable;
+    }
+}
+
+body .site-content {
+    flex-grow: 1;
+    min-width: 0;
+}
