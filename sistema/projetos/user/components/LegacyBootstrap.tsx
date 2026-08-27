@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { LEGACY_SCRIPTS_CORE, LEGACY_SCRIPTS_HEAVY, comVersao } from "@/lib/scripts";
+import { ASSET_VERSION, LEGACY_SCRIPTS_CORE, LEGACY_SCRIPTS_HEAVY, comVersao } from "@/lib/scripts";
 
 declare global {
   interface Window {
     __stamflowBooted?: boolean;
+    __stamflowAssetVersion?: string;
   }
 }
 
@@ -171,6 +172,13 @@ export default function LegacyBootstrap() {
   useEffect(() => {
     if (window.__stamflowBooted) return;
     window.__stamflowBooted = true;
+
+    // Os scripts legados também buscam dados de /public/data em runtime, e um
+    // fetch() cru fica sujeito ao cache heurístico do navegador (sem
+    // Cache-Control no .htaccess, um JSON antigo pode sobreviver dias a um
+    // deploy). Publicar a versão aqui deixa esses scripts versionarem a URL
+    // com a mesma chave usada nos <script>.
+    window.__stamflowAssetVersion = ASSET_VERSION;
 
     let cancelled = false;
 
