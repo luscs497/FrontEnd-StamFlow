@@ -728,6 +728,21 @@
     if (!raiz || !raiz.offsetParent) return; // seção ainda oculta
     const topo = raiz.getBoundingClientRect().top;
     raiz.style.height = Math.max(420, Math.round(window.innerHeight - topo)) + "px";
+    medirCabecalho();
+  }
+
+  // O cabeçalho flutua sobre a área do quadro; as etapas 2 e 3 precisam saber a
+  // altura dele para não nascerem por baixo. Muda quando o submenu de
+  // ferramentas abre/fecha e quando o texto quebra em outra largura, então é
+  // medido em runtime e publicado como custom property.
+  function medirCabecalho() {
+    const raiz = document.getElementById("detox-root");
+    const cabecalho = raiz && raiz.querySelector(".detox-header");
+    if (!raiz || !cabecalho) return;
+    const altura = Math.round(cabecalho.getBoundingClientRect().height);
+    // Com a seção ainda oculta a medida sai 0; publicar isso zeraria o padding
+    // das etapas 2 e 3 (o fallback do CSS só vale se a variável não existir).
+    if (altura > 0) raiz.style.setProperty("--detox-header-h", altura + "px");
   }
 
   function init() {
@@ -735,6 +750,9 @@
     if (!raiz || raiz.dataset.detoxIniciado) return;
     raiz.dataset.detoxIniciado = "1";
     renderMoodWidget();
+    switchStep(1);          // monta as abas e deixa a etapa 1 visível
+    toggleFerramentas(false); // submenu começa recolhido
+    renderDailyWinsInputs();
     ajustarAltura();
 
     window.addEventListener("resize", ajustarAltura);
@@ -745,6 +763,602 @@
 
     // Colapsar/expandir a sidebar muda a largura da área; a altura não, mas o
     // widget de humor é centralizado por CSS e não precisa de recálculo.
+  }
+
+
+  /* ==========================================================================
+   * ETAPAS 2 e 3, MÉTODO STOP e DAILY WINS
+   *
+   * Portado do artefato novo do Gemini Canvas com as MESMAS três adaptações do
+   * bloco original (ver cabeçalho): ids prefixados com `detox-`, tudo dentro
+   * desta IIFE e exposto só em window.detoxMental, sem window.onload.
+   *
+   * Só as funções NOVAS vieram do artefato. As 24 que já existiam aqui ficaram
+   * como estavam de propósito: o artefato é gerado do zero a cada iteração e
+   * não tem os ajustes feitos no projeto — o setupMoodWidgetDragging dele, por
+   * exemplo, ainda é a versão por `handle` que o commit fec148d substituiu.
+   *
+   * Duas diferenças deliberadas em relação ao artefato:
+   *   - textos do usuário passam por escaparHTML() antes de entrar em
+   *     innerHTML. O artefato interpola item/act crus, e esse conteúdo vem de
+   *     post-it e de input.
+   *   - os handlers inline não podem mexer em variável de módulo
+   *     (`dailyWinsList[i] = this.value` no artefato), então a escrita passa
+   *     por detoxMental.setDailyWin / setProblema.
+   * ========================================================================== */
+
+  // O detox.js original chama document.getElementById direto; como o bloco
+  // abaixo consulta muitos ids, um atalho local evita repetir a chamada.
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+  // Estado das etapas novas.
+  let currentStep = 1;
+  let blockCategories = { 1: [], 2: [], 3: [] };
+  let microActions = { problem: "", list24h: [], listNext: [] };
+  let dailyWinsList = [""];
+  let draggedKanbanItem = null;
+  let draggedActionIndex = null;
+
+  function escaparHTML(valor) {
+    return String(valor == null ? "" : valor)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  // --------------------------------------------------------------------------
+  // Navegação entre as etapas
+  // --------------------------------------------------------------------------
+  const CLASSE_ABA_ATIVA =
+    "flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md shrink-0";
+  const CLASSE_ABA_INATIVA =
+    "flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/50 shrink-0";
+
+  const INSTRUCAO_ETAPA = {
+    1: "Clique em qualquer lugar para escrever livremente",
+    2: "Importe as notas do Brain Dump ou adicione manualmente",
+    3: "Selecione da etapa Blocos ou adicione manualmente",
+  };
+
+  // A etapa 1 continua sendo o #detox-whiteboard que já existia: 8 pontos do
+  // código antigo o consultam por esse id, então mapear é mais barato (e menos
+  // arriscado) do que renomear o container.
+  const ID_ETAPA = { 1: "detox-whiteboard", 2: "detox-step2View", 3: "detox-step3View" };
+
+  function switchStep(step) {
+    currentStep = step;
+
+    [1, 2, 3].forEach(function (s) {
+      const view = el(ID_ETAPA[s]);
+      if (view) view.classList.toggle("hidden", s !== step);
+      const btn = el("detox-tabBtn" + s);
+      if (btn) btn.className = s === step ? CLASSE_ABA_ATIVA : CLASSE_ABA_INATIVA;
+    });
+
+    const instrucao = el("detox-step1Instruction");
+    if (instrucao) {
+      instrucao.classList.remove("hidden");
+      instrucao.textContent = INSTRUCAO_ETAPA[step] || "";
+    }
+
+    if (step === 2) renderBlockCategories();
+    if (step === 3) renderStep3ProblemSelector();
+  }
+
+  // --------------------------------------------------------------------------
+  // Método STOP
+  // --------------------------------------------------------------------------
+  function openStopModal() {
+    openModal("detox-stopModal");
+  }
+
+  // --------------------------------------------------------------------------
+  // Daily Wins (mural de vitórias)
+  // --------------------------------------------------------------------------
+  function openDailyWinsModal() {
+    if (dailyWinsList.length === 0) dailyWinsList = [""];
+    renderDailyWinsInputs();
+    openModal("detox-dailyWinsModal");
+  }
+
+  function setDailyWin(idx, valor) {
+    if (idx >= 0 && idx < dailyWinsList.length) dailyWinsList[idx] = valor;
+  }
+
+  function renderDailyWinsInputs() {
+    const container = el("detox-victoryInputsContainer");
+    if (!container) return;
+
+    container.innerHTML = dailyWinsList
+      .map(function (win, idx) {
+        const remover = dailyWinsList.length > 1
+          ? '<button onclick="detoxMental.removeVictoryField(' + idx + ')" class="text-slate-500 hover:text-rose-400 p-1 text-xs shrink-0" title="Remover">✕</button>'
+          : "";
+        return (
+          '<div class="flex items-center gap-2">' +
+          '<span class="text-emerald-400 shrink-0 text-sm">✅</span>' +
+          '<input type="text" value="' + escaparHTML(win) + '" ' +
+          'oninput="detoxMental.setDailyWin(' + idx + ', this.value)" ' +
+          'placeholder="Ex: Concluí o relatório importante, caminhei 30 min..." ' +
+          'class="flex-1 bg-[#1b1a2e] border border-slate-700 text-xs text-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">' +
+          remover +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function addVictoryField() {
+    dailyWinsList.push("");
+    renderDailyWinsInputs();
+  }
+
+  function removeVictoryField(idx) {
+    if (dailyWinsList.length > 1) {
+      dailyWinsList.splice(idx, 1);
+      renderDailyWinsInputs();
+    }
+  }
+
+  function saveDailyWins() {
+    closeModal("detox-dailyWinsModal");
+    showToast("Vitória registrada. Ciclo de hoje concluído!", "🏆");
+  }
+
+  function celebrateAndClearDailyWins() {
+    dailyWinsList = [""];
+    renderDailyWinsInputs();
+    closeModal("detox-dailyWinsModal");
+    showToast("Vitória registrada. Ciclo de hoje concluído!", "🎉");
+  }
+
+  function openDailyWinsDownloadModal() {
+    closeModal("detox-dailyWinsModal");
+    openModal("detox-dailyWinsDownloadModal");
+  }
+
+  function openDailyWinsEliminateModal() {
+    closeModal("detox-dailyWinsModal");
+    openModal("detox-dailyWinsEliminateModal");
+  }
+
+  function vitoriasPreenchidas() {
+    return dailyWinsList.filter(function (w) {
+      return w.trim() !== "";
+    });
+  }
+
+  function triggerDailyWinsDownload(format) {
+    closeModal("detox-dailyWinsDownloadModal");
+    const validas = vitoriasPreenchidas();
+    if (validas.length === 0) {
+      showToast("Nenhuma vitória registrada para salvar.", "💡");
+      return;
+    }
+    if (format === "png") exportDailyWinsPNG(validas);
+    else if (format === "pdf") exportDailyWinsPDF(validas);
+    else if (format === "docx") exportDailyWinsDOC(validas);
+  }
+
+  // Cartão offscreen que o html2canvas fotografa. Estilo inline de propósito:
+  // o html2canvas lê o CSS computado, e as utilitárias do detox.css só valem
+  // dentro de #detox-root — este nó vive solto no body.
+  function montarCartaoVitorias(validas) {
+    const container = document.createElement("div");
+    container.style.cssText =
+      "position:fixed;left:-9999px;top:-9999px;width:600px;background-color:#12111f;" +
+      "color:#f1f5f9;padding:32px;border-radius:24px;border:1px solid rgba(6,95,70,0.6);" +
+      "font-family:Inter,Arial,sans-serif;";
+    container.innerHTML =
+      '<div style="display:flex;align-items:center;gap:12px;border-bottom:1px solid #1e293b;padding-bottom:16px;margin-bottom:20px;">' +
+      '<span style="font-size:28px;">🏆</span><div>' +
+      '<h1 style="font-size:20px;font-weight:bold;color:#ffffff;margin:0;">Daily Wins (Mural de Vitórias)</h1>' +
+      '<p style="font-size:12px;color:#94a3b8;margin:4px 0 0 0;">Registrado em ' +
+      new Date().toLocaleDateString("pt-BR") + "</p></div></div>" +
+      '<div style="display:flex;flex-direction:column;gap:12px;">' +
+      validas
+        .map(function (win) {
+          return (
+            '<div style="background-color:#1b1a2e;border:1px solid #065f46;padding:12px 16px;' +
+            'border-radius:12px;display:flex;align-items:center;gap:10px;">' +
+            '<span style="color:#34d399;font-size:16px;">✅</span>' +
+            '<span style="font-size:14px;color:#e2e8f0;font-weight:500;">' + escaparHTML(win) + "</span></div>"
+          );
+        })
+        .join("") +
+      "</div>" +
+      '<div style="margin-top:24px;text-align:center;font-size:11px;color:#64748b;' +
+      'border-top:1px solid #1e293b;padding-top:12px;">Detox Mental • StamFlow</div>';
+    document.body.appendChild(container);
+    return container;
+  }
+
+  function dataArquivo() {
+    return new Date().toISOString().split("T")[0];
+  }
+
+  function exportDailyWinsPNG(validas) {
+    showToast("Gerando imagem das vitórias...", "💾");
+    const cartao = montarCartaoVitorias(validas);
+    html2canvas(cartao, { backgroundColor: "#0c0b14", scale: 2 })
+      .then(function (canvas) {
+        const link = document.createElement("a");
+        link.download = "Daily_Wins_" + dataArquivo() + ".png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      })
+      .catch(function () {
+        showToast("Erro ao gerar imagem.", "⚠️");
+      })
+      .then(function () {
+        if (document.body.contains(cartao)) document.body.removeChild(cartao);
+      });
+  }
+
+  function exportDailyWinsPDF(validas) {
+    showToast("Gerando PDF das vitórias...", "💾");
+    const cartao = montarCartaoVitorias(validas);
+    html2canvas(cartao, { backgroundColor: "#0c0b14", scale: 1.5 })
+      .then(function (canvas) {
+        const jsPDF = window.jspdf && window.jspdf.jsPDF;
+        if (!jsPDF) throw new Error("jsPDF ausente");
+        const pdf = new jsPDF("p", "px", [canvas.width, canvas.height]);
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, canvas.width, canvas.height);
+        pdf.save("Daily_Wins_" + dataArquivo() + ".pdf");
+      })
+      .catch(function () {
+        showToast("Erro ao gerar PDF.", "⚠️");
+      })
+      .then(function () {
+        if (document.body.contains(cartao)) document.body.removeChild(cartao);
+      });
+  }
+
+  function exportDailyWinsDOC(validas) {
+    showToast("Gerando DOC das vitórias...", "💾");
+    const doc =
+      "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+      "xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>" +
+      "<head><meta charset='utf-8'><title>Daily Wins - Vitórias do Dia</title></head>" +
+      '<body style="font-family: Arial, sans-serif; padding: 20px;">' +
+      '<h1 style="color: #059669;">🏆 Daily Wins (Mural de Vitórias)</h1>' +
+      "<p><strong>Data de Registro:</strong> " + new Date().toLocaleDateString("pt-BR") + "</p>" +
+      '<hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;" />' +
+      "<h2>Minhas Vitórias do Dia:</h2><ul>" +
+      validas
+        .map(function (w) {
+          return '<li style="font-size: 14px; margin-bottom: 8px;">✅ ' + escaparHTML(w) + "</li>";
+        })
+        .join("") +
+      "</ul></body></html>";
+
+    const blob = new Blob(["﻿" + doc], { type: "application/msword" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Daily_Wins_" + dataArquivo() + ".doc";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function executeDailyWinsEliminate() {
+    closeModal("detox-dailyWinsEliminateModal");
+    isProcessingDisintegration = true;
+
+    switchStep(1);
+    isMoodWidgetExpanded = true;
+    renderMoodWidget();
+
+    const notas = document.querySelectorAll("#detox-notesContainer .note-bubble");
+    notas.forEach(function (n) {
+      n.classList.add("fade-out-peaceful");
+    });
+
+    showToast("Vitória registrada. Ciclo de hoje concluído.", "🏆");
+
+    setTimeout(function () {
+      dailyWinsList = [""];
+      renderDailyWinsInputs();
+      const container = el("detox-notesContainer");
+      if (container) container.innerHTML = "";
+      notes = [];
+      isProcessingDisintegration = false;
+    }, 3500);
+  }
+
+  // --------------------------------------------------------------------------
+  // Etapa 2 — Blocos (kanban de 3 categorias)
+  // --------------------------------------------------------------------------
+  function autoCategorizeNotes() {
+    const validas = notes.filter(function (n) {
+      return n.text.trim() !== "";
+    });
+    if (validas.length === 0) {
+      showToast("Escreva pensamentos na Parte 1 para importar.", "💡");
+      return;
+    }
+
+    let adicionadas = 0;
+    validas.forEach(function (nota) {
+      const texto = nota.text.trim();
+      const existe =
+        blockCategories[1].indexOf(texto) !== -1 ||
+        blockCategories[2].indexOf(texto) !== -1 ||
+        blockCategories[3].indexOf(texto) !== -1;
+      if (!existe) {
+        blockCategories[1].push(texto);
+        adicionadas++;
+      }
+    });
+
+    renderBlockCategories();
+    showToast(adicionadas + " pensamentos importados para a Parte 2!", "📂");
+  }
+
+  const ROTULO_BLOCO = { 1: "Semana", 2: "Próximas", 3: "Não agora" };
+  // Classe inteira, e não "hover:text-" + cor + "-400": o Tailwind gera o CSS
+  // varrendo o fonte por strings literais, então classe montada por
+  // concatenação simplesmente não é gerada e o hover fica sem efeito.
+  const HOVER_BLOCO = {
+    1: "hover:text-emerald-400",
+    2: "hover:text-blue-400",
+    3: "hover:text-rose-400",
+  };
+
+  function renderBlockCategories() {
+    [1, 2, 3].forEach(function (cat) {
+      const container = el("detox-blockCategory" + cat);
+      const badge = el("detox-countBlock" + cat);
+      if (!container || !badge) return;
+
+      const itens = blockCategories[cat];
+      badge.textContent = itens.length;
+
+      if (itens.length === 0) {
+        container.innerHTML =
+          '<div class="h-28 border border-dashed border-slate-800 rounded-xl flex items-center ' +
+          'justify-center text-slate-500 text-xs italic pointer-events-none">Nenhum item inserido</div>';
+        return;
+      }
+
+      container.innerHTML = itens
+        .map(function (item, idx) {
+          const mover = [1, 2, 3]
+            .filter(function (destino) {
+              return destino !== cat;
+            })
+            .map(function (destino) {
+              return (
+                '<button onclick="detoxMental.moveBlockItem(' + cat + ", " + destino + ", " + idx + ')" ' +
+                'class="' + HOVER_BLOCO[destino] + ' font-semibold">' +
+                ROTULO_BLOCO[destino] + "</button>"
+              );
+            })
+            .join("");
+
+          return (
+            '<div draggable="true" ' +
+            'ondragstart="detoxMental.handleKanbanDragStart(event, ' + cat + ", " + idx + ')" ' +
+            'ondragend="detoxMental.handleKanbanDragEnd(event)" ' +
+            'class="bg-[#1b1a2e] border border-slate-800 hover:border-slate-700 rounded-xl p-3 ' +
+            'flex flex-col gap-2 text-xs text-slate-200 group cursor-grab active:cursor-grabbing transition-all">' +
+            '<div class="flex items-start justify-between gap-2">' +
+            '<span class="leading-relaxed font-medium">' + escaparHTML(item) + "</span>" +
+            '<button onclick="detoxMental.removeBlockItem(' + cat + ", " + idx + ')" ' +
+            'class="text-slate-500 hover:text-rose-400 p-0.5 rounded focus:outline-none shrink-0" title="Remover">✕</button>' +
+            "</div>" +
+            '<div class="flex items-center gap-1.5 pt-1 border-t border-slate-800/60 text-[10px] text-slate-400">' +
+            "<span>Mover para:</span>" + mover +
+            "</div></div>"
+          );
+        })
+        .join("");
+    });
+
+    const total = blockCategories[1].length + blockCategories[2].length + blockCategories[3].length;
+    const badge = el("detox-step2Badge");
+    if (badge) badge.textContent = total;
+  }
+
+  function handleBlockInput(e, cat) {
+    if (e.key !== "Enter") return;
+    const valor = e.target.value.trim();
+    if (!valor) return;
+    blockCategories[cat].push(valor);
+    e.target.value = "";
+    renderBlockCategories();
+  }
+
+  function moveBlockItem(origem, destino, idx) {
+    const item = blockCategories[origem].splice(idx, 1)[0];
+    if (item) {
+      blockCategories[destino].push(item);
+      renderBlockCategories();
+    }
+  }
+
+  function removeBlockItem(cat, idx) {
+    blockCategories[cat].splice(idx, 1);
+    renderBlockCategories();
+  }
+
+  function handleKanbanDragStart(e, cat, idx) {
+    draggedKanbanItem = { cat: cat, idx: idx };
+    if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
+    e.currentTarget.classList.add("opacity-40");
+  }
+
+  function handleKanbanDragOver(e) {
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+  }
+
+  function handleKanbanDrop(e, destino) {
+    e.preventDefault();
+    if (!draggedKanbanItem) return;
+    const item = blockCategories[draggedKanbanItem.cat].splice(draggedKanbanItem.idx, 1)[0];
+    if (item) {
+      blockCategories[destino].push(item);
+      renderBlockCategories();
+    }
+    draggedKanbanItem = null;
+  }
+
+  function handleKanbanDragEnd(e) {
+    e.currentTarget.classList.remove("opacity-40");
+    draggedKanbanItem = null;
+  }
+
+  // --------------------------------------------------------------------------
+  // Etapa 3 — Ações de 24h
+  // --------------------------------------------------------------------------
+  function renderStep3ProblemSelector() {
+    const seletor = el("detox-problemSelector");
+    if (!seletor) return;
+    seletor.innerHTML =
+      '<option value="">Selecionar da etapa Blocos</option>' +
+      blockCategories[1]
+        .map(function (item, idx) {
+          return '<option value="' + escaparHTML(item) + '">' + (idx + 1) + ". " + escaparHTML(item) + "</option>";
+        })
+        .join("");
+    renderMicroActions();
+  }
+
+  function handleProblemSelect(valor) {
+    if (!valor) return;
+    const campo = el("detox-customProblemInput");
+    if (campo) campo.value = valor;
+    microActions.problem = valor;
+  }
+
+  function setProblema(valor) {
+    microActions.problem = valor;
+  }
+
+  function addMicroAction() {
+    const campo = el("detox-customProblemInput");
+    const problema = campo ? campo.value.trim() : "";
+    if (!problema) {
+      showToast("Por favor, selecione ou digite o problema primeiro.", "⚠️");
+      return;
+    }
+    microActions.problem = problema;
+
+    const input = el("detox-action24hInput");
+    if (input && input.value.trim()) {
+      microActions.list24h.push(input.value.trim());
+      input.value = "";
+      renderMicroActions();
+    }
+  }
+
+  function renderMicroActions() {
+    const lista = el("detox-list24h");
+    if (!lista) return;
+
+    if (microActions.list24h.length === 0) {
+      lista.innerHTML = '<li class="text-slate-500 text-xs italic py-2">Nenhuma ação adicionada ainda.</li>';
+    } else {
+      lista.innerHTML = microActions.list24h
+        .map(function (acao, i) {
+          const subir = i > 0
+            ? '<button onclick="detoxMental.moveMicroActionUp(' + i + ')" class="text-slate-500 hover:text-emerald-300 p-1 text-[10px]" title="Mover para cima">▲</button>'
+            : "";
+          const descer = i < microActions.list24h.length - 1
+            ? '<button onclick="detoxMental.moveMicroActionDown(' + i + ')" class="text-slate-500 hover:text-emerald-300 p-1 text-[10px]" title="Mover para baixo">▼</button>'
+            : "";
+          return (
+            '<li draggable="true" ' +
+            'ondragstart="detoxMental.handleActionDragStart(event, ' + i + ')" ' +
+            'ondragover="detoxMental.handleActionDragOver(event)" ' +
+            'ondrop="detoxMental.handleActionDrop(event, ' + i + ')" ' +
+            'ondragend="detoxMental.handleActionDragEnd(event)" ' +
+            'class="flex items-center justify-between gap-3 text-xs text-emerald-200 bg-emerald-950/20 ' +
+            'border border-emerald-900/40 px-3.5 py-2.5 rounded-xl transition-all cursor-grab ' +
+            'active:cursor-grabbing hover:border-emerald-700/60 group">' +
+            '<div class="flex items-center gap-2.5 min-w-0 flex-1">' +
+            '<span class="text-slate-500 group-hover:text-emerald-400 text-sm shrink-0 select-none" title="Arraste para reordenar">☰</span>' +
+            '<span class="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold text-[10px] flex items-center justify-center shrink-0">' +
+            (i + 1) + "</span>" +
+            '<span class="truncate leading-relaxed">' + escaparHTML(acao) + "</span></div>" +
+            '<div class="flex items-center gap-1 shrink-0">' + subir + descer +
+            '<button onclick="detoxMental.removeMicroAction(' + i + ')" class="text-slate-500 hover:text-rose-400 p-1 ml-1" title="Remover">✕</button>' +
+            "</div></li>"
+          );
+        })
+        .join("");
+    }
+
+    const badge = el("detox-step3Badge");
+    if (badge) badge.textContent = microActions.list24h.length;
+  }
+
+  function moveMicroActionUp(idx) {
+    if (idx <= 0) return;
+    const lista = microActions.list24h;
+    const tmp = lista[idx];
+    lista[idx] = lista[idx - 1];
+    lista[idx - 1] = tmp;
+    renderMicroActions();
+  }
+
+  function moveMicroActionDown(idx) {
+    const lista = microActions.list24h;
+    if (idx >= lista.length - 1) return;
+    const tmp = lista[idx];
+    lista[idx] = lista[idx + 1];
+    lista[idx + 1] = tmp;
+    renderMicroActions();
+  }
+
+  function removeMicroAction(idx) {
+    microActions.list24h.splice(idx, 1);
+    renderMicroActions();
+  }
+
+  function handleActionDragStart(e, idx) {
+    draggedActionIndex = idx;
+    if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
+    e.currentTarget.classList.add("opacity-40");
+  }
+
+  function handleActionDragOver(e) {
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+  }
+
+  function handleActionDrop(e, destino) {
+    e.preventDefault();
+    if (draggedActionIndex === null || draggedActionIndex === destino) return;
+    const item = microActions.list24h.splice(draggedActionIndex, 1)[0];
+    microActions.list24h.splice(destino, 0, item);
+    renderMicroActions();
+  }
+
+  function handleActionDragEnd(e) {
+    e.currentTarget.classList.remove("opacity-40");
+    draggedActionIndex = null;
+  }
+
+  // --------------------------------------------------------------------------
+  // Submenu "Ferramentas" (adaptação pedida: o header pesado do mockup vira um
+  // painel colapsável, com um gatilho discreto no header atual). As abas de
+  // etapa ficam FORA dele, sempre visíveis: são navegação, e colapsá-las
+  // esconderia as etapas 2 e 3.
+  // --------------------------------------------------------------------------
+  function toggleFerramentas(forcar) {
+    const painel = el("detox-ferramentas-painel");
+    const gatilho = el("detox-ferramentas-gatilho");
+    if (!painel || !gatilho) return;
+    const aberto = typeof forcar === "boolean" ? forcar : painel.classList.contains("hidden");
+    painel.classList.toggle("hidden", !aberto);
+    gatilho.setAttribute("aria-expanded", aberto ? "true" : "false");
+    medirCabecalho(); // abrir/fechar muda a altura que as etapas 2 e 3 descontam
   }
 
   window.detoxMental = {
@@ -764,6 +1378,42 @@
     selectNoteColor: selectNoteColor,
     deleteNote: deleteNote,
     updateNoteText: updateNoteText,
+
+    // --- etapas, submenu, Método STOP e Daily Wins ---
+    switchStep: switchStep,
+    toggleFerramentas: toggleFerramentas,
+    openStopModal: openStopModal,
+
+    openDailyWinsModal: openDailyWinsModal,
+    setDailyWin: setDailyWin,
+    addVictoryField: addVictoryField,
+    removeVictoryField: removeVictoryField,
+    saveDailyWins: saveDailyWins,
+    celebrateAndClearDailyWins: celebrateAndClearDailyWins,
+    openDailyWinsDownloadModal: openDailyWinsDownloadModal,
+    triggerDailyWinsDownload: triggerDailyWinsDownload,
+    openDailyWinsEliminateModal: openDailyWinsEliminateModal,
+    executeDailyWinsEliminate: executeDailyWinsEliminate,
+
+    autoCategorizeNotes: autoCategorizeNotes,
+    handleBlockInput: handleBlockInput,
+    moveBlockItem: moveBlockItem,
+    removeBlockItem: removeBlockItem,
+    handleKanbanDragStart: handleKanbanDragStart,
+    handleKanbanDragOver: handleKanbanDragOver,
+    handleKanbanDrop: handleKanbanDrop,
+    handleKanbanDragEnd: handleKanbanDragEnd,
+
+    handleProblemSelect: handleProblemSelect,
+    setProblema: setProblema,
+    addMicroAction: addMicroAction,
+    moveMicroActionUp: moveMicroActionUp,
+    moveMicroActionDown: moveMicroActionDown,
+    removeMicroAction: removeMicroAction,
+    handleActionDragStart: handleActionDragStart,
+    handleActionDragOver: handleActionDragOver,
+    handleActionDrop: handleActionDrop,
+    handleActionDragEnd: handleActionDragEnd,
   };
 
   if (document.readyState === "loading") {

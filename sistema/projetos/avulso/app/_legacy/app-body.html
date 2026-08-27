@@ -835,7 +835,10 @@
         </div>
         <div class="container-1700 conteudo-site detox-secao display-none">
     <div id="detox-root" class="detox-root">
-        <div class="detox-header w-full bg-[#0c0b14] border-b border-slate-800/80 px-6 py-4 flex flex-col lg:flex-row items-center justify-between gap-4 z-30 shrink-0">
+        <div class="detox-header w-full bg-[#0c0b14] border-b border-slate-800/80 px-6 py-4 z-30 shrink-0">
+            <!-- Linha de cima: título + ações. Precisa do wrapper próprio porque
+                 o .detox-header agora empilha três linhas (topo, ferramentas, abas). -->
+            <div class="detox-header-topo">
 
                 <!-- Esquerda: Título principal quebrado em duas linhas com gradiente e botão de informações -->
                 <div class="flex flex-col gap-1 text-center lg:text-left flex-1 max-w-5xl">
@@ -863,11 +866,59 @@
                         </svg>
                         <span class="text-xs md:text-sm lg:text-[15px] font-bold tracking-wide">Como funciona o Detox Mental</span>
                     </button>
-                    <span class="text-[11px] text-slate-400 font-medium tracking-wide">
-                        Clique em qualquer lugar do quadro para escrever livremente
-                    </span>
+                    <!-- Gatilho discreto do submenu. O mockup trazia um header
+                         escuro com todas as ferramentas expostas; aqui elas
+                         ficam atrás deste botão para não pesar a UI. -->
+                    <button type="button" id="detox-ferramentas-gatilho" aria-expanded="false" aria-controls="detox-ferramentas-painel" onclick="detoxMental.toggleFerramentas()" class="detox-btn flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/50 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+                        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-xs md:text-sm font-bold tracking-wide">Ferramentas</span>
+                    </button>
                 </div>
+                </div>
+
+            <!-- Painel colapsável de ferramentas (Método STOP + Daily Wins).
+                 Fica dentro do fluxo do header, então abrir/fechar só muda a
+                 altura: nenhuma largura muda e não há layout shift lateral. -->
+            <div id="detox-ferramentas-painel" class="hidden w-full flex flex-wrap items-center gap-3 px-6 pb-4 border-b border-slate-800/80 bg-[#0c0b14]">
+                <button onclick="detoxMental.openStopModal()" title="Exercício rápido para momentos de angústia ou desespero" class="detox-btn flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-900/40 hover:bg-indigo-900/70 border border-indigo-700/50 text-indigo-200 transition-all focus:outline-none">
+                    <span class="text-base">🧘</span>
+                    <span class="text-xs font-bold tracking-wide">Método STOP (Angústia)</span>
+                </button>
+                <button onclick="detoxMental.openDailyWinsModal()" title="Acione o pulso de dopamina e registre suas vitórias diárias" class="detox-btn flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-950/50 hover:bg-emerald-900/70 border border-emerald-800/60 text-emerald-200 transition-all focus:outline-none">
+                    <span class="text-base">🏆</span>
+                    <span class="text-xs font-bold tracking-wide">Daily Wins (Vitórias)</span>
+                </button>
             </div>
+
+            <!-- Abas das etapas. Ficam FORA do painel colapsável de propósito:
+                 são navegação, e escondê-las tornaria as etapas 2 e 3
+                 indescobríveis. -->
+            <div class="detox-abas w-full flex flex-wrap items-center justify-between gap-3 py-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button id="detox-tabBtn1" onclick="detoxMental.switchStep(1)" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md shrink-0">
+                        <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
+                        <span>Detox</span>
+                    </button>
+                    <span class="text-slate-600 text-xs">&rarr;</span>
+                    <button id="detox-tabBtn2" onclick="detoxMental.switchStep(2)" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/50 shrink-0">
+                        <span id="detox-step2Badge" class="w-4 h-4 rounded-full bg-slate-700 flex items-center justify-center text-[10px]">0</span>
+                        <span>Blocos</span>
+                    </button>
+                    <span class="text-slate-600 text-xs">&rarr;</span>
+                    <button id="detox-tabBtn3" onclick="detoxMental.switchStep(3)" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/50 shrink-0">
+                        <span id="detox-step3Badge" class="w-4 h-4 rounded-full bg-slate-700 flex items-center justify-center text-[10px]">0</span>
+                        <span>Ações</span>
+                    </button>
+                </div>
+                <span id="detox-step1Instruction" class="text-[11px] md:text-xs text-slate-400 font-medium tracking-wide">
+                    Clique em qualquer lugar para escrever livremente
+                </span>
+            </div>
+
+            </div><!-- /.detox-header -->
 
             <div id="detox-whiteboard" class="whiteboard-grid flex-1 w-full relative overflow-hidden cursor-crosshair" onclick="detoxMental.handleWhiteboardClick(event)">
 
@@ -936,6 +987,80 @@
 
                 <!-- Área Dinâmica de Notas (Gerada via JS) -->
                 <div id="detox-notesContainer" class="w-full h-full absolute inset-0 z-10 pointer-events-none"></div>
+            </div>
+
+            <!-- ETAPA 2 — Blocos (kanban de 3 categorias) -->
+            <div id="detox-step2View" class="hidden whiteboard-grid flex-1 w-full relative overflow-y-auto p-4 md:p-6">
+                <div class="flex items-center justify-between gap-3 flex-wrap mb-4">
+                    <div>
+                        <h2 class="text-sm md:text-base font-bold text-slate-100">Organize em blocos</h2>
+                        <p class="text-[11px] md:text-xs text-slate-400">Separe o que saiu da sua cabeça pelo momento de resolver.</p>
+                    </div>
+                    <button onclick="detoxMental.autoCategorizeNotes()" class="detox-btn flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all focus:outline-none">
+                        <span>📂</span>
+                        <span>Importar do Brain Dump</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div ondragover="detoxMental.handleKanbanDragOver(event)" ondrop="detoxMental.handleKanbanDrop(event, 1)" class="flex flex-col gap-3 bg-[#12111f] border border-emerald-900/40 rounded-2xl p-4 min-h-[220px]">
+                        <div class="flex items-center justify-between gap-2">
+                            <h3 class="text-xs font-bold text-emerald-300">Preciso resolver nesta semana</h3>
+                            <span id="detox-countBlock1" class="bg-emerald-950 border border-emerald-800 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-lg">0</span>
+                        </div>
+                        <div id="detox-blockCategory1" class="flex-1 flex flex-col gap-2 overflow-y-auto pr-1 min-h-[110px]"></div>
+                        <input id="detox-inputBlock1" onkeydown="detoxMental.handleBlockInput(event, 1)" type="text" placeholder="Adicionar e pressionar Enter" class="w-full bg-[#1b1a2e] border border-slate-800 text-xs text-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500/50">
+                    </div>
+
+                    <div ondragover="detoxMental.handleKanbanDragOver(event)" ondrop="detoxMental.handleKanbanDrop(event, 2)" class="flex flex-col gap-3 bg-[#12111f] border border-blue-900/40 rounded-2xl p-4 min-h-[220px]">
+                        <div class="flex items-center justify-between gap-2">
+                            <h3 class="text-xs font-bold text-blue-300">Fica para as próximas semanas</h3>
+                            <span id="detox-countBlock2" class="bg-blue-950 border border-blue-800 text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-lg">0</span>
+                        </div>
+                        <div id="detox-blockCategory2" class="flex-1 flex flex-col gap-2 overflow-y-auto pr-1 min-h-[110px]"></div>
+                        <input id="detox-inputBlock2" onkeydown="detoxMental.handleBlockInput(event, 2)" type="text" placeholder="Adicionar e pressionar Enter" class="w-full bg-[#1b1a2e] border border-slate-800 text-xs text-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500/50">
+                    </div>
+
+                    <div ondragover="detoxMental.handleKanbanDragOver(event)" ondrop="detoxMental.handleKanbanDrop(event, 3)" class="flex flex-col gap-3 bg-[#12111f] border border-rose-900/40 rounded-2xl p-4 min-h-[220px]">
+                        <div class="flex items-center justify-between gap-2">
+                            <h3 class="text-xs font-bold text-rose-300">Não é para agora</h3>
+                            <span id="detox-countBlock3" class="bg-rose-950 border border-rose-800 text-rose-300 text-[10px] font-bold px-2 py-0.5 rounded-lg">0</span>
+                        </div>
+                        <div id="detox-blockCategory3" class="flex-1 flex flex-col gap-2 overflow-y-auto pr-1 min-h-[110px]"></div>
+                        <input id="detox-inputBlock3" onkeydown="detoxMental.handleBlockInput(event, 3)" type="text" placeholder="Adicionar e pressionar Enter" class="w-full bg-[#1b1a2e] border border-slate-800 text-xs text-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-rose-500/50">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ETAPA 3 — Micro-ações das próximas 24h -->
+            <div id="detox-step3View" class="hidden whiteboard-grid flex-1 w-full relative overflow-y-auto p-4 md:p-6">
+                <div class="mb-4">
+                    <h2 class="text-sm md:text-base font-bold text-slate-100">Transforme em ação</h2>
+                    <p class="text-[11px] md:text-xs text-slate-400">Escolha um problema e quebre em micro-ações para as próximas 24 horas.</p>
+                </div>
+
+                <div class="bg-[#12111f] border border-slate-800/60 rounded-2xl p-4 md:p-5 flex flex-col gap-4 max-w-3xl">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Problema a resolver</label>
+                        <div class="flex flex-col md:flex-row items-stretch gap-2">
+                            <select id="detox-problemSelector" onchange="detoxMental.handleProblemSelect(this.value)" class="flex-1 bg-[#1b1a2e] border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-indigo-500">
+                                <option value="">Selecionar da etapa Blocos</option>
+                            </select>
+                            <input id="detox-customProblemInput" oninput="detoxMental.setProblema(this.value)" type="text" placeholder="...ou escreva o problema aqui" class="flex-1 bg-[#1b1a2e] border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-indigo-500">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Micro-ações nas próximas 24h</label>
+                        <div class="flex items-stretch gap-2">
+                            <input id="detox-action24hInput" type="text" placeholder="Ex: enviar o e-mail de alinhamento" class="flex-1 bg-[#1b1a2e] border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
+                            <button onclick="detoxMental.addMicroAction()" class="detox-btn px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all focus:outline-none shrink-0">Adicionar</button>
+                        </div>
+                        <ul id="detox-list24h" class="pl-8 flex flex-col gap-2 mt-2">
+                            <li class="text-slate-500 text-xs italic py-2">Nenhuma ação adicionada ainda.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <div class="detox-footer w-full bg-[#0c0b14] border-t border-slate-800/80 px-6 py-5 flex flex-col sm:flex-row items-center justify-center gap-4 z-30 shrink-0">
@@ -1150,6 +1275,101 @@
             </div>
 
             <!-- TOASTS DE NOTIFICAÇÃO -->
+
+            <!-- Modal: Método STOP (socorro em crise) -->
+            <div id="detox-stopModal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                <div class="bg-[#12111f] border border-indigo-700/50 rounded-3xl p-7 max-w-lg w-full relative shadow-2xl transition-transform duration-150">
+                    <button onclick="detoxMental.closeModal('detox-stopModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors focus:outline-none" title="Fechar">
+                        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-3xl">🧘</span>
+                        <h3 class="text-lg font-bold text-white">Método STOP</h3>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-5">Quatro passos para atravessar um momento de angústia sem se afogar nele.</p>
+                    <div class="flex flex-col gap-3">
+                        <div class="bg-[#1b1a2e] border border-slate-800 rounded-2xl p-4">
+                            <p class="text-xs font-bold text-indigo-300 mb-1">S &mdash; Stop (Pare)</p>
+                            <p class="text-xs text-slate-300 leading-relaxed">Interrompa o que está fazendo. Não responda, não decida, não envie nada agora.</p>
+                        </div>
+                        <div class="bg-[#1b1a2e] border border-slate-800 rounded-2xl p-4">
+                            <p class="text-xs font-bold text-indigo-300 mb-1">T &mdash; Take a breath (Respire)</p>
+                            <p class="text-xs text-slate-300 leading-relaxed">Três respirações lentas. Inspire contando até quatro, solte contando até seis.</p>
+                        </div>
+                        <div class="bg-[#1b1a2e] border border-slate-800 rounded-2xl p-4">
+                            <p class="text-xs font-bold text-indigo-300 mb-1">O &mdash; Observe</p>
+                            <p class="text-xs text-slate-300 leading-relaxed">Note o que está sentindo e onde sente no corpo. Nomear já reduz a intensidade.</p>
+                        </div>
+                        <div class="bg-[#1b1a2e] border border-slate-800 rounded-2xl p-4">
+                            <p class="text-xs font-bold text-indigo-300 mb-1">P &mdash; Proceed (Prossiga)</p>
+                            <p class="text-xs text-slate-300 leading-relaxed">Escolha o próximo passo pequeno e possível &mdash; não o problema inteiro.</p>
+                        </div>
+                    </div>
+                    <button onclick="detoxMental.closeModal('detox-stopModal')" class="detox-btn-modal w-full mt-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-2xl shadow-md transition-all">Estou pronto para continuar</button>
+                </div>
+            </div>
+
+            <!-- Modal: Daily Wins (mural de vitórias) -->
+            <div id="detox-dailyWinsModal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                <div class="bg-[#12111f] border border-emerald-800/60 rounded-3xl p-7 max-w-lg w-full relative shadow-2xl transition-transform duration-150">
+                    <button onclick="detoxMental.closeModal('detox-dailyWinsModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors focus:outline-none" title="Fechar">
+                        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-3xl">🏆</span>
+                        <h3 class="text-lg font-bold text-white">Daily Wins</h3>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-5">Registre o que deu certo hoje, por menor que pareça.</p>
+
+                    <div id="detox-victoryInputsContainer" class="space-y-2.5 max-h-[180px] overflow-y-auto pr-1"></div>
+
+                    <button onclick="detoxMental.addVictoryField()" class="mt-3 text-xs text-emerald-400 hover:text-emerald-300 font-semibold focus:outline-none">+ Adicionar outra vitória</button>
+
+                    <div class="flex flex-col sm:flex-row gap-2.5 mt-6">
+                        <button onclick="detoxMental.saveDailyWins()" class="detox-btn-modal flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-2xl shadow-md transition-all">Registrar</button>
+                        <button onclick="detoxMental.openDailyWinsDownloadModal()" class="detox-btn-modal-secundario flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-2xl transition-all">Baixar</button>
+                        <button onclick="detoxMental.openDailyWinsEliminateModal()" class="detox-btn-modal-secundario flex-1 py-3 bg-[#1e111a] hover:bg-[#2b1625] border border-rose-900/40 text-rose-400 font-semibold rounded-2xl transition-all">Encerrar ciclo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal: formato de download das vitórias -->
+            <div id="detox-dailyWinsDownloadModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                <div class="bg-[#12111f] border border-slate-800 rounded-3xl p-7 max-w-md w-full relative shadow-2xl transition-transform duration-150">
+                    <button onclick="detoxMental.closeModal('detox-dailyWinsDownloadModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors focus:outline-none" title="Fechar">
+                        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <h3 class="text-lg font-bold text-white mb-1">Salvar suas vitórias</h3>
+                    <p class="text-xs text-slate-400 mb-5">Escolha o formato do arquivo.</p>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="detoxMental.triggerDailyWinsDownload('png')" class="detox-btn-formato w-full p-4 bg-[#1b1a2e] hover:bg-[#23213d] border border-slate-800 hover:border-emerald-500 text-slate-200 rounded-2xl font-semibold flex items-center justify-between transition-all">
+                            <span class="text-sm">Imagem (PNG)</span>
+                            <span class="bg-orange-950 text-orange-400 border border-orange-800/40 px-2.5 py-1 rounded-lg text-xs font-bold">PNG</span>
+                        </button>
+                        <button onclick="detoxMental.triggerDailyWinsDownload('pdf')" class="detox-btn-formato w-full p-4 bg-[#1b1a2e] hover:bg-[#23213d] border border-slate-800 hover:border-emerald-500 text-slate-200 rounded-2xl font-semibold flex items-center justify-between transition-all">
+                            <span class="text-sm">Documento portátil</span>
+                            <span class="bg-rose-950 text-rose-400 border border-rose-800/40 px-2.5 py-1 rounded-lg text-xs font-bold">PDF</span>
+                        </button>
+                        <button onclick="detoxMental.triggerDailyWinsDownload('docx')" class="detox-btn-formato w-full p-4 bg-[#1b1a2e] hover:bg-[#23213d] border border-slate-800 hover:border-emerald-500 text-slate-200 rounded-2xl font-semibold flex items-center justify-between transition-all">
+                            <span class="text-sm">Documento do Word</span>
+                            <span class="bg-blue-950 text-blue-400 border border-blue-800/40 px-2.5 py-1 rounded-lg text-xs font-bold">DOC</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal: encerrar o ciclo do dia -->
+            <div id="detox-dailyWinsEliminateModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                <div class="bg-[#12111f] border border-rose-900/40 rounded-3xl p-7 max-w-md w-full relative shadow-2xl transition-transform duration-150">
+                    <h3 class="text-lg font-bold text-white mb-2">Encerrar o ciclo de hoje?</h3>
+                    <p class="text-xs text-slate-400 mb-6 leading-relaxed">As vitórias registradas e os pensamentos do quadro serão limpos. Se quiser guardar, baixe antes.</p>
+                    <div class="flex gap-3">
+                        <button onclick="detoxMental.closeModal('detox-dailyWinsEliminateModal')" class="detox-btn-modal-secundario flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl font-semibold transition-all focus:outline-none">Voltar</button>
+                        <button onclick="detoxMental.executeDailyWinsEliminate()" class="detox-btn-modal-perigo flex-1 py-3 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-2xl shadow-md transition-all focus:outline-none">Encerrar</button>
+                    </div>
+                </div>
+            </div>
+
             <div id="detox-toast" class="opacity-0 pointer-events-none fixed bottom-24 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs md:text-sm px-5 py-3 rounded-2xl border border-slate-800 shadow-2xl transition-all duration-300 flex items-center gap-2.5 z-50">
                 <span id="detox-toastIcon"></span>
                 <span id="detox-toastMessage"></span>
