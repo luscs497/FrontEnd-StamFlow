@@ -2331,3 +2331,101 @@
     /* o toast é `left-1/2` + `-translate-x-1/2`: metade do desvio recentra. */
     left: calc(50% + var(--detox-area-left, 0px) / 2);
 }
+
+/* -----------------------------------------------------------------------------
+   7) Gatilho que recolhe as duas barras.
+
+   Fica no topo do miolo, centralizado, encostado na borda de baixo do
+   cabeçalho — a leitura é de uma aba de puxar. Recolhido, ele continua no
+   mesmo lugar (o miolo cresceu e ocupou o espaço das barras), então o alvo do
+   clique não se move entre um estado e outro.
+
+   É filho do miolo, não do quadro: o handler que cria post-it está no
+   #detox-whiteboard, e um clique aqui não borbulha para lá.
+   -------------------------------------------------------------------------- */
+#detox-root .detox-toggle-barras {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 14px 5px;
+    color: #94a3b8;
+    background-color: #0c0b14;
+    border: 1px solid rgb(30 41 59 / 0.8);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+/* As etapas 2 e 3 rolam logo abaixo do gatilho, então o primeiro cartão
+   passava por baixo dele. O quadro da etapa 1 não precisa disso: ali o gatilho
+   flutua sobre a lousa de propósito. */
+#detox-root #detox-step2View,
+#detox-root #detox-step3View {
+    padding-top: 2.75rem;
+}
+
+#detox-root .detox-toggle-barras:hover {
+    color: #e2e8f0;
+    background-color: #16142a;
+}
+
+#detox-root .detox-toggle-barras:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+#detox-root .detox-toggle-barras svg {
+    transition: transform 0.2s ease;
+}
+
+/* Recolhido: a seta aponta para baixo (maximizar) e as barras somem. */
+#detox-root.detox-barras-recolhidas .detox-toggle-barras svg {
+    transform: rotate(180deg);
+}
+
+#detox-root.detox-barras-recolhidas .detox-header,
+#detox-root.detox-barras-recolhidas .detox-footer {
+    display: none;
+}
+
+/* -----------------------------------------------------------------------------
+   8) O <select> do problema da semana (etapa Ações).
+
+   Dois defeitos herdados do controle nativo:
+
+   a) A lista aberta ignorava o tema — vinha branca com texto preto, porque o
+      <option> não herda cor do <select>. `color-scheme: dark` resolve no
+      Chrome/Edge e as cores explícitas cobrem o resto.
+
+   b) A seta nativa é desenhada colada na borda direita, sem respeitar o
+      padding. Com `appearance: none` ela vira imagem de fundo, posicionada a
+      0.875rem da borda — a mesma distância que o texto tem da esquerda
+      (`px-3.5` do artefato).
+   -------------------------------------------------------------------------- */
+#detox-root #detox-problemSelector {
+    color-scheme: dark;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.875rem center;
+    background-size: 16px 16px;
+    /* espaço da seta + a mesma folga da esquerda, para o texto não passar por baixo */
+    padding-right: calc(0.875rem + 16px + 0.5rem);
+}
+
+#detox-root #detox-problemSelector option {
+    background-color: #1b1a2e;
+    color: #e2e8f0;
+}

@@ -861,6 +861,33 @@
     });
   }
 
+  // --------------------------------------------------------------------------
+  // Recolher as barras (cabeçalho e ações) para o quadro ocupar a tela toda.
+  //
+  // As duas somem juntas: sozinhas elas deixariam o quadro colado numa borda
+  // e sobrando na outra. A altura do #detox-root não muda — o miolo é
+  // `flex: 1`, então ele simplesmente cresce e o gatilho continua no mesmo
+  // lugar, no topo do quadro.
+  // --------------------------------------------------------------------------
+  function toggleBarras(forcar) {
+    const raiz = el("detox-root");
+    const gatilho = el("detox-toggleBarras");
+    if (!raiz) return;
+
+    const recolhido =
+      typeof forcar === "boolean"
+        ? forcar
+        : !raiz.classList.contains("detox-barras-recolhidas");
+
+    raiz.classList.toggle("detox-barras-recolhidas", recolhido);
+    if (gatilho) {
+      gatilho.setAttribute("aria-expanded", recolhido ? "false" : "true");
+      gatilho.setAttribute("title", recolhido ? "Mostrar as barras" : "Recolher as barras");
+      const texto = gatilho.querySelector(".detox-toggle-barras-texto");
+      if (texto) texto.textContent = recolhido ? "Mostrar" : "Recolher";
+    }
+  }
+
   function switchStep(step) {
     currentStep = step;
 
@@ -1398,8 +1425,9 @@
     deleteNote: deleteNote,
     updateNoteText: updateNoteText,
 
-    // --- etapas, submenu, Método STOP e Daily Wins ---
+    // --- etapas, barras, Método STOP e Daily Wins ---
     switchStep: switchStep,
+    toggleBarras: toggleBarras,
     openStopModal: openStopModal,
 
     openDailyWinsModal: openDailyWinsModal,
