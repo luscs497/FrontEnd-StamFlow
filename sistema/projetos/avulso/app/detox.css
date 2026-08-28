@@ -2301,36 +2301,15 @@
 }
 
 /* -----------------------------------------------------------------------------
-   6) Centralização dos modais e do toast sobre a ÁREA DO PAINEL.
+   6) Modais e toast centralizados na VIEWPORT.
 
-   No arquivo do cliente o detox ocupa a tela toda, então `fixed inset-0` +
-   `items-center justify-center` cai no centro do que o usuário vê. Aqui não: a
-   sidebar come ~300px à esquerda e o content-header ~70px no topo, e a caixa
-   nascia deslocada em relação ao quadro.
-
-   A cortina escura continua cobrindo a viewport inteira (é o que os pop-ups do
-   painel fazem — ver `.popups` no globals.css). O que muda é só o retângulo em
-   que o flex centraliza: o padding empurra o eixo para o canto da área do
-   detox, publicado pelo detox.js em --detox-area-left/top. No mobile a sidebar
-   some, os valores viram 0 e a regra deixa de ter efeito sozinha.
+   É o padrão dos pop-ups do painel (ver `.popups` no globals.css: fixed, 100vw
+   por 100vh, centralizado no flex). Chegou a existir aqui um deslocamento que
+   os centralizava sobre a área do detox — a caixa caía no meio do quadro, mas
+   destoava de todos os outros pop-ups do sistema. O artefato já vem
+   `fixed inset-0` com `items-center justify-center`, então basta não
+   atrapalhar: nenhuma regra de posição mora mais nesta seção.
    -------------------------------------------------------------------------- */
-#detox-root #detox-howItWorksModal,
-#detox-root #detox-infoModal,
-#detox-root #detox-stopModal,
-#detox-root #detox-dailyWinsModal,
-#detox-root #detox-dailyWinsDownloadModal,
-#detox-root #detox-dailyWinsEliminateModal,
-#detox-root #detox-downloadModal,
-#detox-root #detox-eliminateModal {
-    /* o `p-4` do artefato continua valendo nos outros lados */
-    padding-left: calc(var(--detox-area-left, 0px) + 1rem);
-    padding-top: calc(var(--detox-area-top, 0px) + 1rem);
-}
-
-#detox-root #detox-toast {
-    /* o toast é `left-1/2` + `-translate-x-1/2`: metade do desvio recentra. */
-    left: calc(50% + var(--detox-area-left, 0px) / 2);
-}
 
 /* -----------------------------------------------------------------------------
    7) Gatilho que recolhe as duas barras.

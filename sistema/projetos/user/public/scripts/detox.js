@@ -903,17 +903,8 @@
   function ajustarAltura() {
     const raiz = document.getElementById("detox-root");
     if (!raiz || !raiz.offsetParent) return; // seção ainda oculta
-    const caixa = raiz.getBoundingClientRect();
-    raiz.style.height = Math.max(420, Math.round(window.innerHeight - caixa.top)) + "px";
-
-    // Os modais e o toast vêm do artefato como `fixed inset-0`, ou seja,
-    // centralizados na VIEWPORT. Lá isso é o centro da tela; aqui a área útil
-    // começa depois da sidebar e do content-header, então a caixa aparecia
-    // deslocada para a esquerda e para cima. Publicamos o canto da área do
-    // detox e o CSS usa como padding para centralizar sobre ela — a cortina
-    // escura continua cobrindo a viewport inteira, como nos pop-ups do painel.
-    raiz.style.setProperty("--detox-area-left", Math.round(caixa.left) + "px");
-    raiz.style.setProperty("--detox-area-top", Math.round(caixa.top) + "px");
+    const topo = raiz.getBoundingClientRect().top;
+    raiz.style.height = Math.max(420, Math.round(window.innerHeight - topo)) + "px";
   }
 
   function init() {
