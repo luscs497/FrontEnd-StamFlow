@@ -2351,17 +2351,14 @@
     z-index: 30;
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 3px 14px 5px;
+    justify-content: center;
+    width: 52px;
+    padding: 2px 0 4px;
     color: #94a3b8;
-    background-color: #0c0b14;
+    background-color: #161320;
     border: 1px solid rgb(30 41 59 / 0.8);
     border-top: none;
     border-radius: 0 0 12px 12px;
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
     cursor: pointer;
     transition: color 0.2s ease, background-color 0.2s ease;
 }
@@ -2376,7 +2373,7 @@
 
 #detox-root .detox-toggle-barras:hover {
     color: #e2e8f0;
-    background-color: #16142a;
+    background-color: #1f1d2b;
 }
 
 #detox-root .detox-toggle-barras:focus-visible {
@@ -2385,17 +2382,34 @@
 }
 
 #detox-root .detox-toggle-barras svg {
-    transition: transform 0.2s ease;
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* As barras encolhem em altura em vez de sumirem de uma vez. O max-height em
+   pixels é escrito pelo detox.js (o CSS não sabe a altura natural delas); daqui
+   saem o resto das propriedades e a curva, a mesma do colapso da sidebar do
+   painel. O padding entra na conta: sem ele a barra pararia de encolher com
+   ~24px de sobra e o corte apareceria. */
+#detox-root .detox-header,
+#detox-root .detox-footer {
+    overflow: hidden;
+    transition: max-height 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                padding-top 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                padding-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s ease;
+}
+
+#detox-root.detox-barras-recolhidas .detox-header,
+#detox-root.detox-barras-recolhidas .detox-footer {
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    opacity: 0;
 }
 
 /* Recolhido: a seta aponta para baixo (maximizar) e as barras somem. */
 #detox-root.detox-barras-recolhidas .detox-toggle-barras svg {
     transform: rotate(180deg);
-}
-
-#detox-root.detox-barras-recolhidas .detox-header,
-#detox-root.detox-barras-recolhidas .detox-footer {
-    display: none;
 }
 
 /* -----------------------------------------------------------------------------
@@ -2428,4 +2442,61 @@
 #detox-root #detox-problemSelector option {
     background-color: #1b1a2e;
     color: #e2e8f0;
+}
+
+/* -----------------------------------------------------------------------------
+   9) As barras seguem a régua do painel, não a do artefato.
+
+   O artefato usa `px-4 md:px-6` no cabeçalho e `px-6` no rodapé — valores
+   próprios, que não conversam com nada em volta. No painel, quem define a
+   margem lateral do conteúdo é a .content-header (a barra com o nome da aba e
+   o sino), e ela muda de padding a cada breakpoint.
+
+   Repetindo os mesmos valores, o título "Detox Mental (Brain Dump)" nasce na
+   mesma vertical do nome da aba logo acima, e a última ação da barra de baixo
+   termina na mesma vertical do sino. Só o padding lateral entra aqui: o
+   vertical é da animação de recolher.
+   -------------------------------------------------------------------------- */
+#detox-root .detox-header,
+#detox-root .detox-footer {
+    padding-left: 3.2rem;
+    padding-right: 3.2rem;
+}
+
+@media screen and (max-width: 1500px) and (min-width: 1201px) {
+    #detox-root .detox-header,
+    #detox-root .detox-footer {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+@media screen and (max-width: 1200px) and (min-width: 993px) {
+    #detox-root .detox-header,
+    #detox-root .detox-footer {
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    #detox-root .detox-header,
+    #detox-root .detox-footer {
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+    }
+}
+
+/* -----------------------------------------------------------------------------
+   10) Azul-marinho do painel no lugar do quase-preto do artefato.
+
+   O artefato pinta as barras de #0c0b14, que é mais escuro que qualquer
+   superfície do sistema. #161320 é o fundo da .site-content — o mesmo que
+   aparece nas outras abas — então a aba deixa de destoar do resto.
+   -------------------------------------------------------------------------- */
+#detox-root,
+#detox-root .detox-header,
+#detox-root .detox-footer,
+#detox-root .detox-main {
+    background-color: #161320;
 }

@@ -869,6 +869,29 @@
   // `flex: 1`, então ele simplesmente cresce e o gatilho continua no mesmo
   // lugar, no topo do quadro.
   // --------------------------------------------------------------------------
+  // A altura precisa vir do JS: max-height só anima entre valores concretos, e
+  // um valor "grande o bastante" chutado no CSS faz a barra disparar no começo
+  // e frear no fim, porque a transição percorre a distância inteira no mesmo
+  // tempo. Medindo o natural, a distância é exatamente a que se vê.
+  function animarBarra(barra, recolher) {
+    if (!barra) return;
+    const altura = barra.scrollHeight;
+
+    barra.style.maxHeight = (recolher ? altura : 0) + "px";
+    void barra.offsetHeight; // fixa o ponto de partida antes de mudar o destino
+    barra.style.maxHeight = (recolher ? 0 : altura) + "px";
+
+    // Aberta, a barra volta a ter altura automática: o conteúdo pode quebrar em
+    // outra largura depois, e um max-height fixo a cortaria.
+    if (!recolher) {
+      barra.addEventListener("transitionend", function liberar(evento) {
+        if (evento.propertyName !== "max-height") return;
+        barra.removeEventListener("transitionend", liberar);
+        barra.style.maxHeight = "";
+      });
+    }
+  }
+
   function toggleBarras(forcar) {
     const raiz = el("detox-root");
     const gatilho = el("detox-toggleBarras");
@@ -879,12 +902,15 @@
         ? forcar
         : !raiz.classList.contains("detox-barras-recolhidas");
 
+    animarBarra(el("detox-header"), recolhido);
+    animarBarra(el("detox-footer"), recolhido);
     raiz.classList.toggle("detox-barras-recolhidas", recolhido);
+
     if (gatilho) {
+      const rotulo = recolhido ? "Mostrar as barras" : "Recolher as barras";
       gatilho.setAttribute("aria-expanded", recolhido ? "false" : "true");
-      gatilho.setAttribute("title", recolhido ? "Mostrar as barras" : "Recolher as barras");
-      const texto = gatilho.querySelector(".detox-toggle-barras-texto");
-      if (texto) texto.textContent = recolhido ? "Mostrar" : "Recolher";
+      gatilho.setAttribute("aria-label", rotulo);
+      gatilho.setAttribute("title", rotulo);
     }
   }
 
