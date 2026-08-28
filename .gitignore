@@ -1,0 +1,8 @@
+# Deploy secrets — nunca versionar
+deploy.conf
+.secrets/
+*.ftp
+
+# Saída das sessões de teste com navegador (screenshots, logs de console,
+# exports baixados). É descarte de depuração, não faz parte do projeto.
+.playwright-mcp/
