@@ -821,7 +821,14 @@
 
   // CONFIRMAÇÃO DE APAGAR (DEIXAR IR)
   function confirmEliminate(fromDownload = false) {
-      if (notes.length === 0 && !selectedMood) {
+      // A guarda olha as três etapas: dava para ter os blocos cheios, o quadro
+      // vazio, e ouvir que "já está em branco" sem conseguir limpar nada.
+      const temBloco =
+          blockCategories[1].length + blockCategories[2].length + blockCategories[3].length > 0;
+      const temAcao =
+          microActions.list24h.length > 0 || String(microActions.problem || "").trim() !== "";
+
+      if (notes.length === 0 && !selectedMood && !temBloco && !temAcao) {
           showToast("O quadro já está em branco.", "🍃");
           return;
       }
@@ -838,6 +845,10 @@
   function executeEliminate() {
       closeModal('detox-eliminateModal');
       isProcessingDisintegration = true;
+
+      // A dissolução é o ponto da ação; se o clique veio de Blocos ou de
+      // Ações, volta para o quadro para ela ser vista.
+      switchStep(1);
 
       const widget = document.getElementById('detox-moodWidgetContainer');
 
@@ -856,6 +867,8 @@
       setTimeout(() => {
           document.getElementById('detox-notesContainer').innerHTML = '';
           notes = [];
+          limparEtapas(); // blocos, ações e os campos das duas — a promessa do
+                          // modal é apagar "em todas as partes"
           atualizarBadges();
           selectedMood = null;
           isMoodWidgetExpanded = true; // Retorna ao estado inicial reaberto padrão
@@ -1074,6 +1087,34 @@
     barras.forEach(function (b, i) { b.style.transition = transicaoAnterior[i]; });
 
     return alturas;
+  }
+
+  // Zera as etapas 2 e 3: o estado, os campos abertos e o rótulo da lista do
+  // problema, que ficaria mostrando um item que não existe mais.
+  function limparEtapas() {
+    blockCategories = { 1: [], 2: [], 3: [] };
+    microActions = { problem: "", list24h: [], listNext: [] };
+
+    [
+      "detox-inputBlock1",
+      "detox-inputBlock2",
+      "detox-inputBlock3",
+      "detox-customProblemInput",
+      "detox-action24hInput",
+    ].forEach(function (id) {
+      const campo = el(id);
+      if (campo) campo.value = "";
+    });
+
+    const rotulo = el("detox-problemComboRotulo");
+    if (rotulo) {
+      rotulo.textContent = "Selecionar da etapa Blocos";
+      rotulo.removeAttribute("title");
+    }
+    fecharProblemCombo();
+
+    renderBlockCategories();
+    renderStep3ProblemSelector();
   }
 
   function toggleBarras(forcar) {
