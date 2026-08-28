@@ -8,4 +8,23 @@ ErrorDocument 404 /404.html
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(self), microphone=()"
   Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+
+  # O index.html NÃO pode ficar em cache sem revalidar. Ele é o único arquivo
+  # de URL fixa que aponta para os bundles hasheados do Next: se o navegador
+  # servir uma cópia velha, ela pede o CSS/JS antigo (que continua no servidor,
+  # porque o mirror do deploy não apaga) junto com o /scripts/*.js NOVO, que
+  # tem URL fixa e é sobrescrito a cada deploy. Esse meio-a-meio quebra a tela
+  # de formas difíceis de diagnosticar.
+  #
+  # Sem Cache-Control o navegador aplica cache heurístico (~10% da idade do
+  # arquivo), então um index.html de um mês atrás pode passar dias sem
+  # revalidar. `no-cache` não proíbe guardar: obriga a revalidar, o que com
+  # ETag/Last-Modified custa um 304 de poucos bytes.
+  #
+  # Os bundles de /_next/ têm hash no nome e os de /scripts/ são versionados
+  # pelo ASSET_VERSION na query, então nenhum dos dois precisa de regra aqui.
+  <FilesMatch "\.html$">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
 </IfModule>

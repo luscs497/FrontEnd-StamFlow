@@ -2168,6 +2168,17 @@
     user-select: none;
 }
 
+/* O Preflight do Tailwind está desligado (ele resetaria o painel legado
+   inteiro), mas as utilitárias assumem border-box: sem isso `w-full` somado a
+   `px-6` estoura a largura do container e as barras vazam para a direita.
+   Aqui o reset vale só dentro do #detox-root. */
+#detox-root,
+#detox-root *,
+#detox-root ::before,
+#detox-root ::after {
+    box-sizing: border-box;
+}
+
 /* O <main> do artefato: `flex-1` já dá a altura, o min-height evita que o
    conteúdo das etapas 2 e 3 estufe a caixa em vez de rolar dentro dela. */
 #detox-root .detox-main {
@@ -2287,4 +2298,36 @@
 
 #detox-root #detox-toast {
     z-index: 1001;
+}
+
+/* -----------------------------------------------------------------------------
+   6) Centralização dos modais e do toast sobre a ÁREA DO PAINEL.
+
+   No arquivo do cliente o detox ocupa a tela toda, então `fixed inset-0` +
+   `items-center justify-center` cai no centro do que o usuário vê. Aqui não: a
+   sidebar come ~300px à esquerda e o content-header ~70px no topo, e a caixa
+   nascia deslocada em relação ao quadro.
+
+   A cortina escura continua cobrindo a viewport inteira (é o que os pop-ups do
+   painel fazem — ver `.popups` no globals.css). O que muda é só o retângulo em
+   que o flex centraliza: o padding empurra o eixo para o canto da área do
+   detox, publicado pelo detox.js em --detox-area-left/top. No mobile a sidebar
+   some, os valores viram 0 e a regra deixa de ter efeito sozinha.
+   -------------------------------------------------------------------------- */
+#detox-root #detox-howItWorksModal,
+#detox-root #detox-infoModal,
+#detox-root #detox-stopModal,
+#detox-root #detox-dailyWinsModal,
+#detox-root #detox-dailyWinsDownloadModal,
+#detox-root #detox-dailyWinsEliminateModal,
+#detox-root #detox-downloadModal,
+#detox-root #detox-eliminateModal {
+    /* o `p-4` do artefato continua valendo nos outros lados */
+    padding-left: calc(var(--detox-area-left, 0px) + 1rem);
+    padding-top: calc(var(--detox-area-top, 0px) + 1rem);
+}
+
+#detox-root #detox-toast {
+    /* o toast é `left-1/2` + `-translate-x-1/2`: metade do desvio recentra. */
+    left: calc(50% + var(--detox-area-left, 0px) / 2);
 }
