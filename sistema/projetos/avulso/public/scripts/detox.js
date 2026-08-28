@@ -873,23 +873,34 @@
   // um valor "grande o bastante" chutado no CSS faz a barra disparar no começo
   // e frear no fim, porque a transição percorre a distância inteira no mesmo
   // tempo. Medindo o natural, a distância é exatamente a que se vê.
-  function animarBarra(barra, recolher) {
-    if (!barra) return;
-    const altura = barra.scrollHeight;
+  //
+  // E a medida tem que ser feita com o estado ABERTO aplicado. Recolhida, a
+  // barra está com padding vertical zerado (ele também é animado), então
+  // qualquer leitura ali sai sem esses ~24px do cabeçalho e ~32px do rodapé —
+  // a animação terminaria curta e o resto apareceria de um golpe quando o
+  // limite fosse liberado. Daí abrir, medir e voltar tudo no mesmo quadro,
+  // com a transição desligada para nada disso ser visto.
+  function medirBarrasAbertas(raiz, barras) {
+    const estavaRecolhido = raiz.classList.contains("detox-barras-recolhidas");
+    const maxAnterior = barras.map(function (b) { return b.style.maxHeight; });
+    const transicaoAnterior = barras.map(function (b) { return b.style.transition; });
 
-    barra.style.maxHeight = (recolher ? altura : 0) + "px";
-    void barra.offsetHeight; // fixa o ponto de partida antes de mudar o destino
-    barra.style.maxHeight = (recolher ? 0 : altura) + "px";
+    barras.forEach(function (b) {
+      b.style.transition = "none";
+      b.style.maxHeight = "none";
+    });
+    raiz.classList.remove("detox-barras-recolhidas");
 
-    // Aberta, a barra volta a ter altura automática: o conteúdo pode quebrar em
-    // outra largura depois, e um max-height fixo a cortaria.
-    if (!recolher) {
-      barra.addEventListener("transitionend", function liberar(evento) {
-        if (evento.propertyName !== "max-height") return;
-        barra.removeEventListener("transitionend", liberar);
-        barra.style.maxHeight = "";
-      });
-    }
+    const alturas = barras.map(function (b) {
+      return Math.ceil(b.getBoundingClientRect().height);
+    });
+
+    if (estavaRecolhido) raiz.classList.add("detox-barras-recolhidas");
+    barras.forEach(function (b, i) { b.style.maxHeight = maxAnterior[i]; });
+    void raiz.offsetHeight; // devolve o estado anterior antes de religar a transição
+    barras.forEach(function (b, i) { b.style.transition = transicaoAnterior[i]; });
+
+    return alturas;
   }
 
   function toggleBarras(forcar) {
@@ -902,9 +913,34 @@
         ? forcar
         : !raiz.classList.contains("detox-barras-recolhidas");
 
-    animarBarra(el("detox-header"), recolhido);
-    animarBarra(el("detox-footer"), recolhido);
+    const barras = [el("detox-header"), el("detox-footer")].filter(Boolean);
+    const alturas = medirBarrasAbertas(raiz, barras);
+
+    // ponto de partida
+    barras.forEach(function (b, i) {
+      b.style.maxHeight = (recolhido ? alturas[i] : 0) + "px";
+    });
+    void raiz.offsetHeight;
+
+    // destino: o limite e o padding caminham juntos, na mesma curva e no mesmo
+    // tempo, então a barra chega no fim já com a altura natural — não sobra
+    // nada para o navegador resolver de uma vez ao liberar o limite.
     raiz.classList.toggle("detox-barras-recolhidas", recolhido);
+    barras.forEach(function (b, i) {
+      b.style.maxHeight = (recolhido ? 0 : alturas[i]) + "px";
+    });
+
+    // Aberta, a barra volta a ter altura automática: o conteúdo pode quebrar em
+    // outra largura depois, e um max-height fixo a cortaria.
+    if (!recolhido) {
+      barras.forEach(function (b) {
+        b.addEventListener("transitionend", function liberar(evento) {
+          if (evento.propertyName !== "max-height") return;
+          b.removeEventListener("transitionend", liberar);
+          b.style.maxHeight = "";
+        });
+      });
+    }
 
     if (gatilho) {
       const rotulo = recolhido ? "Mostrar as barras" : "Recolher as barras";
