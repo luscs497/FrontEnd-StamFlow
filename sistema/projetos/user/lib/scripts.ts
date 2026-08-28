@@ -65,7 +65,7 @@ export const LEGACY_SCRIPTS: string[] = [
   BUMPAR A CADA DEPLOY que altere qualquer arquivo em /public/scripts ou
   /public/data (o script.js versiona o fetch dos JSON com esta mesma chave).
 */
-export const ASSET_VERSION = "20260827n";
+export const ASSET_VERSION = "20260827o";
 
 /** Anexa ?v= apenas a assets locais (CDNs já versionam na própria URL). */
 export function comVersao(src: string): string {

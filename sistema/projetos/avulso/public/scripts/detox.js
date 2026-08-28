@@ -713,6 +713,15 @@
     const arquivo = campo && campo.files && campo.files[0];
     if (!arquivo) return;
 
+    // PNG e PDF saem do html2canvas: são uma foto do quadro, sem camada de
+    // texto, então não há o que ler de volta. Só o .doc volta, porque apesar
+    // do nome ele é HTML e guarda cada pensamento como texto estruturado.
+    if (/\.(pdf|png|jpe?g|webp)$/i.test(arquivo.name || "")) {
+      showToast("PNG e PDF são imagem do quadro. Reimporte pelo arquivo .doc.", "💡");
+      campo.value = "";
+      return;
+    }
+
     const leitor = new FileReader();
     leitor.onerror = function () {
       showToast("Não consegui ler esse arquivo.", "⚠️");
