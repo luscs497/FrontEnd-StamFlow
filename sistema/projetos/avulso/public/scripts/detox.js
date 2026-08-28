@@ -39,6 +39,11 @@
   let isProcessingDisintegration = false;
 
   // DRAG AND DROP AUXILIARES
+  // Qual post-it estava em edição no instante em que o botão do mouse desceu.
+  // Precisa ser capturado no mousedown, e não no click: o navegador tira o
+  // foco do textarea durante o mousedown, então no click o activeElement já
+  // seria o body e a informação estaria perdida.
+  let notaEmEdicao = null;
   let activeDragNote = null;
   let dragOffset = { x: 0, y: 0 };
   let activeDragWidget = null;
@@ -252,6 +257,17 @@
   function handleWhiteboardClick(e) {
       // Se clicar nos modais, no seletor de cores, ou seletor de humor, ignorar
       if (e.target.closest('#detox-moodWidgetContainer') || e.target.closest('.note-bubble') || e.target.closest('.color-picker-dropdown') || isProcessingDisintegration) {
+          return;
+      }
+
+      // Escrevendo num post-it, o clique no quadro vale como "fechar este":
+      // ele só tira o foco, e não cria nada. O post-it novo nasce no clique
+      // seguinte, já sem nada selecionado. Botões continuam com a vez —
+      // header, rodapé e widget de humor nem chegam aqui, e o que está dentro
+      // da nota já saiu nas guardas acima.
+      if (notaEmEdicao) {
+          notaEmEdicao.blur();
+          notaEmEdicao = null;
           return;
       }
 
@@ -891,6 +907,24 @@
 
     window.addEventListener("resize", ajustarAltura);
 
+    // Antes de o foco mudar, guarda a nota que estava sendo escrita.
+    document.addEventListener("mousedown", function (evento) {
+      const ativo = document.activeElement;
+      const escrevendo =
+        ativo && ativo.tagName === "TEXTAREA" && ativo.closest(".note-bubble");
+      // Clicar DENTRO da própria nota não conta: ali o cursor só se move.
+      notaEmEdicao = escrevendo && !ativo.contains(evento.target) ? ativo : null;
+    }, true);
+
+    // a lista do problema fecha ao clicar fora ou no Esc, como um menu
+    document.addEventListener("click", function (evento) {
+      const combo = el("detox-problemCombo");
+      if (combo && !combo.contains(evento.target)) fecharProblemCombo();
+    });
+    document.addEventListener("keydown", function (evento) {
+      if (evento.key === "Escape") fecharProblemCombo();
+    });
+
     // Abrir a aba é o momento em que a seção ganha medida.
     const link = document.querySelector('.link-nav[title="Detox Mental"]');
     if (link) link.addEventListener("click", () => setTimeout(function () {
@@ -1479,21 +1513,118 @@
   // --------------------------------------------------------------------------
   // Etapa 3 — Ações de 24h
   // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
+  // Seletor do problema da semana.
+  //
+  // A lista traz as TRÊS colunas da etapa Blocos, e não só a primeira: quem
+  // separou os itens ali espera reencontrar todos aqui, inclusive para trazer
+  // um "não é para agora" à tona. Cada grupo vem rotulado para a origem não se
+  // perder.
+  // --------------------------------------------------------------------------
+  const TITULO_BLOCO = {
+    1: "Preciso resolver nesta semana",
+    2: "Fica para as próximas semanas",
+    3: "Não é para agora",
+  };
+
+  // Post-it é texto solto: vem com quebra de linha, espaço dobrado e às vezes
+  // vários períodos. Numa lista fechada isso vira uma linha comprida demais.
+  //
+  // O resumo é deliberadamente simples e previsível: normaliza o espaço, fica
+  // com o primeiro período quando ele já diz a coisa (o resto costuma ser
+  // detalhe), e só então corta — na última palavra inteira antes do limite,
+  // para não partir palavra no meio. O texto cheio continua no title e é ele
+  // que vai para o campo ao escolher; o resumo é só o rótulo.
+  const LIMITE_RESUMO = 64;
+
+  function resumirTexto(texto) {
+    const limpo = String(texto == null ? "" : texto).replace(/\s+/g, " ").trim();
+    if (!limpo) return "";
+
+    let base = limpo;
+    const fim = base.search(/[.!?](\s|$)/);
+    if (fim >= 20 && fim < base.length - 1) base = base.slice(0, fim);
+
+    if (base.length <= LIMITE_RESUMO) return base;
+
+    const corte = base.slice(0, LIMITE_RESUMO);
+    const ultimoEspaco = corte.lastIndexOf(" ");
+    const aparado = (ultimoEspaco > LIMITE_RESUMO * 0.6 ? corte.slice(0, ultimoEspaco) : corte)
+      .replace(/[\s,;:.\-]+$/, "");
+    return aparado + " [...]";
+  }
+
+  // Índice estável para o clique: o texto cheio não precisa atravessar o HTML.
+  let problemasDisponiveis = [];
+
   function renderStep3ProblemSelector() {
-    const seletor = el("detox-problemSelector");
-    if (!seletor) return;
-    seletor.innerHTML =
-      '<option value="">Selecionar da etapa Blocos</option>' +
-      blockCategories[1]
-        .map(function (item, idx) {
-          return '<option value="' + escaparHTML(item) + '">' + (idx + 1) + ". " + escaparHTML(item) + "</option>";
-        })
-        .join("");
+    const lista = el("detox-problemComboLista");
+    if (!lista) return;
+
+    problemasDisponiveis = [];
+    let html = "";
+
+    [1, 2, 3].forEach(function (cat) {
+      const itens = blockCategories[cat];
+      if (!itens.length) return;
+
+      html += '<div class="detox-combo-grupo">' + escaparHTML(TITULO_BLOCO[cat]) + "</div>";
+      itens.forEach(function (item) {
+        const indice = problemasDisponiveis.length;
+        problemasDisponiveis.push(item);
+        html +=
+          '<button type="button" role="option" aria-selected="false" ' +
+          'onclick="detoxMental.escolherProblema(' + indice + ')" ' +
+          'title="' + escaparHTML(item) + '" class="detox-combo-item detox-combo-item-c' + cat + '">' +
+          escaparHTML(resumirTexto(item)) +
+          "</button>";
+      });
+    });
+
+    if (!html) {
+      html =
+        '<p class="detox-combo-vazio">Nenhum item na etapa Blocos ainda. ' +
+        "Importe os pensamentos do Brain Dump ou escreva o problema ao lado.</p>";
+    }
+
+    lista.innerHTML = html;
     renderMicroActions();
+  }
+
+  function toggleProblemCombo(evento) {
+    if (evento) evento.stopPropagation();
+    const lista = el("detox-problemComboLista");
+    const botao = el("detox-problemComboBtn");
+    if (!lista || !botao) return;
+
+    const abrir = lista.classList.contains("hidden");
+    lista.classList.toggle("hidden", !abrir);
+    botao.setAttribute("aria-expanded", abrir ? "true" : "false");
+  }
+
+  function fecharProblemCombo() {
+    const lista = el("detox-problemComboLista");
+    const botao = el("detox-problemComboBtn");
+    if (lista) lista.classList.add("hidden");
+    if (botao) botao.setAttribute("aria-expanded", "false");
+  }
+
+  function escolherProblema(indice) {
+    const item = problemasDisponiveis[indice];
+    fecharProblemCombo();
+    if (item == null) return;
+
+    const rotulo = el("detox-problemComboRotulo");
+    if (rotulo) {
+      rotulo.textContent = resumirTexto(item);
+      rotulo.title = item;
+    }
+    handleProblemSelect(item);
   }
 
   function handleProblemSelect(valor) {
     if (!valor) return;
+    // o campo ao lado recebe o texto CHEIO: o resumo é só rótulo de lista
     const campo = el("detox-customProblemInput");
     if (campo) campo.value = valor;
     microActions.problem = valor;
@@ -1654,6 +1785,8 @@
     handleKanbanDragEnd: handleKanbanDragEnd,
 
     handleProblemSelect: handleProblemSelect,
+    toggleProblemCombo: toggleProblemCombo,
+    escolherProblema: escolherProblema,
     setProblema: setProblema,
     addMicroAction: addMicroAction,
     moveMicroActionUp: moveMicroActionUp,

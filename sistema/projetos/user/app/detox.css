@@ -2413,38 +2413,6 @@
 }
 
 /* -----------------------------------------------------------------------------
-   8) O <select> do problema da semana (etapa Ações).
-
-   Dois defeitos herdados do controle nativo:
-
-   a) A lista aberta ignorava o tema — vinha branca com texto preto, porque o
-      <option> não herda cor do <select>. `color-scheme: dark` resolve no
-      Chrome/Edge e as cores explícitas cobrem o resto.
-
-   b) A seta nativa é desenhada colada na borda direita, sem respeitar o
-      padding. Com `appearance: none` ela vira imagem de fundo, posicionada a
-      0.875rem da borda — a mesma distância que o texto tem da esquerda
-      (`px-3.5` do artefato).
-   -------------------------------------------------------------------------- */
-#detox-root #detox-problemSelector {
-    color-scheme: dark;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.875rem center;
-    background-size: 16px 16px;
-    /* espaço da seta + a mesma folga da esquerda, para o texto não passar por baixo */
-    padding-right: calc(0.875rem + 16px + 0.5rem);
-}
-
-#detox-root #detox-problemSelector option {
-    background-color: #1b1a2e;
-    color: #e2e8f0;
-}
-
-/* -----------------------------------------------------------------------------
    9) As barras seguem a régua do painel, não a do artefato.
 
    O artefato usa `px-4 md:px-6` no cabeçalho e `px-6` no rodapé — valores
@@ -2563,4 +2531,105 @@
     #detox-root .detox-toggle-barras svg {
         transition-duration: 0.01ms;
     }
+}
+
+/* -----------------------------------------------------------------------------
+   12) Etapas 2 e 3: a barra de rolagem não pode empurrar o conteúdo.
+
+   As duas rolam, e o conteúdo delas é centralizado. Quando as barras eram
+   recolhidas, a área crescia, a rolagem deixava de ser necessária e a barra
+   sumia — devolvendo os 6px dela e deslocando os cartões para a direita. Com
+   a calha reservada, o espaço existe sempre e nada se move.
+   -------------------------------------------------------------------------- */
+#detox-root #detox-step2View,
+#detox-root #detox-step3View {
+    scrollbar-gutter: stable;
+}
+
+/* -----------------------------------------------------------------------------
+   13) Lista do problema da semana, no padrão do painel.
+
+   A lista flutuante do <select> nativo é desenhada pelo sistema operacional:
+   `option { background }` é ignorado em boa parte dos navegadores, e era por
+   isso que ela aparecia sem estilo nenhum. Esta lista é markup comum, então
+   segue as mesmas superfícies do resto da aba.
+   -------------------------------------------------------------------------- */
+#detox-root .detox-combo-lista {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 40;
+    max-height: 264px;
+    overflow-y: auto;
+    padding: 6px;
+    background-color: #1b1a2e;
+    border: 1px solid rgb(51 65 85 / 0.9);
+    border-radius: 0.75rem;
+    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.55);
+}
+
+#detox-root .detox-combo-grupo {
+    padding: 8px 10px 4px;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+#detox-root .detox-combo-item {
+    display: block;
+    width: 100%;
+    padding: 8px 10px 8px 20px;
+    position: relative;
+    color: #e2e8f0;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* O ponto herda a cor da coluna de origem, como na etapa Blocos. */
+#detox-root .detox-combo-item::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 50%;
+}
+
+#detox-root .detox-combo-item-c1::before { background-color: #10b981; }
+#detox-root .detox-combo-item-c2::before { background-color: #3b82f6; }
+#detox-root .detox-combo-item-c3::before { background-color: #f43f5e; }
+
+#detox-root .detox-combo-item:hover,
+#detox-root .detox-combo-item:focus-visible {
+    background-color: rgb(99 102 241 / 0.16);
+    color: #ffffff;
+    outline: none;
+}
+
+#detox-root .detox-combo-vazio {
+    padding: 10px;
+    color: #94a3b8;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+#detox-root .detox-combo-seta {
+    color: #94a3b8;
+    transition: transform 0.2s ease;
+}
+
+#detox-root .detox-combo [aria-expanded="true"] .detox-combo-seta {
+    transform: rotate(180deg);
 }
