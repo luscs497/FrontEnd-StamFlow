@@ -366,6 +366,8 @@
           colorName: colorName
       });
 
+      atualizarBadges();
+
       // Auto-focus no textarea gerado
       const textarea = noteDiv.querySelector('textarea');
       textarea.focus();
@@ -385,6 +387,7 @@
       const note = notes.find(n => n.id === id);
       if (note) {
           note.text = textarea.value;
+          atualizarBadges();
       }
   }
 
@@ -392,6 +395,7 @@
   function deleteNote(id, event) {
       event.stopPropagation();
       notes = notes.filter(n => n.id !== id);
+      atualizarBadges();
       const noteElement = document.getElementById(`detox-note-${id}`);
       if (noteElement) {
           noteElement.classList.add('scale-75', 'opacity-0');
@@ -702,6 +706,7 @@
       setTimeout(() => {
           document.getElementById('detox-notesContainer').innerHTML = '';
           notes = [];
+          atualizarBadges();
           selectedMood = null;
           isMoodWidgetExpanded = true; // Retorna ao estado inicial reaberto padrão
 
@@ -811,6 +816,15 @@
   const CLASSE_ABA_INATIVA =
     "flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-700/50 shrink-0";
 
+  // O selo acompanha o estado da aba: sobre o indigo da ativa ele é um véu
+  // claro; sobre a inativa, o mesmo slate das bordas. Antes só a marcação
+  // inicial dizia isso, então a etapa 1 ficava com o véu claro mesmo depois de
+  // perder o foco.
+  const CLASSE_SELO_ATIVO =
+    "w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]";
+  const CLASSE_SELO_INATIVO =
+    "w-4 h-4 rounded-full bg-slate-700 flex items-center justify-center text-[10px]";
+
   const INSTRUCAO_ETAPA = {
     1: "Clique em qualquer lugar para escrever livremente",
     2: "Importe as notas do Brain Dump ou adicione manualmente",
@@ -822,6 +836,31 @@
   // arriscado) do que renomear o container.
   const ID_ETAPA = { 1: "detox-whiteboard", 2: "detox-step2View", 3: "detox-step3View" };
 
+  // Os três selos contam a MESMA coisa: quanto material existe em cada etapa.
+  //
+  // O arquivo do cliente misturava duas leituras — a etapa 1 trazia um "1" e a
+  // etapa 2 um "2", que eram número de etapa, enquanto o JS escrevia contagem
+  // nas etapas 2 e 3. Dava a impressão de que o número "zerava" ao abrir a aba
+  // Blocos: era só a contagem substituindo o ordinal. A ordem das etapas já
+  // está nas setas entre as abas, então aqui todos contam.
+  //
+  // A etapa 1 conta pensamentos escritos, ignorando post-its em branco — é o
+  // mesmo critério que o download e o "deixar ir" usam para decidir se o
+  // quadro tem conteúdo.
+  function atualizarBadges() {
+    const escritos = notes.filter(function (n) {
+      return n.text.trim() !== "";
+    }).length;
+    const blocos =
+      blockCategories[1].length + blockCategories[2].length + blockCategories[3].length;
+
+    const valores = { 1: escritos, 2: blocos, 3: microActions.list24h.length };
+    [1, 2, 3].forEach(function (s) {
+      const selo = el("detox-step" + s + "Badge");
+      if (selo) selo.textContent = valores[s];
+    });
+  }
+
   function switchStep(step) {
     currentStep = step;
 
@@ -830,7 +869,11 @@
       if (view) view.classList.toggle("hidden", s !== step);
       const btn = el("detox-tabBtn" + s);
       if (btn) btn.className = s === step ? CLASSE_ABA_ATIVA : CLASSE_ABA_INATIVA;
+      const selo = el("detox-step" + s + "Badge");
+      if (selo) selo.className = s === step ? CLASSE_SELO_ATIVO : CLASSE_SELO_INATIVO;
     });
+
+    atualizarBadges();
 
     const instrucao = el("detox-step1Instruction");
     if (instrucao) {
@@ -1059,6 +1102,7 @@
       const container = el("detox-notesContainer");
       if (container) container.innerHTML = "";
       notes = [];
+      atualizarBadges();
       isProcessingDisintegration = false;
     }, 3500);
   }
@@ -1152,9 +1196,7 @@
         .join("");
     });
 
-    const total = blockCategories[1].length + blockCategories[2].length + blockCategories[3].length;
-    const badge = el("detox-step2Badge");
-    if (badge) badge.textContent = total;
+    atualizarBadges();
   }
 
   function handleBlockInput(e, cat) {
@@ -1287,8 +1329,7 @@
         .join("");
     }
 
-    const badge = el("detox-step3Badge");
-    if (badge) badge.textContent = microActions.list24h.length;
+    atualizarBadges();
   }
 
   function moveMicroActionUp(idx) {
