@@ -1,11 +1,19 @@
 /* =============================================================================
    Detox Mental (Brain Dump) — estilos da aba.
 
-   As utilitárias abaixo (a partir de "UTILITÁRIAS") foram GERADAS pelo Tailwind
-   e commitadas como CSS estático. Não há Tailwind em runtime: o CDN traz o
-   Preflight, um reset global que sobrescreveria o CSS legado do painel.
+   O markup da aba é o arquivo do cliente (detox_mental_brain_dump.html)
+   transposto 1:1, e ele é escrito em Tailwind. Não há Tailwind em runtime no
+   painel (o CDN traz o Preflight, que é um reset GLOBAL e atropelaria o CSS
+   legado), então as duas primeiras seções abaixo são CSS gerado e commitado:
 
-   Regenerar (só se o markup/JS do detox mudar):
+     1) PREFLIGHT ESCOPADO — o reset do Tailwind, com cada seletor prefixado
+        por #detox-root. Sem ele os botões saem com o padrão do browser (fundo
+        cinza, borda `outset`, fonte Arial) e as classes `border-*` não
+        desenham nada: `.border` define só a largura, quem define
+        `border-style: solid` é o preflight.
+     2) UTILITÁRIAS — as classes propriamente ditas.
+
+   Regenerar as utilitárias (só se o markup/JS do detox mudar):
      content: ["app/_legacy/app-body.html", "public/scripts/detox.js"]
      corePlugins: { preflight: false }   -> sem reset global
      important: "#detox-root"            -> prefixa toda regra, escopando no container
@@ -16,8 +24,245 @@
      os defaults das variáveis --tw-* (gradiente, sombra, transform dependem
      deles), e o `important` do Tailwind não escopa a camada base.
 
-   Toda regra gerada começa com #detox-root, então nada vaza para o painel.
+   Regenerar o preflight: segunda build, `@tailwind base` com
+   `corePlugins: { preflight: true }` e `content: []`. Depois prefixar cada
+   seletor com `#detox-root ` e descartar as regras de `html`, `:host` e
+   `body` — elas valeriam para a página inteira, e o que o container precisa
+   (fonte, fundo, cor) está na seção de integração.
+
+   Toda regra começa com #detox-root, então nada vaza para o painel.
    ============================================================================= */
+
+/* =============================================================================
+   PREFLIGHT ESCOPADO (gerado pelo Tailwind — ver cabeçalho)
+   ============================================================================= */
+
+#detox-root,
+#detox-root *,
+#detox-root ::before,
+#detox-root ::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+
+#detox-root hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+
+#detox-root abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+#detox-root h1,
+#detox-root h2,
+#detox-root h3,
+#detox-root h4,
+#detox-root h5,
+#detox-root h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+#detox-root a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+#detox-root b,
+#detox-root strong {
+  font-weight: bolder;
+}
+
+#detox-root code,
+#detox-root kbd,
+#detox-root samp,
+#detox-root pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  font-size: 1em;
+}
+
+#detox-root small {
+  font-size: 80%;
+}
+
+#detox-root sub,
+#detox-root sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+#detox-root sub {
+  bottom: -0.25em;
+}
+
+#detox-root sup {
+  top: -0.5em;
+}
+
+#detox-root table {
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+
+#detox-root button,
+#detox-root input,
+#detox-root optgroup,
+#detox-root select,
+#detox-root textarea {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+#detox-root button,
+#detox-root select {
+  text-transform: none;
+}
+
+#detox-root button,
+#detox-root input:where([type='button']),
+#detox-root input:where([type='reset']),
+#detox-root input:where([type='submit']) {
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
+
+#detox-root :-moz-focusring {
+  outline: auto;
+}
+
+#detox-root :-moz-ui-invalid {
+  box-shadow: none;
+}
+
+#detox-root progress {
+  vertical-align: baseline;
+}
+
+#detox-root ::-webkit-inner-spin-button,
+#detox-root ::-webkit-outer-spin-button {
+  height: auto;
+}
+
+#detox-root [type='search'] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+
+#detox-root ::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+#detox-root ::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+#detox-root summary {
+  display: list-item;
+}
+
+#detox-root blockquote,
+#detox-root dl,
+#detox-root dd,
+#detox-root h1,
+#detox-root h2,
+#detox-root h3,
+#detox-root h4,
+#detox-root h5,
+#detox-root h6,
+#detox-root hr,
+#detox-root figure,
+#detox-root p,
+#detox-root pre {
+  margin: 0;
+}
+
+#detox-root fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+#detox-root legend {
+  padding: 0;
+}
+
+#detox-root ol,
+#detox-root ul,
+#detox-root menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#detox-root dialog {
+  padding: 0;
+}
+
+#detox-root textarea {
+  resize: vertical;
+}
+
+#detox-root input::-moz-placeholder,
+#detox-root textarea::-moz-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+#detox-root input::placeholder,
+#detox-root textarea::placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+#detox-root button,
+#detox-root [role="button"] {
+  cursor: pointer;
+}
+
+#detox-root :disabled {
+  cursor: default;
+}
+
+#detox-root img,
+#detox-root svg,
+#detox-root video,
+#detox-root canvas,
+#detox-root audio,
+#detox-root iframe,
+#detox-root embed,
+#detox-root object {
+  display: block;
+  vertical-align: middle;
+}
+
+#detox-root img,
+#detox-root video {
+  max-width: 100%;
+  height: auto;
+}
+
+#detox-root [hidden]:where(:not([hidden="until-found"])) {
+  display: none;
+}
 
 /* =============================================================================
    UTILITÁRIAS (geradas pelo Tailwind — ver cabeçalho)
@@ -77,7 +322,6 @@
   --tw-contain-style:  
 }
 
-
 #detox-root .pointer-events-none {
   pointer-events: none
 }
@@ -102,8 +346,8 @@
   inset: 0px
 }
 
-#detox-root .bottom-24 {
-  bottom: 6rem
+#detox-root .bottom-20 {
+  bottom: 5rem
 }
 
 #detox-root .left-0 {
@@ -179,6 +423,10 @@
   margin-bottom: 0.5rem
 }
 
+#detox-root .mb-3 {
+  margin-bottom: 0.75rem
+}
+
 #detox-root .mb-4 {
   margin-bottom: 1rem
 }
@@ -195,6 +443,10 @@
   margin-left: 0.25rem
 }
 
+#detox-root .mt-0\.5 {
+  margin-top: 0.125rem
+}
+
 #detox-root .mt-1 {
   margin-top: 0.25rem
 }
@@ -207,12 +459,20 @@
   margin-top: 0.625rem
 }
 
-#detox-root .mt-3 {
-  margin-top: 0.75rem
+#detox-root .mt-4 {
+  margin-top: 1rem
+}
+
+#detox-root .mt-5 {
+  margin-top: 1.25rem
 }
 
 #detox-root .mt-6 {
   margin-top: 1.5rem
+}
+
+#detox-root .block {
+  display: block
 }
 
 #detox-root .inline {
@@ -239,12 +499,24 @@
   height: 0.25rem
 }
 
+#detox-root .h-10 {
+  height: 2.5rem
+}
+
 #detox-root .h-16 {
   height: 4rem
 }
 
+#detox-root .h-20 {
+  height: 5rem
+}
+
 #detox-root .h-28 {
   height: 7rem
+}
+
+#detox-root .h-3 {
+  height: 0.75rem
 }
 
 #detox-root .h-4 {
@@ -253,6 +525,10 @@
 
 #detox-root .h-5 {
   height: 1.25rem
+}
+
+#detox-root .h-6 {
+  height: 1.5rem
 }
 
 #detox-root .h-full {
@@ -267,16 +543,20 @@
   max-height: 180px
 }
 
-#detox-root .max-h-\[60vh\] {
-  max-height: 60vh
-}
-
-#detox-root .min-h-\[110px\] {
-  min-height: 110px
+#detox-root .max-h-\[62vh\] {
+  max-height: 62vh
 }
 
 #detox-root .min-h-\[220px\] {
   min-height: 220px
+}
+
+#detox-root .min-h-\[360px\] {
+  min-height: 360px
+}
+
+#detox-root .min-h-\[36px\] {
+  min-height: 36px
 }
 
 #detox-root .w-10 {
@@ -287,12 +567,24 @@
   width: 4rem
 }
 
+#detox-root .w-20 {
+  width: 5rem
+}
+
+#detox-root .w-3 {
+  width: 0.75rem
+}
+
 #detox-root .w-4 {
   width: 1rem
 }
 
 #detox-root .w-5 {
   width: 1.25rem
+}
+
+#detox-root .w-6 {
+  width: 1.5rem
 }
 
 #detox-root .w-\[240px\] {
@@ -311,12 +603,12 @@
   min-width: 0px
 }
 
-#detox-root .max-w-3xl {
-  max-width: 48rem
+#detox-root .max-w-4xl {
+  max-width: 56rem
 }
 
-#detox-root .max-w-5xl {
-  max-width: 64rem
+#detox-root .max-w-6xl {
+  max-width: 72rem
 }
 
 #detox-root .max-w-lg {
@@ -329,6 +621,10 @@
 
 #detox-root .max-w-sm {
   max-width: 24rem
+}
+
+#detox-root .max-w-xl {
+  max-width: 36rem
 }
 
 #detox-root .flex-1 {
@@ -434,8 +730,8 @@
   align-items: center
 }
 
-#detox-root .items-stretch {
-  align-items: stretch
+#detox-root .justify-end {
+  justify-content: flex-end
 }
 
 #detox-root .justify-center {
@@ -444,6 +740,10 @@
 
 #detox-root .justify-between {
   justify-content: space-between
+}
+
+#detox-root .gap-0\.5 {
+  gap: 0.125rem
 }
 
 #detox-root .gap-1 {
@@ -482,8 +782,18 @@
   gap: 1rem
 }
 
+#detox-root .gap-5 {
+  gap: 1.25rem
+}
+
 #detox-root .gap-8 {
   gap: 2rem
+}
+
+#detox-root :is(.space-y-1 > :not([hidden]) ~ :not([hidden])) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.25rem * var(--tw-space-y-reverse))
 }
 
 #detox-root :is(.space-y-1\.5 > :not([hidden]) ~ :not([hidden])) {
@@ -518,6 +828,10 @@
 
 #detox-root .overflow-hidden {
   overflow: hidden
+}
+
+#detox-root .overflow-x-auto {
+  overflow-x: auto
 }
 
 #detox-root .overflow-y-auto {
@@ -619,8 +933,16 @@
   border-color: rgb(30 64 175 / 0.4)
 }
 
+#detox-root .border-blue-900\/30 {
+  border-color: rgb(30 58 138 / 0.3)
+}
+
 #detox-root .border-blue-900\/40 {
   border-color: rgb(30 58 138 / 0.4)
+}
+
+#detox-root .border-emerald-500\/30 {
+  border-color: rgb(16 185 129 / 0.3)
 }
 
 #detox-root .border-emerald-800 {
@@ -632,8 +954,16 @@
   border-color: rgb(6 95 70 / 0.6)
 }
 
+#detox-root .border-emerald-900\/30 {
+  border-color: rgb(6 78 59 / 0.3)
+}
+
 #detox-root .border-emerald-900\/40 {
   border-color: rgb(6 78 59 / 0.4)
+}
+
+#detox-root .border-emerald-900\/50 {
+  border-color: rgb(6 78 59 / 0.5)
 }
 
 #detox-root .border-indigo-500 {
@@ -661,6 +991,10 @@
   border-color: rgb(127 29 29 / 0.4)
 }
 
+#detox-root .border-rose-500\/40 {
+  border-color: rgb(244 63 94 / 0.4)
+}
+
 #detox-root .border-rose-800 {
   --tw-border-opacity: 1;
   border-color: rgb(159 18 57 / var(--tw-border-opacity, 1))
@@ -672,6 +1006,14 @@
 
 #detox-root .border-rose-800\/40 {
   border-color: rgb(159 18 57 / 0.4)
+}
+
+#detox-root .border-rose-800\/60 {
+  border-color: rgb(159 18 57 / 0.6)
+}
+
+#detox-root .border-rose-900\/30 {
+  border-color: rgb(136 19 55 / 0.3)
 }
 
 #detox-root .border-rose-900\/40 {
@@ -777,9 +1119,19 @@
   background-color: rgb(245 158 11 / 0.1)
 }
 
+#detox-root .bg-blue-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1))
+}
+
 #detox-root .bg-blue-950 {
   --tw-bg-opacity: 1;
   background-color: rgb(23 37 84 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-emerald-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(16 185 129 / var(--tw-bg-opacity, 1))
 }
 
 #detox-root .bg-emerald-500\/20 {
@@ -798,6 +1150,10 @@
 
 #detox-root .bg-emerald-950\/20 {
   background-color: rgb(2 44 34 / 0.2)
+}
+
+#detox-root .bg-emerald-950\/30 {
+  background-color: rgb(2 44 34 / 0.3)
 }
 
 #detox-root .bg-emerald-950\/50 {
@@ -824,6 +1180,15 @@
 #detox-root .bg-orange-950 {
   --tw-bg-opacity: 1;
   background-color: rgb(67 20 7 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-rose-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(244 63 94 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-rose-500\/20 {
+  background-color: rgb(244 63 94 / 0.2)
 }
 
 #detox-root .bg-rose-600 {
@@ -865,6 +1230,10 @@
 #detox-root .bg-slate-900 {
   --tw-bg-opacity: 1;
   background-color: rgb(15 23 42 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .bg-slate-900\/80 {
+  background-color: rgb(15 23 42 / 0.8)
 }
 
 #detox-root .bg-slate-950\/80 {
@@ -931,10 +1300,6 @@
   padding: 0.5rem
 }
 
-#detox-root .p-2\.5 {
-  padding: 0.625rem
-}
-
 #detox-root .p-3 {
   padding: 0.75rem
 }
@@ -949,10 +1314,6 @@
 
 #detox-root .p-6 {
   padding: 1.5rem
-}
-
-#detox-root .p-7 {
-  padding: 1.75rem
 }
 
 #detox-root .px-2 {
@@ -1030,17 +1391,16 @@
   padding-bottom: 1rem
 }
 
-#detox-root .py-5 {
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem
-}
-
-#detox-root .pb-4 {
-  padding-bottom: 1rem
+#detox-root .pb-3 {
+  padding-bottom: 0.75rem
 }
 
 #detox-root .pl-1 {
   padding-left: 0.25rem
+}
+
+#detox-root .pl-4 {
+  padding-left: 1rem
 }
 
 #detox-root .pl-5 {
@@ -1063,12 +1423,24 @@
   padding-top: 0.25rem
 }
 
+#detox-root .pt-2 {
+  padding-top: 0.5rem
+}
+
+#detox-root .pt-4 {
+  padding-top: 1rem
+}
+
 #detox-root .text-left {
   text-align: left
 }
 
 #detox-root .text-center {
   text-align: center
+}
+
+#detox-root .text-right {
+  text-align: right
 }
 
 #detox-root .text-2xl {
@@ -1122,6 +1494,10 @@
   font-weight: 700
 }
 
+#detox-root .font-extrabold {
+  font-weight: 800
+}
+
 #detox-root .font-medium {
   font-weight: 500
 }
@@ -1148,6 +1524,10 @@
 
 #detox-root .leading-relaxed {
   line-height: 1.625
+}
+
+#detox-root .leading-tight {
+  line-height: 1.25
 }
 
 #detox-root .tracking-wide {
@@ -1192,6 +1572,11 @@
   color: rgb(245 158 11 / var(--tw-text-opacity, 1))
 }
 
+#detox-root .text-blue-200 {
+  --tw-text-opacity: 1;
+  color: rgb(191 219 254 / var(--tw-text-opacity, 1))
+}
+
 #detox-root .text-blue-300 {
   --tw-text-opacity: 1;
   color: rgb(147 197 253 / var(--tw-text-opacity, 1))
@@ -1227,11 +1612,6 @@
   color: rgb(107 114 128 / var(--tw-text-opacity, 1))
 }
 
-#detox-root .text-indigo-200 {
-  --tw-text-opacity: 1;
-  color: rgb(199 210 254 / var(--tw-text-opacity, 1))
-}
-
 #detox-root .text-indigo-300 {
   --tw-text-opacity: 1;
   color: rgb(165 180 252 / var(--tw-text-opacity, 1))
@@ -1245,6 +1625,11 @@
 #detox-root .text-orange-400 {
   --tw-text-opacity: 1;
   color: rgb(251 146 60 / var(--tw-text-opacity, 1))
+}
+
+#detox-root .text-rose-200 {
+  --tw-text-opacity: 1;
+  color: rgb(254 205 211 / var(--tw-text-opacity, 1))
 }
 
 #detox-root .text-rose-300 {
@@ -1346,6 +1731,12 @@
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
 }
 
+#detox-root .shadow-sm {
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+}
+
 #detox-root .shadow-xl {
   --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
@@ -1395,6 +1786,10 @@
   transition-duration: 150ms
 }
 
+#detox-root .duration-200 {
+  transition-duration: 200ms
+}
+
 #detox-root .duration-300 {
   transition-duration: 300ms
 }
@@ -1403,11 +1798,6 @@
   --tw-scale-x: 1.1;
   --tw-scale-y: 1.1;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
-}
-
-#detox-root .hover\:border-emerald-500:hover {
-  --tw-border-opacity: 1;
-  border-color: rgb(16 185 129 / var(--tw-border-opacity, 1))
 }
 
 #detox-root .hover\:border-emerald-700\/60:hover {
@@ -1488,6 +1878,10 @@
 #detox-root .hover\:bg-rose-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(244 63 94 / var(--tw-bg-opacity, 1))
+}
+
+#detox-root .hover\:bg-rose-900\/60:hover {
+  background-color: rgb(136 19 55 / 0.6)
 }
 
 #detox-root .hover\:bg-slate-200\/50:hover {
@@ -1579,6 +1973,10 @@
   border-color: rgb(16 185 129 / 0.5)
 }
 
+#detox-root .focus\:border-emerald-500\/60:focus {
+  border-color: rgb(16 185 129 / 0.6)
+}
+
 #detox-root .focus\:border-indigo-500:focus {
   --tw-border-opacity: 1;
   border-color: rgb(99 102 241 / var(--tw-border-opacity, 1))
@@ -1628,16 +2026,15 @@
   color: rgb(52 211 153 / var(--tw-text-opacity, 1))
 }
 
-#detox-root :is(.group:hover .group-hover\:text-indigo-400) {
-  --tw-text-opacity: 1;
-  color: rgb(129 140 248 / var(--tw-text-opacity, 1))
-}
-
 #detox-root :is(.group:hover .group-hover\:opacity-100) {
   opacity: 1
 }
 
 @media (min-width: 640px) {
+  #detox-root .sm\:block {
+    display: block
+  }
+
   #detox-root .sm\:w-auto {
     width: auto
   }
@@ -1656,6 +2053,10 @@
     flex-direction: row
   }
 
+  #detox-root .md\:items-center {
+    align-items: center
+  }
+
   #detox-root .md\:p-5 {
     padding: 1.25rem
   }
@@ -1668,14 +2069,29 @@
     padding: 2rem
   }
 
+  #detox-root .md\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem
+  }
+
   #detox-root .md\:text-base {
     font-size: 1rem;
     line-height: 1.5rem
   }
 
+  #detox-root .md\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem
+  }
+
   #detox-root .md\:text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem
+  }
+
+  #detox-root .md\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem
   }
 
   #detox-root .md\:text-xs {
@@ -1685,29 +2101,20 @@
 }
 
 @media (min-width: 1024px) {
-  #detox-root .lg\:w-auto {
-    width: auto
-  }
-
-  #detox-root .lg\:items-end {
-    align-items: flex-end
+  #detox-root .lg\:flex-row {
+    flex-direction: row
   }
 
   #detox-root .lg\:justify-start {
     justify-content: flex-start
   }
 
+  #detox-root .lg\:justify-end {
+    justify-content: flex-end
+  }
+
   #detox-root .lg\:text-left {
     text-align: left
-  }
-
-  #detox-root .lg\:text-\[15px\] {
-    font-size: 15px
-  }
-
-  #detox-root .lg\:text-lg {
-    font-size: 1.125rem;
-    line-height: 1.75rem
   }
 }
 
@@ -1715,12 +2122,16 @@
    AJUSTES DE INTEGRAÇÃO — vêm DEPOIS das utilitárias de propósito.
    As regras geradas têm a mesma especificidade (#detox-root + 1 classe), então
    o desempate é por ordem no arquivo: o que estiver aqui embaixo vence.
+
+   O markup da aba é o do arquivo do cliente (detox_mental_brain_dump.html)
+   transposto 1:1 — só os ids ganharam o prefixo `detox-` e os handlers inline
+   passaram a chamar `detoxMental.*`. Logo, aqui embaixo mora apenas o que o
+   artefato tinha na própria tag <style> e o mínimo para ele caber na aba.
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   1) O quadro é o protagonista: ocupa toda a área de conteúdo.
-   A seção usa .container-1700, que traz max-width 1360px e padding — era isso
-   que criava a moldura escura em volta do quadro. Aqui ela é zerada.
+   1) Full-bleed: a seção usa .container-1700, que traz max-width 1360px e
+   padding — era isso que criava a moldura em volta do quadro.
    -------------------------------------------------------------------------- */
 .conteudo-site.detox-secao {
     max-width: none;
@@ -1728,163 +2139,53 @@
     gap: 0;
 }
 
+/* -----------------------------------------------------------------------------
+   2) O #detox-root faz o papel do <body> do artefato:
+
+       body { h-screen flex flex-col justify-between; background: #0c0b14 }
+         header  (barra escura, shrink-0)
+         main    (flex-1: quadro / blocos / ações)
+         footer  (barra escura, shrink-0)
+
+   A única diferença é a altura: em vez de 100vh ela vem do detox.js
+   (viewport menos o topo do container), acompanhando o content-header do
+   painel em cada breakpoint.
+   -------------------------------------------------------------------------- */
 #detox-root {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
-    /* altura definida em runtime por detox.js (viewport - topo do container),
-       o que acompanha o content-header em cada breakpoint. */
     height: calc(100vh - 86px);
     min-height: 420px;
     overflow: hidden;
     border: none;
     border-radius: 0;
-    background-color: #fcfcfd;
+    background-color: #0c0b14;
+    color: #f1f5f9;
     font-family: inherit;
     user-select: none;
-    color: #0f172a;
 }
 
-/* O quadro preenche o container inteiro; cabeçalho e ações flutuam por cima. */
-#detox-root #detox-whiteboard {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    flex: none;
+/* O <main> do artefato: `flex-1` já dá a altura, o min-height evita que o
+   conteúdo das etapas 2 e 3 estufe a caixa em vez de rolar dentro dela. */
+#detox-root .detox-main {
+    min-height: 0;
 }
 
+/* -----------------------------------------------------------------------------
+   3) Daqui para baixo é a <style> do artefato, escopada no #detox-root.
+   -------------------------------------------------------------------------- */
+
+/* Fundo do quadro branco com pontos. */
 #detox-root .whiteboard-grid {
     background-color: #fcfcfd;
     background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
     background-size: 24px 24px;
 }
 
-/* -----------------------------------------------------------------------------
-   2) Cabeçalho e ações flutuando sobre o quadro.
-   Ficam como irmãos do quadro (não filhos): assim um clique neles não borbulha
-   para o handler que cria post-its.
-   -------------------------------------------------------------------------- */
-#detox-root .detox-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 20;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 20px 24px;
-    background-color: transparent;
-    border: none;
-}
-
-/* Sobre o fundo branco o texto claro do original some. O :not() preserva o
-   título, que é um span com texto transparente preenchido por gradiente —
-   pintá-lo de cinza apagava o gradiente. */
-#detox-root .detox-header p,
-#detox-root .detox-header span:not(.text-transparent) {
-    color: #475569;
-}
-
-#detox-root .detox-header h1 {
-    white-space: nowrap;
-}
-
-#detox-root .detox-footer {
-    position: absolute;
-    right: 24px;
-    bottom: 24px;
-    left: auto;
-    top: auto;
-    z-index: 20;
-    width: auto;
-    flex-direction: row;
-    gap: 12px;
-    padding: 0;
-    background-color: transparent;
-    border: none;
-}
-
-/* -----------------------------------------------------------------------------
-   3) Botões no padrão do painel (.btn do globals.css), sem as bordas cinzas
-   incompletas do artefato original. A cor de acento muda por contexto.
-   -------------------------------------------------------------------------- */
-#detox-root .detox-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: auto;
-    padding: 0.72rem 1.2rem;
-    font-family: inherit;
-    font-size: 15.2px;
-    font-weight: 700;
-    color: #34d3bb;
-    background-color: #34d3bb04;
-    border: 0.8px solid #34d3bb44;
-    border-radius: 19.2px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
-}
-
-#detox-root .detox-btn:hover {
-    background-color: #34d3bb17;
-    border-color: #34d3bb88;
-    color: #34d3bb;
-}
-
-#detox-root .detox-btn svg {
-    color: currentColor;
-    flex-shrink: 0;
-}
-
-#detox-root .detox-btn span {
-    color: currentColor;
-}
-
-/* O "i" do título: mesmo padrão, em formato redondo e compacto. */
-#detox-root .detox-btn-icone {
-    padding: 0;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    box-shadow: none;
-}
-
-/* Eliminar mantém o tom de alerta, mas com o mesmo formato. */
-#detox-root .detox-btn-perigo {
-    color: #f43f5e;
-    background-color: #f43f5e08;
-    border-color: #f43f5e44;
-}
-
-#detox-root .detox-btn-perigo:hover {
-    background-color: #f43f5e1a;
-    border-color: #f43f5e88;
-    color: #f43f5e;
-}
-
-/* -----------------------------------------------------------------------------
-   4) Widget de humor: cantos e borda do padrão do sistema.
-   -------------------------------------------------------------------------- */
-#detox-root #detox-moodWidgetContainer {
-    border: 0.8px solid #34d3bb44;
-    border-radius: 19.2px;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-}
-
-#detox-root #detox-moodWidgetContainer:hover {
-    border-color: #34d3bb88;
-}
-
-/* -----------------------------------------------------------------------------
-   5) Restante do app (inalterado do artefato original).
-   -------------------------------------------------------------------------- */
-
-/* Dissipação lenta usada ao "deixar ir" (notas e widget de humor). */
+/* Dissipação lenta usada ao "deixar ir". */
 #detox-root .fade-out-peaceful {
     opacity: 0 !important;
     filter: blur(12px) grayscale(100%);
@@ -1895,7 +2196,7 @@
     pointer-events: none;
 }
 
-/* Post-it — as cores das notas são identidade do detox e ficam como estão. */
+/* Post-it. */
 #detox-root .note-bubble {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease,
@@ -1907,111 +2208,36 @@
     transform: scale(1.01);
 }
 
+/* Círculo de respiração do Método STOP. */
+@keyframes detoxBreatheAnimation {
+    0%   { transform: scale(1);    opacity: 0.7; }
+    40%  { transform: scale(1.45); opacity: 1; }
+    60%  { transform: scale(1.45); opacity: 1; }
+    100% { transform: scale(1);    opacity: 0.7; }
+}
+
+#detox-root .breathe-circle {
+    animation: detoxBreatheAnimation 8s ease-in-out infinite;
+}
+
+/* Barras de rolagem finas. */
 #detox-root ::-webkit-scrollbar { width: 6px; height: 6px; }
 #detox-root ::-webkit-scrollbar-track { background: transparent; }
-#detox-root ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-#detox-root ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+#detox-root ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+#detox-root ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-/* Modais e toast são fixed (viewport) e precisam vencer o header sticky do painel. */
-#detox-root #detox-howItWorksModal,
-#detox-root #detox-infoModal,
-#detox-root #detox-downloadModal,
-#detox-root #detox-eliminateModal {
-    z-index: 1000;
+/* Sem barra horizontal nas abas de etapa. */
+#detox-root .no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
 
-#detox-root #detox-toast {
-    z-index: 1001;
-}
-
-/* Em telas estreitas as ações viram coluna para não cobrirem o quadro todo. */
-@media screen and (max-width: 640px) {
-    #detox-root .detox-header {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 14px 16px;
-    }
-
-    #detox-root .detox-footer {
-        right: 16px;
-        bottom: 16px;
-        left: 16px;
-        flex-direction: column;
-    }
+#detox-root .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 /* -----------------------------------------------------------------------------
-   6) Botões dos modais no padrão dos pop-ups do painel.
-   Referência: .button-close-embasamento / .btn-salvar / .btn-login do
-   globals.css — todos com `border: none`, cantos arredondados, peso 700 e
-   fundo translúcido no verde-teal do sistema. O artefato original usava
-   bordas cinza de 1px (border-slate-800), que era a "borda incompleta".
-   -------------------------------------------------------------------------- */
-#detox-root .detox-btn-modal,
-#detox-root .detox-btn-modal-secundario,
-#detox-root .detox-btn-modal-perigo,
-#detox-root .detox-btn-formato {
-    font-family: inherit;
-    font-weight: 700;
-    border: none;
-    border-radius: 14.4px;
-    cursor: pointer;
-    box-shadow: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Ação principal do pop-up (Entendido / Começar Detox Mental). */
-#detox-root .detox-btn-modal {
-    background-color: rgba(52, 211, 153, 0.122);
-    background-image: none;
-    color: rgb(52, 211, 153);
-    font-size: 17.6px;
-}
-
-#detox-root .detox-btn-modal:hover {
-    background-color: rgba(52, 211, 153, 0.198);
-    background-image: none;
-    color: rgb(52, 211, 153);
-}
-
-/* Ação neutra (Ainda não). */
-#detox-root .detox-btn-modal-secundario {
-    background-color: rgba(148, 163, 184, 0.12);
-    color: #cbd5e1;
-    font-size: 16px;
-}
-
-#detox-root .detox-btn-modal-secundario:hover {
-    background-color: rgba(148, 163, 184, 0.2);
-    color: #e2e8f0;
-}
-
-/* Ação destrutiva (Sim, deixar ir) — mesmo formato, tom de alerta. */
-#detox-root .detox-btn-modal-perigo {
-    background-color: rgba(244, 63, 94, 0.14);
-    background-image: none;
-    color: #fb7185;
-    font-size: 16px;
-}
-
-#detox-root .detox-btn-modal-perigo:hover {
-    background-color: rgba(244, 63, 94, 0.22);
-    color: #fda4af;
-}
-
-/* Cartões de formato do download (PNG / PDF / DOC). */
-#detox-root .detox-btn-formato {
-    background-color: rgba(148, 163, 184, 0.08);
-    color: #e2e8f0;
-}
-
-#detox-root .detox-btn-formato:hover {
-    background-color: rgba(52, 211, 153, 0.12);
-    border-color: transparent;
-}
-
-/* -----------------------------------------------------------------------------
-   7) Arraste do widget de humor com a mesma resposta dos post-its.
+   4) Arraste do widget de humor com a mesma resposta dos post-its.
 
    Duas coisas deixavam o movimento ruim:
 
@@ -2045,79 +2271,20 @@
 }
 
 /* -----------------------------------------------------------------------------
-   6) Etapas 2 e 3, submenu de ferramentas e abas.
-
-   O cabeçalho aqui não é o <header> em fluxo do artefato: ele flutua sobre o
-   quadro (position: absolute) e era uma flex ROW com dois filhos. Agora carrega
-   três linhas — topo, ferramentas e abas — então vira coluna, e a linha de cima
-   ganha o wrapper .detox-header-topo para continuar sendo row.
+   5) Modais e toast são fixed (viewport) e precisam vencer o header sticky do
+   painel, que no globals.css sobe até z-index 999.
    -------------------------------------------------------------------------- */
-#detox-root .detox-header {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 10px;
+#detox-root #detox-howItWorksModal,
+#detox-root #detox-infoModal,
+#detox-root #detox-stopModal,
+#detox-root #detox-dailyWinsModal,
+#detox-root #detox-dailyWinsDownloadModal,
+#detox-root #detox-dailyWinsEliminateModal,
+#detox-root #detox-downloadModal,
+#detox-root #detox-eliminateModal {
+    z-index: 1000;
 }
 
-#detox-root .detox-header-topo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-}
-
-@media screen and (min-width: 1024px) {
-    #detox-root .detox-header-topo {
-        flex-direction: row;
-        align-items: flex-start;
-    }
-}
-
-/* O painel e as abas herdam o padding lateral do .detox-header, então zeram o
-   próprio para não somar duas vezes. */
-#detox-root #detox-ferramentas-painel,
-#detox-root .detox-abas {
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    background-color: transparent;
-    border-bottom: none;
-}
-
-/* As etapas 2 e 3 ocupam a mesma área do quadro (que é absolute inset:0), mas
-   ao contrário dele o conteúdo começa no topo — daí o padding que desvia do
-   cabeçalho flutuante. A altura do cabeçalho muda quando o submenu abre, então
-   o valor vem de --detox-header-h, medido pelo detox.js. */
-#detox-root #detox-step2View,
-#detox-root #detox-step3View {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    flex: none;
-    padding-top: calc(var(--detox-header-h, 130px) + 16px);
-    padding-bottom: 96px;
-    overflow-y: auto;
-    z-index: 10;
-}
-
-/* A regra antiga `.detox-header span { color: #475569 }` existe porque a linha
-   de cima flutua sobre o quadro BRANCO, onde texto claro sumiria. O painel de
-   ferramentas e as abas trazem fundo escuro próprio, então ali ela inverte o
-   problema e apaga os rótulos: `inherit` devolve a cor da classe do botão. */
-#detox-root .detox-header #detox-ferramentas-painel span:not(.text-transparent),
-#detox-root .detox-header .detox-abas span:not(.text-transparent) {
-    color: inherit;
-}
-
-/* Sobre o fundo claro do quadro, o texto slate-100/400 do artefato sumiria. */
-#detox-root #detox-step2View h2,
-#detox-root #detox-step3View h2 {
-    color: #0f172a;
-}
-
-#detox-root #detox-step2View > div > p,
-#detox-root #detox-step3View > div > p {
-    color: #475569;
+#detox-root #detox-toast {
+    z-index: 1001;
 }

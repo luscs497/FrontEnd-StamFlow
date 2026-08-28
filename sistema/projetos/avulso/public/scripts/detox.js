@@ -728,21 +728,6 @@
     if (!raiz || !raiz.offsetParent) return; // seção ainda oculta
     const topo = raiz.getBoundingClientRect().top;
     raiz.style.height = Math.max(420, Math.round(window.innerHeight - topo)) + "px";
-    medirCabecalho();
-  }
-
-  // O cabeçalho flutua sobre a área do quadro; as etapas 2 e 3 precisam saber a
-  // altura dele para não nascerem por baixo. Muda quando o submenu de
-  // ferramentas abre/fecha e quando o texto quebra em outra largura, então é
-  // medido em runtime e publicado como custom property.
-  function medirCabecalho() {
-    const raiz = document.getElementById("detox-root");
-    const cabecalho = raiz && raiz.querySelector(".detox-header");
-    if (!raiz || !cabecalho) return;
-    const altura = Math.round(cabecalho.getBoundingClientRect().height);
-    // Com a seção ainda oculta a medida sai 0; publicar isso zeraria o padding
-    // das etapas 2 e 3 (o fallback do CSS só vale se a variável não existir).
-    if (altura > 0) raiz.style.setProperty("--detox-header-h", altura + "px");
   }
 
   function init() {
@@ -750,8 +735,7 @@
     if (!raiz || raiz.dataset.detoxIniciado) return;
     raiz.dataset.detoxIniciado = "1";
     renderMoodWidget();
-    switchStep(1);          // monta as abas e deixa a etapa 1 visível
-    toggleFerramentas(false); // submenu começa recolhido
+    switchStep(1);   // monta as abas e deixa a etapa 1 visível
     renderDailyWinsInputs();
     ajustarAltura();
 
@@ -1345,21 +1329,6 @@
     draggedActionIndex = null;
   }
 
-  // --------------------------------------------------------------------------
-  // Submenu "Ferramentas" (adaptação pedida: o header pesado do mockup vira um
-  // painel colapsável, com um gatilho discreto no header atual). As abas de
-  // etapa ficam FORA dele, sempre visíveis: são navegação, e colapsá-las
-  // esconderia as etapas 2 e 3.
-  // --------------------------------------------------------------------------
-  function toggleFerramentas(forcar) {
-    const painel = el("detox-ferramentas-painel");
-    const gatilho = el("detox-ferramentas-gatilho");
-    if (!painel || !gatilho) return;
-    const aberto = typeof forcar === "boolean" ? forcar : painel.classList.contains("hidden");
-    painel.classList.toggle("hidden", !aberto);
-    gatilho.setAttribute("aria-expanded", aberto ? "true" : "false");
-    medirCabecalho(); // abrir/fechar muda a altura que as etapas 2 e 3 descontam
-  }
 
   window.detoxMental = {
     init: init,
@@ -1381,7 +1350,6 @@
 
     // --- etapas, submenu, Método STOP e Daily Wins ---
     switchStep: switchStep,
-    toggleFerramentas: toggleFerramentas,
     openStopModal: openStopModal,
 
     openDailyWinsModal: openDailyWinsModal,
