@@ -2500,3 +2500,67 @@
 #detox-root .detox-main {
     background-color: #161320;
 }
+
+/* -----------------------------------------------------------------------------
+   11) Botões do rodapé: ícone sozinho, rótulo abrindo no hover.
+
+   O rótulo não some com `display: none` — ele continua no fluxo, com largura
+   limitada a zero, para poder animar. A largura de destino é a real de cada
+   texto, medida pelo detox.js e publicada em --detox-rotulo-w: um valor
+   chutado aqui faria o texto abrir depressa e depois esperar parado, porque a
+   transição percorre a distância declarada no mesmo tempo.
+
+   O `gap` do artefato também entra na conta: fechado ele deixaria 10px de
+   sobra entre o ícone e um rótulo invisível, e o botão não ficaria redondo em
+   volta do ícone.
+   -------------------------------------------------------------------------- */
+#detox-root .detox-btn-expansivel {
+    gap: 0;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease,
+                transform 0.15s ease, gap 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#detox-root .detox-btn-rotulo {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    white-space: nowrap;
+    transition: max-width 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s ease 0.04s;
+}
+
+#detox-root .detox-btn-expansivel:hover,
+#detox-root .detox-btn-expansivel:focus-visible {
+    gap: 10px;
+}
+
+#detox-root .detox-btn-expansivel:hover .detox-btn-rotulo,
+#detox-root .detox-btn-expansivel:focus-visible .detox-btn-rotulo {
+    max-width: var(--detox-rotulo-w, 15rem);
+    opacity: 1;
+}
+
+/* Sem mouse não existe hover: no toque os rótulos ficam sempre abertos, senão
+   o rodapé viraria três ícones sem nome. Vale também para quem prefere menos
+   movimento. */
+@media (hover: none) {
+    #detox-root .detox-btn-expansivel {
+        gap: 10px;
+    }
+
+    #detox-root .detox-btn-rotulo {
+        max-width: var(--detox-rotulo-w, 15rem);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #detox-root .detox-btn-expansivel,
+    #detox-root .detox-btn-rotulo,
+    #detox-root .detox-header,
+    #detox-root .detox-footer,
+    #detox-root .detox-toggle-barras svg {
+        transition-duration: 0.01ms;
+    }
+}

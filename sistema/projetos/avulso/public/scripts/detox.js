@@ -669,6 +669,140 @@
       promptEliminateAfterDownload();
   }
 
+  // --------------------------------------------------------------------------
+  // Importar pensamentos de uma sessão anterior.
+  //
+  // Só o .doc dá para ler de volta: PNG e PDF são imagem, e o .doc que o
+  // exportToDOC gera é HTML por dentro (é assim que o Word o abre). Então o
+  // parse é o inverso exato da exportação — cada `.note` daquele arquivo vira
+  // um post-it de novo, com a mesma cor e o mesmo texto.
+  //
+  // Nada disso sai do navegador: o arquivo é lido com FileReader, igual ao
+  // resto da aba.
+  // --------------------------------------------------------------------------
+  const COR_POR_ROTULO = (function () {
+    const mapa = {};
+    Object.keys(colorSchemes).forEach(function (nome) {
+      mapa[colorSchemes[nome].label.toLowerCase()] = nome;
+    });
+    return mapa;
+  })();
+
+  function abrirImportador() {
+    const campo = el("detox-importInput");
+    if (campo) campo.click();
+  }
+
+  function importarArquivo(campo) {
+    const arquivo = campo && campo.files && campo.files[0];
+    if (!arquivo) return;
+
+    const leitor = new FileReader();
+    leitor.onerror = function () {
+      showToast("Não consegui ler esse arquivo.", "⚠️");
+      campo.value = "";
+    };
+    leitor.onload = function () {
+      try {
+        aplicarImportacao(String(leitor.result || ""));
+      } catch (erro) {
+        showToast("Arquivo não reconhecido. Use o .doc exportado daqui.", "⚠️");
+      }
+      // zera para o mesmo arquivo poder ser escolhido de novo em seguida
+      campo.value = "";
+    };
+    leitor.readAsText(arquivo);
+  }
+
+  function aplicarImportacao(conteudo) {
+    const doc = new DOMParser().parseFromString(conteudo, "text/html");
+    const blocos = doc.querySelectorAll(".note");
+
+    if (!blocos.length) {
+      showToast("Nenhum pensamento encontrado nesse arquivo.", "💡");
+      return;
+    }
+
+    const quadro = el("detox-whiteboard");
+    const area = quadro ? quadro.getBoundingClientRect() : { width: 960, height: 600 };
+    const LARGURA = 264;  // 240px do post-it + respiro
+    const ALTURA = 172;
+    const colunas = Math.max(1, Math.floor((area.width - 24) / LARGURA));
+
+    let importados = 0;
+    blocos.forEach(function (bloco) {
+      // <strong>Pensamento #N (Cor):</strong> abre o bloco; o texto é o resto
+      const marcador = bloco.querySelector("strong");
+      const rotuloCor = marcador ? (marcador.textContent.match(/\(([^)]+)\)/) || [])[1] : "";
+      const cor = COR_POR_ROTULO[String(rotuloCor).trim().toLowerCase()] || "azul";
+
+      if (marcador) marcador.remove();
+      // <br/> viraram as quebras de linha na exportação; desfaz isso
+      bloco.querySelectorAll("br").forEach(function (br) {
+        br.replaceWith(doc.createTextNode("\n"));
+      });
+
+      const texto = bloco.textContent.replace(/^\s+|\s+$/g, "");
+      if (!texto) return;
+
+      const posicao = importados;
+      const x = 24 + (posicao % colunas) * LARGURA;
+      const y = 24 + Math.floor(posicao / colunas) * ALTURA;
+      createNoteElement(
+        Math.min(x, Math.max(24, area.width - 260)),
+        Math.min(y, Math.max(24, area.height - 150)),
+        texto,
+        cor
+      );
+      importados++;
+    });
+
+    // O humor também volta, quando o arquivo trouxer um.
+    const selo = doc.querySelector(".mood-badge");
+    if (selo) {
+      const emoji = (selo.textContent.match(/([\u{1F300}-\u{1FAFF}])/u) || [])[1];
+      if (emoji) {
+        selectedMood = emoji;
+        isMoodWidgetExpanded = false;
+        renderMoodWidget();
+      }
+    }
+
+    if (importados === 0) {
+      showToast("Nenhum pensamento encontrado nesse arquivo.", "💡");
+      return;
+    }
+
+    switchStep(1);
+    showToast(importados + (importados === 1 ? " pensamento importado." : " pensamentos importados."), "📥");
+  }
+
+  // --------------------------------------------------------------------------
+  // Botões do rodapé: só o ícone, e o rótulo abre no hover.
+  //
+  // A largura de cada rótulo é medida uma vez e publicada como custom
+  // property. Um `max-width` chutado no CSS faria o texto abrir depressa e
+  // depois esperar parado, porque a transição percorre a distância declarada
+  // no mesmo tempo — o mesmo problema das barras.
+  // --------------------------------------------------------------------------
+  function medirRotulosDoRodape() {
+    const rotulos = document.querySelectorAll("#detox-footer .detox-btn-rotulo");
+    rotulos.forEach(function (rotulo) {
+      // scrollWidth volta 0 aqui: o rótulo está com max-width 0 e overflow
+      // hidden. Suspender o limite por um quadro dá a largura real do texto,
+      // e a transição fica desligada para a ida e volta não ser vista.
+      const transicao = rotulo.style.transition;
+      rotulo.style.transition = "none";
+      rotulo.style.maxWidth = "none";
+      const largura = Math.ceil(rotulo.getBoundingClientRect().width);
+      rotulo.style.maxWidth = "";
+      void rotulo.offsetWidth;
+      rotulo.style.transition = transicao;
+
+      if (largura > 0) rotulo.style.setProperty("--detox-rotulo-w", largura + "px");
+    });
+  }
+
   // CONFIRMAÇÃO DE APAGAR (DEIXAR IR)
   function confirmEliminate(fromDownload = false) {
       if (notes.length === 0 && !selectedMood) {
@@ -752,12 +886,17 @@
     switchStep(1);   // monta as abas e deixa a etapa 1 visível
     renderDailyWinsInputs();
     ajustarAltura();
+    medirRotulosDoRodape();
+    window.addEventListener("resize", medirRotulosDoRodape);
 
     window.addEventListener("resize", ajustarAltura);
 
     // Abrir a aba é o momento em que a seção ganha medida.
     const link = document.querySelector('.link-nav[title="Detox Mental"]');
-    if (link) link.addEventListener("click", () => setTimeout(ajustarAltura, 60));
+    if (link) link.addEventListener("click", () => setTimeout(function () {
+      ajustarAltura();
+      medirRotulosDoRodape(); // com a seção oculta a medida sai 0
+    }, 60));
 
     // Colapsar/expandir a sidebar muda a largura da área; a altura não, mas o
     // widget de humor é centralizado por CSS e não precisa de recálculo.
@@ -1476,6 +1615,8 @@
     closeModal: closeModal,
     handleWhiteboardClick: handleWhiteboardClick,
     openDownloadModal: openDownloadModal,
+    abrirImportador: abrirImportador,
+    importarArquivo: importarArquivo,
     triggerDownload: triggerDownload,
     confirmEliminate: confirmEliminate,
     executeEliminate: executeEliminate,
