@@ -8030,3 +8030,43 @@ header .logo-content {
         justify-content: center;
     }
 }
+
+/* ---- (R10) Auditoria das abas MODO FOCO e STAMFLOW UNIVERSITY (user e avulso).
+             O achado nao e das abas: e do card de audio, compartilhado pelas
+             QUATRO categorias. So aparecia no University porque la os titulos
+             e descricoes sao os mais longos do produto. */
+
+/* R10#1 — O bloco da direita do card (duracao + circulo de play) nao tinha
+   defesa contra o flex-shrink, e o bloco de texto da esquerda nao tinha
+   `min-width: 0`. Resultado: quando o texto e longo, ele empurra e quem cede
+   e a direita — que tem tamanho FIXO. Dois sintomas, ambos medidos a 1200px
+   (nao e problema so de mobile):
+     - o circulo de play (51.2x51.2 com border-radius 50%) era esmagado no eixo
+       horizontal e virava uma ELIPSE, com largura variando card a card
+       conforme o comprimento do titulo: medidos 43x51, 44x51, 45x51, 46x51,
+       47x51, 49x51, 50x51 e 51x51 na mesma lista;
+     - a duracao "--:--" quebrava em duas linhas ("--:-" + "-") em 4 dos 5
+       cards visiveis.
+   No mobile o mesmo efeito aparecia como 27x34 / 28x34 em vez de 34x34.
+   CORREÇÃO: `flex-shrink: 0` no bloco da direita e nos seus dois filhos de
+   tamanho fixo, `nowrap` na duracao, e `min-width: 0` na esquerda para o
+   texto poder encolher e quebrar em vez de empurrar. Medido depois: play
+   uniformemente 51x51 no desktop e 34x34 no mobile, duracao sempre em uma
+   linha. O texto reflui em alguns cards do University — e a contrapartida
+   correta: quem cede passa a ser o paragrafo, nao o botao. */
+.audio-minimizado .audio-div-left {
+    min-width: 0;
+}
+
+.audio-minimizado .audio-div-right {
+    flex-shrink: 0;
+}
+
+.audio-minimizado .audio-audio-player {
+    flex-shrink: 0;
+}
+
+.audio-minimizado .audio-audio-time {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
