@@ -34,6 +34,15 @@ export const LEGACY_SCRIPTS_HEAVY: string[] = [
   "/scripts/camera.js",
   "/scripts/get-repots.js",
   "/scripts/notifications.js",
+  // Aba "Reportar" (Support & Tickets). Estava fora desta lista desde acb89bd,
+  // então o markup do formulário renderizava mas NADA respondia: sem listener
+  // de submit em #criarTicket, sem o botão "Acompanhar um Report" e sem a
+  // busca de /tickets/my-tickets. Precisa vir DEPOIS de auth.js (fase 1):
+  // tickets.js sobrescreve window.authFetch, mas quem injeta CSRF e
+  // credentials é o monkey-patch de window.fetch feito pelo auth.js, então a
+  // ordem garante que as chamadas daqui continuem autenticadas. Só o painel
+  // gestor carregava tickets.js até agora, na mesma posição relativa.
+  "/scripts/tickets.js",
   // Aba Detox Mental. html2canvas e jsPDF só são usados na exportação do quadro
   // (PNG/PDF); ficam na fase pesada por isso. São libs isoladas, sem reset
   // global — ao contrário do Tailwind, que foi eliminado do runtime.

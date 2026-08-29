@@ -7192,3 +7192,398 @@ body .site-content {
     flex-grow: 1;
     min-width: 0;
 }
+
+/* ---- (R6) Auditoria de responsividade da estrutura global (sidebar + topo).
+            Três defeitos que valiam em TODAS as larguras, nos três painéis. */
+
+/* R6#1 — O wordmark do logo vinha cortado 32px à esquerda em qualquer largura.
+   CAUSA: `.logo-image` é puxada para fora da caixa do pai por
+   `margin-left: -32px` (compensa o padding transparente do PNG 500x500). O
+   colapso da mini-sidebar (R3) deu `overflow: hidden` ao `header .logo-content`
+   para animar o `max-width` até 0 — e esse clip passou a comer justamente os
+   32px que a imagem ocupa fora da caixa. Acima de 1500px sobrava respiro e só
+   o transparente era cortado; de 1500px para baixo o header cai para 250px e o
+   corte chega no glifo: o logo virava "tamFlow".
+   CORREÇÃO: `overflow: clip` + `overflow-clip-margin` deixa a imagem PINTAR
+   fora da caixa sem alterar geometria nenhuma — o colapso continua clipando o
+   layout e o estado .nav-mini fica pixel-idêntico. Navegador sem suporte a
+   overflow-clip-margin cai no clip de hoje, nunca em algo pior. */
+header .logo-content {
+    overflow: clip;
+    overflow-clip-margin: 40px;
+}
+
+/* R6#2 — De 469px a 992px o hamburguer parava no meio da barra em vez de ir
+   para a borda direita (a 900px ficava 530px longe da borda).
+   CAUSA: `.logo-content` é o espaçador `width: 100%` que empurra o botão para
+   a direita, mas o mesmo bloco do R3 lhe deu `max-width: 320px` FORA de media
+   query. O bloco de <=992px neutraliza os tamanhos do .nav-mini, só que não
+   esse teto — então o espaçador travava em 320px e o botão junto com ele.
+   Abaixo de ~420px a tela é mais estreita que o teto e o bug some sozinho, o
+   que explica ele não aparecer nos testes de celular pequeno. */
+@media screen and (max-width: 992px) {
+    header .logo-content {
+        max-width: none;
+    }
+}
+
+/* R6#3 — Barra do topo (.content-header) sem folga nem escape.
+   Era `justify-content: space-between` com `flex-wrap: nowrap` e SEM gap em
+   toda a faixa >=469px: título e bloco da direita (sino + pílula de status)
+   só não colidiam porque os rótulos atuais são curtos. Com um nome de seção
+   longo ("StamFlow University", "Compliance Training") a 360px o título
+   quebrava em duas linhas E a pílula quebrava dentro dela mesma.
+   CORREÇÃO fluida: gap real que acompanha a viewport, `flex-wrap` como rede de
+   segurança (só entra quando não cabe mesmo), `min-width: 0` para o título
+   poder encolher em vez de empurrar, e nowrap na pílula para ela nunca
+   quebrar no meio. Nos rótulos reais nada muda: a altura da barra medida é
+   idêntica à de antes em todas as larguras de 360px a 1600px. */
+.content-header {
+    flex-wrap: wrap;
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+    row-gap: 0.5rem;
+}
+
+#section-name {
+    min-width: 0;
+}
+
+.content-header-right {
+    flex-shrink: 0;
+}
+
+.sistema {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ---- (R7) Auditoria de responsividade do CONTEÚDO do Dashboard.
+            Um único defeito real nos três painéis — e ele só existe em
+            user/avulso, porque o gestor não tem esse grupo de cards. */
+
+/* R7#1 — Os três cards de conquista ("Tempo de Tela", "Pausas Realizadas",
+   "Exercícios Realizados") ficavam espremidos e com o rodapé desalinhado
+   sempre que a faixa disponível não comportava os três lado a lado.
+   CAUSA: `.relatorios-conquistas` é `display:flex` com `flex-wrap: nowrap`,
+   `align-items: flex-start` e `.conquista { width: 100% }`. Com nowrap os
+   cards não têm para onde quebrar: eles encolhem até o título mais longo
+   ("Exercícios Realizados Hoje") passar para a segunda linha — e aí, como o
+   align é flex-start em vez de stretch, só AQUELE card cresce e a fileira
+   fica com o rodapé irregular. Medido a 1024px: 3 cards de 208px com alturas
+   [78, 78, 95] — 17px de degrau. O mesmo acontece de 769px a 900px, onde a
+   faixa útil também fica abaixo do limiar (~254px por card).
+   CORREÇÃO: grid com `auto-fit` + `minmax(240px, 1fr)`. Os cards passam a
+   quebrar para a linha de baixo em vez de espremer, mantendo largura e altura
+   iguais entre si em qualquer faixa; `align-items: stretch` garante o rodapé
+   alinhado. O limiar de 240px foi calibrado na medição: acima dele o título
+   nunca quebra.
+   Escopo >=769px de propósito — abaixo disso a folha de 768/468 já empilha os
+   cards com `flex-direction: column`, e esse comportamento fica intocado (um
+   flex-basis/grid herdado ali viraria altura, não largura).
+   Delta medido nas 8 larguras auditadas: só 1024px muda (208x3 desalinhado ->
+   316x2 + 316 alinhado). 1200, 900, 768, 600, 480, 400 e 360 ficam idênticos. */
+@media screen and (min-width: 769px) {
+    .relatorios-conquistas {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        align-items: stretch;
+    }
+}
+
+/* ---- (R8) Auditoria de responsividade da aba EXERCÍCIOS (user e avulso).
+            A listagem em si passou limpa em todas as larguras — os dois
+            achados são do modal do player. */
+
+/* R8#1 — "Fechar Timer" é a ÚNICA saída do modal do player: não há clique no
+   backdrop nem tecla Escape (script.js registra o listener só em
+   #fechar-modal-audio). E ele mede 107x28px em <=768px, contra 150x46px no
+   desktop — ou seja, o alvo ENCOLHE justamente onde o toque acontece.
+   O R4#2 reduziu fonte e padding do `.close-popup` junto com o resto da
+   compactação do modal no mobile, sem separar o alvo de toque do tamanho
+   visual. Isso contradiz o padrão que o próprio R5#1 estabeleceu neste
+   arquivo ("far below the WCAG / iOS / Android ~44 px minimum") e que ali foi
+   corrigido aumentando area clicavel E visual.
+   CORREÇÃO: mantém a compactação visual do R4#2 (fonte 12.5px intacta) e
+   devolve só a área de toque, via min-height de 44px com centralização
+   flex. Medido: 107x28 -> 123x44. O modal cresce 16px de altura no mobile,
+   e nada muda em >=900px. */
+@media screen and (max-width: 768px) {
+    .modal-audio .close-popup {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 1.4rem;
+        padding-right: 1.4rem;
+    }
+}
+
+/* R8#2 — Abaixo de ~330px o modal encostava nas duas bordas da tela (margem
+   0). Ele nunca vaza — `width:100%` + `max-width` já seguram, medido até
+   280px sem overflow —, mas fica colado. O teto passa a ser o menor entre os
+   320px do R4#2 e a largura do pai menos 1.5rem, garantindo respiro.
+   Escopado a <=359px: a 360px o modal ja tem 13px de margem de cada lado e
+   fica byte a byte como estava. */
+@media screen and (max-width: 359px) {
+    .modal-audio {
+        max-width: calc(100% - 1.5rem) !important;
+    }
+}
+
+/* ---- (R9) Auditoria de responsividade da aba PAUSA MENTAL (user e avulso).
+            Um achado, e é o mesmo padrão do R8#1 / R5#1: alvo de toque. */
+
+/* R9#1 — Os botões de faixa anterior / próxima do player medem 18x21px em
+   <=768px. `.modal-audio-nav` é um <button> sem padding nem tamanho próprio:
+   a caixa dele é literalmente o SVG, então quando o R4#2 reduziu o ícone de
+   25.6px para 18px no mobile, o alvo de toque encolheu junto. São menores que
+   o "Fechar Timer" corrigido no R8#1 (28px) e da mesma ordem dos 7.7x11px que
+   o R5#1 documentou como causa raiz do bug recorrente do dropdown de período.
+   O play/pause central ficava em 43x43 — 1px abaixo do mínimo.
+   CORREÇÃO: min-width/min-height de 44px com centralização flex nos três
+   controles. O ícone NÃO muda de tamanho (o SVG continua com os 18px/22px do
+   R4#2); só a área clicável cresce. Medido: 18x21 -> 44x44 e 43x43 -> 44x44.
+   Custo: 1px de altura do modal no mobile. Em >=900px nada muda — lá os
+   controles são 26x29 e 64x66, acima do mínimo AA de 24px da WCAG 2.5.8, e
+   o input é mouse. */
+@media screen and (max-width: 768px) {
+    .modal-audio .modal-audio-nav {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+    .modal-audio #modal-audio-pause {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* ---- (R10) Auditoria das abas MODO FOCO e STAMFLOW UNIVERSITY (user e avulso).
+             O achado nao e das abas: e do card de audio, compartilhado pelas
+             QUATRO categorias. So aparecia no University porque la os titulos
+             e descricoes sao os mais longos do produto. */
+
+/* R10#1 — O bloco da direita do card (duracao + circulo de play) nao tinha
+   defesa contra o flex-shrink, e o bloco de texto da esquerda nao tinha
+   `min-width: 0`. Resultado: quando o texto e longo, ele empurra e quem cede
+   e a direita — que tem tamanho FIXO. Dois sintomas, ambos medidos a 1200px
+   (nao e problema so de mobile):
+     - o circulo de play (51.2x51.2 com border-radius 50%) era esmagado no eixo
+       horizontal e virava uma ELIPSE, com largura variando card a card
+       conforme o comprimento do titulo: medidos 43x51, 44x51, 45x51, 46x51,
+       47x51, 49x51, 50x51 e 51x51 na mesma lista;
+     - a duracao "--:--" quebrava em duas linhas ("--:-" + "-") em 4 dos 5
+       cards visiveis.
+   No mobile o mesmo efeito aparecia como 27x34 / 28x34 em vez de 34x34.
+   CORREÇÃO: `flex-shrink: 0` no bloco da direita e nos seus dois filhos de
+   tamanho fixo, `nowrap` na duracao, e `min-width: 0` na esquerda para o
+   texto poder encolher e quebrar em vez de empurrar. Medido depois: play
+   uniformemente 51x51 no desktop e 34x34 no mobile, duracao sempre em uma
+   linha. O texto reflui em alguns cards do University — e a contrapartida
+   correta: quem cede passa a ser o paragrafo, nao o botao. */
+.audio-minimizado .audio-div-left {
+    min-width: 0;
+}
+
+.audio-minimizado .audio-div-right {
+    flex-shrink: 0;
+}
+
+.audio-minimizado .audio-audio-player {
+    flex-shrink: 0;
+}
+
+.audio-minimizado .audio-audio-time {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ---- (R11) Auditoria da aba CHECKUP SCAN / camera (user e avulso).
+             Testada com feed real: Chrome com --use-fake-device-for-media-stream,
+             permissions:['camera'] e o jsDelivr liberado para o face-api e o
+             MediaPipe subirem de verdade (video 640x480, "Monitoramento Ativo").
+             Nao ha overflow-x em largura nenhuma: o <video> e display:none e
+             nunca entra no layout — quem aparece e so o <canvas> de landmarks. */
+
+/* R11#1 — O overlay de landmarks estava sendo CORTADO.
+   O bitmap do canvas e sempre 640x480 (4:3, fixado em drawHolisticResults a
+   partir de videoWidth/videoHeight), mas a caixa `.camera` nao tem proporcao
+   propria: a altura vem de um `height: 320px` fixo ate 1200px e, acima disso,
+   do stretch do flex em relacao ao painel de resultados irmao. A proporcao da
+   caixa varia de 0.69 a 2.01 ao longo da matriz, contra 1.33 do bitmap — e o
+   `object-fit: cover` corta a diferenca.
+   Medido: a 768-1200px so 66% da ALTURA do quadro fica visivel (perde-se o
+   terco de cima e o de baixo, ou seja, topo da cabeca e quadril); a 400px so
+   84% da largura. Para uma ferramenta que mede inclinacao de cabeca e de
+   tronco, perder justamente essas extremidades do esqueleto e funcional, nao
+   estetico.
+   CORREÇÃO: `contain` em vez de `cover`. O quadro inteiro passa a caber na
+   caixa em qualquer proporcao. Como o feed de video nao e exibido (so os
+   landmarks sobre fundo transparente), o letterbox e invisivel — nao ha
+   barras aparentes, so o esqueleto inteiro em vez de recortado.
+   Layout shift: ZERO. A caixa CSS do canvas nao muda; muda so a escala
+   interna do bitmap. Verificado nas 13 larguras, nos dois paineis. */
+#output {
+    object-fit: contain;
+}
+
+/* R11#2 — O icone de ajuda "?" (.abrir-como-melhorar-stamina) e um controle de
+   verdade — role="button", tabindex="0", com handler de click e de
+   Enter/Espaco abrindo o modal "Como melhorar minha Stamina" — e mede 19x19px
+   em TODAS as larguras. E o menor alvo de toque encontrado em toda a
+   auditoria: menor que os 28px do R8#1 e que os 18x21 do R9#1, e da mesma
+   ordem dos 7.7x11px que o R5#1 documentou como causa raiz do bug recorrente
+   do dropdown de periodo. Ele nao vive so aqui: o mesmo seletor aparece no
+   Dashboard e no card de energia do scan, entao a correcao cobre os tres.
+   CORREÇÃO: area de toque de 44x44 via pseudo-elemento absoluto centrado, em
+   vez de min-width/min-height. Assim o alvo cresce sem que a CAIXA do icone
+   mude — o ::after nao participa do layout, entao o desktop fica byte a byte
+   igual, o que min-height nao permitiria aqui (o icone divide a linha com o
+   <h2> do titulo).
+   Medido com elementFromPoint em 5 pontos de uma area de 44x44 centrada no
+   icone: antes 1/5 acertavam o controle (so o centro; os cantos caiam no
+   .sub-header e no proprio <h2>), depois 5/5, em todas as larguras. Nenhum
+   clique e roubado de outro botao ou link — verificado que nao ha elemento
+   interativo dentro da area expandida. */
+.abrir-como-melhorar-stamina {
+    position: relative;
+}
+
+.abrir-como-melhorar-stamina::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+}
+
+/* ---- (R12) Auditoria das abas BRAIN DUMP (Detox Mental) e TICKETS.
+             Brain Dump existe em user e avulso; Tickets so no user, entao o bloco R12#3
+             (alvos de toque do formulario de report) vive apenas no globals.css
+             do user. */
+
+/* R12#1 — A instrucao da barra de etapas vazava o header inteiro.
+   O span #detox-step1Instruction nasce com `hidden sm:block whitespace-nowrap
+   shrink-0`: escondido abaixo de 640px por design. Mas switchStep() faz
+   `instrucao.classList.remove("hidden")` sem condicao — ou seja, assim que o
+   usuario troca de etapa (a interacao central da aba), o span passa a aparecer
+   em QUALQUER largura. Como e nowrap e shrink-0, ele estoura a linha: medido
+   677px de conteudo dentro de um header de 345px a 360px, com o excedente
+   cortado em silencio pelo overflow:hidden do header.
+   CORREÇÃO em CSS (o JS fica intocado): restaura a intencao original abaixo de
+   640px e, acima disso, deixa o span encolher com reticencias em vez de
+   empurrar. Medido: escapa/cortado 1 -> 0 nas etapas 1, 2 e 3, de 360 a 600px. */
+@media screen and (max-width: 639px) {
+    #detox-root #detox-step1Instruction {
+        display: none;
+    }
+}
+
+#detox-root #detox-step1Instruction {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* R12#2 — Header do Detox estourava 6px na faixa 993-1200px.
+   A primeira linha do header e `flex-col lg:flex-row`: a partir do `lg` do
+   Tailwind (1024px de VIEWPORT) ela vira linha, com o bloco de acoes marcado
+   `shrink-0`. So que nessa faixa a sidebar ainda ocupa 250px, entao o painel
+   util tem apenas 759px — o layout em linha entra numa largura de viewport em
+   que o CONTAINER ainda nao comporta. Classico descompasso entre media query
+   de viewport e largura real do container.
+   CORREÇÃO: `flex-wrap: wrap` na linha, em vez de um breakpoint magico. Quando
+   titulo + acoes nao cabem, as acoes descem sozinhas; quando cabem, nada muda.
+   Medido: scrollWidth 765 -> 759 a 1024px, e identico a 900 e 1200px. */
+#detox-root .detox-header > div:first-child {
+    flex-wrap: wrap;
+}
+
+
+/* ---- (R13) Auditoria dos MODAIS GLOBAIS (user e avulso).
+             Nenhum modal vaza a tela em largura nenhuma — o achado real e de
+             area de toque, mais o respiro lateral do modal de perfil. */
+
+/* R13#1 — Campo do modal de perfil: a caixa visivel tinha 52px de altura, mas
+   so os 20px do meio focavam o input. O padding de 16px vive no WRAPPER
+   (.dados-perfil-input), que e um <div>, nao um <label> — entao clicar na
+   moldura nao faz nada. Passamos o padding vertical do wrapper para o proprio
+   input: a caixa visivel continua com os mesmos 52px (altura do modal medida
+   identica em todas as larguras), mas agora a area inteira e clicavel.
+   Medido: 20 -> 52px de alvo, com a caixa do modal inalterada. */
+.dados-perfil-input {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.dados-perfil-input input {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+/* R13#2 — Respiro lateral do modal de perfil. Abaixo de ~535px ele encostava
+   nas duas bordas (margem 0), com borda e border-radius de 14.4px colados na
+   tela. Diferente do .popup-embasamento, que e full-bleed no mobile DE
+   PROPOSITO (ver R4#1), aqui isso era so consequencia do width:100%.
+   O `min()` dispensa media query: acima de ~535px o teto de 520px continua
+   valendo e nada muda; abaixo, sobra 12px de cada lado. */
+.modal-perfil {
+    max-width: min(520px, calc(100% - 1.5rem));
+}
+
+/* R13#3 — Botoes do modal de alerta de bem-estar e o "Salvar" do perfil.
+   #alerta-bem-estar-acao (a acao principal do alerta) media 22px de altura a
+   360px, 26px de 480 a 768 e 32px no desktop; o #alerta-bem-estar-ignorar
+   ficava em 38-43px; e o #perfil-salvar, em 41px.
+   Escopo <=768px pela mesma razao do R9#1: abaixo disso os valores caem
+   ABAIXO do minimo AA de 24px da WCAG 2.5.8 e o input e toque; de 900px para
+   cima eles passam no AA e mexer ali quebraria o layout shift zero.
+   Medido: 2 alvos fora do minimo -> 0 em <=768px; o modal de alerta cresce
+   27px de altura no mobile, contido dentro dele mesmo. */
+@media screen and (max-width: 768px) {
+    .alerta-bem-estar-acoes .btn {
+        min-height: 44px;
+    }
+
+    #perfil-salvar {
+        min-height: 44px;
+    }
+}
+
+/* R13#5 — O "X" de fechar dos modais e um <svg> nu de 19.2px (22x22 na tela,
+   20x20 no mobile) com listener de click direto. Passou batido no meu primeiro
+   varredor porque o seletor so olhava BUTTON/A/role="button" — <svg> nao entra
+   em nenhum dos tres, apesar de ser o unico jeito de fechar esses modais.
+   Aqui NAO da para usar o pseudo-elemento do R11#2 / R12#3: ::after nao
+   renderiza dentro de <svg>. A saida e crescer a CAIXA sem crescer o desenho —
+   `box-sizing: border-box` com 44x44 e padding de 11px deixa o content box em
+   22px, que e o tamanho que o viewBox ja ocupava. O icone fica identico; so a
+   area clicavel muda.
+   Medido: 22x22 -> 44x44 em <=768px nos seis "X". A linha do titulo do perfil
+   cresce de 35 para 44px e a do embasamento de 59 para 65px a 360px — dentro
+   do proprio modal. Em >=900px nada muda (22 e 26px, acima do minimo AA de
+   24px da WCAG 2.5.8, com input de mouse). */
+@media screen and (max-width: 768px) {
+    #fechar-perfil,
+    #fechar-como-ajuda,
+    #fechar-como-melhorar-stamina,
+    #fechar-embasamento-exercicios,
+    #fechar-embasamento-mental,
+    #fechar-embasamento-foco,
+    #close-popup-politica {
+        box-sizing: border-box;
+        width: 44px;
+        height: 44px;
+        padding: 11px;
+        overflow: visible;
+    }
+}

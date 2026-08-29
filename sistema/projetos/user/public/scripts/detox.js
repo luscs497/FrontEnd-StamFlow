@@ -46,6 +46,8 @@
   let notaEmEdicao = null;
   let activeDragNote = null;
   let dragOffset = { x: 0, y: 0 };
+  // Fracao equivalente ao moodWidgetPos (ver bloco POSICAO DAS NOTAS).
+  let moodWidgetFrac = { x: null, y: null };
   let activeDragWidget = null;
   let widgetOffset = { x: 0, y: 0 };
   let moodWidgetPos = { x: 0, y: 0 };
@@ -130,8 +132,13 @@
       // Se o usuário já moveu o widget manualmente, use as coordenadas absolutas salvas
       if (hasDraggedMood) {
           container.classList.remove('left-1/2', 'top-1/2', '-translate-x-1/2', '-translate-y-1/2');
-          container.style.left = `${moodWidgetPos.x}px`;
-          container.style.top = `${moodWidgetPos.y}px`;
+          // Mesma normalizacao das notas: em % da area util, nao em px.
+          if (typeof moodWidgetFrac.x === 'number') {
+              aplicarPosicao(container, moodWidgetFrac.x, moodWidgetFrac.y);
+          } else {
+              container.style.left = `${moodWidgetPos.x}px`;
+              container.style.top = `${moodWidgetPos.y}px`;
+          }
       } else {
           // Caso contrário, centralize via classes Tailwind
           container.classList.add('left-1/2', 'top-1/2', '-translate-x-1/2', '-translate-y-1/2');
@@ -229,6 +236,8 @@
           widget.style.top = `${rect.top - boardRect.top}px`;
           moodWidgetPos.x = rect.left - boardRect.left;
           moodWidgetPos.y = rect.top - boardRect.top;
+          moodWidgetFrac.x = pxParaFracao(moodWidgetPos.x, boardRect.width, widget.offsetWidth);
+          moodWidgetFrac.y = pxParaFracao(moodWidgetPos.y, boardRect.height, widget.offsetHeight);
       }
 
       widget.addEventListener('mousedown', function(e) {
@@ -324,6 +333,84 @@
       if (picker) picker.classList.add('hidden');
   }
 
+
+  // ==========================================================================
+  // POSICAO DAS NOTAS — normalizada, nao em pixels
+  //
+  // Antes, a posicao de cada post-it era gravada em pixels (style.left = "800px"
+  // e notes[].x = 800). Como o quadro e fluido e nao havia NENHUM handler de
+  // resize, uma nota criada a 1200px continuava a 800px de offset quando a tela
+  // virava 360px: ela caia fora do quadro e o overflow:hidden a escondia de vez,
+  // sem jeito de recuperar.
+  //
+  // A fracao NAO e `x / larguraDoQuadro`, e sim `x / (larguraDoQuadro -
+  // larguraDaNota)`: o post-it tem largura fixa (240px), entao normalizar pela
+  // largura do quadro deixaria uma nota em 90% comecando a 310px num quadro de
+  // 345px — 240px de nota estourando de novo. Normalizando pela AREA UTIL,
+  // 0 = encostada na esquerda e 1 = encostada na direita, em qualquer largura.
+  //
+  // O CSS sai em %, convertido a partir da fracao no momento de aplicar, e um
+  // ResizeObserver reaplica em todo resize do quadro.
+  // ==========================================================================
+  function medidasQuadro() {
+      const board = document.getElementById('detox-whiteboard');
+      if (!board) return null;
+      const r = board.getBoundingClientRect();
+      if (r.width <= 0 || r.height <= 0) return null;
+      return { w: r.width, h: r.height };
+  }
+
+  function pxParaFracao(px, tamanhoQuadro, tamanhoElemento) {
+      const util = tamanhoQuadro - tamanhoElemento;
+      if (util <= 0) return 0;
+      return Math.min(1, Math.max(0, px / util));
+  }
+
+  function fracaoParaPct(fracao, tamanhoQuadro, tamanhoElemento) {
+      if (tamanhoQuadro <= 0) return 0;
+      const util = Math.max(0, tamanhoQuadro - tamanhoElemento);
+      return ((fracao * util) / tamanhoQuadro) * 100;
+  }
+
+  function aplicarPosicao(elm, fx, fy) {
+      const q = medidasQuadro();
+      if (!q || !elm) return;
+      elm.style.left = fracaoParaPct(fx, q.w, elm.offsetWidth) + '%';
+      elm.style.top = fracaoParaPct(fy, q.h, elm.offsetHeight) + '%';
+  }
+
+  function guardarFracao(note, elm, xPx, yPx) {
+      const q = medidasQuadro();
+      if (!q || !note || !elm) return;
+      note.fx = pxParaFracao(xPx, q.w, elm.offsetWidth);
+      note.fy = pxParaFracao(yPx, q.h, elm.offsetHeight);
+      note.x = xPx;
+      note.y = yPx;
+  }
+
+  // Reancora tudo que vive no quadro sempre que ele muda de tamanho.
+  function reposicionarQuadro() {
+      notes.forEach(function (n) {
+          const el = document.getElementById('detox-note-' + n.id);
+          if (el && typeof n.fx === 'number') aplicarPosicao(el, n.fx, n.fy);
+      });
+      if (hasDraggedMood && typeof moodWidgetFrac.x === 'number') {
+          const w = document.getElementById('detox-moodWidgetContainer');
+          if (w) aplicarPosicao(w, moodWidgetFrac.x, moodWidgetFrac.y);
+      }
+  }
+
+  function observarQuadro() {
+      const board = document.getElementById('detox-whiteboard');
+      if (!board || board.__detoxObservado) return;
+      board.__detoxObservado = true;
+      if (typeof ResizeObserver === 'function') {
+          new ResizeObserver(function () { reposicionarQuadro(); }).observe(board);
+      } else {
+          window.addEventListener('resize', reposicionarQuadro);
+      }
+  }
+
   function createNoteElement(x, y, text = '', colorName = 'azul') {
       const id = noteIdCounter++;
       const container = document.getElementById('detox-notesContainer');
@@ -373,14 +460,22 @@
 
       container.appendChild(noteDiv);
 
-      // Adicionar ao array de controle do estado
-      notes.push({
+      // Adicionar ao array de controle do estado. A posicao entra normalizada
+      // (fx/fy) e o CSS e reescrito em % — os px acima servem so para o
+      // elemento ja existir com tamanho medivel aqui.
+      const registro = {
           id: id,
           x: x,
           y: y,
+          fx: 0,
+          fy: 0,
           text: text,
           colorName: colorName
-      });
+      };
+      notes.push(registro);
+      guardarFracao(registro, noteDiv, x, y);
+      aplicarPosicao(noteDiv, registro.fx, registro.fy);
+      observarQuadro();
 
       atualizarBadges();
 
@@ -454,14 +549,16 @@
           x = Math.max(0, Math.min(x, boardRect.width - activeDragNote.offsetWidth));
           y = Math.max(0, Math.min(y, boardRect.height - activeDragNote.offsetHeight));
 
-          activeDragNote.style.left = `${x}px`;
-          activeDragNote.style.top = `${y}px`;
+          activeDragNote.style.left = `${(x / boardRect.width) * 100}%`;
+          activeDragNote.style.top = `${(y / boardRect.height) * 100}%`;
 
-          const noteId = parseInt(activeDragNote.id.replace('note-', ''));
+          // O id do elemento e "detox-note-<n>": trocar so "note-" deixava
+          // "detox-<n>", que vira NaN no parseInt — o estado NUNCA era
+          // atualizado ao arrastar com o mouse. Agora lemos o sufixo numerico.
+          const noteId = parseInt(activeDragNote.id.replace('detox-note-', ''), 10);
           const note = notes.find(n => n.id === noteId);
           if (note) {
-              note.x = x;
-              note.y = y;
+              guardarFracao(note, activeDragNote, x, y);
           }
       }
 
@@ -473,11 +570,13 @@
           x = Math.max(0, Math.min(x, boardRect.width - activeDragWidget.offsetWidth));
           y = Math.max(0, Math.min(y, boardRect.height - activeDragWidget.offsetHeight));
 
-          activeDragWidget.style.left = `${x}px`;
-          activeDragWidget.style.top = `${y}px`;
+          activeDragWidget.style.left = `${(x / boardRect.width) * 100}%`;
+          activeDragWidget.style.top = `${(y / boardRect.height) * 100}%`;
 
           moodWidgetPos.x = x;
           moodWidgetPos.y = y;
+          moodWidgetFrac.x = pxParaFracao(x, boardRect.width, activeDragWidget.offsetWidth);
+          moodWidgetFrac.y = pxParaFracao(y, boardRect.height, activeDragWidget.offsetHeight);
       }
   });
 
@@ -491,8 +590,16 @@
           x = Math.max(0, Math.min(x, boardRect.width - activeDragNote.offsetWidth));
           y = Math.max(0, Math.min(y, boardRect.height - activeDragNote.offsetHeight));
 
-          activeDragNote.style.left = `${x}px`;
-          activeDragNote.style.top = `${y}px`;
+          activeDragNote.style.left = `${(x / boardRect.width) * 100}%`;
+          activeDragNote.style.top = `${(y / boardRect.height) * 100}%`;
+
+          // O toque tambem precisa gravar no estado; antes so o mouse tentava
+          // (e falhava no parseInt).
+          const noteId = parseInt(activeDragNote.id.replace('detox-note-', ''), 10);
+          const note = notes.find(n => n.id === noteId);
+          if (note) {
+              guardarFracao(note, activeDragNote, x, y);
+          }
       }
 
       if (activeDragWidget) {
@@ -504,11 +611,13 @@
           x = Math.max(0, Math.min(x, boardRect.width - activeDragWidget.offsetWidth));
           y = Math.max(0, Math.min(y, boardRect.height - activeDragWidget.offsetHeight));
 
-          activeDragWidget.style.left = `${x}px`;
-          activeDragWidget.style.top = `${y}px`;
+          activeDragWidget.style.left = `${(x / boardRect.width) * 100}%`;
+          activeDragWidget.style.top = `${(y / boardRect.height) * 100}%`;
 
           moodWidgetPos.x = x;
           moodWidgetPos.y = y;
+          moodWidgetFrac.x = pxParaFracao(x, boardRect.width, activeDragWidget.offsetWidth);
+          moodWidgetFrac.y = pxParaFracao(y, boardRect.height, activeDragWidget.offsetHeight);
       }
   }, { passive: true });
 
