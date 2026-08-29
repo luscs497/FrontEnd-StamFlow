@@ -8131,3 +8131,80 @@ header .logo-content {
     height: 44px;
     transform: translate(-50%, -50%);
 }
+
+/* ---- (R12) Auditoria das abas BRAIN DUMP (Detox Mental) e TICKETS.
+             Brain Dump existe em user e avulso; Tickets so no user. */
+
+/* R12#1 — A instrucao da barra de etapas vazava o header inteiro.
+   O span #detox-step1Instruction nasce com `hidden sm:block whitespace-nowrap
+   shrink-0`: escondido abaixo de 640px por design. Mas switchStep() faz
+   `instrucao.classList.remove("hidden")` sem condicao — ou seja, assim que o
+   usuario troca de etapa (a interacao central da aba), o span passa a aparecer
+   em QUALQUER largura. Como e nowrap e shrink-0, ele estoura a linha: medido
+   677px de conteudo dentro de um header de 345px a 360px, com o excedente
+   cortado em silencio pelo overflow:hidden do header.
+   CORREÇÃO em CSS (o JS fica intocado): restaura a intencao original abaixo de
+   640px e, acima disso, deixa o span encolher com reticencias em vez de
+   empurrar. Medido: escapa/cortado 1 -> 0 nas etapas 1, 2 e 3, de 360 a 600px. */
+@media screen and (max-width: 639px) {
+    #detox-root #detox-step1Instruction {
+        display: none;
+    }
+}
+
+#detox-root #detox-step1Instruction {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* R12#2 — Header do Detox estourava 6px na faixa 993-1200px.
+   A primeira linha do header e `flex-col lg:flex-row`: a partir do `lg` do
+   Tailwind (1024px de VIEWPORT) ela vira linha, com o bloco de acoes marcado
+   `shrink-0`. So que nessa faixa a sidebar ainda ocupa 250px, entao o painel
+   util tem apenas 759px — o layout em linha entra numa largura de viewport em
+   que o CONTAINER ainda nao comporta. Classico descompasso entre media query
+   de viewport e largura real do container.
+   CORREÇÃO: `flex-wrap: wrap` na linha, em vez de um breakpoint magico. Quando
+   titulo + acoes nao cabem, as acoes descem sozinhas; quando cabem, nada muda.
+   Medido: scrollWidth 765 -> 759 a 1024px, e identico a 900 e 1200px. */
+#detox-root .detox-header > div:first-child {
+    flex-wrap: wrap;
+}
+
+/* R12#3 — Alvos de toque do formulario de report (aba Tickets).
+   Tres controles reais abaixo do minimo de 44px, seguindo a mesma regra do
+   R5#1 / R8#1 / R9#1 / R11#2:
+     - botao de envio (.btn) com 36px de altura a 360-400px e 41px a 480-768px;
+     - checkbox de aceite da politica: label de 19x19px;
+     - "X" de fechar o modal de reports: 16x16px.
+   O botao de envio ganha min-height (ele ja e full-width, entao so a altura
+   importa). Os outros dois ganham area de 44x44 via pseudo-elemento absoluto,
+   que nao participa do layout — assim a caixa visual do checkbox e do "X" fica
+   igual e o desktop nao se mexe.
+   Medido com elementFromPoint em 5 pontos de uma area de 44x44: checkbox 1/5
+   -> 5/5 e fechar 1/5 -> 5/5, sem roubar clique do link "Politica de
+   Denuncias" que fica ao lado. Botao de envio: 36 -> 44px em <=768px, e
+   inalterado (50px) em >=900px. */
+@media screen and (max-width: 768px) {
+    #criarTicket .btn {
+        min-height: 44px;
+    }
+}
+
+.checkbox-politica .checkbox-wrapper,
+#close-popup-tickets {
+    position: relative;
+}
+
+.checkbox-politica .checkbox-wrapper::after,
+#close-popup-tickets::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+}
