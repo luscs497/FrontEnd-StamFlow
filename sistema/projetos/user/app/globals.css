@@ -8438,3 +8438,49 @@ header .logo-content {
         min-height: 24px;
     }
 }
+
+/* ---- (R18) Caca aos fantasmas — elementos que so existem em runtime.
+             Varredura por injecoes fora do fluxo normal nos cinco projetos:
+             NAO ha iframes de terceiros, gateway de pagamento, reCAPTCHA,
+             script de chat, tag de analytics nem banner de consentimento
+             LGPD em lugar nenhum (a LGPD aparece so como texto da politica de
+             privacidade). Nao ha modal de "sessao expirada": tanto o auth.js
+             quanto o tickets.js redirecionam direto para o login no 401.
+             O que existe de injetado em runtime sao os dois abaixo, mais o
+             cartao offscreen do Daily Wins — este ultimo e `position: fixed`
+             em left/top -9999px, so serve de fonte para o html2canvas e nao
+             entra no layout. */
+
+/* R18#1 — "Marcar todas como lidas" media 140x15px. So aparece com o painel
+   de notificacoes ABERTO, e todos os varredores anteriores o mediram fechado
+   (display:none) ou vazio. Piso de 24px do AA em qualquer largura e 44px no
+   mobile. O painel cresce de 135 para 159px de altura a 360px. */
+#notificacoes-marcar-todas {
+    min-height: 24px;
+    display: inline-flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+    #notificacoes-marcar-todas {
+        min-height: 44px;
+    }
+}
+
+/* R18#2 — O sino de notificacoes, com 22x22px, foi reportado na fase 7 e
+   seguiu sem correcao ate aqui — fecha essa pendencia. Area de 44x44 via
+   pseudo-elemento, entao a caixa visivel continua 22x22 e nada se move.
+   Medido com elementFromPoint: 1/5 -> 5/5, sem roubar clique de ninguem. */
+#notificacoes-sino {
+    position: relative;
+}
+
+#notificacoes-sino::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+}
