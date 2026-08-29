@@ -7859,3 +7859,100 @@ body .site-content {
     flex-grow: 1;
     min-width: 0;
 }
+
+/* ---- (R6) Auditoria de responsividade da estrutura global (sidebar + topo).
+            Três defeitos que valiam em TODAS as larguras, nos três painéis. */
+
+/* R6#1 — O wordmark do logo vinha cortado 32px à esquerda em qualquer largura.
+   CAUSA: `.logo-image` é puxada para fora da caixa do pai por
+   `margin-left: -32px` (compensa o padding transparente do PNG 500x500). O
+   colapso da mini-sidebar (R3) deu `overflow: hidden` ao `header .logo-content`
+   para animar o `max-width` até 0 — e esse clip passou a comer justamente os
+   32px que a imagem ocupa fora da caixa. Acima de 1500px sobrava respiro e só
+   o transparente era cortado; de 1500px para baixo o header cai para 250px e o
+   corte chega no glifo: o logo virava "tamFlow".
+   CORREÇÃO: `overflow: clip` + `overflow-clip-margin` deixa a imagem PINTAR
+   fora da caixa sem alterar geometria nenhuma — o colapso continua clipando o
+   layout e o estado .nav-mini fica pixel-idêntico. Navegador sem suporte a
+   overflow-clip-margin cai no clip de hoje, nunca em algo pior. */
+header .logo-content {
+    overflow: clip;
+    overflow-clip-margin: 40px;
+}
+
+/* R6#2 — De 469px a 992px o hamburguer parava no meio da barra em vez de ir
+   para a borda direita (a 900px ficava 530px longe da borda).
+   CAUSA: `.logo-content` é o espaçador `width: 100%` que empurra o botão para
+   a direita, mas o mesmo bloco do R3 lhe deu `max-width: 320px` FORA de media
+   query. O bloco de <=992px neutraliza os tamanhos do .nav-mini, só que não
+   esse teto — então o espaçador travava em 320px e o botão junto com ele.
+   Abaixo de ~420px a tela é mais estreita que o teto e o bug some sozinho, o
+   que explica ele não aparecer nos testes de celular pequeno. */
+@media screen and (max-width: 992px) {
+    header .logo-content {
+        max-width: none;
+    }
+}
+
+/* R6#3 — Barra do topo (.content-header) sem folga nem escape.
+   Era `justify-content: space-between` com `flex-wrap: nowrap` e SEM gap em
+   toda a faixa >=469px: título e bloco da direita (sino + pílula de status)
+   só não colidiam porque os rótulos atuais são curtos. Com um nome de seção
+   longo ("StamFlow University", "Compliance Training") a 360px o título
+   quebrava em duas linhas E a pílula quebrava dentro dela mesma.
+   CORREÇÃO fluida: gap real que acompanha a viewport, `flex-wrap` como rede de
+   segurança (só entra quando não cabe mesmo), `min-width: 0` para o título
+   poder encolher em vez de empurrar, e nowrap na pílula para ela nunca
+   quebrar no meio. Nos rótulos reais nada muda: a altura da barra medida é
+   idêntica à de antes em todas as larguras de 360px a 1600px. */
+.content-header {
+    flex-wrap: wrap;
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+    row-gap: 0.5rem;
+}
+
+#section-name {
+    min-width: 0;
+}
+
+.content-header-right {
+    flex-shrink: 0;
+}
+
+.sistema {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ---- (R7) Auditoria de responsividade do CONTEÚDO do Dashboard.
+            Um único defeito real nos três painéis — e ele só existe em
+            user/avulso, porque o gestor não tem esse grupo de cards. */
+
+/* R7#1 — Os três cards de conquista ("Tempo de Tela", "Pausas Realizadas",
+   "Exercícios Realizados") ficavam espremidos e com o rodapé desalinhado
+   sempre que a faixa disponível não comportava os três lado a lado.
+   CAUSA: `.relatorios-conquistas` é `display:flex` com `flex-wrap: nowrap`,
+   `align-items: flex-start` e `.conquista { width: 100% }`. Com nowrap os
+   cards não têm para onde quebrar: eles encolhem até o título mais longo
+   ("Exercícios Realizados Hoje") passar para a segunda linha — e aí, como o
+   align é flex-start em vez de stretch, só AQUELE card cresce e a fileira
+   fica com o rodapé irregular. Medido a 1024px: 3 cards de 208px com alturas
+   [78, 78, 95] — 17px de degrau. O mesmo acontece de 769px a 900px, onde a
+   faixa útil também fica abaixo do limiar (~254px por card).
+   CORREÇÃO: grid com `auto-fit` + `minmax(240px, 1fr)`. Os cards passam a
+   quebrar para a linha de baixo em vez de espremer, mantendo largura e altura
+   iguais entre si em qualquer faixa; `align-items: stretch` garante o rodapé
+   alinhado. O limiar de 240px foi calibrado na medição: acima dele o título
+   nunca quebra.
+   Escopo >=769px de propósito — abaixo disso a folha de 768/468 já empilha os
+   cards com `flex-direction: column`, e esse comportamento fica intocado (um
+   flex-basis/grid herdado ali viraria altura, não largura).
+   Delta medido nas 8 larguras auditadas: só 1024px muda (208x3 desalinhado ->
+   316x2 + 316 alinhado). 1200, 900, 768, 600, 480, 400 e 360 ficam idênticos. */
+@media screen and (min-width: 769px) {
+    .relatorios-conquistas {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        align-items: stretch;
+    }
+}

@@ -3184,3 +3184,67 @@ body .site-content {
     flex-grow: 1;
     min-width: 0;
 }
+
+/* ---- (R6) Auditoria de responsividade da estrutura global (sidebar + topo).
+            Três defeitos que valiam em TODAS as larguras, nos três painéis. */
+
+/* R6#1 — O wordmark do logo vinha cortado 32px à esquerda em qualquer largura.
+   CAUSA: `.logo-image` é puxada para fora da caixa do pai por
+   `margin-left: -32px` (compensa o padding transparente do PNG 500x500). O
+   colapso da mini-sidebar (R3) deu `overflow: hidden` ao `header .logo-content`
+   para animar o `max-width` até 0 — e esse clip passou a comer justamente os
+   32px que a imagem ocupa fora da caixa. Acima de 1500px sobrava respiro e só
+   o transparente era cortado; de 1500px para baixo o header cai para 250px e o
+   corte chega no glifo: o logo virava "tamFlow".
+   CORREÇÃO: `overflow: clip` + `overflow-clip-margin` deixa a imagem PINTAR
+   fora da caixa sem alterar geometria nenhuma — o colapso continua clipando o
+   layout e o estado .nav-mini fica pixel-idêntico. Navegador sem suporte a
+   overflow-clip-margin cai no clip de hoje, nunca em algo pior. */
+header .logo-content {
+    overflow: clip;
+    overflow-clip-margin: 40px;
+}
+
+/* R6#2 — De 469px a 992px o hamburguer parava no meio da barra em vez de ir
+   para a borda direita (a 900px ficava 530px longe da borda).
+   CAUSA: `.logo-content` é o espaçador `width: 100%` que empurra o botão para
+   a direita, mas o mesmo bloco do R3 lhe deu `max-width: 320px` FORA de media
+   query. O bloco de <=992px neutraliza os tamanhos do .nav-mini, só que não
+   esse teto — então o espaçador travava em 320px e o botão junto com ele.
+   Abaixo de ~420px a tela é mais estreita que o teto e o bug some sozinho, o
+   que explica ele não aparecer nos testes de celular pequeno. */
+@media screen and (max-width: 992px) {
+    header .logo-content {
+        max-width: none;
+    }
+}
+
+/* R6#3 — Barra do topo (.content-header) sem folga nem escape.
+   Era `justify-content: space-between` com `flex-wrap: nowrap` e SEM gap em
+   toda a faixa >=469px: título e bloco da direita (sino + pílula de status)
+   só não colidiam porque os rótulos atuais são curtos. Com um nome de seção
+   longo ("StamFlow University", "Compliance Training") a 360px o título
+   quebrava em duas linhas E a pílula quebrava dentro dela mesma.
+   CORREÇÃO fluida: gap real que acompanha a viewport, `flex-wrap` como rede de
+   segurança (só entra quando não cabe mesmo), `min-width: 0` para o título
+   poder encolher em vez de empurrar, e nowrap na pílula para ela nunca
+   quebrar no meio. Nos rótulos reais nada muda: a altura da barra medida é
+   idêntica à de antes em todas as larguras de 360px a 1600px. */
+.content-header {
+    flex-wrap: wrap;
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+    row-gap: 0.5rem;
+}
+
+#section-name {
+    min-width: 0;
+}
+
+.content-header-right {
+    flex-shrink: 0;
+}
+
+.sistema {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
