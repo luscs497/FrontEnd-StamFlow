@@ -8070,3 +8070,64 @@ header .logo-content {
     white-space: nowrap;
     flex-shrink: 0;
 }
+
+/* ---- (R11) Auditoria da aba CHECKUP SCAN / camera (user e avulso).
+             Testada com feed real: Chrome com --use-fake-device-for-media-stream,
+             permissions:['camera'] e o jsDelivr liberado para o face-api e o
+             MediaPipe subirem de verdade (video 640x480, "Monitoramento Ativo").
+             Nao ha overflow-x em largura nenhuma: o <video> e display:none e
+             nunca entra no layout — quem aparece e so o <canvas> de landmarks. */
+
+/* R11#1 — O overlay de landmarks estava sendo CORTADO.
+   O bitmap do canvas e sempre 640x480 (4:3, fixado em drawHolisticResults a
+   partir de videoWidth/videoHeight), mas a caixa `.camera` nao tem proporcao
+   propria: a altura vem de um `height: 320px` fixo ate 1200px e, acima disso,
+   do stretch do flex em relacao ao painel de resultados irmao. A proporcao da
+   caixa varia de 0.69 a 2.01 ao longo da matriz, contra 1.33 do bitmap — e o
+   `object-fit: cover` corta a diferenca.
+   Medido: a 768-1200px so 66% da ALTURA do quadro fica visivel (perde-se o
+   terco de cima e o de baixo, ou seja, topo da cabeca e quadril); a 400px so
+   84% da largura. Para uma ferramenta que mede inclinacao de cabeca e de
+   tronco, perder justamente essas extremidades do esqueleto e funcional, nao
+   estetico.
+   CORREÇÃO: `contain` em vez de `cover`. O quadro inteiro passa a caber na
+   caixa em qualquer proporcao. Como o feed de video nao e exibido (so os
+   landmarks sobre fundo transparente), o letterbox e invisivel — nao ha
+   barras aparentes, so o esqueleto inteiro em vez de recortado.
+   Layout shift: ZERO. A caixa CSS do canvas nao muda; muda so a escala
+   interna do bitmap. Verificado nas 13 larguras, nos dois paineis. */
+#output {
+    object-fit: contain;
+}
+
+/* R11#2 — O icone de ajuda "?" (.abrir-como-melhorar-stamina) e um controle de
+   verdade — role="button", tabindex="0", com handler de click e de
+   Enter/Espaco abrindo o modal "Como melhorar minha Stamina" — e mede 19x19px
+   em TODAS as larguras. E o menor alvo de toque encontrado em toda a
+   auditoria: menor que os 28px do R8#1 e que os 18x21 do R9#1, e da mesma
+   ordem dos 7.7x11px que o R5#1 documentou como causa raiz do bug recorrente
+   do dropdown de periodo. Ele nao vive so aqui: o mesmo seletor aparece no
+   Dashboard e no card de energia do scan, entao a correcao cobre os tres.
+   CORREÇÃO: area de toque de 44x44 via pseudo-elemento absoluto centrado, em
+   vez de min-width/min-height. Assim o alvo cresce sem que a CAIXA do icone
+   mude — o ::after nao participa do layout, entao o desktop fica byte a byte
+   igual, o que min-height nao permitiria aqui (o icone divide a linha com o
+   <h2> do titulo).
+   Medido com elementFromPoint em 5 pontos de uma area de 44x44 centrada no
+   icone: antes 1/5 acertavam o controle (so o centro; os cantos caiam no
+   .sub-header e no proprio <h2>), depois 5/5, em todas as larguras. Nenhum
+   clique e roubado de outro botao ou link — verificado que nao ha elemento
+   interativo dentro da area expandida. */
+.abrir-como-melhorar-stamina {
+    position: relative;
+}
+
+.abrir-como-melhorar-stamina::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+}
