@@ -7289,3 +7289,43 @@ header .logo-content {
         align-items: stretch;
     }
 }
+
+/* ---- (R8) Auditoria de responsividade da aba EXERCÍCIOS (user e avulso).
+            A listagem em si passou limpa em todas as larguras — os dois
+            achados são do modal do player. */
+
+/* R8#1 — "Fechar Timer" é a ÚNICA saída do modal do player: não há clique no
+   backdrop nem tecla Escape (script.js registra o listener só em
+   #fechar-modal-audio). E ele mede 107x28px em <=768px, contra 150x46px no
+   desktop — ou seja, o alvo ENCOLHE justamente onde o toque acontece.
+   O R4#2 reduziu fonte e padding do `.close-popup` junto com o resto da
+   compactação do modal no mobile, sem separar o alvo de toque do tamanho
+   visual. Isso contradiz o padrão que o próprio R5#1 estabeleceu neste
+   arquivo ("far below the WCAG / iOS / Android ~44 px minimum") e que ali foi
+   corrigido aumentando area clicavel E visual.
+   CORREÇÃO: mantém a compactação visual do R4#2 (fonte 12.5px intacta) e
+   devolve só a área de toque, via min-height de 44px com centralização
+   flex. Medido: 107x28 -> 123x44. O modal cresce 16px de altura no mobile,
+   e nada muda em >=900px. */
+@media screen and (max-width: 768px) {
+    .modal-audio .close-popup {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 1.4rem;
+        padding-right: 1.4rem;
+    }
+}
+
+/* R8#2 — Abaixo de ~330px o modal encostava nas duas bordas da tela (margem
+   0). Ele nunca vaza — `width:100%` + `max-width` já seguram, medido até
+   280px sem overflow —, mas fica colado. O teto passa a ser o menor entre os
+   320px do R4#2 e a largura do pai menos 1.5rem, garantindo respiro.
+   Escopado a <=359px: a 360px o modal ja tem 13px de margem de cada lado e
+   fica byte a byte como estava. */
+@media screen and (max-width: 359px) {
+    .modal-audio {
+        max-width: calc(100% - 1.5rem) !important;
+    }
+}
