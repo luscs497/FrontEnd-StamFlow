@@ -74,6 +74,52 @@ window.authFetch = async function(url, options = {}) {
 
 const authFetch = window.authFetch;
 
+// ========================================================================
+// 3.1 FEEDBACK AO USUÁRIO (substitui os alert() nativos)
+//     Reaproveita o toast que JÁ existe no painel — #alerta-bem-estar-toast,
+//     com role="status" e aria-live="polite" — em vez de criar um segundo
+//     sistema de notificação. O camera.js usa o mesmo elemento para os avisos
+//     de bem-estar; aqui só acrescentamos as variantes de cor (sucesso/erro),
+//     definidas no bloco R13 do CSS.
+//     Os tempos (5s de exibição, 320ms de saída) e o reflow entre remover o
+//     display-none e pôr .visivel são os mesmos do camera.js, senão a
+//     transição de entrada não roda.
+//     Se o elemento não existir (markup antigo), cai no alert() para não
+//     engolir a mensagem em silêncio.
+// ========================================================================
+let _toastTicketTimer = null;
+let _toastTicketSaida = null;
+
+function notificarTicket(mensagem, tipo = "sucesso") {
+    const toast = document.getElementById("alerta-bem-estar-toast");
+    const texto = document.getElementById("alerta-bem-estar-toast-texto");
+
+    if (!toast || !texto) {
+        alert(mensagem);
+        return;
+    }
+
+    clearTimeout(_toastTicketTimer);
+    clearTimeout(_toastTicketSaida);
+
+    texto.textContent = mensagem;
+    toast.classList.remove("toast-ticket-sucesso", "toast-ticket-erro");
+    toast.classList.add(tipo === "erro" ? "toast-ticket-erro" : "toast-ticket-sucesso");
+
+    toast.classList.remove("display-none");
+    void toast.offsetWidth;
+    toast.classList.add("visivel");
+
+    _toastTicketTimer = setTimeout(() => {
+        toast.classList.remove("visivel");
+        _toastTicketSaida = setTimeout(() => {
+            toast.classList.add("display-none");
+            toast.classList.remove("toast-ticket-sucesso", "toast-ticket-erro");
+        }, 320);
+    }, 5000);
+}
+
+
 
 // ========================================================================
 // 4. LÓGICA DE TICKETS
@@ -111,10 +157,10 @@ if(criarTicket){
                 if(typeof reportsDiv !== 'undefined' && reportsDiv && !reportsDiv.classList.contains("display-none")) {
                     buscarTicketsAbertos();
                 }
-                alert("Ticket criado com sucesso!");
+                notificarTicket("Report enviado com sucesso!");
             } else {
                 const erro = await res.json();
-                alert("Erro: " + (erro.detail || "Falha ao criar Ticket"));
+                notificarTicket(erro.detail || "Não foi possível enviar o report.", "erro");
             }
         } catch (error) {
             console.error("Erro: ", error)
@@ -314,7 +360,7 @@ async function enviarNovaMensagem(ticket, mensagem) {
 
     } catch (error) {
         console.error("Erro de rede:", error);
-        alert("Erro ao enviar mensagem.");
+        notificarTicket("Não foi possível enviar sua mensagem.", "erro");
     }
 }
 

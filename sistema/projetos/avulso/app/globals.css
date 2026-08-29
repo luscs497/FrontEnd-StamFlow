@@ -7508,3 +7508,82 @@ header .logo-content {
     flex-wrap: wrap;
 }
 
+
+/* ---- (R13) Auditoria dos MODAIS GLOBAIS (user e avulso).
+             Nenhum modal vaza a tela em largura nenhuma — o achado real e de
+             area de toque, mais o respiro lateral do modal de perfil. */
+
+/* R13#1 — Campo do modal de perfil: a caixa visivel tinha 52px de altura, mas
+   so os 20px do meio focavam o input. O padding de 16px vive no WRAPPER
+   (.dados-perfil-input), que e um <div>, nao um <label> — entao clicar na
+   moldura nao faz nada. Passamos o padding vertical do wrapper para o proprio
+   input: a caixa visivel continua com os mesmos 52px (altura do modal medida
+   identica em todas as larguras), mas agora a area inteira e clicavel.
+   Medido: 20 -> 52px de alvo, com a caixa do modal inalterada. */
+.dados-perfil-input {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.dados-perfil-input input {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+/* R13#2 — Respiro lateral do modal de perfil. Abaixo de ~535px ele encostava
+   nas duas bordas (margem 0), com borda e border-radius de 14.4px colados na
+   tela. Diferente do .popup-embasamento, que e full-bleed no mobile DE
+   PROPOSITO (ver R4#1), aqui isso era so consequencia do width:100%.
+   O `min()` dispensa media query: acima de ~535px o teto de 520px continua
+   valendo e nada muda; abaixo, sobra 12px de cada lado. */
+.modal-perfil {
+    max-width: min(520px, calc(100% - 1.5rem));
+}
+
+/* R13#3 — Botoes do modal de alerta de bem-estar e o "Salvar" do perfil.
+   #alerta-bem-estar-acao (a acao principal do alerta) media 22px de altura a
+   360px, 26px de 480 a 768 e 32px no desktop; o #alerta-bem-estar-ignorar
+   ficava em 38-43px; e o #perfil-salvar, em 41px.
+   Escopo <=768px pela mesma razao do R9#1: abaixo disso os valores caem
+   ABAIXO do minimo AA de 24px da WCAG 2.5.8 e o input e toque; de 900px para
+   cima eles passam no AA e mexer ali quebraria o layout shift zero.
+   Medido: 2 alvos fora do minimo -> 0 em <=768px; o modal de alerta cresce
+   27px de altura no mobile, contido dentro dele mesmo. */
+@media screen and (max-width: 768px) {
+    .alerta-bem-estar-acoes .btn {
+        min-height: 44px;
+    }
+
+    #perfil-salvar {
+        min-height: 44px;
+    }
+}
+
+/* R13#5 — O "X" de fechar dos modais e um <svg> nu de 19.2px (22x22 na tela,
+   20x20 no mobile) com listener de click direto. Passou batido no meu primeiro
+   varredor porque o seletor so olhava BUTTON/A/role="button" — <svg> nao entra
+   em nenhum dos tres, apesar de ser o unico jeito de fechar esses modais.
+   Aqui NAO da para usar o pseudo-elemento do R11#2 / R12#3: ::after nao
+   renderiza dentro de <svg>. A saida e crescer a CAIXA sem crescer o desenho —
+   `box-sizing: border-box` com 44x44 e padding de 11px deixa o content box em
+   22px, que e o tamanho que o viewBox ja ocupava. O icone fica identico; so a
+   area clicavel muda.
+   Medido: 22x22 -> 44x44 em <=768px nos seis "X". A linha do titulo do perfil
+   cresce de 35 para 44px e a do embasamento de 59 para 65px a 360px — dentro
+   do proprio modal. Em >=900px nada muda (22 e 26px, acima do minimo AA de
+   24px da WCAG 2.5.8, com input de mouse). */
+@media screen and (max-width: 768px) {
+    #fechar-perfil,
+    #fechar-como-ajuda,
+    #fechar-como-melhorar-stamina,
+    #fechar-embasamento-exercicios,
+    #fechar-embasamento-mental,
+    #fechar-embasamento-foco,
+    #close-popup-politica {
+        box-sizing: border-box;
+        width: 44px;
+        height: 44px;
+        padding: 11px;
+        overflow: visible;
+    }
+}
