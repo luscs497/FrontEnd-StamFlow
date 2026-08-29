@@ -475,3 +475,17 @@ main {
         align-items: center;
     }
 }
+
+/* ---- (R16#5) Revisao absoluta — modal "Esqueci minha senha".
+             Era o unico fragmento de UI do portal que nao tinha sido aberto:
+             ele so existe apos o clique (render condicional por estado), entao
+             nao aparecia em varredura de markup. Nao vaza a tela em nenhuma
+             largura; o "×" de fechar e que media 34x34px reais.
+             Como sempre neste projeto, o valor compensa o html { zoom: 0.8 }:
+             44 / 0.8 = 55px de CSS. */
+@media screen and (max-width: 768px) {
+    .close-popup-pass {
+        min-width: 55px;
+        min-height: 55px;
+    }
+}

@@ -8347,3 +8347,94 @@ header .logo-content {
         max-width: none;
     }
 }
+
+/* ---- (R16) Revisao absoluta — superficie residual.
+             Fragmentos que as 9 fases anteriores nao mediram: o ONBOARDING
+             (que meus proprios varredores escondiam com display-none em toda
+             fase, para chegar ao painel), os 8 modais do Detox, o widget de
+             humor, o dropdown de periodo e os sub-itens do menu lateral.
+             Nao ha overflow em nenhum deles, em nenhuma largura — o achado e
+             todo de area de toque. */
+
+/* R16#1 — Modais do Detox: o "X" de fechar media 23x23px e os botoes de acao
+   ("Entendido", "Comecar Detox Mental", "Ainda nao", "Sim, deixar ir",
+   "+ Adicionar outra vitoria" com 19px) ficavam entre 19 e 41px. Sao oito
+   modais e todos usam o mesmo par de padroes, entao a regra escopa pelo id
+   terminado em "Modal" dentro do #detox-root — o que deixa de fora, de
+   proposito, as bolinhas de cor das notas (20px), que sao muitas numa linha
+   e viveriam apertadas se crescessem. */
+@media screen and (max-width: 768px) {
+    #detox-root [id$="Modal"] button {
+        min-height: 44px;
+    }
+
+    #detox-root [id$="Modal"] button.absolute {
+        min-width: 44px;
+    }
+
+    /* Barra de etapas e acoes do cabecalho do Detox: 25 a 38px. */
+    #detox-tabBtn1,
+    #detox-tabBtn2,
+    #detox-tabBtn3,
+    #detox-toggleBarras,
+    #detox-root .detox-header button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* R16#2 — O "X" do widget de humor mede 16x16px: o menor alvo que sobrou em
+   todo o sistema, e abaixo ate do minimo AA de 24px da WCAG 2.5.8 — por isso
+   esta fora de media query, valendo tambem no desktop. Ele nao vive num
+   [id$="Modal"], entao o R16#1 nao o pegava. */
+#detox-moodWidgetContainer button.absolute {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* R16#3 — Controles do onboarding: "Pular" com 45x27px e a seta de voltar com
+   30x30px. E a PRIMEIRA tela que um usuario novo ve, e passou nove fases sem
+   ser medida porque os proprios varredores a escondiam para alcancar o painel
+   atras dela. */
+@media screen and (max-width: 768px) {
+    .on-boarding .skip {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .on-boarding .prev {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* R16#4 — Sub-itens do menu lateral (Modo Foco, Exercicios, Pausa Mental,
+   StamFlow University) medem 20px de altura: falham o minimo AA de 24px mesmo
+   no desktop, com mouse. Por isso o piso de 24px vale em qualquer largura — um
+   acrescimo de 4px por item — e os 44px de toque entram so onde o menu vira
+   overlay. */
+.li-subitem {
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 992px) {
+    .li-subitem {
+        min-height: 44px;
+    }
+}
+
+/* R16#6 — Piso AA nos botoes dos modais do Detox. O "+ Adicionar outra
+   vitoria" fica em 20px tambem no desktop, abaixo do minimo de 24px da WCAG
+   2.5.8; os 44px de toque continuam so no mobile (R16#1).
+   O media query de min-width e OBRIGATORIO aqui: sem ele esta regra tem a
+   mesma especificidade do R16#1, vem depois no arquivo e venceria a cascata,
+   derrubando os 44px do mobile para 24px — foi exatamente o que aconteceu na
+   primeira tentativa. */
+@media screen and (min-width: 769px) {
+    #detox-root [id$="Modal"] button {
+        min-height: 24px;
+    }
+}

@@ -3329,3 +3329,24 @@ header .logo-content {
     height: 44px;
     transform: translate(-50%, -50%);
 }
+
+/* ---- (R16) Revisao absoluta — superficie residual do gestor.
+             Os modais do Detox e o onboarding nao existem neste painel;
+             o que se aplica aqui sao os sub-itens do menu lateral. */
+
+/* R16#4 — Sub-itens do menu lateral (Modo Foco, Exercicios, Pausa Mental,
+   StamFlow University) medem 20px de altura: falham o minimo AA de 24px mesmo
+   no desktop, com mouse. Por isso o piso de 24px vale em qualquer largura — um
+   acrescimo de 4px por item — e os 44px de toque entram so onde o menu vira
+   overlay. */
+.li-subitem {
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 992px) {
+    .li-subitem {
+        min-height: 44px;
+    }
+}
