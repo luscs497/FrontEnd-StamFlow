@@ -132,3 +132,75 @@ html:not(.js) [style*="opacity: 0"] {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ---- (R17) Auditoria do site institucional — 11 rotas, com foco nas paginas
+             de bloqueio /sem_assinatura e /assinatura_expirada, para onde o
+             gate de autenticacao dos paineis redireciona.
+
+             Este bloco fica FORA dos @layer de proposito: CSS sem camada vence
+             o de dentro de @layer na cascata, entao ele nao e sobrescrito pelas
+             utilitarias do Tailwind.
+
+             Diferente dos paineis, este projeto NAO tem `overflow-x: clip` no
+             html/body — aqui um vazamento vira barra de rolagem de verdade,
+             nao um corte silencioso. */
+
+/* R17#1 — 9px de SCROLL HORIZONTAL REAL na home, a 360px.
+   Os `.surface-card` mediam 338.5px dentro de uma track de grid de 300px:
+   item de grid tem `min-width: auto` por padrao e nao encolhe abaixo do
+   min-content do conteudo, entao o card estourava a track e empurrava o
+   documento. `min-width: 0` libera o encolhimento e o `overflow-wrap` quebra
+   os tokens longos que sustentavam esse min-content.
+   Medido: docScroll 9 -> 0 a 360px. */
+.surface-card {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* R17#2 — Os dropdowns do header (carrinho e aviso) vazavam 57px pela ESQUERDA
+   no mobile. Mesmo padrao do painel de notificacoes (R14#4): eles sao
+   `absolute right-0`, mas a ancora e um `div.relative` de apenas 55px — o
+   wrapper do botao —, entao 317px de painel a partir dali caem para fora.
+   Tornando a ancora `static`, o contexto passa a ser o `header` (que e fixed e
+   ocupa a largura toda) e o `top: calc(100% + 10px)` passa a se medir pela
+   altura do header, que e onde o painel deve mesmo ficar.
+   O `:has()` e necessario para nao afetar os outros `.relative` do header.
+   Medido: 3 escapes -> 0 em todas as rotas. */
+@media (max-width: 640px) {
+    header div.relative:has(> [class*="top-[calc(100%+10px)]"]) {
+        position: static;
+    }
+
+    header [class*="top-[calc(100%+10px)]"] {
+        right: 1rem;
+    }
+}
+
+/* R17#3 — Links de navegacao e de rodape (incluindo "Politica de privacidade",
+   "Termos de uso" e o botao "Solicitar Demonstracao") mediam 19 a 23px de
+   altura em TODAS as larguras. Nao se enquadram na isencao de link inline da
+   WCAG 2.5.8: sao links isolados em nav e footer, nao dentro de um paragrafo.
+   Piso de 24px (minimo AA) em qualquer largura e 44px no mobile. */
+header nav a,
+header nav button,
+footer a,
+footer button {
+    min-height: 24px;
+    display: inline-flex;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    header nav a,
+    header nav button,
+    header a,
+    footer a,
+    footer button {
+        min-height: 44px;
+        /* O `display` precisa vir junto: o link da marca e um <a> inline, e
+           elemento inline ignora min-height — foi por isso que ele continuou
+           em 30px na primeira tentativa. */
+        display: inline-flex;
+        align-items: center;
+    }
+}
