@@ -3248,3 +3248,84 @@ header .logo-content {
     white-space: nowrap;
     flex-shrink: 0;
 }
+
+/* ---- (R15) Auditoria das abas internas do GESTOR.
+             As fases intermediarias cobriram so user e avulso; do gestor,
+             so o Dashboard (Statistics) tinha sido medido na fase 2. Aqui
+             entram Reports, Compliance, FAQ, Colaboradores e o modal de
+             adicionar colaborador, nas 8 larguras.
+
+             Reports e Compliance passaram limpos, sem uma unica correcao.
+             Nao ha <table> em nenhuma aba do gestor — as listas sao <ul> de
+             cards —, entao a questao do wrapper com overflow-x: auto nao se
+             aplica; nada precisa rolar horizontalmente. */
+
+/* R15#1 — O cartao de topo dos Colaboradores estourava a tela a 480px.
+   `.collaborators-info` e um flex de tres blocos (texto, "VIDAS ATIVAS" e
+   "VAGAS DE COLABORADOR") com `justify-content: space-between` e SEM
+   flex-wrap: a 480px o terceiro bloco ia parar em x=518 numa viewport de
+   465 — 53px para fora, cortados em silencio. Com wrap, ele desce. */
+.collaborators-info {
+    flex-wrap: wrap;
+}
+
+/* R15#2 — O campo de busca ficava esmagado a ponto de mostrar so "Bu".
+   `.colab-search-header` poe lupa + input + os tres botoes de filtro na
+   mesma linha sem wrap. Os botoes tem largura de conteudo e nao cedem, o
+   input tem `width: 100%` e cede tudo: medidos 21px de campo a 360px e
+   136px a 480px. Agora os filtros descem para a propria linha e o input
+   tem uma base minima. Medido: 21 -> 245px a 360 e 136 -> 365px a 480. */
+@media screen and (max-width: 768px) {
+    .colab-search-header {
+        flex-wrap: wrap;
+    }
+
+    .colab-search-header input {
+        flex: 1 1 160px;
+        min-width: 0;
+    }
+
+    .colab-filtros {
+        flex-wrap: wrap;
+    }
+}
+
+/* R15#3 — Alvos de toque abaixo de 44px, mesma regra das fases anteriores:
+   filtros Todos/Ativos/Inativos com 29px de altura, "Copiar feedback" do FAQ
+   com 33px e "Importar" do modal de colaboradores com 42px. Escopo <=768px
+   pelo mesmo criterio do R9#1 — acima disso passam no minimo AA de 24px da
+   WCAG 2.5.8, o input e mouse, e mexer quebraria o layout shift zero. */
+@media screen and (max-width: 768px) {
+    .colab-filtro-btn {
+        min-height: 44px;
+    }
+
+    .faq-copiar-feedback {
+        min-height: 44px;
+    }
+
+    #btn-importar-colab {
+        min-height: 44px;
+    }
+}
+
+/* R15#4 — Os checkboxes da lista (o de selecionar tudo e o de cada linha)
+   medem 21.6px. Como sao <input> com `appearance: none`, o ::after ja esta
+   ocupado pelo "✔" do estado :checked — entao a area de toque vai no
+   ::before, que nao participa do layout: a caixa visivel continua com os
+   mesmos 21.6px e o desktop nao se mexe.
+   Medido com elementFromPoint numa area de 44x44: 1/5 -> 5/5, sem roubar
+   clique de nenhum outro controle. */
+.colab-checkbox {
+    position: relative;
+}
+
+.colab-checkbox::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+}
