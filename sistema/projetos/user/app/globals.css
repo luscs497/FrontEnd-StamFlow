@@ -7996,3 +7996,37 @@ header .logo-content {
         max-width: calc(100% - 1.5rem) !important;
     }
 }
+
+/* ---- (R9) Auditoria de responsividade da aba PAUSA MENTAL (user e avulso).
+            Um achado, e é o mesmo padrão do R8#1 / R5#1: alvo de toque. */
+
+/* R9#1 — Os botões de faixa anterior / próxima do player medem 18x21px em
+   <=768px. `.modal-audio-nav` é um <button> sem padding nem tamanho próprio:
+   a caixa dele é literalmente o SVG, então quando o R4#2 reduziu o ícone de
+   25.6px para 18px no mobile, o alvo de toque encolheu junto. São menores que
+   o "Fechar Timer" corrigido no R8#1 (28px) e da mesma ordem dos 7.7x11px que
+   o R5#1 documentou como causa raiz do bug recorrente do dropdown de período.
+   O play/pause central ficava em 43x43 — 1px abaixo do mínimo.
+   CORREÇÃO: min-width/min-height de 44px com centralização flex nos três
+   controles. O ícone NÃO muda de tamanho (o SVG continua com os 18px/22px do
+   R4#2); só a área clicável cresce. Medido: 18x21 -> 44x44 e 43x43 -> 44x44.
+   Custo: 1px de altura do modal no mobile. Em >=900px nada muda — lá os
+   controles são 26x29 e 64x66, acima do mínimo AA de 24px da WCAG 2.5.8, e
+   o input é mouse. */
+@media screen and (max-width: 768px) {
+    .modal-audio .modal-audio-nav {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+    .modal-audio #modal-audio-pause {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
