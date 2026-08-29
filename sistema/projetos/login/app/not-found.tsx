@@ -29,7 +29,6 @@ export default function NotFound() {
       <a
         href="https://login.stamflow.com.br"
         style={{
-          display: "inline-block",
           background: "#7c3aed",
           color: "#fff",
           fontWeight: 600,
@@ -37,6 +36,12 @@ export default function NotFound() {
           padding: "14px 32px",
           borderRadius: "999px",
           textDecoration: "none",
+          // 44px reais de alvo de toque. O projeto aplica html { zoom: 0.8 },
+          // entao o minimo vira 44 / 0.8 = 55px de CSS (ver bloco R14).
+          minHeight: "55px",
+          boxSizing: "border-box",
+          alignItems: "center",
+          display: "inline-flex",
         }}
       >
         Voltar ao login

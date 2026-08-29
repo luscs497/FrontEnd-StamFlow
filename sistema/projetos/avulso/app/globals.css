@@ -7587,3 +7587,39 @@ header .logo-content {
         overflow: visible;
     }
 }
+
+/* ---- (R14#4) Varredura dos pontos cegos — painel de notificacoes.
+             Ele nasce com `display-none` e so aparece ao clicar no sino, entao
+             os varredores das 8 fases (que pulam display:none) nunca o mediram
+             ABERTO. Aberto, ele vaza pela ESQUERDA da tela: medidos 58px de
+             corte a 480, 138px a 400 e 142px a 360 — quase metade do painel
+             fora da tela, escondida em silencio pelo `overflow-x: clip` do
+             html/body, sem barra de rolagem para denunciar.
+             CAUSA: `position: absolute; right: 0` ancora no
+             `.notificacoes-wrapper`, que envolve só o SINO — e o sino nao fica
+             na borda direita, tem a pilula de status depois dele. A 360px o
+             sino termina em x=182 num conteudo de 345px, entao 360px de painel
+             a partir dali caem para fora.
+             CORREÇÃO: no mobile o contexto de posicionamento passa a ser o
+             `.content-header` inteiro (o wrapper vira `static`), e o painel se
+             estica entre as duas bordas com 8px de folga. O `top` continua
+             sendo `calc(100% + 12px)`, agora relativo ao header — o que
+             tambem e mais correto do que pendurar no sino.
+             Medido: vazamento 142 -> 0 a 360px, e nada muda de 600px para
+             cima (mesma caixa de 360x135 na mesma posicao). */
+@media screen and (max-width: 560px) {
+    .content-header {
+        position: relative;
+    }
+
+    .notificacoes-wrapper {
+        position: static;
+    }
+
+    .notificacoes-painel {
+        left: 8px;
+        right: 8px;
+        width: auto;
+        max-width: none;
+    }
+}

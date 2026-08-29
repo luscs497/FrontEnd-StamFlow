@@ -415,3 +415,63 @@ main {
   text-align: left;
   line-height: 1.5;
 }
+/* ---- (R14) Varredura dos pontos cegos — portal de autenticacao.
+             Rotas que ficaram de fora das 8 fases: /login, /register-employee,
+             /reset-password e o 404 deste projeto. Nenhuma delas vaza a tela
+             em largura nenhuma (medido de 1200 a 360px); o achado e todo de
+             area de toque.
+
+             ATENCAO ao converter valores aqui: este projeto aplica
+             `html { zoom: 0.8 }` (linha 5). Todo px de CSS renderiza a 0.8x,
+             entao o minimo de 44px REAIS sob o dedo exige 44 / 0.8 = 55px de
+             CSS. Foi por isso que a primeira tentativa com 44px parou em 35px
+             medidos. Os numeros abaixo ja estao compensados. */
+
+/* R14#1 — O campo so focava nos ~15px do meio. Mesmo padrao do R13#1 nos
+   paineis: o padding de 20px vive no wrapper `.input-field`, que e um <div> e
+   nao um <label>, entao clicar na moldura nao fazia nada. Em vez de mover o
+   padding (a altura da caixa dependia dele), o wrapper ganha `min-height` e o
+   input passa a esticar dentro dela.
+   Medido: alvo de 15 -> 48px reais, com a caixa visivel em 50px nos dois
+   estados — layout shift zero em qualquer largura. */
+.input-field {
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: 62.5px;
+}
+
+.input-campo {
+    align-self: stretch;
+}
+
+/* R14#2 — O olho de mostrar/ocultar senha e um <svg> com onClick,
+   role="button" e tabIndex — controle de verdade — medindo 19x19px reais nas
+   tres telas de autenticacao. Como ::after nao renderiza dentro de <svg>, a
+   caixa cresce por box-sizing + padding, sem mexer no desenho (o content box
+   fica nos 24px originais). A linha do campo nao muda de altura: 44 < 50. */
+.toggle-pass-icon {
+    box-sizing: border-box;
+    width: 55px;
+    height: 55px;
+    padding: 15.5px;
+    overflow: visible;
+}
+
+/* R14#3 — "Esqueci minha senha" (um <p> com onClick) e "Voltar para Login"
+   mediam 22px de altura; os links de Termos e Politica, 13px. Estes ultimos
+   NAO se enquadram na isencao de link inline da WCAG 2.5.8 que valeu no R13:
+   ali eles ficavam dentro de um paragrafo, aqui sao dois links isolados num
+   `.legal-links`. Escopo <=768px pelo mesmo criterio das fases anteriores. */
+@media screen and (max-width: 768px) {
+    .forgot-pass {
+        min-height: 55px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .legal-links a {
+        min-height: 55px;
+        display: inline-flex;
+        align-items: center;
+    }
+}
