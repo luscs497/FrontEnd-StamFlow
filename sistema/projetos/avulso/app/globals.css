@@ -8311,15 +8311,18 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) .site-con
    a largura e o padding originais; e o detox.css é importado DEPOIS do
    globals.css, então nem empatar resolveria. Daí o seletor com os dois ids
    (2,0,0), que ganha por especificidade em qualquer ordem de arquivo.
-   Fica 34x31px, com ~8px em volta do ícone. Os 44x44px de área de toque
-   voltam por um ::after transparente, que não ocupa espaço no layout — mesma
-   solução do R19#11. */
+   Fica 44x26px: uma pastilha larga e baixa, com 13px de folga lateral e
+   3/5px em cima e embaixo — a assimetria vertical é a mesma da regra base do
+   detox.css (2/4px), porque a moldura pende da borda de cima e os cantos
+   arredondados só existem embaixo. Os 44x44px de área de toque voltam por um
+   ::after transparente, que não ocupa espaço no layout — mesma solução do
+   R19#11. */
 @media screen and (max-width: 768px) {
     #detox-root #detox-toggleBarras {
         min-width: 0;
         min-height: 0;
-        width: 34px;
-        padding: 5px 0 7px;
+        width: 44px;
+        padding: 3px 0 4px;
         border-radius: 0 0 10px 10px;
     }
 
