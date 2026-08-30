@@ -9060,3 +9060,28 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) .site-con
         transform: translate(-50%, -50%);
     }
 }
+
+/* R21#5 — Etapa "Ações", bloco das 24h: o "Adicionar" deixa de flutuar.
+   O artefato põe input e botão na mesma linha, com `flex-1` no campo e
+   `shrink-0` no botão. Quanto mais larga a tela, mais longe o botão fica de
+   onde a pessoa acabou de digitar — em 1400px eram ~730px de distância, com
+   ele encostado na borda direita do cartão. Os dois passam a ocupar a
+   largura inteira, um sobre o outro, e o `gap-2` do artefato (8px) vira o
+   respiro vertical entre eles.
+   O `flex: 0 0 auto` no campo desfaz o `flex-1`: em coluna aquele
+   `flex-basis: 0%` passaria a valer na vertical, e a altura do input ficaria
+   à mercê do espaço livre do container.
+   O seletor pega o container pelo campo que ele envolve — a div não tem id
+   nem classe própria, só utilitárias do Tailwind. */
+#detox-root #detox-step3View div:has(> #detox-action24hInput) {
+    flex-direction: column;
+}
+
+#detox-root #detox-action24hInput {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+#detox-root #detox-action24hInput + button {
+    width: 100%;
+}
