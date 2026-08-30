@@ -8959,3 +8959,101 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) {
         font-size: 11.5px;
     }
 }
+
+/* ==========================================================================
+   R21 — Ajustes do Detox Mental pedidos depois do R20.
+   ========================================================================== */
+
+/* R21#1 — Nada do sub-header pode ficar centralizado.
+   O R19#8 já alinhava o bloco do título à esquerda, mas só de 768px para
+   baixo. De 769 a 1023px quem mandava era o `text-center` do Tailwind (o
+   `lg:text-left` só entra em 1024px), e a linha "Despeje tudo o que está
+   ocupando espaço na sua mente agora." voltava para o meio. As mesmas duas
+   regras passam a valer em qualquer largura — de 1024px para cima elas apenas
+   repetem o que o `lg:text-left` já fazia, então nada muda no desktop. */
+#detox-root .detox-header > div:first-child > div:first-child {
+    text-align: left;
+    align-items: flex-start;
+}
+
+#detox-root .detox-header > div:first-child > div:first-child > div {
+    justify-content: flex-start;
+}
+
+/* E os três atalhos. O R19#6 os centralizava em toda a faixa em que eles
+   descem para uma linha própria (<=1104px); o R19#9 só desfazia isso abaixo
+   de 768px. Agora a faixa inteira segue a mesma régua. Mesma especificidade
+   (1,3,0) do R19#6 — vence por vir depois no arquivo. */
+@media screen and (max-width: 1104px) {
+    #detox-root .detox-header .detox-acoes-rapidas {
+        justify-content: flex-start;
+    }
+}
+
+/* R21#2 — Atalhos condensados dentro do "Como funciona o Detox Mental?".
+   Com `flex-wrap` eles quebravam em larguras desiguais e liam como três
+   botões soltos no topo do cartão. Empilhados e ocupando a largura inteira
+   viram uma lista, no mesmo desenho do menu de ações do rodapé (R19#13). */
+@media screen and (max-width: 468px) {
+    #detox-root .detox-atalhos-mobile {
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    #detox-root .detox-atalhos-mobile > button {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* R21#3 — O vazio embaixo da barra de ações no mobile.
+   CAUSA: o R7#1 dá `min-height: 100vh` à .site-content em <=992px para o
+   fundo preto do body não aparecer abaixo de seções curtas. No Detox a seção
+   não é curta — o #detox-root recebe do detox.js a altura exata que falta até
+   o pé do viewport. Só que os 100vh são contados a partir do TOPO da
+   .site-content, que no mobile começa depois da barra superior: a página
+   ganhava 63px de rolagem, todos vazios, logo abaixo do botão "Ações do
+   quadro". Medido em 400px e em 700px de largura, sempre os mesmos 63px.
+   CORREÇÃO: só nesta aba a .site-content deixa de ter piso próprio e volta a
+   ser apenas o item flex que cresce (o `flex-grow: 1` já está declarado mais
+   acima); quem garante a altura cheia da página é o body. A barra passa a
+   encostar no fim do viewport com os mesmos ~8px de respiro que ela tem em
+   cima, e a página deixa de rolar. O `:has(...)` é o mesmo seletor do R19#5. */
+html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) body {
+    min-height: 100vh;
+}
+
+html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) .site-content {
+    min-height: 0;
+}
+
+/* R21#4 — A moldura da seta de recolher as barras, no mobile.
+   Media 52x44px em volta de um desenho de 18px: 17px de folga de cada lado e
+   11/14px em cima e embaixo — desproporcional já em 768px.
+   O R19#10 tentou encolhê-la por `#detox-toggleBarras` (1,0,0), que perde
+   para o `#detox-root .detox-toggle-barras` (1,1,0) do detox.css, onde estão
+   a largura e o padding originais; e o detox.css é importado DEPOIS do
+   globals.css, então nem empatar resolveria. Daí o seletor com os dois ids
+   (2,0,0), que ganha por especificidade em qualquer ordem de arquivo.
+   Fica 34x31px, com ~8px em volta do ícone. Os 44x44px de área de toque
+   voltam por um ::after transparente, que não ocupa espaço no layout — mesma
+   solução do R19#11. */
+@media screen and (max-width: 768px) {
+    #detox-root #detox-toggleBarras {
+        min-width: 0;
+        min-height: 0;
+        width: 34px;
+        padding: 5px 0 7px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    #detox-root #detox-toggleBarras::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 44px;
+        height: 44px;
+        transform: translate(-50%, -50%);
+    }
+}
