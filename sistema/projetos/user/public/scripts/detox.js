@@ -191,6 +191,50 @@
       rodape.appendChild(gatilho);
   }
 
+  // --------------------------------------------------------------------------
+  // Pop-ups do STOP e do Daily Wins: cartao de altura limitada, com o MIOLO
+  // rolando por dentro.
+  //
+  // Os dois sao os mais altos do Detox (830px e 880px medidos em 360x740) e
+  // vinham sem teto de altura: o cartao estourava o viewport pelas duas
+  // pontas, o "X" ficava ACIMA da borda de cima (fora de alcance) e o botao
+  // de baixo era cortado. Nao havia rolagem nenhuma, porque a camada de fundo
+  // e `fixed inset-0` e nao rola.
+  //
+  // Nao da para resolver so com CSS: o miolo sao DOIS irmaos diretos do
+  // cartao, entre o cabecalho e a barra de baixo. Sem um contêiner em volta,
+  // cada um teria a sua propria barra de rolagem. Aqui eles ganham um
+  // envelope unico, e o CSS faz o cartao virar coluna flex — cabecalho e
+  // barra de baixo fixos, envelope rolando entre os dois. O "X" continua
+  // `absolute` em relacao ao cartao, que agora nao rola: fica sempre no lugar.
+  //
+  // Idempotente: se o envelope ja existe, nao faz nada.
+  // --------------------------------------------------------------------------
+  const MODAIS_COM_CORPO_ROLAVEL = ["detox-stopModal", "detox-dailyWinsModal"];
+
+  function montarCorpoRolavelDosModais() {
+      MODAIS_COM_CORPO_ROLAVEL.forEach(function (id) {
+          const modal = document.getElementById(id);
+          if (!modal) return;
+          const cartao = modal.querySelector(":scope > div");
+          if (!cartao || cartao.querySelector(":scope > .detox-modal-corpo")) return;
+
+          // O miolo e tudo o que nao e o "X" (absolute), o cabecalho (primeiro
+          // filho depois dele) e a barra de baixo (ultimo filho).
+          const filhos = [...cartao.children].filter(function (f) {
+              return !f.classList.contains("absolute");
+          });
+          if (filhos.length < 3) return;
+          const miolo = filhos.slice(1, -1);
+          if (!miolo.length) return;
+
+          const corpo = document.createElement("div");
+          corpo.className = "detox-modal-corpo";
+          miolo[0].insertAdjacentElement("beforebegin", corpo);
+          miolo.forEach(function (f) { corpo.appendChild(f); });
+      });
+  }
+
   // TOGGLE PARA EXPANDIR / MINIMIZAR WIDGET DE HUMOR
   function toggleMoodWidget(expanded, event) {
       if (event) event.stopPropagation();
@@ -1131,6 +1175,8 @@
     raiz.dataset.detoxIniciado = "1";
     // Envelopa as acoes do rodape no menu suspenso do mobile (ver R19).
     montarMenuAcoesRodape();
+    // Envelopa o miolo do STOP e do Daily Wins para eles rolarem por dentro.
+    montarCorpoRolavelDosModais();
     renderMoodWidget();
     switchStep(1);   // monta as abas e deixa a etapa 1 visível
     renderDailyWinsInputs();

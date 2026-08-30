@@ -9085,3 +9085,126 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) .site-con
 #detox-root #detox-action24hInput + button {
     width: 100%;
 }
+
+/* ==========================================================================
+   R22 — Pop-ups altos com miolo rolável, e o recuo do bloco das 24h.
+   ========================================================================== */
+
+/* R22#1 — STOP e Daily Wins: cartão com teto de altura e rolagem por dentro.
+   São os dois pop-ups mais altos do Detox — medidos em 360x740, o cartão do
+   STOP dava 830px e o do Daily Wins 880px. Sem teto de altura eles estouravam
+   o viewport pelas DUAS pontas: o cartão começava em -45px / -70px, o "X"
+   ficava acima da borda de cima (fora de alcance) e o botão de baixo era
+   cortado. E não havia rolagem nenhuma para alcançar o que sobrava, porque a
+   camada de fundo é `fixed inset-0`, que não rola.
+   O cartão vira uma coluna flex com teto de 100% (a camada de fundo tem a
+   altura do viewport e 1rem de padding, então sobra 100vh - 2rem). Cabeçalho
+   e barra de baixo ficam parados; quem rola é só o miolo, envelopado pelo
+   detox.js em .detox-modal-corpo — dois irmãos diretos que, sem contêiner,
+   teriam cada um a sua própria barra de rolagem.
+   O "X" continua `absolute` em relação ao cartão, e o cartão não rola: ele
+   fica sempre no mesmo lugar, alcançável em qualquer ponto da rolagem.
+   Vale em todas as larguras de propósito: uma janela de desktop baixa (uma
+   altura de 700px, por exemplo) tem exatamente o mesmo problema. Quando o
+   conteúdo cabe, o teto não é atingido e nada muda. */
+#detox-root #detox-stopModal > div,
+#detox-root #detox-dailyWinsModal > div {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+/* Cabeçalho e barra de baixo não encolhem — só o miolo cede espaço. */
+#detox-root #detox-stopModal > div > :not(.detox-modal-corpo),
+#detox-root #detox-dailyWinsModal > div > :not(.detox-modal-corpo) {
+    flex-shrink: 0;
+}
+
+#detox-root .detox-modal-corpo {
+    flex: 1 1 auto;
+    /* Sem isto o item flex não encolhe abaixo da altura do próprio conteúdo
+       (min-height: auto é o padrão) e a rolagem nunca chega a existir. */
+    min-height: 0;
+    overflow-y: auto;
+    /* A rolagem para no fim do miolo em vez de continuar na página atrás. */
+    overscroll-behavior: contain;
+}
+
+/* R22#2 — O recuo de 32px do bloco das 24h, no mobile.
+   O `pl-8` do artefato alinha a descrição, o campo, a dica e a lista com o
+   TEXTO do título, deixando de fora a pastilha "24h". Em 360px o bloco tem
+   280px de largura: 32px viram 11% da faixa útil, gastos para manter uma
+   pastilha sozinha na margem. No mobile o recuo sai e o conteúdo ocupa a
+   largura inteira; a pastilha continua na linha do título, onde sempre
+   esteve. */
+@media screen and (max-width: 768px) {
+    #detox-root #detox-step3View div:has(> #detox-list24h) > .pl-8 {
+        padding-left: 0;
+    }
+}
+
+/* R22#3 — O "X" do STOP e do Daily Wins passava por cima do título.
+   Com o teto de altura do R22#1 o botão voltou para dentro da tela, e aí
+   ficou visível que ele dividia a primeira linha com o texto: em 360px o
+   "Exercício Extra: Método STOP" ia até 305px e a caixa de 44px do "X"
+   começava em 300px.
+   Mesmo tratamento que o R20#3 já deu ao "Como funciona": a caixa VISÍVEL
+   encolhe para 30px, os 44x44px de toque voltam por um ::after transparente
+   (que não ocupa espaço no layout, então o alvo não regride), e o cabeçalho
+   reserva a faixa da direita para ele. Os três pop-ups grandes do Detox
+   ficam com o mesmo desenho de cabeçalho no mobile.
+
+   O "O que descarregar aqui?" (detox-infoModal) entra na mesma regra: ele
+   cabe na tela sem teto de altura, mas a varredura de 360px mostrou que o
+   texto do título ia até 305,8px e a caixa do "X" começava em 283px — a
+   única sobreposição real que restava. Medi a extensão do TEXTO com um
+   Range, e não a caixa do <h3>: nos dois modais de download o <h3> é bloco e
+   ocupa a largura toda, então a caixa cruzava o "X" mas a palavra não
+   chegava perto. Esses ficam como estão.
+
+   Aferido sem sobreposição em 360px nos três. */
+@media screen and (max-width: 768px) {
+    #detox-root #detox-stopModal > div > button.absolute,
+    #detox-root #detox-dailyWinsModal > div > button.absolute,
+    #detox-root #detox-infoModal > div > button.absolute {
+        top: 0.9rem;
+        right: 0.9rem;
+        min-width: 0;
+        min-height: 0;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #detox-root #detox-stopModal > div > button.absolute svg,
+    #detox-root #detox-dailyWinsModal > div > button.absolute svg,
+    #detox-root #detox-infoModal > div > button.absolute svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    #detox-root #detox-stopModal > div > button.absolute::after,
+    #detox-root #detox-dailyWinsModal > div > button.absolute::after,
+    #detox-root #detox-infoModal > div > button.absolute::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 44px;
+        height: 44px;
+        transform: translate(-50%, -50%);
+    }
+
+    /* `div:first-of-type` é o cabeçalho: o primeiro filho é o próprio "X",
+       que é um <button>. */
+    #detox-root #detox-stopModal > div > div:first-of-type,
+    #detox-root #detox-dailyWinsModal > div > div:first-of-type,
+    #detox-root #detox-infoModal > div > div:first-of-type {
+        padding-right: 2.25rem;
+    }
+}
