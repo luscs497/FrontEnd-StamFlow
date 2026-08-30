@@ -54,21 +54,22 @@
   let hasDraggedMood = false; // Controle de centralização inicial do primeiro acesso
 
   // CONFIGURAÇÕES DOS MODAIS
+  // Abertura/fechamento imediatos, como o modal de Perfil. Os setTimeout de 10ms
+  // (abrir) e 150ms (fechar) existiam para dar tempo da transição do scale-95
+  // rodar; o R19#3 zerou esse transform, então o que sobrava era só atraso.
+  // O scale-95 continua sendo tirado/reposto para não deixar a marcação num
+  // estado inconsistente caso o CSS mude.
   function openModal(id) {
       const modal = document.getElementById(id);
-      if (id === 'detox-infoModal') montarAtalhosNoInfoModal();
+      if (id === 'detox-howItWorksModal') montarAtalhosNoComoFunciona();
       modal.classList.remove('hidden');
-      setTimeout(() => {
-          modal.querySelector('div').classList.remove('scale-95');
-      }, 10);
+      modal.querySelector('div').classList.remove('scale-95');
   }
 
   function closeModal(id) {
       const modal = document.getElementById(id);
       modal.querySelector('div').classList.add('scale-95');
-      setTimeout(() => {
-          modal.classList.add('hidden');
-      }, 150);
+      modal.classList.add('hidden');
   }
 
   // RETORNAR LEGENDA TRADUZIDA DOS MOODS (Fiel às novas legendas solicitadas)
@@ -95,8 +96,14 @@
   // quem aparece — ver R19 no globals.css. O clone é feito uma única vez e os
   // onclick inline vêm junto no cloneNode, então continuam funcionando.
   // --------------------------------------------------------------------------
-  function montarAtalhosNoInfoModal() {
-      const modal = document.getElementById("detox-infoModal");
+  // O destino é o pop-up "Como funciona o Detox Mental?" (detox-howItWorksModal).
+  // Antes os clones iam para o "O que descarregar aqui?" (detox-infoModal), que
+  // era o modal errado. A faixa entra DEPOIS do cabeçalho com o título, e não
+  // logo após o botão de fechar, para não disputar espaço com o "X".
+  const ID_MODAL_ATALHOS = "detox-howItWorksModal";
+
+  function montarAtalhosNoComoFunciona() {
+      const modal = document.getElementById(ID_MODAL_ATALHOS);
       if (!modal || modal.querySelector(".detox-atalhos-mobile")) return;
       const cartao = modal.querySelector("div");
       if (!cartao) return;
@@ -109,15 +116,15 @@
       [...origem.children].forEach(function (btn) {
           if (btn.tagName !== "BUTTON") return;
           const c = btn.cloneNode(true);
-          // O de "O que descarregar aqui?" abriria este mesmo modal: aqui ele
-          // não faz sentido, então sai do clone.
-          if ((c.getAttribute("onclick") || "").includes("detox-infoModal")) return;
+          // Um atalho que reabrisse este mesmo modal não faz sentido aqui.
+          if ((c.getAttribute("onclick") || "").includes(ID_MODAL_ATALHOS)) return;
           faixa.appendChild(c);
       });
       if (!faixa.children.length) return;
 
-      const fechar = cartao.querySelector("button.absolute");
-      if (fechar && fechar.nextSibling) cartao.insertBefore(faixa, fechar.nextSibling);
+      // Âncora: o cabeçalho (ícone + título + linha divisória).
+      const cabecalho = cartao.querySelector("div.border-b");
+      if (cabecalho) cabecalho.insertAdjacentElement("afterend", faixa);
       else cartao.insertBefore(faixa, cartao.firstChild);
   }
 
