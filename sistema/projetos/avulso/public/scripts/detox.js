@@ -1166,7 +1166,173 @@
     const raiz = document.getElementById("detox-root");
     if (!raiz || !raiz.offsetParent) return; // seção ainda oculta
     const topo = raiz.getBoundingClientRect().top;
-    raiz.style.height = Math.max(420, Math.round(window.innerHeight - topo)) + "px";
+    // Exatamente o que sobra até o pé do viewport, sem piso. O piso de 420px
+    // que havia aqui (e o min-height gêmeo no detox.css) era a ÚNICA fonte de
+    // rolagem que restava nesta aba: com o viewport curto, ele travava a raiz
+    // mais alta do que o espaço disponível e a página passava a rolar. Medido
+    // em 360x500: 43px de sobra, todos vazios. O corte acontecia abaixo de
+    // ~543px de altura (o topo da raiz no mobile fica em 123px).
+    // Sem piso a aba fica apertada num viewport muito baixo — mas apertada e
+    // inteira, que é o comportamento certo para uma aba que não rola.
+    const alvo = Math.max(0, Math.round(window.innerHeight - topo)) + "px";
+    // Só escreve se mudou: quem chama isto também é o ResizeObserver da raiz, e
+    // escrever a mesma altura de novo o faria disparar em looping.
+    if (raiz.style.height !== alvo) raiz.style.height = alvo;
+    publicarGeometria(raiz);
+  }
+
+  // --------------------------------------------------------------------------
+  // Barras fixas: a geometria que o CSS não tem como descobrir sozinho.
+  //
+  // O cabeçalho e o rodapé são `position: fixed`, então precisam de coordenadas
+  // de VIEWPORT — e as deles são as da própria #detox-root, que muda de lugar
+  // e de largura com o breakpoint, com o colapso da sidebar e com a
+  // .container-1700. Nada disso o CSS alcança a partir dos filhos, então a
+  // medida sai daqui como custom properties.
+  //
+  // O atalho barato seria dar `transform` à raiz para ela virar o bloco de
+  // contenção dos filhos fixed — aí bastaria `top: 0` / `bottom: 0`. Está
+  // DESCARTADO de propósito: os 8 pop-ups do Detox são filhos diretos da raiz e
+  // também são `fixed inset-0`; com o transform, todos eles passariam a se
+  // prender à raiz em vez do viewport, e os oito quebrariam de uma vez.
+  // --------------------------------------------------------------------------
+  let geometriaAnterior = "";
+  let timersDeAssentamento = [];
+
+  // Uma medida só não basta quando o painel EM VOLTA também está refluindo.
+  // Ao cruzar o breakpoint, o `resize` do navegador chega antes de a sidebar
+  // virar barra do topo: nessa primeira passada o topo da raiz ainda é o
+  // antigo, e a altura sai errada. Medido indo de 1400x900 para 768x640: a
+  // raiz ficava com 485px (640 - 155, o topo velho) quando o certo era 517px
+  // (640 - 123).
+  //
+  // Duas coisas que NÃO resolvem, ambas testadas:
+  //   - ResizeObserver na raiz: quando a mudança de tamanho nasce dentro do
+  //     próprio callback dele, o Chrome não entrega a rodada seguinte.
+  //   - um punhado de requestAnimationFrame: o reflow em volta passa de 48ms,
+  //     e as três passadas liam todas o topo antigo.
+  // Daí a janela ir até 600ms. Cada passada é uma leitura e, quase sempre,
+  // nenhuma escrita — ajustarAltura só escreve quando o valor muda.
+  function agendarAssentamento() {
+      timersDeAssentamento.forEach(clearTimeout);
+      timersDeAssentamento = [60, 150, 320, 600].map(function (ms) {
+          return setTimeout(ajustarAltura, ms);
+      });
+      requestAnimationFrame(ajustarAltura);
+  }
+
+  function publicarGeometria(raiz) {
+      raiz = raiz || el("detox-root");
+      if (!raiz || !raiz.offsetParent) return;
+      const r = raiz.getBoundingClientRect();
+      const x = Math.round(r.left);
+      const larg = Math.round(r.width);
+      const topo = Math.round(r.top);
+      const base = Math.round(window.innerHeight - r.bottom);
+
+      // Sem mudança, sem escrita: o observador abaixo dispara a cada quadro da
+      // animação da sidebar, e reescrever as mesmas quatro variáveis forçaria
+      // um cálculo de layout por quadro à toa.
+      const assinatura = x + "|" + larg + "|" + topo + "|" + base;
+      if (assinatura !== geometriaAnterior) {
+          geometriaAnterior = assinatura;
+          raiz.style.setProperty("--detox-x", x + "px");
+          raiz.style.setProperty("--detox-larg", larg + "px");
+          raiz.style.setProperty("--detox-topo", topo + "px");
+          raiz.style.setProperty("--detox-base", base + "px");
+      }
+
+      // As alturas das barras ficam FORA do atalho acima, de propósito. Elas
+      // dependem da largura recém-publicada — que decide onde o texto quebra —
+      // e a quebra só se acomoda no quadro seguinte. Na primeira passada a
+      // medida ainda é a antiga; é a segunda, disparada pelo observador com a
+      // posição já igual, que acerta. Com a chamada dentro do atalho essa
+      // segunda passada não acontecia: medido em 360x500, o rodapé tinha 61px
+      // e a reserva ficava presa em 65px, abrindo 4px de vão entre o quadro
+      // branco e o rodapé.
+      sincronizarAlturaDasBarras(raiz);
+
+  }
+
+  // Escreve só quando muda, para não realimentar o ResizeObserver.
+  function definirVar(raiz, nome, valor) {
+      if (raiz.style.getPropertyValue(nome) !== valor) {
+          raiz.style.setProperty(nome, valor);
+      }
+  }
+
+  // Colapsar a sidebar do desktop muda a LARGURA e a posição da raiz sem passar
+  // por `resize`. Enquanto as barras estavam no fluxo isso não custava nada —
+  // elas herdavam a largura nova sozinhas. Fixas, precisam ser avisadas, e o
+  // aviso tem que chegar a cada quadro da transição da sidebar, senão elas
+  // saltam para o lugar novo só no fim. Um ResizeObserver na própria raiz cobre
+  // esse caso e qualquer outro que mude a caixa dela.
+  // Medido sem ele, em 1400px: a raiz ia para 64/1336 e as barras ficavam
+  // paradas em 300/1100.
+  //
+  // O observador chama ajustarAltura, e não publicarGeometria direto, porque a
+  // altura também pode estar defasada: o `resize` do navegador chega antes de o
+  // painel em volta terminar de refluir, e o topo medido ali ainda é o antigo.
+  // Medido em 769x800: a raiz ficava com 645px de altura e as variáveis com o
+  // topo em 155px, quando o topo real já era 123px — o cabeçalho fixo aparecia
+  // 32px abaixo do lugar. Com a chamada completa o ciclo se corrige sozinho:
+  // altura nova -> observador -> mede de novo -> nada mudou -> para.
+  function observarGeometria() {
+      const raiz = el("detox-root");
+      if (!raiz || raiz.dataset.detoxObservando) return;
+      if (typeof ResizeObserver !== "function") return;
+      raiz.dataset.detoxObservando = "1";
+
+      // A raiz: posição e largura. Cobre o colapso da sidebar, a troca de
+      // breakpoint e o resize da janela.
+      new ResizeObserver(function () { agendarAssentamento(); }).observe(raiz);
+
+      // As barras, separadamente. A altura delas muda quando o texto reflui, e
+      // o refluxo acontece um layout DEPOIS de a largura mudar — medir junto
+      // com a posição pega sempre a quebra anterior. Medido em 1024x768: o
+      // cabeçalho já estava com 172,6px e a reserva continuava em 162px, com o
+      // quadro branco 10px por baixo dele. Observar as duas é o sinal direto, e
+      // não realimenta nada: a reserva que elas alimentam é o padding da
+      // .detox-main, que não mexe no tamanho de barra nenhuma.
+      const olhoNasBarras = new ResizeObserver(function () {
+          sincronizarAlturaDasBarras(raiz);
+      });
+      [el("detox-header"), el("detox-footer")].forEach(function (b) {
+          if (b) olhoNasBarras.observe(b);
+      });
+  }
+
+  // Fora do fluxo, as barras não empurram mais nada — quem reserva o espaço
+  // delas é o padding da .detox-main, e o gatilho da seta se apoia no mesmo
+  // valor. Recolhidas, o espaço reservado é zero.
+  function sincronizarAlturaDasBarras(raiz) {
+      raiz = raiz || el("detox-root");
+      if (!raiz) return;
+      if (raiz.classList.contains("detox-barras-recolhidas")) {
+          definirVar(raiz, "--detox-barra-topo", "0px");
+          definirVar(raiz, "--detox-barra-base", "0px");
+          return;
+      }
+      const cabecalho = el("detox-header");
+      const rodape = el("detox-footer");
+
+      // Com uma transição de recolher/abrir em curso, a altura de agora é um
+      // ponto no meio do caminho. Quem manda nessa fase é o toggleBarras, que
+      // já escreveu o valor de destino; medir aqui atropelaria a animação. O
+      // marcador é o max-height inline, que o toggleBarras põe ao começar e
+      // limpa no transitionend.
+      const animando = (cabecalho && cabecalho.style.maxHeight) ||
+                       (rodape && rodape.style.maxHeight);
+      if (animando) return;
+
+      if (cabecalho) {
+          definirVar(raiz, "--detox-barra-topo",
+            Math.ceil(cabecalho.getBoundingClientRect().height) + "px");
+      }
+      if (rodape) {
+          definirVar(raiz, "--detox-barra-base",
+            Math.ceil(rodape.getBoundingClientRect().height) + "px");
+      }
   }
 
   function init() {
@@ -1177,6 +1343,8 @@
     montarMenuAcoesRodape();
     // Envelopa o miolo do STOP e do Daily Wins para eles rolarem por dentro.
     montarCorpoRolavelDosModais();
+    // Mantém as barras fixas coladas na raiz quando ela muda de caixa.
+    observarGeometria();
     renderMoodWidget();
     switchStep(1);   // monta as abas e deixa a etapa 1 visível
     renderDailyWinsInputs();
@@ -1184,7 +1352,10 @@
     medirRotulosDoRodape();
     window.addEventListener("resize", medirRotulosDoRodape);
 
-    window.addEventListener("resize", ajustarAltura);
+    window.addEventListener("resize", function () {
+      ajustarAltura();
+      agendarAssentamento(); // o painel em volta ainda vai refluir
+    });
 
     // Antes de o foco mudar, guarda a nota que estava sendo escrita.
     document.addEventListener("mousedown", function (evento) {
@@ -1409,6 +1580,13 @@
     barras.forEach(function (b, i) {
       b.style.maxHeight = (recolhido ? 0 : alturas[i]) + "px";
     });
+
+    // O espaço reservado na .detox-main viaja na mesma curva e no mesmo tempo
+    // que o max-height das barras. Os valores saem de `alturas`, e não de uma
+    // medição agora: no meio da transição a barra ainda está com a altura
+    // antiga, e a leitura sairia errada.
+    raiz.style.setProperty("--detox-barra-topo", (recolhido ? 0 : alturas[0]) + "px");
+    raiz.style.setProperty("--detox-barra-base", (recolhido ? 0 : alturas[1] || 0) + "px");
 
     // Aberta, a barra volta a ter altura automática: o conteúdo pode quebrar em
     // outra largura depois, e um max-height fixo a cortaria.

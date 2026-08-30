@@ -9208,3 +9208,112 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) .site-con
         padding-right: 2.25rem;
     }
 }
+
+/* ==========================================================================
+   R23 — As duas barras do Detox saem do fluxo e viram `position: fixed`.
+   ========================================================================== */
+
+/* R23#1 — O piso de altura da raiz.
+   O detox.css dá `min-height: 420px` à #detox-root, gêmeo do Math.max(420,...)
+   que estava no ajustarAltura. Era a única fonte de rolagem que ainda existia
+   nesta aba: com o viewport curto, o piso deixava a raiz mais alta do que o
+   espaço disponível. Medido em 360x500: a raiz ia a 420px num vão de 377px e
+   a página passava a rolar 43px, todos vazios. Acontecia abaixo de ~543px de
+   altura. Tirar só o Math.max não bastaria — o min-height do CSS venceria.
+   O seletor repete a classe (1,1,0) porque `#detox-root` sozinho (1,0,0)
+   EMPATA com o do detox.css e perde por ordem de arquivo: o detox.css é
+   importado depois do globals.css. Medido: com `#detox-root` puro, o JS
+   escrevia 377px e a caixa continuava sendo renderizada com 420px. */
+#detox-root.detox-root {
+    min-height: 0;
+}
+
+/* R23#2 — Cabeçalho e rodapé presos ao viewport.
+   As coordenadas vêm do detox.js em custom properties (ver publicarGeometria):
+   são as da própria raiz, que muda de lugar e de largura com o breakpoint, com
+   o colapso da sidebar e com a .container-1700 — nada que o CSS consiga
+   descobrir a partir dos filhos.
+   As reservas (fallback) existem para o primeiro quadro, antes de o JS medir.
+   A largura declarada é a mesma de antes, então o texto quebra igual e a
+   altura natural das barras não muda. */
+/* Dois ids também aqui, e pelo mesmo motivo do rodapé logo abaixo: as duas
+   barras carregam `w-full` do artefato, que chega como `#detox-root .w-full`
+   (1,1,0) pelo detox.css — importado DEPOIS do globals.css. Com um seletor por
+   classe, o `width: 100%` vencia, e um elemento fixed mede 100% do VIEWPORT,
+   não da raiz. Medido em 1400px com a sidebar aberta: a raiz ia de 300 a 1400
+   e o cabeçalho de 300 a 1700, 300px para fora da tela. No mobile o defeito
+   não aparecia porque ali a raiz ocupa a largura toda. */
+#detox-root #detox-header {
+    position: fixed;
+    top: var(--detox-topo, 0px);
+    left: var(--detox-x, 0px);
+    width: var(--detox-larg, 100%);
+}
+
+/* Dois ids: em <=768px o R19#13 dá `position: relative` a
+   `#detox-root #detox-footer` (2,0,0), que venceria um seletor por classe.
+   O `relative` de lá existia para ancorar o menu suspenso, que é `absolute`
+   dentro do rodapé — e `fixed` também é bloco de contenção para ele, então o
+   dropup continua funcionando igual. */
+#detox-root #detox-footer {
+    position: fixed;
+    bottom: var(--detox-base, 0px);
+    left: var(--detox-x, 0px);
+    width: var(--detox-larg, 100%);
+}
+
+/* R23#3 — Fora do fluxo, as barras deixam de empurrar o miolo: a .detox-main
+   passa a ocupar a raiz inteira e reserva o espaço delas em padding. O valor é
+   o mesmo que as barras medem, então o quadro branco continua com exatamente a
+   altura de antes — a caixa de conteúdo da .detox-main é idêntica à que ela
+   tinha entre as duas barras.
+   A transição repete a curva e o tempo do colapso (detox.css), e o toggleBarras
+   escreve as duas variáveis no mesmo instante em que escreve o max-height: as
+   barras encolhem e o espaço reservado encolhe junto, sem defasagem. */
+#detox-root .detox-main {
+    padding-top: var(--detox-barra-topo, 0px);
+    padding-bottom: var(--detox-barra-base, 0px);
+    transition: padding-top 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                padding-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* R23#4 — A seta de recolher é `absolute` dentro da .detox-main, e `top: 0`
+   passa a ser o topo do PADDING box — ou seja, atrás do cabeçalho fixo. Ela
+   desce para a borda de baixo da barra e acompanha o colapso na mesma curva,
+   que é o movimento que ela já fazia quando a .detox-main é que se mexia.
+   Dois ids porque a regra base (`#detox-root .detox-toggle-barras`, 1,1,0)
+   está no detox.css, que é importado DEPOIS do globals.css — mesma situação
+   do R21#4. */
+#detox-root #detox-toggleBarras {
+    top: var(--detox-barra-topo, 0px);
+    transition: color 0.2s ease, background-color 0.2s ease,
+                top 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Quem pediu menos movimento não ganha estes dois de brinde. */
+@media (prefers-reduced-motion: reduce) {
+    #detox-root .detox-main,
+    #detox-root #detox-toggleBarras {
+        transition-duration: 0.01ms;
+    }
+}
+
+/* R23#5 — O rodapé recolhido nunca chegava a zero no mobile.
+   O detox.css zera o padding das barras em
+   `#detox-root.detox-barras-recolhidas .detox-footer` (1,2,0), mas o R19#13
+   redeclara `#detox-root #detox-footer { padding: 8px 0 }` (2,0,0) em <=768px
+   — e 2 ids ganham de 1 id + 2 classes. Resultado: com as barras recolhidas o
+   rodapé ficava com 16px de padding, medidos.
+   Antes isso era uma tira de 16px no fluxo, no pé da aba: feia, mas inerte.
+   Com o rodapé fixo ela vira uma faixa INVISÍVEL (opacity 0) por cima dos
+   últimos 16px do quadro branco, comendo os cliques de quem tentasse criar
+   uma nota ali. Daí a correção entrar junto com o R23, e não depois.
+   Os dois ids mais a classe de estado dão (2,1,0) e vencem o R19#13. O
+   `pointer-events: none` é o cinto de segurança: recolhida e invisível, a
+   barra não intercepta nada, sobre qualquer altura residual que apareça. */
+#detox-root.detox-barras-recolhidas #detox-header,
+#detox-root.detox-barras-recolhidas #detox-footer {
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+}
