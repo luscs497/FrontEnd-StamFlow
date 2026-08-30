@@ -8484,3 +8484,315 @@ header .logo-content {
     height: 44px;
     transform: translate(-50%, -50%);
 }
+
+/* ---- (R19) Polimento fino de UI/UX: Detox Mental, menu de Boosts e
+             Relatórios. Numerado R19 e não R18 porque o R18 já existe (fase
+             12, os controles do painel de notificações aberto). */
+
+/* R19#1 — Abertura/fechamento com transição no submenu de Boosts e na lista
+   flutuante de prazos dos Relatórios. Os dois alternavam `display-none`, que é
+   `display: none !important` — e display não anima, então a lista aparecia e
+   sumia num piscar. Trocamos o mecanismo por max-height + opacity, que animam.
+   O `!important` no display é necessário para vencer o do .display-none; o
+   restante do colapso da mini-sidebar (max-height 400px, no bloco R3) continua
+   valendo e compõe com este. */
+header .nav-links .sub-lista,
+#periodos-nao-visiveis {
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 1;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.22s ease,
+        margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+header .nav-links .sub-lista.display-none,
+#periodos-nao-visiveis.display-none {
+    max-height: 0;
+    opacity: 0;
+    /* Margem E padding zerados: com display:none a lista simplesmente sumia;
+       trocando por max-height, o padding vertical sobrava como uma faixa de
+       13px no menu fechado. */
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+}
+
+/* R19#2 — Abas de etapa do Detox (Despejo / Blocos / Ações): sai a borda que
+   aparecia no estado ativo e no clique, fica só a troca suave de cor. O
+   padding vertical encolhe um pouco; em <=768px o min-height de 44px do R16#1
+   continua mandando na altura, então o alvo de toque não regride. */
+/* O seletor leva o #detox-root junto de propósito: as utilitárias do Tailwind
+   vêm como `#detox-root .transition-all` / `#detox-root .py-*` no detox.css,
+   que carrega DEPOIS do globals.css. Com um seletor de ID só (1,0,0) elas
+   venciam por especificidade; com dois IDs (2,0,0) a regra abaixo manda. */
+#detox-root #detox-tabBtn1,
+#detox-root #detox-tabBtn2,
+#detox-root #detox-tabBtn3 {
+    border-color: transparent;
+    box-shadow: none;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+#detox-root #detox-tabBtn1:focus-visible,
+#detox-root #detox-tabBtn2:focus-visible,
+#detox-root #detox-tabBtn3:focus-visible {
+    outline: 2px solid #7264EA;
+    outline-offset: 2px;
+}
+
+/* R19#3 — Pop-ups do Detox padronizados com o modal de Perfil. O de Perfil não
+   tem animação de entrada: ele simplesmente aparece. Os do Detox nasciam com
+   `transform: scale(.95) transition-all` e o JS tirava a classe num setTimeout.
+   Zerando o transform aqui, o JS continua rodando mas fica inerte, e os dois
+   passam a abrir do mesmo jeito. */
+#detox-root [id$="Modal"] > div {
+    transform: none !important;
+    transition: none !important;
+}
+
+/* R19#4 — Ícone (i) ao lado de "Detox Mental (Brain Dump)": centraliza no eixo
+   Y e encosta no título, em vez de esticar até a borda direita do bloco. */
+#detox-root .detox-header h1 + button {
+    align-self: center;
+    flex-shrink: 0;
+    margin-right: auto;
+}
+
+/* R19#5 — A BARRA PRETA na lateral direita.
+   CAUSA: o `html` usa `scrollbar-gutter: stable`, que reserva ~15px de forma
+   permanente para a barra de rolagem. Nas outras abas a página rola e a calha
+   é ocupada pela própria barra, então ninguém vê. No Detox o #detox-root tem
+   `height: calc(100vh - 86px)` com `overflow: hidden` e a página NÃO rola —
+   a calha fica vazia e mostra o preto do body. Medido: o .site-content
+   terminava 15px antes da borda em todas as larguras.
+   CORREÇÃO: só nesta aba a calha deixa de ser reservada, e o conteúdo encosta
+   na borda do navegador. Em troca há um deslocamento de ~15px ao entrar e sair
+   do Detox — que é justamente o que o `stable` existia para evitar nas abas
+   que rolam, e que aqui não se aplica porque esta não rola. */
+html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) {
+    scrollbar-gutter: auto;
+}
+
+/* R19#6 — O sub-header virava linha a partir do `lg` do Tailwind (1024px), e
+   com o flex-wrap do R12#2 a quebra acontecia por volta de 1044px, onde ainda
+   fica apertado. Passa a valer só de 1105px para cima. */
+@media screen and (max-width: 1104px) {
+    #detox-root .detox-header > div:first-child {
+        flex-direction: column;
+    }
+
+    #detox-root .detox-header .detox-acoes-rapidas {
+        justify-content: center;
+    }
+}
+
+/* R19#7 — Barra inferior de ações: altura menor e respiro rigorosamente igual
+   em cima e embaixo. O py-4 do artefato (16px) somava 79px de barra para
+   botões de 46px. */
+#detox-root #detox-footer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    align-items: center;
+}
+
+/* ==========================================================================
+   R19 — Redesenho do Detox no mobile (<=768px)
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+
+    /* R19#8 — Título e descrição alinhados à esquerda, em vez de centralizados. */
+    #detox-root .detox-header > div:first-child > div:first-child {
+        text-align: left;
+        align-items: flex-start;
+    }
+
+    #detox-root .detox-header > div:first-child > div:first-child > div {
+        justify-content: flex-start;
+    }
+
+    /* R19#9 — Os três atalhos encolhem proporcionalmente: altura, padding,
+       fonte e SVG. Ficam menores, não só mais estreitos. */
+    #detox-root .detox-acoes-rapidas {
+        gap: 0.4rem;
+        justify-content: flex-start;
+    }
+
+    #detox-root .detox-acoes-rapidas > button {
+        min-height: 34px;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.6rem;
+        gap: 0.35rem;
+    }
+
+    #detox-root .detox-acoes-rapidas > button span {
+        font-size: 11px;
+    }
+
+    #detox-root .detox-acoes-rapidas > button svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    /* R19#10 — Seta de minimizar as barras: sobrava espaço em volta. */
+    #detox-toggleBarras {
+        margin: 0;
+        padding: 0.15rem 0.4rem;
+    }
+
+    /* R19#11 — Os três atalhos saem do sub-header e reaparecem, compactos, no
+       topo do pop-up de Informações (os clones são criados pelo detox.js). */
+    #detox-root .detox-header .detox-acoes-rapidas {
+        display: none;
+    }
+
+    #detox-root .detox-atalhos-mobile {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 0 0 0.9rem;
+        padding-right: 2.5rem;
+    }
+
+    #detox-root .detox-atalhos-mobile > button {
+        min-height: 44px;
+        padding: 0.35rem 0.7rem;
+        border-radius: 0.6rem;
+        gap: 0.35rem;
+    }
+
+    #detox-root .detox-atalhos-mobile > button span {
+        font-size: 11.5px;
+    }
+
+    /* R19#12 — Pop-up de Informações mais baixo, e o "X" descolado do título. */
+    /* Dois IDs pelo mesmo motivo do R19#2: as utilitárias `#detox-root .p-6`
+       do detox.css carregam depois e venceriam um seletor de ID só. */
+    #detox-root #detox-infoModal > div {
+        max-height: 82vh;
+        overflow-y: auto;
+        padding-top: 3.2rem;
+    }
+
+    #detox-root #detox-infoModal > div > button.absolute {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+
+    /* R19#13 — Barra inferior: um único botão que abre as ações num menu
+       suspenso, em vez de três botões ocupando altura permanente. O envelope
+       (.detox-acoes-menu) e o gatilho são criados pelo detox.js. */
+    #detox-root #detox-footer {
+        flex-direction: row;
+        justify-content: center;
+        position: relative;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        gap: 0;
+    }
+
+    /* O rodapé vem do artefato com `overflow: hidden` — ele RECORTAVA o menu
+       suspenso, que é absolute dentro dele e sobe para fora. Medido: o menu
+       existia em 12,681 336x163 com opacity 1, mas quem pintava naquele ponto
+       era o #detox-whiteboard.
+       O overflow só é liberado com o menu ABERTO: fechado, o hidden continua
+       valendo, que é o que o recolher-barras usa para clipar a transição de
+       max-height. O z-index sobe junto, senão o quadro pinta por cima. */
+    #detox-root #detox-footer.detox-acoes-abertas {
+        overflow: visible;
+        z-index: 50;
+    }
+
+    #detox-root .detox-acoes-gatilho {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 44px;
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background-color: #12111f;
+        color: #e2e8f0;
+        font-size: 13px;
+        font-weight: 600;
+        transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    #detox-root .detox-acoes-gatilho svg {
+        width: 18px;
+        height: 18px;
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #detox-root .detox-footer.detox-acoes-abertas .detox-acoes-gatilho svg {
+        transform: rotate(45deg);
+    }
+
+    #detox-root .detox-acoes-menu {
+        position: absolute;
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: calc(100% - 4px);
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.5rem;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        background-color: #12111f;
+        box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0.2s;
+        z-index: 40;
+    }
+
+    #detox-root .detox-footer.detox-acoes-abertas .detox-acoes-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    #detox-root .detox-acoes-menu .detox-btn-expansivel {
+        width: 100%;
+        min-height: 44px;
+        padding: 0.5rem 0.85rem;
+        justify-content: flex-start;
+        gap: 0.6rem;
+    }
+
+    /* Dentro do menu o rótulo fica SEMPRE aberto. No rodapé compacto ele só
+       aparecia no hover (e no toque, pelo @media (hover: none) do detox.css);
+       num menu de largura inteira três ícones sem nome não dizem nada. */
+    #detox-root .detox-acoes-menu .detox-btn-rotulo {
+        max-width: 15rem;
+        opacity: 1;
+    }
+}
+
+/* Em >=769px o envelope criado pelo JS volta a ser uma linha comum e o gatilho
+   some — a mesma marcação serve às duas faixas. */
+@media screen and (min-width: 769px) {
+    #detox-root .detox-acoes-gatilho {
+        display: none;
+    }
+
+    #detox-root .detox-acoes-menu {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+    }
+}

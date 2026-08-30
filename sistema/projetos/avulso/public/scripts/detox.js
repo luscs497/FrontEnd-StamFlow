@@ -56,6 +56,7 @@
   // CONFIGURAÇÕES DOS MODAIS
   function openModal(id) {
       const modal = document.getElementById(id);
+      if (id === 'detox-infoModal') montarAtalhosNoInfoModal();
       modal.classList.remove('hidden');
       setTimeout(() => {
           modal.querySelector('div').classList.remove('scale-95');
@@ -87,6 +88,102 @@
       return legends[emoji] || '';
   }
 
+  // --------------------------------------------------------------------------
+  // Mobile: os três atalhos do sub-header (O que descarregar / Método STOP /
+  // Daily Wins) são CLONADOS para o topo do pop-up de Informações. CSS não
+  // move nó no DOM, então os originais continuam no header e cada faixa decide
+  // quem aparece — ver R19 no globals.css. O clone é feito uma única vez e os
+  // onclick inline vêm junto no cloneNode, então continuam funcionando.
+  // --------------------------------------------------------------------------
+  function montarAtalhosNoInfoModal() {
+      const modal = document.getElementById("detox-infoModal");
+      if (!modal || modal.querySelector(".detox-atalhos-mobile")) return;
+      const cartao = modal.querySelector("div");
+      if (!cartao) return;
+
+      const origem = document.querySelector("#detox-header .detox-acoes-rapidas");
+      if (!origem) return;
+
+      const faixa = document.createElement("div");
+      faixa.className = "detox-atalhos-mobile";
+      [...origem.children].forEach(function (btn) {
+          if (btn.tagName !== "BUTTON") return;
+          const c = btn.cloneNode(true);
+          // O de "O que descarregar aqui?" abriria este mesmo modal: aqui ele
+          // não faz sentido, então sai do clone.
+          if ((c.getAttribute("onclick") || "").includes("detox-infoModal")) return;
+          faixa.appendChild(c);
+      });
+      if (!faixa.children.length) return;
+
+      const fechar = cartao.querySelector("button.absolute");
+      if (fechar && fechar.nextSibling) cartao.insertBefore(faixa, fechar.nextSibling);
+      else cartao.insertBefore(faixa, cartao.firstChild);
+  }
+
+  // --------------------------------------------------------------------------
+  // Mobile: a barra inferior deixa de ter três botões soltos e vira UM botão
+  // que abre um menu suspenso (dropup). Precisa de JS porque os três botões
+  // são irmãos diretos do rodapé — sem um contêiner em volta não há como
+  // posicioná-los como menu só com CSS. O envelope é criado uma vez; em
+  // desktop o CSS devolve o contêiner ao fluxo normal e o gatilho some, então
+  // a mesma marcação serve às duas faixas.
+  // --------------------------------------------------------------------------
+  function montarMenuAcoesRodape() {
+      const rodape = document.getElementById("detox-footer");
+      if (!rodape || rodape.querySelector(".detox-acoes-menu")) return;
+
+      const botoes = [...rodape.querySelectorAll(":scope > .detox-btn-expansivel")];
+      if (!botoes.length) return;
+
+      const menu = document.createElement("div");
+      menu.className = "detox-acoes-menu";
+      botoes.forEach(function (b) { menu.appendChild(b); });
+
+      const gatilho = document.createElement("button");
+      gatilho.type = "button";
+      gatilho.className = "detox-acoes-gatilho";
+      gatilho.setAttribute("aria-expanded", "false");
+      gatilho.setAttribute("aria-haspopup", "true");
+      gatilho.setAttribute("aria-label", "Ações do quadro");
+      gatilho.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<line x1="12" y1="5" x2="12" y2="19"></line>' +
+        '<line x1="5" y1="12" x2="19" y2="12"></line></svg>' +
+        '<span>Ações do quadro</span>';
+
+      gatilho.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const aberto = rodape.classList.toggle("detox-acoes-abertas");
+          gatilho.setAttribute("aria-expanded", aberto ? "true" : "false");
+      });
+
+      // Clique fora e Escape fecham, como qualquer menu do painel.
+      document.addEventListener("click", function (e) {
+          if (!rodape.classList.contains("detox-acoes-abertas")) return;
+          if (e.target.closest(".detox-acoes-menu, .detox-acoes-gatilho")) return;
+          rodape.classList.remove("detox-acoes-abertas");
+          gatilho.setAttribute("aria-expanded", "false");
+      });
+      document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && rodape.classList.contains("detox-acoes-abertas")) {
+              rodape.classList.remove("detox-acoes-abertas");
+              gatilho.setAttribute("aria-expanded", "false");
+          }
+      });
+
+      // Escolher uma ação fecha o menu.
+      menu.addEventListener("click", function (e) {
+          if (!e.target.closest(".detox-btn-expansivel")) return;
+          rodape.classList.remove("detox-acoes-abertas");
+          gatilho.setAttribute("aria-expanded", "false");
+      });
+
+      rodape.appendChild(menu);
+      rodape.appendChild(gatilho);
+  }
+
   // TOGGLE PARA EXPANDIR / MINIMIZAR WIDGET DE HUMOR
   function toggleMoodWidget(expanded, event) {
       if (event) event.stopPropagation();
@@ -104,6 +201,11 @@
       } else {
           selectedMood = emoji;
           showToast(`Humor definido: ${getMoodLegend(emoji)} ${emoji}`, "💭");
+          // Escolheu um humor => o card se recolhe sozinho, reaproveitando a
+          // mesma via do "X" (toggleMoodWidget(false)). Só no caso de DEFINIR:
+          // ao LIMPAR (clicar de novo na mesma emoção) o card fica aberto, senão
+          // quem quis trocar de humor teria de reabrir a cada tentativa.
+          isMoodWidgetExpanded = false;
       }
       renderMoodWidget();
   }
@@ -1020,6 +1122,8 @@
     const raiz = document.getElementById("detox-root");
     if (!raiz || raiz.dataset.detoxIniciado) return;
     raiz.dataset.detoxIniciado = "1";
+    // Envelopa as acoes do rodape no menu suspenso do mobile (ver R19).
+    montarMenuAcoesRodape();
     renderMoodWidget();
     switchStep(1);   // monta as abas e deixa a etapa 1 visível
     renderDailyWinsInputs();
