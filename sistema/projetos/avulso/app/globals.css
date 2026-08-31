@@ -8593,3 +8593,37 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) .site-con
     padding-bottom: 0;
     pointer-events: none;
 }
+
+/* ==========================================================================
+   R24 — A aba do Detox trava o viewport.
+   ========================================================================== */
+
+/* R24#1 — Enquanto o Detox está aberto, a PÁGINA não rola. Ponto.
+   O R23 tratou o sintoma que eu tinha conseguido medir (o piso de 420px) e
+   pôs as barras em `fixed`, mas deixou a página rolável — só desgrudou as
+   barras da rolagem. Só que `fixed` não impede a barra de se mexer: a posição
+   e a largura dela vinham de uma medida em JS, refeita a cada mudança de
+   layout, e é isso que se vê como as barras "se ajustando".
+   Aqui a rolagem deixa de existir: com `overflow: hidden` no html e no body
+   não há o que rolar, em nenhum aparelho e por nenhum caminho — nem o arrasto
+   da barra de URL do celular, nem um pixel de sobra que apareça amanhã em
+   alguma largura que eu não tenha medido. As barras param porque nada mais
+   se move debaixo delas.
+   `overscroll-behavior: none` corta também o efeito elástico do toque, que é
+   o que sobra de "movimento" num app travado.
+   O seletor é o mesmo `:has(...)` do R19#5 e do R21#3: vale SÓ nesta aba. Sair
+   dela devolve a rolagem para o resto do painel, que precisa dela. */
+html:has(.container-1700.conteudo-site:not(.display-none) #detox-root),
+html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+/* R24#2 — Com a página travada, o piso da rolagem interna das etapas 2 e 3
+   passa a ser a única rolagem da aba, que é como deve ser: o conteúdo rola
+   dentro do miolo, entre as duas barras paradas. */
+#detox-root #detox-step2View,
+#detox-root #detox-step3View {
+    overscroll-behavior: contain;
+}

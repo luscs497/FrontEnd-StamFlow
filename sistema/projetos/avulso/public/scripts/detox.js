@@ -1377,10 +1377,18 @@
 
     // Abrir a aba é o momento em que a seção ganha medida.
     const link = document.querySelector('.link-nav[title="Detox Mental"]');
-    if (link) link.addEventListener("click", () => setTimeout(function () {
-      ajustarAltura();
-      medirRotulosDoRodape(); // com a seção oculta a medida sai 0
-    }, 60));
+    if (link) link.addEventListener("click", () => {
+      // A aba trava a rolagem da página (R24#1). Se o usuário chegou aqui com
+      // outra aba rolada para baixo, o travamento congelaria a página NAQUELA
+      // posição e o Detox nasceria deslocado — sem barra de rolagem para
+      // corrigir. Voltar ao topo antes de medir resolve, e não custa nada:
+      // nas outras abas o clique já leva para o começo do conteúdo.
+      window.scrollTo(0, 0);
+      setTimeout(function () {
+        ajustarAltura();
+        medirRotulosDoRodape(); // com a seção oculta a medida sai 0
+      }, 60);
+    });
 
     // Colapsar/expandir a sidebar muda a largura da área; a altura não, mas o
     // widget de humor é centralizado por CSS e não precisa de recálculo.
