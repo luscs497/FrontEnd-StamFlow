@@ -8671,3 +8671,82 @@ html:has(> body.modal-open) {
     overflow: hidden;
     scrollbar-gutter: stable;
 }
+
+/* ==========================================================================
+   R27 — Os pop-ups legados no mesmo formato dos do Detox, no mobile.
+   ========================================================================== */
+
+/* R27#1 — A família `popup-embasamento` (os cinco: "Como melhorar minha
+   Stamina", "Como te ajuda" e os embasamentos científicos do Modo Foco, dos
+   Exercícios e da Pausa Mental) ganha o desenho do "Como funciona o Detox
+   Mental" e do STOP: cartão com respiro nas bordas, cabeçalho e botão parados,
+   e só o miolo rolando.
+
+   COMO ESTAVA: o R4#1 deixava o cartão full-bleed no mobile —
+   `width/height/min-height: 100vw/100vh`, sem borda e sem raio. Medido em
+   360x740: o cartão ia de 0 a 740, colado nas duas pontas do viewport, e o
+   `overflow-y: auto` da regra base fazia o CARTÃO INTEIRO rolar. O botão
+   "Fechar" caía em 1852px — fora da tela, alcançável só rolando o cabeçalho
+   para fora junto.
+
+   POR QUE DÁ PARA FAZER SÓ COM CSS: os cinco têm exatamente a mesma estrutura
+   de três partes — `.embasamento-header`, um bloco de conteúdo e
+   `.button-close-embasamento`. É a mesma forma dos pop-ups do Detox, e por
+   isso aqui não precisou do envelope em JS que o R22#1 precisou criar lá.
+
+   O respiro vem do padding do overlay (#modais), como o `p-4` dos do Detox. */
+@media screen and (max-width: 768px) {
+    #modais.modais {
+        padding: 1rem;
+    }
+
+    .popup-embasamento {
+        width: 100%;
+        max-width: 100%;
+        /* Desfaz o full-bleed do R4#1: a altura passa a ser a do conteúdo, com
+           teto na caixa do overlay já descontado o padding acima. */
+        height: auto;
+        min-height: 0;
+        max-height: 100%;
+        border: 0.8px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 1.15rem 1rem;
+        display: flex;
+        flex-direction: column;
+        /* Quem rola é o miolo, não o cartão. */
+        overflow: hidden;
+    }
+
+    .popup-embasamento > .embasamento-header,
+    .popup-embasamento > .button-close-embasamento {
+        flex-shrink: 0;
+    }
+
+    .popup-embasamento > *:not(.embasamento-header):not(.button-close-embasamento) {
+        flex: 1 1 auto;
+        /* Sem isto o item flex não encolhe abaixo do próprio conteúdo
+           (min-height: auto é o padrão) e a rolagem nunca chega a existir. */
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+}
+
+/* R27#2 — Teto de segurança para os outros pop-ups do painel no mobile.
+   Hoje eles cabem com folga — medido em 360x740, o de Perfil ocupa 91,7 a
+   648,3 e o player de áudio 212,8 a 527,2, nenhum precisando rolar. Por isso
+   NÃO ganharam o tratamento de três partes do R27#1: a estrutura deles é
+   outra (o de Perfil tem dois filhos, o player tem quatro), e impor uma coluna
+   flex com miolo rolável a uma marcação que não é dessa forma é onde se
+   quebra algo sem necessidade.
+   O que entra é só o teto: se o conteúdo crescer, o cartão para de encostar
+   nas bordas e passa a rolar por dentro em vez de ser cortado. Enquanto
+   couber, a regra não faz nada. */
+@media screen and (max-width: 768px) {
+    #modais .modal-perfil,
+    #modais .modal-audio {
+        max-height: 100%;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+}

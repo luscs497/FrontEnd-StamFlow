@@ -43,7 +43,15 @@
       // cada mudança de classe na árvore, inclusive durante o arraste de um
       // post-it do Detox.
       if (escondidoPorClasse(nos[i])) continue;
-      if (getComputedStyle(nos[i]).display !== "none") return true;
+      // getComputedStyle NAO serve aqui: ele devolve o display do proprio
+      // elemento, ignorando ancestral escondido. Os cinco `popup-embasamento`
+      // e o modal de Perfil vivem dentro de <section id="modais">, que e o
+      // overlay e tem o seu proprio `.display-none` — com um popup destravado
+      // e o #modais ainda escondido, o computed dizia "flex" e a trava ligava
+      // com nada na tela. Medido: computedDisplay "flex", getClientRects() 0.
+      // getClientRects() ve a arvore inteira: zero retangulos = invisivel,
+      // seja por qual ancestral for.
+      if (nos[i].getClientRects().length > 0) return true;
     }
     return false;
   }
