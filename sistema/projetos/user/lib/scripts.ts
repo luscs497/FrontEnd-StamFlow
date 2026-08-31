@@ -22,6 +22,10 @@ export const LEGACY_SCRIPTS_CORE: string[] = [
   "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
   "/scripts/auth.js",
   "/scripts/script.js",
+  // Trava a rolagem da pagina com qualquer pop-up aberto (R26). Fase 1 porque o
+  // onboarding ja nasce aberto: se entrasse na fase 2, a primeira tela do app
+  // ficaria rolavel por tras ate as libs de visao terminarem de baixar.
+  "/scripts/modal-scroll-lock.js",
 ];
 
 // Fase 2 — libs de visão + câmera, carregadas logo em seguida (não bloqueiam
@@ -74,7 +78,7 @@ export const LEGACY_SCRIPTS: string[] = [
   BUMPAR A CADA DEPLOY que altere qualquer arquivo em /public/scripts ou
   /public/data (o script.js versiona o fetch dos JSON com esta mesma chave).
 */
-export const ASSET_VERSION = "20260831";
+export const ASSET_VERSION = "20260831b";
 
 /** Anexa ?v= apenas a assets locais (CDNs já versionam na própria URL). */
 export function comVersao(src: string): string {

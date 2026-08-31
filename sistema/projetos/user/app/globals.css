@@ -9367,3 +9367,31 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) .site-con
 #detox-root #detox-step3View {
     overscroll-behavior: contain;
 }
+
+/* ==========================================================================
+   R26 — Bloqueio global de rolagem com pop-up aberto (scroll bleed).
+   Numerado R26 e nao R18 como pedido: o R18 ja existe desde a fase 12 (os
+   controles do painel de notificacoes aberto), e reaproveitar o numero
+   deixaria dois blocos diferentes com a mesma etiqueta. Mesma decisao que o
+   R19 tomou quando a fase 13 pediu "R18".
+   ========================================================================== */
+
+/* R26#1 — A classe entra e sai do <body> pelo modal-scroll-lock.js.
+   As DUAS declaracoes sao necessarias, e nao uma redundancia da outra: quem
+   rola nesta pagina e o elemento raiz (document.scrollingElement === html),
+   entao `overflow: hidden` so no body nao segura nada — medido, a pagina
+   continuava rolando. Quem trava e a regra do html, cujo overflow o navegador
+   propaga para o viewport. A do body fica porque e a forma canonica, a que
+   qualquer um espera encontrar, e cobre o caso de o body virar o container de
+   rolagem numa mudanca futura de layout.
+   `scrollbar-gutter: stable` segura a calha da barra de rolagem: sem ele o
+   conteudo saltaria ~15px para a direita no instante em que o pop-up abre,
+   porque a barra some junto com a rolagem. */
+body.modal-open {
+    overflow: hidden;
+}
+
+html:has(> body.modal-open) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+}
