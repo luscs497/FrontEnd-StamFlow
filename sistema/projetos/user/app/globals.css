@@ -8583,12 +8583,23 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) {
 /* R19#6 — O sub-header virava linha a partir do `lg` do Tailwind (1024px), e
    com o flex-wrap do R12#2 a quebra acontecia por volta de 1044px, onde ainda
    fica apertado. Passa a valer só de 1105px para cima. */
+/* CORRIGIDO: a primeira versão trocava a direção para `column`, o que empilhava
+   também o bloco do título — ou seja, trazia para 1105px o desenho que era de
+   ~900px. O que deve mudar em 1105px é só a QUEBRA DE LINHA: os atalhos descem
+   para uma faixa própria, ainda em linha, exatamente como ficavam em ~1040px.
+   O `row` precisa ser reafirmado porque abaixo de 1024px o Tailwind
+   (`flex-col lg:flex-row`) devolveria a coluna por conta própria. */
 @media screen and (max-width: 1104px) {
     #detox-root .detox-header > div:first-child {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
+    /* Base de 100%: os atalhos tomam a linha inteira e caem para baixo do
+       título sem que nada precise ser empilhado. */
     #detox-root .detox-header .detox-acoes-rapidas {
+        flex-basis: 100%;
         justify-content: center;
     }
 }
@@ -8619,7 +8630,10 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) {
 
     /* R19#9 — Os três atalhos encolhem proporcionalmente: altura, padding,
        fonte e SVG. Ficam menores, não só mais estreitos. */
-    #detox-root .detox-acoes-rapidas {
+    /* O `.detox-header` entra no seletor para empatar a especificidade com a
+       regra do R19#6 (1,2,0) e vencer por ordem de arquivo — senão o
+       `justify-content: center` de lá continuaria valendo aqui embaixo. */
+    #detox-root .detox-header .detox-acoes-rapidas {
         gap: 0.4rem;
         justify-content: flex-start;
     }
@@ -8646,43 +8660,40 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) {
         padding: 0.15rem 0.4rem;
     }
 
-    /* R19#11 — Os três atalhos saem do sub-header e reaparecem, compactos, no
-       topo do pop-up de Informações (os clones são criados pelo detox.js). */
-    #detox-root .detox-header .detox-acoes-rapidas {
-        display: none;
+    /* R19#11 — Ícone (i) ao lado de "Detox Mental (Brain Dump)". A caixa vinha
+       de 44x44px (piso de toque do R16#1) em volta de um desenho de 14px, o
+       que deixava a moldura visivelmente maior que o ícone e desalinhada do
+       título. A caixa VISÍVEL encolhe para 26px com o ícone centrado, e os
+       44x44px de área clicável são devolvidos por um ::after transparente —
+       que não ocupa espaço no layout, então o alvo de toque não regride.
+       Especificidade (1,1,2) contra os (1,1,1) do R16#1: esta manda. */
+    #detox-root .detox-header h1 + button {
+        min-width: 0;
+        min-height: 0;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
     }
 
-    #detox-root .detox-atalhos-mobile {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin: 0 0 0.9rem;
-        padding-right: 2.5rem;
+    #detox-root .detox-header h1 + button svg {
+        width: 14px;
+        height: 14px;
+        margin: 0;
     }
 
-    #detox-root .detox-atalhos-mobile > button {
-        min-height: 44px;
-        padding: 0.35rem 0.7rem;
-        border-radius: 0.6rem;
-        gap: 0.35rem;
-    }
-
-    #detox-root .detox-atalhos-mobile > button span {
-        font-size: 11.5px;
-    }
-
-    /* R19#12 — Pop-up de Informações mais baixo, e o "X" descolado do título. */
-    /* Dois IDs pelo mesmo motivo do R19#2: as utilitárias `#detox-root .p-6`
-       do detox.css carregam depois e venceriam um seletor de ID só. */
-    #detox-root #detox-infoModal > div {
-        max-height: 82vh;
-        overflow-y: auto;
-        padding-top: 3.2rem;
-    }
-
-    #detox-root #detox-infoModal > div > button.absolute {
-        top: 0.5rem;
-        right: 0.5rem;
+    #detox-root .detox-header h1 + button::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 44px;
+        height: 44px;
+        transform: translate(-50%, -50%);
     }
 
     /* R19#13 — Barra inferior: um único botão que abre as ações num menu
@@ -8795,4 +8806,564 @@ html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) {
         gap: 1rem;
         width: 100%;
     }
+}
+
+/* ---- (R20) Ajustes finos do Detox Mental pedidos após o R19: velocidade dos
+             pop-ups, hover sem borda, e o destino correto dos atalhos
+             condensados. */
+
+/* R20#1 — Hover dos botões dos pop-ups. A borda saltava de um tom escuro para
+   um claro (`hover:border-indigo-500`, `hover:border-slate-600`), o que lia
+   como um contorno branco acendendo em volta do botão. A borda passa a ficar
+   parada e quem responde ao mouse é só o fundo, que esses botões já trocam via
+   `hover:bg-*`. Cada família repete aqui a SUA cor de borda em repouso, porque
+   elas diferem (slate-800, slate-700/60, red-900/40).
+   Especificidade: as utilitárias chegam como `#detox-root .hover\:border-*:hover`
+   (1 id, 2 classes); os seletores abaixo somam um tipo a mais e vencem. */
+#detox-root [id$="Modal"] button,
+#detox-root .detox-btn-expansivel {
+    transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+/* Cinza-escuro: botões de formato (PNG/PDF/DOCX) dos dois modais de download. */
+#detox-root [id$="Modal"] button.border-slate-800:hover {
+    border-color: rgb(30 41 59);
+}
+
+/* Cinza médio translúcido: ações do Daily Wins e da barra inferior. */
+#detox-root [id$="Modal"] button.border-slate-700\/60:hover,
+#detox-root button.detox-btn-expansivel.border-slate-700\/60:hover {
+    border-color: rgb(51 65 85 / 0.6);
+}
+
+/* Vermelho: os dois "deixar ir". */
+#detox-root [id$="Modal"] button.border-red-900\/40:hover,
+#detox-root button.detox-btn-expansivel.border-red-900\/40:hover {
+    border-color: rgb(127 29 29 / 0.4);
+}
+
+/* R20#2 — A faixa de atalhos condensados NÃO existe fora do mobile. O R19 só
+   lhe dava `display: flex` dentro do @media, e sem regra fora dele a div caía
+   no `display: block` padrão: no desktop os clones de "Método STOP" e "Daily
+   Wins" apareciam dentro do pop-up, onde nunca deveriam estar. O piso agora é
+   `none`, e o breakpoint abaixo é quem liga. */
+#detox-root .detox-atalhos-mobile {
+    display: none;
+}
+
+/* R20#3 — Cabeçalho do pop-up "Como funciona o Detox Mental?". O título
+   encostava no "X" e, abaixo de 390px, passava por baixo dele. Três frentes:
+   a moldura do ícone (i) encolhe, o "X" ganha uma caixa visível menor (mantendo
+   os 44x44px de toque por ::after, como no R19#11) e o cabeçalho reserva a
+   faixa da direita para ele. Aferido até 360px. */
+@media screen and (max-width: 768px) {
+    #detox-root #detox-howItWorksModal > div > div.border-b {
+        gap: 0.6rem;
+        padding-right: 2.5rem;
+        align-items: center;
+    }
+
+    #detox-root #detox-howItWorksModal > div > div.border-b > span {
+        padding: 0.35rem;
+        border-radius: 0.6rem;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #detox-root #detox-howItWorksModal > div > div.border-b > span svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    #detox-root #detox-howItWorksModal > div > div.border-b h3 {
+        font-size: 15px;
+        line-height: 1.3;
+    }
+
+    #detox-root #detox-howItWorksModal > div > button.absolute {
+        top: 0.6rem;
+        right: 0.6rem;
+        min-width: 0;
+        min-height: 0;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #detox-root #detox-howItWorksModal > div > button.absolute::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 44px;
+        height: 44px;
+        transform: translate(-50%, -50%);
+    }
+
+    #detox-root #detox-howItWorksModal > div {
+        max-height: 86vh;
+        overflow-y: auto;
+    }
+}
+
+/* Faixa mais estreita: o cartão cede padding lateral e o título cede corpo. */
+@media screen and (max-width: 400px) {
+    #detox-root #detox-howItWorksModal > div {
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
+    }
+
+    #detox-root #detox-howItWorksModal > div > div.border-b h3 {
+        font-size: 14px;
+    }
+}
+
+/* ==========================================================================
+   R20 — Condensação dos atalhos do sub-header (<=468px)
+   Antes acontecia em 768px, cedo demais: de 768 a 469 os três atalhos cabem
+   no sub-header, só que menores (R19#9). O corte agora é 468px, a faixa
+   mobile padrão, e o destino dos clones é o pop-up "Como funciona o Detox
+   Mental?" — não mais o "O que descarregar aqui?".
+   ========================================================================== */
+@media screen and (max-width: 468px) {
+
+    /* R20#4 — Os atalhos saem do sub-header. */
+    #detox-root .detox-header .detox-acoes-rapidas {
+        display: none;
+    }
+
+    /* R20#5 — E reaparecem compactos no "Como funciona", logo abaixo do
+       cabeçalho (o detox.js os insere ali). Como não ficam mais colados no
+       topo do cartão, não precisam mais reservar espaço para o "X". */
+    #detox-root .detox-atalhos-mobile {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 0 0 1rem;
+    }
+
+    #detox-root .detox-atalhos-mobile > button {
+        min-height: 44px;
+        padding: 0.35rem 0.7rem;
+        border-radius: 0.6rem;
+        gap: 0.35rem;
+    }
+
+    #detox-root .detox-atalhos-mobile > button span {
+        font-size: 11.5px;
+    }
+}
+
+/* ==========================================================================
+   R21 — Ajustes do Detox Mental pedidos depois do R20.
+   ========================================================================== */
+
+/* R21#1 — Nada do sub-header pode ficar centralizado.
+   O R19#8 já alinhava o bloco do título à esquerda, mas só de 768px para
+   baixo. De 769 a 1023px quem mandava era o `text-center` do Tailwind (o
+   `lg:text-left` só entra em 1024px), e a linha "Despeje tudo o que está
+   ocupando espaço na sua mente agora." voltava para o meio. As mesmas duas
+   regras passam a valer em qualquer largura — de 1024px para cima elas apenas
+   repetem o que o `lg:text-left` já fazia, então nada muda no desktop. */
+#detox-root .detox-header > div:first-child > div:first-child {
+    text-align: left;
+    align-items: flex-start;
+}
+
+#detox-root .detox-header > div:first-child > div:first-child > div {
+    justify-content: flex-start;
+}
+
+/* E os três atalhos. O R19#6 os centralizava em toda a faixa em que eles
+   descem para uma linha própria (<=1104px); o R19#9 só desfazia isso abaixo
+   de 768px. Agora a faixa inteira segue a mesma régua. Mesma especificidade
+   (1,3,0) do R19#6 — vence por vir depois no arquivo. */
+@media screen and (max-width: 1104px) {
+    #detox-root .detox-header .detox-acoes-rapidas {
+        justify-content: flex-start;
+    }
+}
+
+/* R21#2 — Atalhos condensados dentro do "Como funciona o Detox Mental?".
+   Com `flex-wrap` eles quebravam em larguras desiguais e liam como três
+   botões soltos no topo do cartão. Empilhados e ocupando a largura inteira
+   viram uma lista, no mesmo desenho do menu de ações do rodapé (R19#13). */
+@media screen and (max-width: 468px) {
+    #detox-root .detox-atalhos-mobile {
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    #detox-root .detox-atalhos-mobile > button {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* R21#3 — O vazio embaixo da barra de ações no mobile.
+   CAUSA: o R7#1 dá `min-height: 100vh` à .site-content em <=992px para o
+   fundo preto do body não aparecer abaixo de seções curtas. No Detox a seção
+   não é curta — o #detox-root recebe do detox.js a altura exata que falta até
+   o pé do viewport. Só que os 100vh são contados a partir do TOPO da
+   .site-content, que no mobile começa depois da barra superior: a página
+   ganhava 63px de rolagem, todos vazios, logo abaixo do botão "Ações do
+   quadro". Medido em 400px e em 700px de largura, sempre os mesmos 63px.
+   CORREÇÃO: só nesta aba a .site-content deixa de ter piso próprio e volta a
+   ser apenas o item flex que cresce (o `flex-grow: 1` já está declarado mais
+   acima); quem garante a altura cheia da página é o body. A barra passa a
+   encostar no fim do viewport com os mesmos ~8px de respiro que ela tem em
+   cima, e a página deixa de rolar. O `:has(...)` é o mesmo seletor do R19#5. */
+html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) body {
+    min-height: 100vh;
+}
+
+html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) .site-content {
+    min-height: 0;
+}
+
+/* R21#4 — A moldura da seta de recolher as barras, no mobile.
+   Media 52x44px em volta de um desenho de 18px: 17px de folga de cada lado e
+   11/14px em cima e embaixo — desproporcional já em 768px.
+   O R19#10 tentou encolhê-la por `#detox-toggleBarras` (1,0,0), que perde
+   para o `#detox-root .detox-toggle-barras` (1,1,0) do detox.css, onde estão
+   a largura e o padding originais; e o detox.css é importado DEPOIS do
+   globals.css, então nem empatar resolveria. Daí o seletor com os dois ids
+   (2,0,0), que ganha por especificidade em qualquer ordem de arquivo.
+   Fica 44x26px: uma pastilha larga e baixa, com 13px de folga lateral e
+   3/5px em cima e embaixo — a assimetria vertical é a mesma da regra base do
+   detox.css (2/4px), porque a moldura pende da borda de cima e os cantos
+   arredondados só existem embaixo. Os 44x44px de área de toque voltam por um
+   ::after transparente, que não ocupa espaço no layout — mesma solução do
+   R19#11. */
+@media screen and (max-width: 768px) {
+    #detox-root #detox-toggleBarras {
+        min-width: 0;
+        min-height: 0;
+        width: 44px;
+        padding: 3px 0 4px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    #detox-root #detox-toggleBarras::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 44px;
+        height: 44px;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* R21#5 — Etapa "Ações", bloco das 24h: o "Adicionar" deixa de flutuar.
+   O artefato põe input e botão na mesma linha, com `flex-1` no campo e
+   `shrink-0` no botão. Quanto mais larga a tela, mais longe o botão fica de
+   onde a pessoa acabou de digitar — em 1400px eram ~730px de distância, com
+   ele encostado na borda direita do cartão. Os dois passam a ocupar a
+   largura inteira, um sobre o outro, e o `gap-2` do artefato (8px) vira o
+   respiro vertical entre eles.
+   O `flex: 0 0 auto` no campo desfaz o `flex-1`: em coluna aquele
+   `flex-basis: 0%` passaria a valer na vertical, e a altura do input ficaria
+   à mercê do espaço livre do container.
+   O seletor pega o container pelo campo que ele envolve — a div não tem id
+   nem classe própria, só utilitárias do Tailwind. */
+#detox-root #detox-step3View div:has(> #detox-action24hInput) {
+    flex-direction: column;
+}
+
+#detox-root #detox-action24hInput {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+#detox-root #detox-action24hInput + button {
+    width: 100%;
+}
+
+/* ==========================================================================
+   R22 — Pop-ups altos com miolo rolável, e o recuo do bloco das 24h.
+   ========================================================================== */
+
+/* R22#1 — STOP e Daily Wins: cartão com teto de altura e rolagem por dentro.
+   São os dois pop-ups mais altos do Detox — medidos em 360x740, o cartão do
+   STOP dava 830px e o do Daily Wins 880px. Sem teto de altura eles estouravam
+   o viewport pelas DUAS pontas: o cartão começava em -45px / -70px, o "X"
+   ficava acima da borda de cima (fora de alcance) e o botão de baixo era
+   cortado. E não havia rolagem nenhuma para alcançar o que sobrava, porque a
+   camada de fundo é `fixed inset-0`, que não rola.
+   O cartão vira uma coluna flex com teto de 100% (a camada de fundo tem a
+   altura do viewport e 1rem de padding, então sobra 100vh - 2rem). Cabeçalho
+   e barra de baixo ficam parados; quem rola é só o miolo, envelopado pelo
+   detox.js em .detox-modal-corpo — dois irmãos diretos que, sem contêiner,
+   teriam cada um a sua própria barra de rolagem.
+   O "X" continua `absolute` em relação ao cartão, e o cartão não rola: ele
+   fica sempre no mesmo lugar, alcançável em qualquer ponto da rolagem.
+   Vale em todas as larguras de propósito: uma janela de desktop baixa (uma
+   altura de 700px, por exemplo) tem exatamente o mesmo problema. Quando o
+   conteúdo cabe, o teto não é atingido e nada muda. */
+#detox-root #detox-stopModal > div,
+#detox-root #detox-dailyWinsModal > div {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+/* Cabeçalho e barra de baixo não encolhem — só o miolo cede espaço. */
+#detox-root #detox-stopModal > div > :not(.detox-modal-corpo),
+#detox-root #detox-dailyWinsModal > div > :not(.detox-modal-corpo) {
+    flex-shrink: 0;
+}
+
+#detox-root .detox-modal-corpo {
+    flex: 1 1 auto;
+    /* Sem isto o item flex não encolhe abaixo da altura do próprio conteúdo
+       (min-height: auto é o padrão) e a rolagem nunca chega a existir. */
+    min-height: 0;
+    overflow-y: auto;
+    /* A rolagem para no fim do miolo em vez de continuar na página atrás. */
+    overscroll-behavior: contain;
+}
+
+/* R22#2 — O recuo de 32px do bloco das 24h, no mobile.
+   O `pl-8` do artefato alinha a descrição, o campo, a dica e a lista com o
+   TEXTO do título, deixando de fora a pastilha "24h". Em 360px o bloco tem
+   280px de largura: 32px viram 11% da faixa útil, gastos para manter uma
+   pastilha sozinha na margem. No mobile o recuo sai e o conteúdo ocupa a
+   largura inteira; a pastilha continua na linha do título, onde sempre
+   esteve. */
+@media screen and (max-width: 768px) {
+    #detox-root #detox-step3View div:has(> #detox-list24h) > .pl-8 {
+        padding-left: 0;
+    }
+}
+
+/* R22#3 — O "X" do STOP e do Daily Wins passava por cima do título.
+   Com o teto de altura do R22#1 o botão voltou para dentro da tela, e aí
+   ficou visível que ele dividia a primeira linha com o texto: em 360px o
+   "Exercício Extra: Método STOP" ia até 305px e a caixa de 44px do "X"
+   começava em 300px.
+   Mesmo tratamento que o R20#3 já deu ao "Como funciona": a caixa VISÍVEL
+   encolhe para 30px, os 44x44px de toque voltam por um ::after transparente
+   (que não ocupa espaço no layout, então o alvo não regride), e o cabeçalho
+   reserva a faixa da direita para ele. Os três pop-ups grandes do Detox
+   ficam com o mesmo desenho de cabeçalho no mobile.
+
+   O "O que descarregar aqui?" (detox-infoModal) entra na mesma regra: ele
+   cabe na tela sem teto de altura, mas a varredura de 360px mostrou que o
+   texto do título ia até 305,8px e a caixa do "X" começava em 283px — a
+   única sobreposição real que restava. Medi a extensão do TEXTO com um
+   Range, e não a caixa do <h3>: nos dois modais de download o <h3> é bloco e
+   ocupa a largura toda, então a caixa cruzava o "X" mas a palavra não
+   chegava perto. Esses ficam como estão.
+
+   Aferido sem sobreposição em 360px nos três. */
+@media screen and (max-width: 768px) {
+    #detox-root #detox-stopModal > div > button.absolute,
+    #detox-root #detox-dailyWinsModal > div > button.absolute,
+    #detox-root #detox-infoModal > div > button.absolute {
+        top: 0.9rem;
+        right: 0.9rem;
+        min-width: 0;
+        min-height: 0;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #detox-root #detox-stopModal > div > button.absolute svg,
+    #detox-root #detox-dailyWinsModal > div > button.absolute svg,
+    #detox-root #detox-infoModal > div > button.absolute svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    #detox-root #detox-stopModal > div > button.absolute::after,
+    #detox-root #detox-dailyWinsModal > div > button.absolute::after,
+    #detox-root #detox-infoModal > div > button.absolute::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 44px;
+        height: 44px;
+        transform: translate(-50%, -50%);
+    }
+
+    /* `div:first-of-type` é o cabeçalho: o primeiro filho é o próprio "X",
+       que é um <button>. */
+    #detox-root #detox-stopModal > div > div:first-of-type,
+    #detox-root #detox-dailyWinsModal > div > div:first-of-type,
+    #detox-root #detox-infoModal > div > div:first-of-type {
+        padding-right: 2.25rem;
+    }
+}
+
+/* ==========================================================================
+   R23 — As duas barras do Detox saem do fluxo e viram `position: fixed`.
+   ========================================================================== */
+
+/* R23#1 — O piso de altura da raiz.
+   O detox.css dá `min-height: 420px` à #detox-root, gêmeo do Math.max(420,...)
+   que estava no ajustarAltura. Era a única fonte de rolagem que ainda existia
+   nesta aba: com o viewport curto, o piso deixava a raiz mais alta do que o
+   espaço disponível. Medido em 360x500: a raiz ia a 420px num vão de 377px e
+   a página passava a rolar 43px, todos vazios. Acontecia abaixo de ~543px de
+   altura. Tirar só o Math.max não bastaria — o min-height do CSS venceria.
+   O seletor repete a classe (1,1,0) porque `#detox-root` sozinho (1,0,0)
+   EMPATA com o do detox.css e perde por ordem de arquivo: o detox.css é
+   importado depois do globals.css. Medido: com `#detox-root` puro, o JS
+   escrevia 377px e a caixa continuava sendo renderizada com 420px. */
+#detox-root.detox-root {
+    min-height: 0;
+}
+
+/* R23#2, #3 e #4 valem SÓ no mobile (<=768px).
+   No desktop as barras voltam ao fluxo, que é onde elas sempre estiveram e
+   onde o desenho já estava certo: ali a raiz preenche o viewport sozinha, a
+   aba não rola e tirar as barras do fluxo não mudava um pixel — só carregava
+   a geometria publicada por JS sem nenhum ganho.
+   O que fica valendo em toda largura é o R23#1 (o piso de altura da raiz) e o
+   R23#5 (o rodapé recolhido chegando a zero): os dois só evitam sobra, nunca
+   a criam. */
+@media screen and (max-width: 768px) {
+
+    /* R23#2 — Cabeçalho e rodapé presos ao viewport.
+       As coordenadas vêm do detox.js em custom properties (ver publicarGeometria):
+       são as da própria raiz, que muda de lugar e de largura com o breakpoint, com
+       o colapso da sidebar e com a .container-1700 — nada que o CSS consiga
+       descobrir a partir dos filhos.
+       As reservas (fallback) existem para o primeiro quadro, antes de o JS medir.
+       A largura declarada é a mesma de antes, então o texto quebra igual e a
+       altura natural das barras não muda. */
+    /* Dois ids também aqui, e pelo mesmo motivo do rodapé logo abaixo: as duas
+       barras carregam `w-full` do artefato, que chega como `#detox-root .w-full`
+       (1,1,0) pelo detox.css — importado DEPOIS do globals.css. Com um seletor por
+       classe, o `width: 100%` vencia, e um elemento fixed mede 100% do VIEWPORT,
+       não da raiz. Medido em 1400px com a sidebar aberta: a raiz ia de 300 a 1400
+       e o cabeçalho de 300 a 1700, 300px para fora da tela. No mobile o defeito
+       não aparecia porque ali a raiz ocupa a largura toda. */
+    #detox-root #detox-header {
+        position: fixed;
+        top: var(--detox-topo, 0px);
+        left: var(--detox-x, 0px);
+        width: var(--detox-larg, 100%);
+    }
+
+    /* Dois ids: em <=768px o R19#13 dá `position: relative` a
+       `#detox-root #detox-footer` (2,0,0), que venceria um seletor por classe.
+       O `relative` de lá existia para ancorar o menu suspenso, que é `absolute`
+       dentro do rodapé — e `fixed` também é bloco de contenção para ele, então o
+       dropup continua funcionando igual. */
+    #detox-root #detox-footer {
+        position: fixed;
+        bottom: var(--detox-base, 0px);
+        left: var(--detox-x, 0px);
+        width: var(--detox-larg, 100%);
+    }
+
+    /* R23#3 — Fora do fluxo, as barras deixam de empurrar o miolo: a .detox-main
+       passa a ocupar a raiz inteira e reserva o espaço delas em padding. O valor é
+       o mesmo que as barras medem, então o quadro branco continua com exatamente a
+       altura de antes — a caixa de conteúdo da .detox-main é idêntica à que ela
+       tinha entre as duas barras.
+       A transição repete a curva e o tempo do colapso (detox.css), e o toggleBarras
+       escreve as duas variáveis no mesmo instante em que escreve o max-height: as
+       barras encolhem e o espaço reservado encolhe junto, sem defasagem. */
+    #detox-root .detox-main {
+        padding-top: var(--detox-barra-topo, 0px);
+        padding-bottom: var(--detox-barra-base, 0px);
+        transition: padding-top 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                    padding-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* R23#4 — A seta de recolher é `absolute` dentro da .detox-main, e `top: 0`
+       passa a ser o topo do PADDING box — ou seja, atrás do cabeçalho fixo. Ela
+       desce para a borda de baixo da barra e acompanha o colapso na mesma curva,
+       que é o movimento que ela já fazia quando a .detox-main é que se mexia.
+       Dois ids porque a regra base (`#detox-root .detox-toggle-barras`, 1,1,0)
+       está no detox.css, que é importado DEPOIS do globals.css — mesma situação
+       do R21#4. */
+    #detox-root #detox-toggleBarras {
+        top: var(--detox-barra-topo, 0px);
+        transition: color 0.2s ease, background-color 0.2s ease,
+                    top 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Quem pediu menos movimento não ganha estes dois de brinde. */
+    @media (prefers-reduced-motion: reduce) {
+        #detox-root .detox-main,
+        #detox-root #detox-toggleBarras {
+            transition-duration: 0.01ms;
+        }
+    }
+}
+
+/* R23#5 — O rodapé recolhido nunca chegava a zero no mobile.
+   O detox.css zera o padding das barras em
+   `#detox-root.detox-barras-recolhidas .detox-footer` (1,2,0), mas o R19#13
+   redeclara `#detox-root #detox-footer { padding: 8px 0 }` (2,0,0) em <=768px
+   — e 2 ids ganham de 1 id + 2 classes. Resultado: com as barras recolhidas o
+   rodapé ficava com 16px de padding, medidos.
+   Antes isso era uma tira de 16px no fluxo, no pé da aba: feia, mas inerte.
+   Com o rodapé fixo ela vira uma faixa INVISÍVEL (opacity 0) por cima dos
+   últimos 16px do quadro branco, comendo os cliques de quem tentasse criar
+   uma nota ali. Daí a correção entrar junto com o R23, e não depois.
+   Os dois ids mais a classe de estado dão (2,1,0) e vencem o R19#13. O
+   `pointer-events: none` é o cinto de segurança: recolhida e invisível, a
+   barra não intercepta nada, sobre qualquer altura residual que apareça. */
+#detox-root.detox-barras-recolhidas #detox-header,
+#detox-root.detox-barras-recolhidas #detox-footer {
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   R24 — A aba do Detox trava o viewport.
+   ========================================================================== */
+
+/* R24#1 — Enquanto o Detox está aberto, a PÁGINA não rola. Ponto.
+   O R23 tratou o sintoma que eu tinha conseguido medir (o piso de 420px) e
+   pôs as barras em `fixed`, mas deixou a página rolável — só desgrudou as
+   barras da rolagem. Só que `fixed` não impede a barra de se mexer: a posição
+   e a largura dela vinham de uma medida em JS, refeita a cada mudança de
+   layout, e é isso que se vê como as barras "se ajustando".
+   Aqui a rolagem deixa de existir: com `overflow: hidden` no html e no body
+   não há o que rolar, em nenhum aparelho e por nenhum caminho — nem o arrasto
+   da barra de URL do celular, nem um pixel de sobra que apareça amanhã em
+   alguma largura que eu não tenha medido. As barras param porque nada mais
+   se move debaixo delas.
+   `overscroll-behavior: none` corta também o efeito elástico do toque, que é
+   o que sobra de "movimento" num app travado.
+   O seletor é o mesmo `:has(...)` do R19#5 e do R21#3: vale SÓ nesta aba. Sair
+   dela devolve a rolagem para o resto do painel, que precisa dela.
+   E vale só até 768px: no desktop a aba já não rola por conta própria, e
+   travar o viewport inteiro de um painel de desktop é caro demais para um
+   problema que lá não existe. */
+@media screen and (max-width: 768px) {
+    html:has(.container-1700.conteudo-site:not(.display-none) #detox-root),
+    html:has(.container-1700.conteudo-site:not(.display-none) #detox-root) body {
+        height: 100%;
+        overflow: hidden;
+        overscroll-behavior: none;
+    }
+}
+
+/* R24#2 — Com a página travada, o piso da rolagem interna das etapas 2 e 3
+   passa a ser a única rolagem da aba, que é como deve ser: o conteúdo rola
+   dentro do miolo, entre as duas barras paradas. */
+#detox-root #detox-step2View,
+#detox-root #detox-step3View {
+    overscroll-behavior: contain;
 }
