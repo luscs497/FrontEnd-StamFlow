@@ -9677,3 +9677,21 @@ html:has(> body.modal-open) {
         font-size: 14.4px;
     }
 }
+
+/* ==========================================================================
+   R30 — Respiro do cabeçalho do Detox.
+   ========================================================================== */
+
+/* R30#1 — Um pouco mais de ar em volta do título, nas duas frentes pedidas:
+   entre ele e a borda de cima, e entre ele e a linha que separa a faixa das
+   abas (Detox / Blocos / Ações).
+   Os valores do artefato eram `py-3` (12px) e `gap-2.5` (10px). Vão para 18px
+   e 16px — o suficiente para respirar sem inchar a barra, que nesta aba é
+   fixa no mobile e come área do quadro branco. São +12px de altura no total.
+   Dois ids porque as utilitárias chegam pelo detox.css, importado DEPOIS do
+   globals.css. O padding de baixo fica como estava: o pedido era o topo e a
+   distância até a linha. */
+#detox-root #detox-header {
+    padding-top: 18px;
+    row-gap: 16px;
+}

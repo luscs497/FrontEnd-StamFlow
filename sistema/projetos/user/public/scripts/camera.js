@@ -200,7 +200,9 @@ function applyWorkerUpdates() {
   const ergonomicsScore = (typeof latestEmotionMsg.postureRaw === 'number') ? latestEmotionMsg.postureRaw : 0;
   const emotionScore    = (typeof latestEmotionMsg.emotionRaw === 'number') ? latestEmotionMsg.emotionRaw : 0;
   const finalStamina    = (typeof latestEmotionMsg.final === 'number') ? latestEmotionMsg.final
-                          : Math.round(ergonomicsScore * 0.7 + emotionScore * 0.3);
+                          // Mesmos pesos do worker (90/10) — este ramo e o
+                          // fallback de quando o worker nao manda `final`.
+                          : Math.round(ergonomicsScore * 0.9 + emotionScore * 0.1);
   const isBoostActive   = !!latestEmotionMsg.boostActive;
 
   _currentStaminaValue = finalStamina;

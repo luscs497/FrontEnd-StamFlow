@@ -230,7 +230,10 @@ onmessage = (ev) => {
         }
 
         const boostedEmotion = Math.min(100, Math.round(base + (boostActive ? BOOST_PERCENT : 0)));
-        const finalWeighted = Math.round((currentPostureScore * 0.7) + (boostedEmotion * 0.3));
+        // Pesos da Stamina: 90% postura, 10% emocao (fase 14). Este e o
+        // calculo de verdade; o texto do modal "Como melhorar minha Stamina"
+        // ja fala em 90/10 desde o mesmo commit e agora bate com a conta.
+        const finalWeighted = Math.round((currentPostureScore * 0.9) + (boostedEmotion * 0.1));
 
         postMessage({
             type: 'emotionState',
