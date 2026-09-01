@@ -8750,3 +8750,158 @@ html:has(> body.modal-open) {
         overscroll-behavior: contain;
     }
 }
+
+/* ==========================================================================
+   R28 — Fase 14. Numerado R28 e não R19 como pedido: o R19 é da fase 13 e já
+   está em produção; reaproveitar o número deixaria dois blocos com a mesma
+   etiqueta. Mesma decisão do R19 quando a fase 13 pediu "R18".
+   ========================================================================== */
+
+/* R28#1 — Barra de rolagem fina nos pop-ups, de 468px para baixo.
+   Medida: 15px de barra dentro de um cartão de 328px de largura útil — quase
+   5% da faixa de leitura gastos com o trilho. Vale para os cinco
+   `popup-embasamento` (Pausa Mental e Exercícios inclusos) e para o miolo dos
+   pop-ups do Detox, que já rolavam por dentro desde o R22.
+   Só -webkit-: é o motor de Chrome, Edge, Safari e de todos os navegadores de
+   celular que importam aqui. `scrollbar-width` do padrão fica junto para o
+   Firefox, que ignora a versão -webkit-. */
+@media screen and (max-width: 468px) {
+    /* `scrollbar-width: thin` do padrao NAO entra aqui de proposito: o Chrome
+       ja o implementa e ele VENCE o ::-webkit-scrollbar, rendendo ~10px em vez
+       dos 5 pedidos — medido, a barra caiu de 15px para 10px e parou ali. Com
+       so o -webkit-, Chrome, Edge e Safari (os que importam no celular) usam
+       os 5px; o Firefox fica com a barra padrao dele, que ja e mais fina. */
+    .popup-embasamento > *::-webkit-scrollbar,
+    #detox-root .detox-modal-corpo::-webkit-scrollbar,
+    #detox-root [id$="Modal"] > div::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .popup-embasamento > *::-webkit-scrollbar-track,
+    #detox-root .detox-modal-corpo::-webkit-scrollbar-track,
+    #detox-root [id$="Modal"] > div::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .popup-embasamento > *::-webkit-scrollbar-thumb,
+    #detox-root .detox-modal-corpo::-webkit-scrollbar-thumb,
+    #detox-root [id$="Modal"] > div::-webkit-scrollbar-thumb {
+        background-color: rgba(148, 163, 184, 0.45);
+        border-radius: 999px;
+    }
+}
+
+/* R28#2 — Proporção dos títulos das abas em <=1200px.
+   Medido: 28,8px em 1100px de viewport, o mesmo valor da faixa de 1200 a
+   1500px, enquanto a largura útil encolheu bem mais que isso. */
+@media screen and (max-width: 1200px) {
+    .sub-header-text h2 {
+        font-size: 25.6px;
+    }
+}
+
+/* R28#3 — O título e a descrição do Detox alinhados com as outras abas.
+   Medido em 1366px: as outras abas com título de 28,8px e descrição de
+   14,4px; o Detox com 16px e 12px. Em >1500px o par das outras é 38,4px e
+   16px, e o Detox seguia nos mesmos 16/12 — por isso as duas faixas entram
+   aqui, e não um valor único.
+   Dois ids porque as utilitárias do Tailwind (`text-sm md:text-base`,
+   `text-xs`) chegam pelo detox.css, importado DEPOIS do globals.css. */
+@media screen and (min-width: 1201px) and (max-width: 1500px) {
+    #detox-root #detox-header h1,
+    #detox-root #detox-header h1 span {
+        font-size: 28.8px;
+        line-height: 1.2;
+    }
+}
+
+@media screen and (min-width: 1501px) {
+    #detox-root #detox-header h1,
+    #detox-root #detox-header h1 span {
+        font-size: 38.4px;
+        line-height: 1.2;
+    }
+}
+
+/* A descrição acompanha exatamente a das outras abas nas duas faixas. */
+@media screen and (min-width: 1201px) and (max-width: 1500px) {
+    #detox-root #detox-header > div:first-child > div:first-child > p {
+        font-size: 14.4px;
+    }
+}
+
+@media screen and (min-width: 1501px) {
+    #detox-root #detox-header > div:first-child > div:first-child > p {
+        font-size: 16px;
+    }
+}
+
+/* R28#4 — Fonte do menu lateral travada entre 1201 e 1500px.
+   Medido: 15,912px nessa faixa contra 18,72px acima de 1500px. O menu tem
+   largura fixa nas duas faixas, então não havia motivo para o texto encolher.
+   Passa a usar o valor de cima. */
+@media screen and (min-width: 1201px) and (max-width: 1500px) {
+    .link-nav h3 {
+        font-size: 18.72px;
+    }
+}
+
+/* R28#5 — A câmera do Checkup Scan ocupando a largura do container.
+   Medido em 1100px: a `.camera.viewer` travada em `width: 640px` dentro de um
+   pai de 796,6px — 156px de sobra à direita, desalinhando com as divs de
+   baixo. De 1200px para baixo ela passa a acompanhar o pai, com a altura
+   crescendo junto pela proporção original (640x320 = 2:1), que é o que mantém
+   o vídeo sem distorção. */
+@media screen and (max-width: 1200px) {
+    .camera.viewer {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 640 / 320;
+    }
+}
+
+/* R28#6 — Os atalhos do Detox quebram de linha mais cedo.
+   O R19#6 fazia a quebra em <=1104px; passa a <=1500px, como pedido. O
+   seletor repete o do R19#6 para vencer por ordem de arquivo — a regra de lá
+   continua existindo e casaria na mesma faixa. */
+@media screen and (max-width: 1500px) {
+    #detox-root .detox-header > div:first-child {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    #detox-root .detox-header .detox-acoes-rapidas {
+        flex-basis: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* R28#7 — Pop-up de Perfil mais compacto em <=468px: fontes e padding
+   menores, para sobrar tela. */
+@media screen and (max-width: 468px) {
+    #modais .modal-perfil {
+        padding: 1.1rem 0.9rem;
+        gap: 1rem;
+    }
+
+    #modais .modal-perfil h2 {
+        font-size: 15px;
+    }
+
+    #modais .modal-perfil h3,
+    #modais .modal-perfil label {
+        font-size: 13px;
+    }
+
+    #modais .modal-perfil p,
+    #modais .modal-perfil span,
+    #modais .modal-perfil input {
+        font-size: 12.5px;
+    }
+
+    #modais .modal-perfil .dados-perfil {
+        gap: 0.7rem;
+    }
+}
