@@ -8971,3 +8971,15 @@ html:has(> body.modal-open) {
     padding-top: 18px;
     row-gap: 16px;
 }
+
+/* R30#2 — Continuação do R30: o vão entre o título do Detox e a descrição
+   passa a ser o mesmo das outras abas.
+   Medido: a `.sub-header-text` (Exercícios, Modo Foco, Pausa Mental...) usa
+   `row-gap: 6,4px`; o bloco do Detox vinha com `gap-0.5` do artefato, que dá
+   2px. O valor abaixo é o da referência, não um arredondamento — 6,4px é o
+   que a régua de 0,8 do resto da folha produz para esse espaçamento.
+   Dois ids porque o `gap-0.5` chega pelo detox.css, importado DEPOIS do
+   globals.css. */
+#detox-root #detox-header > div:first-child > div:first-child {
+    row-gap: 6.4px;
+}
