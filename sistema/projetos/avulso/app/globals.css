@@ -9071,3 +9071,66 @@ html:has(> body.modal-open) {
     background-color: rgba(148, 163, 184, 0.45);
     border-radius: 999px;
 }
+
+/* ==========================================================================
+   R32 — Cabeçalho e miolo dos pop-ups: ícone ao lado do título, largura
+   cheia e respiro antes da barra de rolagem.
+   ========================================================================== */
+
+/* R32#1 — O ícone volta para o lado do título entre 469 e 768px.
+   A faixa `@media (max-width: 768px) and (min-width: 469px)` declara
+   `.embasamento-header-text { flex-direction: column }`, e era só ali: acima
+   de 768 e abaixo de 469 o bloco já era linha. Por isso o ícone subia para
+   cima do texto exatamente nessa janela.
+   A regra abaixo fica FORA de media query de propósito — em vez de corrigir
+   só aquela faixa, fixa `row` para todas as larguras, que é o pedido de
+   padronizar. Vence a do @media por vir depois no arquivo, com a mesma
+   especificidade.
+   Vale para os cinco pop-ups: a classe é a mesma nos cinco. */
+.embasamento-header-text {
+    flex-direction: row;
+}
+
+/* R32#2 — Cabeçalho, miolo e botão ocupando a largura inteira do cartão,
+   parando só no padding dele.
+   A regra base do `.popup-embasamento` usa `align-items: center`, e num
+   container flex em coluna isso faz cada filho encolher até o próprio
+   conteúdo em vez de esticar. Medido em 600px: cabeçalho e miolo com 519px
+   dentro de uma faixa útil de 521px, e o desalinhamento aumenta conforme o
+   texto do título é mais curto.
+   `stretch` é o padrão do flex — a regra base é que fugia dele. */
+.popup-embasamento {
+    align-items: stretch;
+}
+
+/* R32#3 — Três pixels entre o texto e a barra de rolagem.
+   O miolo vinha com `padding-right: 0`, então a última letra de cada linha
+   encostava no trilho. Vale para os cinco pop-ups e para o miolo dos do
+   Detox, que usam a mesma barra de 5px do R31#3 — é a mesma padronização. */
+.popup-embasamento > *:not(.embasamento-header):not(.button-close-embasamento),
+#detox-root .detox-modal-corpo {
+    padding-right: 3px;
+}
+
+/* R33#1 — Pop-up "Meu Perfil" em <=468px: título um pouco maior e mais perto
+   da descrição.
+   Medido em 440px: título com 15px (valor que o R28#7 tinha fixado) e 20,5px
+   de distância até a descrição — folga demais para um cartão que o próprio
+   R28#7 estava tentando compactar.
+   O vão vem de duas fontes somadas: o `row-gap: 8px` do bloco e a sobra da
+   `.perfil-title-close`, que é uma linha flex cuja altura é ditada pelo botão
+   "X", não pelo texto. Zerar o gap sozinho não resolveria; alinhar o título
+   pelo centro da linha tira a outra metade. */
+@media screen and (max-width: 468px) {
+    #modais .modal-perfil h2 {
+        font-size: 16.5px;
+    }
+
+    #modais .modal-perfil > .gap-16 {
+        row-gap: 4px;
+    }
+
+    #modais .modal-perfil .perfil-title-close {
+        align-items: center;
+    }
+}
