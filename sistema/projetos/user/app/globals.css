@@ -9629,3 +9629,51 @@ html:has(> body.modal-open) {
         gap: 0.7rem;
     }
 }
+
+/* ==========================================================================
+   R29 — Um só tamanho de título acima de 1200px, e o Detox igual em TODAS as
+   larguras. Ajuste sobre o R28#2/#3, que deixou duas coisas pendentes: acima
+   de 1500px o título continuava dando um salto para 38,4px, e abaixo de
+   1200px o Detox ficou de fora e seguia com 16px (14px no celular) contra os
+   25,6px das outras abas.
+   ========================================================================== */
+
+/* R29#1 — De 1201px para cima, um valor único: 27,2px.
+   Antes eram dois — 28,8px de 1201 a 1500 e 38,4px acima — e o salto de 9,6px
+   ao cruzar 1500 era o que incomodava. O valor novo é um pouco menor que os
+   28,8px de antes e continua acima dos 25,6px de <=1200, que era a condição:
+   reduzir sem achatar tudo num tamanho só.
+   27,2px = 34 x 0,8, dentro da mesma escala de 0,8 que o resto da folha usa
+   (25,6 = 32 x 0,8; 28,8 = 36 x 0,8; 38,4 = 48 x 0,8) — não é um número
+   solto. */
+@media screen and (min-width: 1201px) {
+    .sub-header-text h2 {
+        font-size: 27.2px;
+    }
+
+    #detox-root #detox-header h1,
+    #detox-root #detox-header h1 span {
+        font-size: 27.2px;
+        line-height: 1.2;
+    }
+}
+
+/* R29#2 — De 1200px para baixo o Detox passa a acompanhar as outras abas.
+   Medido antes: as outras em 25,6px em toda a faixa (o mesmo valor em 900px e
+   em 400px, sem redução extra no celular), e o Detox em 16px a 900px e 14px a
+   400px. Era o "desigual abaixo de certa resolução".
+   A descrição entra junto pelo mesmo motivo do R28#3: ela também vinha menor
+   (12px contra 14,4px).
+   Dois ids porque as utilitárias do Tailwind (`text-sm md:text-base`,
+   `text-xs`) chegam pelo detox.css, importado DEPOIS do globals.css. */
+@media screen and (max-width: 1200px) {
+    #detox-root #detox-header h1,
+    #detox-root #detox-header h1 span {
+        font-size: 25.6px;
+        line-height: 1.2;
+    }
+
+    #detox-root #detox-header > div:first-child > div:first-child > p {
+        font-size: 14.4px;
+    }
+}
