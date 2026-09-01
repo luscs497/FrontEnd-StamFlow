@@ -9707,3 +9707,91 @@ html:has(> body.modal-open) {
 #detox-root #detox-header > div:first-child > div:first-child {
     row-gap: 6.4px;
 }
+
+/* ==========================================================================
+   R31 — O desenho de pop-up do mobile vira o padrão de TODAS as larguras, e
+   o conteúdo deixa de ser cortado pelo topo.
+   ========================================================================== */
+
+/* R31#1 — O CORTE DO INÍCIO. Bug real, e o mais sério desta série.
+   O `.artigos-lista-categorias` (e os miolos irmãos) são `display: flex;
+   flex-direction: column` com `justify-content: center`. Quando o conteúdo
+   fica maior que a caixa, um container flex centralizado empurra o excedente
+   para FORA PELAS DUAS PONTAS — e o que vaza pelo topo não é alcançável por
+   rolagem, porque scrollTop não vai abaixo de zero.
+   Medido no embasamento da Pausa Mental, com scrollTop em 0: a categoria 1
+   ficava em top -467,5px e a 2 em -107,1px, contra o topo do scroller em
+   137px. Ou seja, as duas primeiras categorias eram invisíveis e
+   inalcançáveis; a rolagem só cobria da terceira em diante.
+   `flex-start` é a correção canônica: o conteúdo passa a crescer para baixo,
+   e aí sim a rolagem cobre tudo, do primeiro ao último item.
+   EFEITO COLATERAL ACEITO: quando o conteúdo é curto e cabe, ele agora fica
+   encostado no topo em vez de centralizado verticalmente. É o preço de não
+   cortar o início, e é o comportamento que qualquer área rolável deve ter. */
+.popup-embasamento > *:not(.embasamento-header):not(.button-close-embasamento) {
+    justify-content: flex-start;
+}
+
+/* R31#2 — O mesmo desenho do mobile em todas as larguras.
+   O R27 montou cabeçalho fixo + miolo rolando + botão fixo, mas dentro de
+   `@media (max-width: 768px)`. No desktop continuava valendo o desenho
+   antigo: o CARTÃO inteiro rolava, com `max-height: 80%` e `overflow-y:auto`
+   na regra base. Medido em 1866x844: cartão de 675px com os filhos indo até
+   2065px — o botão "Fechar" ficava 1300px abaixo do fim do cartão, e o
+   cabeçalho subia junto com o texto.
+   As regras saem do @media e passam a valer sempre. O `max-width` fica DE
+   FORA de propósito: o desktop mantém os 720px da regra base e o mobile os
+   100% do R27, cada um com a largura que já tinha. */
+#modais.modais {
+    padding: 1rem;
+}
+
+.popup-embasamento {
+    height: auto;
+    min-height: 0;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Quem rola é o miolo, não o cartão. */
+    overflow: hidden;
+}
+
+.popup-embasamento > .embasamento-header,
+.popup-embasamento > .button-close-embasamento {
+    flex-shrink: 0;
+}
+
+.popup-embasamento > *:not(.embasamento-header):not(.button-close-embasamento) {
+    flex: 1 1 auto;
+    /* Sem isto o item flex não encolhe abaixo do próprio conteúdo e a rolagem
+       nunca chega a existir. */
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/* R31#3 — A barra fina em todas as larguras que pedirem rolagem, e não só em
+   <=468px como o R28#1 fazia. Mesmo desenho: 5px, trilho transparente e
+   polegar arredondado. Vale para os cinco `popup-embasamento` e para os
+   pop-ups do Detox.
+   `scrollbar-width` do padrao continua fora: o Chrome ja o implementa e ele
+   VENCE o ::-webkit-scrollbar, travando em ~10px — medido quando o R28#1 foi
+   escrito. */
+.popup-embasamento > *::-webkit-scrollbar,
+#detox-root .detox-modal-corpo::-webkit-scrollbar,
+#detox-root [id$="Modal"] > div::-webkit-scrollbar {
+    width: 5px;
+}
+
+.popup-embasamento > *::-webkit-scrollbar-track,
+#detox-root .detox-modal-corpo::-webkit-scrollbar-track,
+#detox-root [id$="Modal"] > div::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.popup-embasamento > *::-webkit-scrollbar-thumb,
+#detox-root .detox-modal-corpo::-webkit-scrollbar-thumb,
+#detox-root [id$="Modal"] > div::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.45);
+    border-radius: 999px;
+}
