@@ -48,45 +48,6 @@ function formatMonthLabel(monthOffset = 0) {
     : `${name} ${d.getFullYear()}`;
 }
 
-// quarterOffset: 0 = trimestre atual, 1 = trimestre anterior, ...
-// O fim nunca passa de hoje: um "trimestre atual" ainda em curso vai do
-// primeiro dia do trimestre ate hoje, e nao ate uma data futura (o backend
-// devolveria 404/vazio para o intervalo que ainda nao aconteceu).
-function getQuarterRange(quarterOffset = 0) {
-  const now = new Date();
-  const q = Math.floor(now.getMonth() / 3) - quarterOffset;
-  const year = now.getFullYear() + Math.floor(q / 4);
-  const qIndex = ((q % 4) + 4) % 4;
-  const start = new Date(year, qIndex * 3, 1);
-  const endRaw = new Date(year, qIndex * 3 + 3, 0);
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const end = endRaw > today ? today : endRaw;
-  return { start_date: toISODateLocal(start), end_date: toISODateLocal(end) };
-}
-
-function getYearRange() {
-  const now = new Date();
-  return {
-    start_date: toISODateLocal(new Date(now.getFullYear(), 0, 1)),
-    end_date: getToday(),
-  };
-}
-
-// Presets do seletor de período da Visão Principal. Cada um devolve o
-// intervalo que vai para os inputs de data — e e esse mesmo intervalo que a
-// exportação (CSV/PDF) manda para o backend. "custom" nao aparece aqui de
-// proposito: ele significa "mantem o que o usuario digitou nos inputs".
-const PERIOD_PRESETS = {
-  hoje: () => ({ start_date: getToday(), end_date: getToday() }),
-  // 7 dias contando hoje (hoje + os 6 anteriores).
-  semana: () => ({ start_date: getDateAgo(6), end_date: getToday() }),
-  mes: () => getMonthRange(0),
-  "mes-passado": () => getMonthRange(1),
-  trimestre: () => getQuarterRange(0),
-  "trimestre-passado": () => getQuarterRange(1),
-  ano: () => getYearRange(),
-};
-
 // Mapas de Períodos para Dias
 const PERIOD_MAP = {
   hoje: 0,
@@ -382,41 +343,18 @@ function periodoLabelFromKey(key) {
       loadMainView(inputInicioPrincipal?.value, inputFimPrincipal?.value);
     }
 
-    // Seletor de período (Hoje / Últimos 7 dias / Mês atual / Mês passado /
-    // Trimestre atual / ... / Personalizado). Escolher um preset preenche os
-    // dois inputs de data e recarrega; editar uma data na mão joga o seletor
-    // para "Personalizado".
-    const presetPrincipal = document.getElementById("preset-periodo-principal");
-
-    function aplicarPresetPrincipal(key) {
-      const build = PERIOD_PRESETS[key];
-      // "custom" (ou valor desconhecido): respeita o que já está nos inputs.
-      if (!build) {
-        loadMainViewFromInputs();
-        return;
-      }
-      const { start_date, end_date } = build();
-      if (inputInicioPrincipal) inputInicioPrincipal.value = start_date;
-      if (inputFimPrincipal) inputFimPrincipal.value = end_date;
-      loadMainView(start_date, end_date);
-    }
-
-    presetPrincipal?.addEventListener("change", () =>
-      aplicarPresetPrincipal(presetPrincipal.value)
-    );
-
     [inputInicioPrincipal, inputFimPrincipal].forEach((el) =>
-      el?.addEventListener("change", () => {
-        // Atribuir .value por script não dispara "change", então só chega
-        // aqui quando foi o usuário que mexeu na data.
-        if (presetPrincipal) presetPrincipal.value = "custom";
-        loadMainViewFromInputs();
-      })
+      el?.addEventListener("change", loadMainViewFromInputs)
     );
 
-    // Estado inicial: o preset selecionado no markup ("Hoje"), preservando o
-    // comportamento padrão que já existia.
-    aplicarPresetPrincipal(presetPrincipal?.value || "hoje");
+    // Estado inicial: hoje (início = fim = hoje), preservando o
+    // comportamento padrão que já existia ("Hoje" pré-selecionado).
+    (function initMainViewDefault() {
+      const hoje = getToday();
+      if (inputInicioPrincipal) inputInicioPrincipal.value = hoje;
+      if (inputFimPrincipal) inputFimPrincipal.value = hoje;
+      loadMainView(hoje, hoje);
+    })();
 
     // ---------------------------
     // 2) VISÃO DE COMPARAÇÃO
@@ -549,8 +487,10 @@ function periodoLabelFromKey(key) {
         option.style.pointerEvents = "none";
 
         try {
-          // As datas vêm do seletor de período da Visão Principal, então o
-          // relatório sempre cobre o intervalo que o gestor escolheu na tela.
+          // As datas saem de getDatesFromActiveTab(), que lê os inputs de
+          // data da Visão Principal — o estado que o painel já mantinha. Não
+          // há UI dedicada à exportação: o relatório simplesmente cobre o
+          // período que estiver na tela.
           // Enviamos em snake_case (contrato atual) e em camelCase, porque o
           // endpoint refatorado do relatório (cabeçalho + nota LGPD) espera
           // startDate/endDate — assim a troca no backend não exige deploy

@@ -630,54 +630,6 @@ header.nav-mini .imagem-usuario {
     flex-shrink: 0;
 }
 
-/* Grupo do seletor de período da Visão Principal: o preset (Hoje / Mês
-   passado / Trimestre atual / ...) fica ao lado do intervalo de datas.
-   O preset preenche as datas; mexer nas datas na mão joga o preset para
-   "Personalizado". É esse intervalo que a exportação (CSV/PDF) envia ao
-   backend, então ele precisa estar visível ANTES de gerar o relatório. */
-.periodo-principal-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-}
-
-.periodo-preset-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background-color: rgb(22, 19, 32);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8.4px;
-}
-
-.periodo-preset-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: rgb(156, 163, 175);
-    white-space: nowrap;
-}
-
-.periodo-preset {
-    background: transparent;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.9);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    color-scheme: dark;
-}
-
-/* As <option> herdam o fundo do sistema, não o do select: sem isso o
-   menu aberto fica texto claro sobre fundo claro no Windows/Linux. */
-.periodo-preset option {
-    background-color: rgb(31, 29, 43);
-    color: rgba(255, 255, 255, 0.9);
-}
-
 /* "Indícios de humor (entusiasmo, neutro, raiva, tristeza)": a lista entre
    parênteses é longa demais para o mesmo peso do título — fica como
    legenda, na mesma linha quando cabe e quebrando abaixo quando não cabe. */
@@ -2177,13 +2129,6 @@ header.nav-mini .imagem-usuario {
     }
 
     .selecao-data-range {
-        order: 1;
-    }
-
-    /* O grupo (preset + datas) é que passa a ser filho direto da barra na
-       Visão Principal; na aba Comparar o .selecao-data-range continua
-       sozinho e mantém o order acima. */
-    .periodo-principal-group {
         order: 1;
     }
 

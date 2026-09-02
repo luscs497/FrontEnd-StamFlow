@@ -279,17 +279,6 @@ header.nav-mini .logo {
   font-size: 15.6px;
 }
 
-/* preset de período (Visão Principal) compacto, no mesmo padrão do range */
-.periodo-preset-wrapper {
-  padding: 8px 10px;
-  gap: 6px;
-}
-
-.periodo-preset-label,
-.periodo-preset {
-  font-size: 11.2px;
-}
-
 /* date range (PERIODO A/B) mais compacto em telas pequenas */
 .selecao-data-range {
   padding: 8px 10px;
