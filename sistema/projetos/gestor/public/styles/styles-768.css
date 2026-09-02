@@ -201,6 +201,29 @@ header.nav-mini .logo {
   width: 100%;
 }
 
+/* Visão Principal: o preset de período e o intervalo de datas não cabem
+   lado a lado quando a barra já está empilhada — empilha os dois também,
+   cada um ocupando a largura toda. */
+.periodo-principal-group {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+#selecao-periodo-principal {
+  max-width: none;
+}
+
+.periodo-preset-wrapper {
+  justify-content: space-between;
+}
+
+.periodo-preset {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+}
+
 /* Date range (PERIODO A/B): em telas estreitas os dois inputs de data +
    separador apertam dentro do card escuro. Permite quebrar linha e reduz
    um pouco a fonte para não cortar "2026-06-24". */

@@ -653,6 +653,14 @@ header {
     transition: width 1.3s ease, background-color 0.5s ease;
 }
 
+/* Estado "Excelente" (>=75%): regra explicita em vez de depender do
+   fallback de #stamina-preenchida, para que a barra tenha uma cor
+   deterministica quando o JS aplica a classe .excelente. */
+#stamina-preenchida.excelente {
+    background-image: linear-gradient(to right, #34d399, #a4ffde, #34d399);
+    border-image: linear-gradient(to bottom, #c3f9e5, #34d399) 1;
+}
+
 #stamina-preenchida.boa {
     background-image: linear-gradient(to right, rgb(245, 158, 11), rgb(252, 186, 74), rgb(245, 158, 11));
     border-image: linear-gradient(to right, rgb(251, 209, 137), rgb(255, 191, 80)) 1;
@@ -3573,6 +3581,11 @@ header {
 }
 
 /* Variações de Cor (Iguais ao Dashboard) */
+
+#scan-stamina-preenchida.excelente {
+    background-image: linear-gradient(to right, #34d399, #a4ffde, #34d399);
+    border-image: linear-gradient(to bottom, #c3f9e5, #34d399) 1;
+}
 
 #scan-stamina-preenchida.boa {
     background-image: linear-gradient(to right, rgb(245, 158, 11), rgb(252, 186, 74), rgb(245, 158, 11));

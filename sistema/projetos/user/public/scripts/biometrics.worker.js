@@ -53,7 +53,13 @@ function smootherUpdate(indexAlphaIdx, v) {
         smootherValues[indexAlphaIdx] = v;
         return v;
     }
-    return a * v + (1 - a) * cur;
+    // O EMA precisa GUARDAR o valor suavizado: sem isso `cur` fica preso no
+    // primeiro desvio lido depois da calibracao e a metrica nunca converge
+    // para a postura atual (ficava em ~75-80% de um valor congelado, o que
+    // travava a Stamina em Critica/Atencao mesmo com a postura correta).
+    const next = a * v + (1 - a) * cur;
+    smootherValues[indexAlphaIdx] = next;
+    return next;
 }
 
 // --- Lógica de Postura ---

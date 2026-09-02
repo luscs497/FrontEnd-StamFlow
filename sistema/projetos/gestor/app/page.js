@@ -131,15 +131,30 @@ export default function PainelGestorPage() {
             <div className="wid100">
                 <div className="painel-gestor gap-48">
                     <div className="periodos-navegacao space-btw">
-                        <div className="selecao-data-range" id="selecao-periodo-principal">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
-                            <div className="input-data-wrapper">
-                                <input type="date" id="data-inicio-principal" className="input-data-inicio" />
-                                <span className="data-separador">→</span>
-                                <input type="date" id="data-fim-principal" className="input-data-fim" />
+                        <div className="periodo-principal-group" id="periodo-principal-group">
+                            <div className="periodo-preset-wrapper">
+                                <label className="periodo-preset-label" htmlFor="preset-periodo-principal">Período</label>
+                                <select id="preset-periodo-principal" className="periodo-preset" defaultValue="hoje">
+                                    <option value="hoje">Hoje</option>
+                                    <option value="semana">Últimos 7 dias</option>
+                                    <option value="mes">Mês atual</option>
+                                    <option value="mes-passado">Mês passado</option>
+                                    <option value="trimestre">Trimestre atual</option>
+                                    <option value="trimestre-passado">Trimestre passado</option>
+                                    <option value="ano">Ano atual</option>
+                                    <option value="custom">Personalizado</option>
+                                </select>
+                            </div>
+                            <div className="selecao-data-range" id="selecao-periodo-principal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                <div className="input-data-wrapper">
+                                    <input type="date" id="data-inicio-principal" className="input-data-inicio" />
+                                    <span className="data-separador">→</span>
+                                    <input type="date" id="data-fim-principal" className="input-data-fim" />
+                                </div>
                             </div>
                         </div>
-                        
+
                         <div className="actions-wrapper">
                             
                             <div className="export-container">
@@ -242,7 +257,7 @@ export default function PainelGestorPage() {
                         </li>
                         <li className="gap-24 insight dados">
                             <div className="space-btw">
-                                <h2 className="color-azul">Humor da Equipe</h2>
+                                <h2 className="color-azul">Indícios de humor <span className="humor-subtitulo">(entusiasmo, neutro, raiva, tristeza)</span></h2>
                                 <div className="periodoTextContainer">
                                     <p className="periodo-text" id="periodo-text" dados="dados">
                                         HOJE
@@ -479,7 +494,7 @@ export default function PainelGestorPage() {
                         <li className="linha-comparacao">
                             <div className="sc-prazo-a wid100 gap-16 insight dados-a" id="container-humor-a">
                                 <div className="space-btw">
-                                    <h2 className="color-azul">Humor da Equipe</h2>
+                                    <h2 className="color-azul">Indícios de humor <span className="humor-subtitulo">(entusiasmo, neutro, raiva, tristeza)</span></h2>
                                     <div className="periodoTextContainer">
                                         <p className="periodo-text">HOJE</p>
                                     </div>
@@ -508,7 +523,7 @@ export default function PainelGestorPage() {
                                 
                             <div className="sc-prazo-b wid100 gap-16 insight dados-b" id="container-humor-b">
                                 <div className="space-btw">
-                                    <h2 className="color-azul">Humor da Equipe</h2>
+                                    <h2 className="color-azul">Indícios de humor <span className="humor-subtitulo">(entusiasmo, neutro, raiva, tristeza)</span></h2>
                                     <div className="periodoTextContainer">
                                         <p className="periodo-text">HOJE</p>
                                     </div>
