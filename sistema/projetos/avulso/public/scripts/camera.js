@@ -107,19 +107,47 @@ function updateDiagnosticUI(classification) {
   });
 }
 
+/*
+ * Faixas da Stamina (fase 17).
+ *
+ * A régua antiga era 0-24 / 25-49 / 50-74 / 75-100, quatro fatias iguais de
+ * 25 pontos. Ela pressupunha que a Stamina pudesse chegar a zero — o que
+ * deixou de ser verdade quando o scoreRatio passou a ter piso 25 no "Crítico"
+ * (fase 16, alinhado ao backend). A pior postura possível passou a valer
+ * 0,9x25 + 0,1x58 = 28 pontos, ou seja, a faixa "Crítica" ficou inalcançável.
+ *
+ * Os cortes agora saem das ÂNCORAS naturais do sistema — as quatro
+ * articulações todas no mesmo nível — com o humor neutro (58), que é o caso
+ * dominante:
+ *
+ *   tudo Crítico   P= 25%  ->  28    tudo Bom       P= 75%  ->  73
+ *   tudo Ruim      P= 50%  ->  51    tudo Perfeito  P=100%  ->  96
+ *
+ * e ficam nos PONTOS MÉDIOS entre elas (39,6 / 62,1 / 84,6). Isso é a partição
+ * de Voronoi em 1D: maximiza a menor distância de uma âncora até uma
+ * fronteira, que sobe de 1,2 para 10,8 pontos.
+ *
+ * A consequência que importa: nenhuma âncora troca de faixa por causa do
+ * humor. Mesmo variando o humor de 8 (raiva sustentada) a 100 (alegria com
+ * boost), "tudo Bom" fica em 68..78 e nunca cruza 85. A postura, que pesa 90%,
+ * é quem decide a cor da barra — como deve ser.
+ *
+ * Mesma régua em sendStaminaNotification (abaixo) e em
+ * get-repots.js -> classifyStamina. Se mudar aqui, mude nos três.
+ */
 function updateStaminaVisuals(val) {
   const v = Math.max(0, Math.min(100, Math.round(val)));
-  
-  let estadoCSS = 'excelente';   
-  let textoStatus = 'Excelente'; 
-  let avisoClass = 'aviso-excelente'; 
 
-  if (v <= 24) {
+  let estadoCSS = 'excelente';
+  let textoStatus = 'Excelente';
+  let avisoClass = 'aviso-excelente';
+
+  if (v <= 39) {
       estadoCSS = 'critico'; textoStatus = 'Crítica'; avisoClass = 'aviso-critico';
-  } else if (v <= 49) {
+  } else if (v <= 62) {
       estadoCSS = 'atencao'; textoStatus = 'Atenção'; avisoClass = 'aviso-atencao';
-  } else if (v <= 74) {
-      estadoCSS = 'boa'; textoStatus = 'Boa'; avisoClass = 'aviso-bom'; 
+  } else if (v <= 84) {
+      estadoCSS = 'boa'; textoStatus = 'Boa'; avisoClass = 'aviso-bom';
   }
 
   if (uiStaminaBar) {
@@ -241,8 +269,12 @@ function applyWorkerUpdates() {
 
   if (uiPostureTotal) {
     const rawP = Math.round(ergonomicsScore);
-    uiPostureTotal.textContent = `${rawP}% - ${rawP > 80 ? 'Excelente' : (rawP > 50 ? 'Bom' : 'Ruim')}`;
-    uiPostureTotal.className = `resultado-geral ${rawP > 80 ? 'green' : (rawP > 50 ? 'orange' : 'red')}`;
+    // Escala da POSTURA pura (25..100), não da Stamina. Os cortes são os
+    // pontos médios entre as mesmas âncoras (37,5 / 62,5 / 87,5), senão o
+    // texto contradiz a barra: com P=81% a barra marca "Boa" (79) e o antigo
+    // `rawP > 80` já dizia "Excelente".
+    uiPostureTotal.textContent = `${rawP}% - ${rawP > 87 ? 'Excelente' : (rawP > 62 ? 'Bom' : 'Ruim')}`;
+    uiPostureTotal.className = `resultado-geral ${rawP > 87 ? 'green' : (rawP > 62 ? 'orange' : 'red')}`;
   }
 }
 
@@ -713,10 +745,13 @@ function requestNotificationPermission() {
 
 function sendStaminaNotification(average) {
     if (Notification.permission === "granted") {
+        // Mesma régua de updateStaminaVisuals: a notificação não pode chamar
+        // de "Boa" uma média que a barra estava pintando de laranja.
         let body = `Sua média foi ${Math.round(average)}%. `;
-        if (average >= 75) body += "Excelente! 🚀";
-        else if (average >= 50) body += "Boa. 👍";
-        else body += "Cuidado! ⚠️";
+        if (average >= 85) body += "Excelente! 🚀";
+        else if (average >= 63) body += "Boa. 👍";
+        else if (average >= 40) body += "Atenção. ⚠️";
+        else body += "Cuidado! 🚨";
         new Notification("Resumo de Energia", { body, icon: "/StamFlowLogo-removebg-preview.png" });
     }
 }

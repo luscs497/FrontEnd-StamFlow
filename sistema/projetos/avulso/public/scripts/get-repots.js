@@ -60,11 +60,15 @@ async function fetchReportData(token_unused, startDate, endDate) {
 // 1) HOME (ABA "HOJE")
 // ============================================================================
 function classifyStamina(pct) {
-  // Faixas padrão StamFlow (25% cada):
-  //   Excelente: 75-100   Boa: 50-74   Atenção: 25-49   Crítica: 0-24
-  if (pct >= 75) return { key: "excelente", label: "Excelente", colorClass: "excelente" };
-  if (pct >= 50) return { key: "boa", label: "Boa", colorClass: "boa" };
-  if (pct >= 25) return { key: "atencao", label: "Atenção", colorClass: "atencao" };
+  // Faixas StamFlow (fase 17) — as mesmas de updateStaminaVisuals em camera.js.
+  // Não são mais quatro fatias iguais de 25 pontos: como o "Crítico" passou a
+  // ter piso 25 no scoreRatio, a Stamina não chega mais perto de zero, e os
+  // cortes ficam nos pontos médios entre as âncoras (tudo Crítico=28,
+  // tudo Ruim=51, tudo Bom=73, tudo Perfeito=96).
+  //   Excelente: 85-100   Boa: 63-84   Atenção: 40-62   Crítica: 0-39
+  if (pct >= 85) return { key: "excelente", label: "Excelente", colorClass: "excelente" };
+  if (pct >= 63) return { key: "boa", label: "Boa", colorClass: "boa" };
+  if (pct >= 40) return { key: "atencao", label: "Atenção", colorClass: "atencao" };
   return { key: "critica", label: "Crítica", colorClass: "critica" };
 }
 
