@@ -9147,3 +9147,33 @@ html:has(> body.modal-open) {
         align-items: center;
     }
 }
+
+/* ---- (R34) "Explicação da meditação" abaixo do play TAMBÉM no mobile.
+            Em <=468px o card empilha e .audio-div-right vira `row-reverse` +
+            `space-between` + `width:100%` (styles-468). A variante com o link
+            tem a mesma especificidade de UMA classe, então perdia para essa
+            regra: a COLUNA [tempo+play] / [link] virava uma LINHA e o link ia
+            parar ao lado do tempo, na ponta esquerda do card, em vez de ficar
+            abaixo do play. Restabelecemos a coluna com dois seletores de
+            classe e passamos o row-reverse para a linha interna — que é quem
+            de fato precisa dele. Como o row-reverse joga o play para a
+            ESQUERDA nesta faixa, o link alinha à esquerda para continuar
+            logo abaixo dele. */
+@media screen and (max-width: 468px) {
+    .audio-div-right.audio-div-right-com-explicacao {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .audio-div-right-com-explicacao .audio-time-play-row {
+        width: 100%;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+    }
+
+    .audio-div-right-com-explicacao .audio-como-ajuda-abrir {
+        text-align: left;
+    }
+}
