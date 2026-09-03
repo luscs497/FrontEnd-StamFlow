@@ -43,6 +43,52 @@ const CALIBRATION_SAMPLES = 24;
 const calibrationBuffer = [];
 
 /*
+ * CALIBRAR SO COM O USUARIO PARADO.
+ *
+ * A auto-calibracao pos-onboarding dispara quando o buffer enche — os primeiros
+ * ~2s depois da camera subir, que e exatamente quando a pessoa ainda esta se
+ * ajeitando na cadeira ou apoiando o celular. Uma baseline capturada em
+ * movimento fica errada para a sessao inteira.
+ *
+ * O teste nao e de ruido, e de DERIVA: compara a media aparada da primeira
+ * metade do buffer com a da segunda. Ruido nao move as duas medias (a
+ * diferenca esperada e ~0,4x o desvio de uma amostra); estar se acomodando
+ * move, porque ha tendencia. O limiar reaproveita a propria zona morta.
+ *
+ * Rede de seguranca: quem nunca fica parado calibraria nunca. Passados
+ * CALIB_ESPERA_MAX quadros (~8s a 12fps) a calibracao libera assim mesmo.
+ *
+ * CALIBRATION_SAMPLES continua 24 e o handler 'calibrate' nao mudou — muda so
+ * QUANDO o camera.js e avisado de que pode disparar. A calibracao manual pelo
+ * botao segue imediata, sem passar por aqui.
+ */
+const CALIB_ESPERA_MAX = 96;
+let amostrasDesdeOInicio = 0;
+let calibProntoLatch = false;
+
+function mediaSimplesAparada(vals) { return mediaAparada(vals, 2); }
+
+function bufferEstavel() {
+    const n = calibrationBuffer.length;
+    if (n < CALIBRATION_SAMPLES) return false;
+    const metade = n >> 1;
+    const campos = [
+        ['shoulderAngle', 'shoulder'], ['headPitch', 'head'],
+        ['neckYaw', 'rotation'],       ['backAngle', 'back']
+    ];
+    for (let k = 0; k < campos.length; k++) {
+        const campo = campos[k][0], nome = campos[k][1];
+        const a = [], b = [];
+        for (let i = 0; i < metade; i++) a.push(calibrationBuffer[i][campo]);
+        for (let i = metade; i < n; i++) b.push(calibrationBuffer[i][campo]);
+        if (Math.abs(mediaSimplesAparada(a) - mediaSimplesAparada(b)) > ZONA_MORTA[nome]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/*
  * MEDIA APARADA, no lugar da media simples.
  *
  * A media simples nao tem defesa contra outlier. O MediaPipe solta, de vez em
@@ -65,11 +111,12 @@ const calibrationBuffer = [];
  */
 const APARA_POR_PONTA = 4;
 
-function mediaAparada(valores) {
+function mediaAparada(valores, aparaPorPonta) {
     const n = valores.length;
     if (n === 0) return 0;
-    // Precisa sobrar pelo menos 4 no meio para a aparagem valer a pena.
-    const corte = n >= 12 ? APARA_POR_PONTA : 0;
+    const apara = typeof aparaPorPonta === 'number' ? aparaPorPonta : APARA_POR_PONTA;
+    // Precisa sobrar pelo menos metade no meio para a aparagem valer a pena.
+    const corte = n >= apara * 3 ? apara : 0;
     const ordenados = valores.slice().sort((a, b) => a - b);
     const meio = ordenados.slice(corte, n - corte);
     let soma = 0;
@@ -137,12 +184,46 @@ function smootherUpdate(indexAlphaIdx, v) {
  * classifyMetricVal, que já usa Math.abs no desvio JÁ calibrado — aí o sinal
  * cancela certinho e ainda diz para que lado o usuário está desviando.
  */
+/*
+ * PORTA DE VISIBILIDADE.
+ *
+ * Os pose landmarks do MediaPipe trazem um campo `visibility` (0 a 1) que o
+ * camera.js descartava ao empacotar o buffer. Quando um ombro sai do quadro ou
+ * e ocluido, o MediaPipe NAO para de emitir a coordenada: ele extrapola, marca
+ * visibility baixa e segue. Sem ler esse campo, o worker calculava angulos em
+ * cima de posicao inventada como se fosse medida boa — uma fonte de jitter e de
+ * vies tao grande quanto o filtro.
+ *
+ * Agora o camera.js manda 4 floats por landmark (x, y, z, visibility) e um
+ * quadro em que qualquer ponto CRITICO esteja abaixo do corte e descartado,
+ * pelo mesmo caminho ja existente de "dados insuficientes" (metrics: null), que
+ * o camera.js trata mantendo a ultima leitura.
+ *
+ * Face mesh nao tem visibility; o camera.js grava 1 nesses, entao a porta nunca
+ * fecha por causa da face.
+ */
+const PONTOS_CRITICOS = [11, 12, 7, 8, 0];   // ombros, orelhas, nariz
+const VISIBILIDADE_MIN = 0.5;                 // corte convencional do MediaPipe
+
 function computePostureFromBuffers(poseBuf, poseCount, faceBuf, faceCount) {
     if (!poseBuf || !faceBuf || poseCount <= 12 || faceCount <= 152) return null;
 
     const pose = new Float32Array(poseBuf);
     const face = new Float32Array(faceBuf);
-    const pi = (i) => i * 3;
+
+    // O passo e deduzido do proprio buffer: 4 floats por landmark na versao
+    // nova, 3 na antiga. Assim uma copia velha do camera.js em cache continua
+    // funcionando (sem a porta de visibilidade) em vez de ler lixo.
+    const passoP = Math.round(pose.length / poseCount) >= 4 ? 4 : 3;
+    const passoF = Math.round(face.length / faceCount) >= 4 ? 4 : 3;
+    const pi = (i) => i * passoP;
+    const fi = (i) => i * passoF;
+
+    if (passoP === 4) {
+        for (let k = 0; k < PONTOS_CRITICOS.length; k++) {
+            if (pose[PONTOS_CRITICOS[k] * 4 + 3] < VISIBILIDADE_MIN) return null;
+        }
+    }
 
     // Pose: 0 nariz | 3 e 6 cantos externos dos olhos | 7 e 8 orelhas | 11 e 12 ombros
     const b11 = pi(11), b12 = pi(12);
@@ -152,7 +233,7 @@ function computePostureFromBuffers(poseBuf, poseCount, faceBuf, faceCount) {
     const midShy = (lShy + rShy) * 0.5;
 
     // Face: 10 testa | 152 queixo
-    const b10 = pi(10), b152 = pi(152);
+    const b10 = fi(10), b152 = fi(152);
     const foreY = face[b10+1], foreZ = face[b10+2];
     const chinY = face[b152+1], chinZ = face[b152+2];
 
@@ -249,11 +330,21 @@ const CLASSIFICATION_RULES = {
  * dentro do "Perfeito" sem deslocar nada, seria um no-op, porque tudo ali ja
  * era "Perfeito". As CLASSIFICATION_RULES em si nao foram tocadas.
  * ========================================================================= */
+/*
+ * O fator e por metrica. A rotacao ganhou uma folga maior a pedido do QA:
+ * ela e a UNICA das quatro sem vies de escala (a normalizacao cancela na
+ * razao (dL-dR)/(|dL|+|dR|), entao 20 graus reais leem 20,00 graus), e ainda
+ * assim estava reagindo demais. Com 0,75 a faixa "Perfeito" efetiva dela vai
+ * de 9,0 para 10,5 graus — cerca de 17% menos sensivel.
+ * As CLASSIFICATION_RULES continuam intactas.
+ */
+const FATOR_ZONA_MORTA = { shoulder: 0.5, head: 0.5, rotation: 0.75, back: 0.5 };
+
 const ZONA_MORTA = {
-    shoulder: CLASSIFICATION_RULES.shoulder.perfeito * 0.5,
-    head:     CLASSIFICATION_RULES.head.perfeito     * 0.5,
-    rotation: CLASSIFICATION_RULES.rotation.perfeito * 0.5,
-    back:     CLASSIFICATION_RULES.back.perfeito     * 0.5
+    shoulder: CLASSIFICATION_RULES.shoulder.perfeito * FATOR_ZONA_MORTA.shoulder,
+    head:     CLASSIFICATION_RULES.head.perfeito     * FATOR_ZONA_MORTA.head,
+    rotation: CLASSIFICATION_RULES.rotation.perfeito * FATOR_ZONA_MORTA.rotation,
+    back:     CLASSIFICATION_RULES.back.perfeito     * FATOR_ZONA_MORTA.back
 };
 
 function desvioUtil(metricName, v) {
@@ -374,6 +465,14 @@ onmessage = (ev) => {
         calibrationBuffer.push(metrics);
         if (calibrationBuffer.length > CALIBRATION_SAMPLES) calibrationBuffer.shift();
 
+        // Uma vez pronto, fica pronto: evita refazer o teste de deriva a cada
+        // quadro pelo resto da sessao.
+        amostrasDesdeOInicio++;
+        if (!calibProntoLatch) {
+            calibProntoLatch = calibrationBuffer.length >= CALIBRATION_SAMPLES &&
+                (bufferEstavel() || amostrasDesdeOInicio >= CALIB_ESPERA_MAX);
+        }
+
         const rawAdj = {
             shoulder: metrics.shoulderAngle - calibrationOffsets.shoulder,
             head:     metrics.headPitch - calibrationOffsets.head,
@@ -408,7 +507,7 @@ onmessage = (ev) => {
             // este arquivo. O camera.js so obedece a este sinal para disparar a
             // auto-calibracao pos-onboarding com o buffer JA cheio, mantendo a
             // media de CALIBRATION_SAMPLES da Fase 16 intacta.
-            calibReady: calibrationBuffer.length >= CALIBRATION_SAMPLES
+            calibReady: calibProntoLatch
         });
         return;
     }

@@ -389,13 +389,28 @@ bgWorker.onmessage = (ev) => {
 };
 
 /* --- Helpers --- */
+/*
+ * Empacota os landmarks com 4 floats cada: x, y, z e VISIBILITY.
+ *
+ * A visibility vinha sendo descartada. Ela e o unico jeito de o worker saber
+ * que um ombro saiu do quadro: o MediaPipe nao para de emitir a coordenada
+ * quando isso acontece, ele extrapola e marca visibility baixa. Sem esse
+ * campo, angulos calculados sobre posicao inventada entravam na conta como se
+ * fossem medida boa.
+ *
+ * Os face landmarks nao tem visibility; grava-se 1 (visivel) para que a porta
+ * do worker nunca feche por causa da face.
+ */
 function landmarksToFloat32(landmarks){
   if (!landmarks || !landmarks.length) return null;
   const n = landmarks.length;
-  const arr = new Float32Array(n * 3);
-  for (let i = 0, b = 0; i < n; i++, b += 3) {
+  const arr = new Float32Array(n * 4);
+  for (let i = 0, b = 0; i < n; i++, b += 4) {
     const p = landmarks[i];
-    arr[b] = p ? (p.x||0) : 0; arr[b+1] = p ? (p.y||0) : 0; arr[b+2] = p && ('z' in p) ? (p.z||0) : 0;
+    arr[b] = p ? (p.x||0) : 0;
+    arr[b+1] = p ? (p.y||0) : 0;
+    arr[b+2] = p && ('z' in p) ? (p.z||0) : 0;
+    arr[b+3] = p && typeof p.visibility === 'number' ? p.visibility : 1;
   }
   return arr;
 }
@@ -405,7 +420,7 @@ function sendLandmarksToWorker(pose, face, ts){
   lastPostureSent = performance.now();
   const pArr = landmarksToFloat32(pose);
   const fArr = landmarksToFloat32(face);
-  const msg = { type: 'landmarks', ts, poseCount: pArr ? pArr.length/3 : 0, faceCount: fArr ? fArr.length/3 : 0 };
+  const msg = { type: 'landmarks', ts, poseCount: pArr ? pArr.length/4 : 0, faceCount: fArr ? fArr.length/4 : 0 };
   const transfers = [];
   if (pArr) { msg.poseBuffer = pArr.buffer; transfers.push(pArr.buffer); }
   if (fArr) { msg.faceBuffer = fArr.buffer; transfers.push(fArr.buffer); }
