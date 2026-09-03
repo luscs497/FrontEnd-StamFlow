@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { ASSET_VERSION, LEGACY_SCRIPTS_CORE, LEGACY_SCRIPTS_HEAVY, comVersao } from "@/lib/scripts";
+import { ASSET_VERSION, LEGACY_SCRIPTS_CORE, LEGACY_SCRIPTS_DETOX, LEGACY_SCRIPTS_HEAVY, comVersao } from "@/lib/scripts";
 
 declare global {
   interface Window {
@@ -233,6 +233,47 @@ export default function LegacyBootstrap() {
       document.dispatchEvent(
         new Event("stamflow:heavy-ready", { bubbles: true })
       );
+
+      // FASE 3 (Q4): html2canvas + jsPDF + detox.js — ~230 KB que só a aba
+      // Detox Mental usa, e que até aqui todo usuário baixava em toda sessão.
+      //
+      // Dois gatilhos, de propósito. O markup do Detox tem handlers inline
+      // (onclick="detoxMental...."), então detoxMental precisa existir no
+      // instante em que a aba aparece; carregar apenas no clique deixaria uma
+      // janela em que os botões lançam ReferenceError. Então:
+      //   1) pointerdown no item de menu — dispara ANTES do click que troca de
+      //      aba, dando ao download alguns quadros de vantagem;
+      //   2) primeira ociosidade do navegador — rede de segurança que garante
+      //      o script carregado por qualquer outro caminho de navegação.
+      // Quem chegar primeiro vence; o guard impede carregar duas vezes.
+      let fase3Iniciada = false;
+      const carregarFase3 = async () => {
+        if (fase3Iniciada || cancelled) return;
+        fase3Iniciada = true;
+        for (const src of LEGACY_SCRIPTS_DETOX) {
+          if (cancelled) return;
+          await loadScript(src);
+        }
+        if (cancelled) return;
+        document.dispatchEvent(
+          new Event("stamflow:detox-ready", { bubbles: true })
+        );
+      };
+
+      const aoApontarNoDetox = (e: Event) => {
+        const alvo = e.target as HTMLElement | null;
+        if (alvo?.closest?.('[title="Detox Mental"]')) carregarFase3();
+      };
+      document.addEventListener("pointerdown", aoApontarNoDetox, true);
+
+      const agendarOcioso = (window as unknown as {
+        requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void;
+      }).requestIdleCallback;
+      if (typeof agendarOcioso === "function") {
+        agendarOcioso(carregarFase3, { timeout: 5000 });
+      } else {
+        setTimeout(carregarFase3, 2000);
+      }
     })();
 
     return () => {

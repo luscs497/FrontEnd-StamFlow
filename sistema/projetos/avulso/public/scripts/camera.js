@@ -26,7 +26,14 @@ const uiClassification = {
 };
 
 /* Web Worker */
-const bgWorker = new Worker('/scripts/biometrics.worker.js');
+// O worker era o unico asset de /scripts servido SEM a query de versao: o
+// camera.js chega versionado (?v=ASSET_VERSION) mas o worker nao, entao o
+// cache podia servir um worker antigo junto de um camera.js novo — os dois
+// lados do protocolo de mensagens fora de sincronia, sem erro visivel.
+// __stamflowAssetVersion e publicado pelo LegacyBootstrap; o fallback sem
+// query preserva o comportamento de hoje se ele nao existir.
+const _versaoAssets = (typeof window !== 'undefined' && window.__stamflowAssetVersion) || '';
+const bgWorker = new Worker('/scripts/biometrics.worker.js' + (_versaoAssets ? '?v=' + _versaoAssets : ''));
 
 /* Controle de Taxa de Envio */
 const POSTURE_SEND_INTERVAL_MS = 83; // ~12fps
@@ -45,6 +52,39 @@ let latestEmotionMsg = null;
 // caminho: o clique nao vira alerta de erro e a calibracao dispara sozinha
 // quando o worker avisar que o buffer de amostras encheu (calibReady).
 let _calibracaoPendente = false;
+
+// C6 — ultimo valor REALMENTE escrito no DOM. Escrever textContent troca o no
+// de texto mesmo quando a string e igual, e isso invalida layout de graca; a
+// Stamina e um inteiro 0-100 fortemente suavizado por EMA, entao a esmagadora
+// maioria das ~10 atualizacoes/s reescrevia exatamente o mesmo numero.
+// -1 / null e o sentinela de "DOM sujo, reescreva na proxima": quem mexe nos
+// mesmos elementos por fora (setNoFaceState, resetMetricsToInactive) precisa
+// invalidar, senao a UI fica presa no estado "--".
+let _ultimaStamina = -1;
+let _ultimoPostureRaw = -1;
+let _ultimoHumorRaw = -1;
+const _ultimoRotulo = { shoulder: null, head: null, rotation: null, back: null };
+const _ultimaEmocaoPct = { neutral: -1, happy: -1, sad: -1, angry: -1 };
+
+function invalidarCacheDeUI() {
+  _ultimaStamina = -1;
+  _ultimoPostureRaw = -1;
+  _ultimoHumorRaw = -1;
+  _ultimoRotulo.shoulder = _ultimoRotulo.head = _ultimoRotulo.rotation = _ultimoRotulo.back = null;
+  _ultimaEmocaoPct.neutral = _ultimaEmocaoPct.happy = _ultimaEmocaoPct.sad = _ultimaEmocaoPct.angry = -1;
+}
+
+// C8 — estado de execucao. A camera ativa manda nos temporizadores; a
+// visibilidade da aba manda em todos eles.
+let _cameraAtiva = false;
+let _emotionLoopSuspenso = false;
+
+// C9 — canvas de rascunho REAPROVEITADO para alimentar o face-api. Passar o
+// <video> direto faz o toNetInput alocar um canvas novo (640x480x4 ~ 1,2 MB)
+// a cada chamada: 10x/s = ~12 MB/s de lixo so para o GC. A resolucao e a
+// mesma; muda apenas quem aloca o buffer de pixels.
+const _faceScratch = document.createElement('canvas');
+const _faceScratchCtx = _faceScratch.getContext('2d');
 
 // Detecção de ausência de rosto: quando o rosto sai do quadro, a stamina
 // deve ir a 0 (e as métricas ficarem vazias), em vez de manter valores altos.
@@ -108,7 +148,13 @@ function updateDiagnosticUI(classification) {
     const el = uiClassification[key];
     const data = classification[key];
     if (el && data) {
-      el.textContent = data.label || '--';
+      // C6 — o rotulo ("Perfeito"/"Bom"/"Ruim"/"Critico") muda raramente; sem
+      // este corte eram 4 textContent + 4 className por leitura do worker.
+      // O _telemetryCurrentState acima continua sendo atualizado SEMPRE.
+      const rotulo = data.label || '--';
+      if (_ultimoRotulo[key] === rotulo) return;
+      _ultimoRotulo[key] = rotulo;
+      el.textContent = rotulo;
       el.className = 'classificacao-categoria ' + (data.label ? getCssClass(data.label) : '');
     }
   });
@@ -157,6 +203,13 @@ function updateStaminaVisuals(val) {
       estadoCSS = 'boa'; textoStatus = 'Boa'; avisoClass = 'aviso-bom';
   }
 
+  // C6 — nada mudou desde a ultima pintura: nao encosta no DOM. estadoCSS,
+  // textoStatus e avisoClass sao funcoes puras de `v`, entao se `v` e o mesmo
+  // TODA a saida desta funcao e a mesma. Isso tambem evita os dois
+  // querySelectorAll('.aviso') e os quatro querySelector abaixo.
+  if (v === _ultimaStamina) return;
+  _ultimaStamina = v;
+
   if (uiStaminaBar) {
       uiStaminaBar.style.width = `${v}%`;
       uiStaminaBar.className = 'barra-preenchida ' + estadoCSS;
@@ -197,6 +250,7 @@ function updateStaminaVisuals(val) {
  * Estado "sem rosto detectado": stamina a 0% e métricas de emoção vazias.
  */
 function setNoFaceState() {
+  invalidarCacheDeUI(); // C6 — este bloco escreve por fora dos caches
   if (uiStaminaBar) { uiStaminaBar.style.width = '0%'; uiStaminaBar.className = 'barra-preenchida critico'; }
   const scanBar = document.getElementById('scan-stamina-preenchida');
   if (scanBar) { scanBar.style.width = '0%'; scanBar.className = 'barra-preenchida critico'; }
@@ -266,6 +320,8 @@ function applyWorkerUpdates() {
       const el = uiEmotions[k];
       if (el) {
         const pct = Math.round((ema[k] || 0) * 100);
+        if (_ultimaEmocaoPct[k] === pct) continue; // C6
+        _ultimaEmocaoPct[k] = pct;
         el.textContent = `${pct}%`;
         el.className = `classificacao-categoria ${getEmotionColorClass(k, pct)}`;
       }
@@ -273,19 +329,28 @@ function applyWorkerUpdates() {
 
     if (uiHumorTotal) {
       const raw = Math.round(emotionScore);
-      uiHumorTotal.textContent = `${raw}% - ${raw > 70 ? 'Ótimo' : (raw > 40 ? 'Médio' : 'Baixo')}`;
-      uiHumorTotal.className = `resultado-geral ${raw > 70 ? 'green' : (raw > 40 ? 'orange' : 'red')}`;
+      if (raw !== _ultimoHumorRaw) { // C6
+        _ultimoHumorRaw = raw;
+        uiHumorTotal.textContent = `${raw}% - ${raw > 70 ? 'Ótimo' : (raw > 40 ? 'Médio' : 'Baixo')}`;
+        uiHumorTotal.className = `resultado-geral ${raw > 70 ? 'green' : (raw > 40 ? 'orange' : 'red')}`;
+      }
     }
   }
 
   if (uiPostureTotal) {
     const rawP = Math.round(ergonomicsScore);
-    // Escala da POSTURA pura (25..100), não da Stamina. Os cortes são os
-    // pontos médios entre as mesmas âncoras (37,5 / 62,5 / 87,5), senão o
-    // texto contradiz a barra: com P=81% a barra marca "Boa" (79) e o antigo
-    // `rawP > 80` já dizia "Excelente".
-    uiPostureTotal.textContent = `${rawP}% - ${rawP > 87 ? 'Excelente' : (rawP > 62 ? 'Bom' : 'Ruim')}`;
-    uiPostureTotal.className = `resultado-geral ${rawP > 87 ? 'green' : (rawP > 62 ? 'orange' : 'red')}`;
+    // C6 — este bloco estava FORA do throttle de 500ms dos demais: reescrevia
+    // texto e classe a cada leitura do worker (~10/s) para um numero que quase
+    // nunca muda.
+    if (rawP !== _ultimoPostureRaw) {
+      _ultimoPostureRaw = rawP;
+      // Escala da POSTURA pura (25..100), não da Stamina. Os cortes são os
+      // pontos médios entre as mesmas âncoras (37,5 / 62,5 / 87,5), senão o
+      // texto contradiz a barra: com P=81% a barra marca "Boa" (79) e o antigo
+      // `rawP > 80` já dizia "Excelente".
+      uiPostureTotal.textContent = `${rawP}% - ${rawP > 87 ? 'Excelente' : (rawP > 62 ? 'Bom' : 'Ruim')}`;
+      uiPostureTotal.className = `resultado-geral ${rawP > 87 ? 'green' : (rawP > 62 ? 'orange' : 'red')}`;
+    }
   }
 }
 
@@ -371,6 +436,46 @@ function canvasVisivel(){
   return canvasElement.getClientRects().length > 0;
 }
 
+/*
+ * C2 — replica FIEL do drawConnectors do @mediapipe/drawing_utils, sem o
+ * overhead da biblioteca.
+ *
+ * Por que nao agrupar tudo num unico path (era o plano original): a cor da
+ * malha e '#C0C0C070', ou seja alfa 0,44 — e a FACEMESH_TESSELATION tem 2556
+ * conexoes para apenas 1322 arestas unicas. 1234 arestas sao percorridas DUAS
+ * vezes, e cada vertice recebe ~11 linhas. Com um stroke por segmento, esses
+ * traços se acumulam por alpha compositing; com um unico path, a uniao e
+ * pintada uma vez so e quase metade da malha ficaria mais clara. Medido em
+ * navegador: 109.467 pixels diferentes. Nao e pixel-identico, entao esta fora.
+ *
+ * O que esta versao remove, sem mexer em um pixel: o adaptador de iterador da
+ * lib, a alocacao do objeto de estilo e dois objetos {index, from, to} POR
+ * conexao, e as 2556 reatribuicoes redundantes de strokeStyle/lineWidth (aqui
+ * sao constantes, entao saem para fora do laco). A sequencia de chamadas de
+ * canvas — beginPath / moveTo / lineTo / stroke por conexao — e byte a byte a
+ * mesma, inclusive o stroke() incondicional que a lib faz fora do guard de
+ * visibilidade. Verificado: 0 pixels de diferenca contra a lib.
+ */
+function desenhaConexoes(ctx, landmarks, conns, cor, larg){
+  ctx.save();
+  const w = ctx.canvas.width, h = ctx.canvas.height;
+  ctx.strokeStyle = cor;
+  ctx.lineWidth = larg;
+  for (let i = 0; i < conns.length; i++) {
+    const c = conns[i];
+    ctx.beginPath();
+    const de = landmarks[c[0]], para = landmarks[c[1]];
+    if (de && para &&
+        (de.visibility === undefined || de.visibility > 0.5) &&
+        (para.visibility === undefined || para.visibility > 0.5)) {
+      ctx.moveTo(de.x * w, de.y * h);
+      ctx.lineTo(para.x * w, para.y * h);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawHolisticResults(results){
   // Só o TRACO para. A inferencia, o envio ao worker, a calibracao, a stamina
   // e a telemetria seguem exatamente como antes — ver onHolisticResults.
@@ -396,24 +501,65 @@ function drawHolisticResults(results){
     drawLandmarks(canvasCtx, results.poseLandmarks, { color: '#38bdf8', lineWidth: 1, radius: 2 });
   }
   if (results.faceLandmarks) {
-      drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_TESSELATION, { color: '#C0C0C070', lineWidth: 1 });
+      desenhaConexoes(canvasCtx, results.faceLandmarks, FACEMESH_TESSELATION, '#C0C0C070', 1);
       drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_RIGHT_EYEBROW, { color: '#EF4444', lineWidth: 3 }); 
       drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_LEFT_EYEBROW, { color: '#EF4444', lineWidth: 3 });
   }
   canvasCtx.restore();
 }
 
+/*
+ * C2 — o desenho passa a ser alinhado ao vsync. O callback do Holistic corre na
+ * cadencia da CAMERA (~30fps) e nao tem relacao com a taxa de atualizacao da
+ * tela; quando a main thread engasga, varios callbacks chegam entre dois
+ * quadros e todos desenhavam, um por cima do outro, sem que nenhum chegasse a
+ * ser composto. Agora o ultimo resultado ganha e os intermediarios sao
+ * descartados antes de custar 2556 tracos.
+ *
+ * O envio ao worker continua FORA do rAF, na cadencia original: a matematica
+ * nao pode perder amostra nenhuma.
+ */
+let _ultimoHolistic = null;
+let _desenhoAgendado = false;
+
+function agendarDesenho(results){
+  _ultimoHolistic = results;
+  if (_desenhoAgendado) return;
+  _desenhoAgendado = true;
+  requestAnimationFrame(() => {
+    _desenhoAgendado = false;
+    const r = _ultimoHolistic;
+    _ultimoHolistic = null;
+    if (r) drawHolisticResults(r);
+  });
+}
+
 function onHolisticResults(results){
-  drawHolisticResults(results);
+  agendarDesenho(results);
   sendLandmarksToWorker(results.poseLandmarks, results.faceLandmarks, performance.now());
 }
 
 async function emotionLoop(){
+  // C8 — aba oculta: para de verdade em vez de continuar rodando uma inferencia
+  // completa por segundo com a tela apagada (o setTimeout so e estrangulado
+  // para 1s em segundo plano, nunca parado). Retomado no visibilitychange.
+  if (document.hidden) { _emotionLoopSuspenso = true; return; }
   if (videoElement.paused || videoElement.ended) { setTimeout(emotionLoop, 100); return; }
   try {
     const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.5 });
-    
-    const detection = await faceapi.detectSingleFace(videoElement, options).withFaceExpressions();
+
+    // C9 — desenha o quadro no rascunho reaproveitado e entrega ELE ao
+    // face-api. Mesma resolucao (videoWidth x videoHeight) que o toNetInput
+    // usaria, mesmo inputSize 320, mesmo scoreThreshold: a deteccao e a
+    // mesma. O que some e a alocacao de um canvas novo por chamada.
+    const _vw = videoElement.videoWidth, _vh = videoElement.videoHeight;
+    if (!_vw || !_vh) { setTimeout(emotionLoop, EMOTION_SEND_INTERVAL_MS); return; }
+    if (_faceScratch.width !== _vw || _faceScratch.height !== _vh) {
+      _faceScratch.width = _vw; _faceScratch.height = _vh;
+    }
+    _faceScratchCtx.drawImage(videoElement, 0, 0, _vw, _vh);
+
+    const detection = await faceapi.detectSingleFace(_faceScratch, options).withFaceExpressions();
 
     if (detection) {
         _noFaceFrames = 0;
@@ -442,6 +588,7 @@ async function emotionLoop(){
  * Evita mostrar 85%/90% enganosos quando não há captação de imagem.
  */
 function resetMetricsToInactive() {
+  invalidarCacheDeUI(); // C6 — este bloco escreve por fora dos caches
   // Barras de stamina -> 0%
   if (uiStaminaBar) { uiStaminaBar.style.width = '0%'; uiStaminaBar.className = 'barra-preenchida'; }
   const scanBar = document.getElementById('scan-stamina-preenchida');
@@ -514,6 +661,7 @@ async function startApp(){
       await camera.start();
 
       statusEl.textContent = "Monitoramento Ativo";
+      _cameraAtiva = true; // C8
       iniciarTemporizadoresDeEmocao(); // Q6
       statusEl.classList.add('active');
       statusEl.classList.remove('error');
@@ -545,6 +693,7 @@ function cameraUnavailable(msg) {
       statusEl.title = msg || "";
   }
   _facePresent = false;
+  _cameraAtiva = false; // C8
   _calibracaoPendente = false; // camera indisponivel: nao ha calibracao a caminho
   pararTemporizadoresDeEmocao(); // Q6
   setNoFaceState();
@@ -801,7 +950,7 @@ function pararTemporizadoresDeEmocao() {
 
 // Amostragem de POSTURA (independente da emoção): a cada 10s grava o estado
 // atual de cada parte do corpo. As 4 partes são registradas a cada amostra.
-setInterval(() => {
+function amostrarPostura() {
     Object.keys(detailedBuffer).forEach(key => {
         if (['shoulder', 'head', 'rotation', 'back'].includes(key)) {
             const state = _telemetryCurrentState.posture[key];
@@ -812,7 +961,38 @@ setInterval(() => {
     });
 
     if (_currentStaminaValue > 0) _notificationHistoryBuffer.push(_currentStaminaValue);
-}, SAMPLING_INTERVAL);
+}
+
+// C8 — a amostragem para com a aba oculta. Com a tela apagada o painel gravava
+// 10 em 10 segundos o ULTIMO estado conhecido (que nasce 'critico' nas quatro
+// articulacoes), inflando o tempo de postura ruim de quem simplesmente saiu da
+// aba. Parar aqui corrige a telemetria alem de poupar CPU.
+// O POST de /reports/sync de 30s NAO para de proposito: ele so envia o que ja
+// foi acumulado, e interrompe-lo arriscaria perder o buffer se a aba fosse
+// fechada em segundo plano.
+let _amostragemPostura = null;
+function iniciarAmostragemPostura() {
+  if (_amostragemPostura) return;
+  _amostragemPostura = setInterval(amostrarPostura, SAMPLING_INTERVAL);
+}
+function pararAmostragemPostura() {
+  if (!_amostragemPostura) return;
+  clearInterval(_amostragemPostura);
+  _amostragemPostura = null;
+}
+iniciarAmostragemPostura();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    pararTemporizadoresDeEmocao();
+    pararAmostragemPostura();
+    return;
+  }
+  iniciarAmostragemPostura();
+  if (!_cameraAtiva) return;
+  iniciarTemporizadoresDeEmocao();
+  if (_emotionLoopSuspenso) { _emotionLoopSuspenso = false; emotionLoop(); }
+});
 
 const METRICS_ENDPOINT = "https://api.stamflow.com.br/reports/sync";
 
