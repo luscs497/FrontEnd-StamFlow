@@ -437,31 +437,18 @@ function periodoLabelFromKey(key) {
 ============================================================================ */
 
 (function () {
+  // Cada header tem o SEU "Exportar": o da Visão Principal e o da comparação
+  // (este último minimizado). Nada é movido entre painéis — cada botão vive no
+  // header a que pertence e some junto com ele, que é o comportamento natural.
+  // Por isso os ganchos são por CLASSE, não por id: ids teriam de ser únicos e
+  // um getElementById pegaria só o primeiro.
   function _initExport() {
-    const btnExportTrigger = document.getElementById("btn-export-trigger");
-    const exportDropdown = document.getElementById("export-list");
-    const exportOptions = document.querySelectorAll(".export-dropdown li");
-
-    // 1. Toggle do Dropdown
-    if (btnExportTrigger && exportDropdown) {
-      btnExportTrigger.addEventListener("click", (e) => {
-        e.stopPropagation();
-        exportDropdown.classList.toggle("display-none");
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!btnExportTrigger.contains(e.target) && !exportDropdown.contains(e.target)) {
-          exportDropdown.classList.add("display-none");
-        }
-      });
-    }
-
-    // 2. Função Auxiliar: Obter Datas (YYYY-MM-DD) do período que está NA TELA.
+    // 1. Função Auxiliar: Obter Datas (YYYY-MM-DD) do período que está NA TELA.
     //    Normalmente são os inputs da Visão Principal (antes era lido do chip
-    //    Hoje/Semana/Mês, que não existe mais). Mas o "Exportar" agora também
-    //    aparece na comparação, e ali a Visão Principal está escondida: exportar
-    //    as datas dela entregaria um PDF de um período que o gestor não está
-    //    vendo. Com a comparação aberta, valem as datas do PERIODO A.
+    //    Hoje/Semana/Mês, que não existe mais). Com a comparação aberta, a
+    //    Visão Principal está escondida: exportar as datas dela entregaria um
+    //    PDF de um período que o gestor não está vendo, então valem as do
+    //    PERIODO A.
     function getDatesFromActiveTab() {
       const painelComparacao = document.querySelectorAll(".painel-gestor")[1];
       const comparando =
@@ -483,69 +470,97 @@ function periodoLabelFromKey(key) {
       return { start_date, end_date };
     }
 
-    // 3. Lógica de Download
-    exportOptions.forEach((option) => {
-      option.addEventListener("click", async () => {
-        const format = option.getAttribute("data-format");
-        const { start_date, end_date } = getDatesFromActiveTab();
+    // 2. Baixa o relatório a partir de uma opção do dropdown.
+    async function baixar(option, dropdown) {
+      const format = option.getAttribute("data-format");
+      const { start_date, end_date } = getDatesFromActiveTab();
 
-        const originalText = option.innerHTML;
-        option.innerHTML = "Baixando...";
-        option.style.pointerEvents = "none";
+      const originalText = option.innerHTML;
+      option.innerHTML = "Baixando...";
+      option.style.pointerEvents = "none";
 
-        try {
-          // As datas saem de getDatesFromActiveTab(), que lê os inputs de
-          // data da Visão Principal — o estado que o painel já mantinha. Não
-          // há UI dedicada à exportação: o relatório simplesmente cobre o
-          // período que estiver na tela.
-          // Enviamos em snake_case (contrato atual) e em camelCase, porque o
-          // endpoint refatorado do relatório (cabeçalho + nota LGPD) espera
-          // startDate/endDate — assim a troca no backend não exige deploy
-          // sincronizado do frontend.
-          const params = new URLSearchParams({
-            start_date,
-            end_date,
-            startDate: start_date,
-            endDate: end_date,
-            format,
-          });
-          const url = `https://api.stamflow.com.br/reports/export?${params.toString()}`;
+      try {
+        // As datas saem de getDatesFromActiveTab(), que lê os inputs de data
+        // do painel que está na tela — o estado que o painel já mantinha. Não
+        // há UI dedicada à exportação: o relatório cobre o período visível.
+        // Enviamos em snake_case (contrato atual) e em camelCase, porque o
+        // endpoint refatorado do relatório (cabeçalho + nota LGPD) espera
+        // startDate/endDate — assim a troca no backend não exige deploy
+        // sincronizado do frontend.
+        const params = new URLSearchParams({
+          start_date,
+          end_date,
+          startDate: start_date,
+          endDate: end_date,
+          format,
+        });
+        const url = `https://api.stamflow.com.br/reports/export?${params.toString()}`;
 
-          const fetcher = window.authFetch || fetch;
-          const response = await fetcher(url, {
-            method: 'GET',
-            credentials: 'include',
-          });
+        const fetcher = window.authFetch || fetch;
+        const response = await fetcher(url, {
+          method: 'GET',
+          credentials: 'include',
+        });
 
-          // 404 = não há dados no período selecionado (não é erro de sistema)
-          if (response.status === 404) {
-            exportDropdown.classList.add("display-none");
-            alert("Nenhum dado encontrado para o período selecionado. Os relatórios aparecem aqui depois que a equipe registrar atividade no StamFlow.");
-            return;
-          }
-
-          if (!response.ok) throw new Error("Erro na exportação");
-
-          const blob = await response.blob();
-
-          const downloadUrl = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = downloadUrl;
-          a.download = `relatorio_stamflow_${start_date}_${end_date}.${format}`;
-          document.body.appendChild(a);
-          a.click();
-
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(downloadUrl);
-
-          exportDropdown.classList.add("display-none");
-        } catch (error) {
-          console.error("Erro ao exportar:", error);
-          alert("Não foi possível gerar o relatório. Tente novamente.");
-        } finally {
-          option.innerHTML = originalText;
-          option.style.pointerEvents = "auto";
+        // 404 = não há dados no período selecionado (não é erro de sistema)
+        if (response.status === 404) {
+          dropdown.classList.add("display-none");
+          alert("Nenhum dado encontrado para o período selecionado. Os relatórios aparecem aqui depois que a equipe registrar atividade no StamFlow.");
+          return;
         }
+
+        if (!response.ok) throw new Error("Erro na exportação");
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `relatorio_stamflow_${start_date}_${end_date}.${format}`;
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+
+        dropdown.classList.add("display-none");
+      } catch (error) {
+        console.error("Erro ao exportar:", error);
+        alert("Não foi possível gerar o relatório. Tente novamente.");
+      } finally {
+        option.innerHTML = originalText;
+        option.style.pointerEvents = "auto";
+      }
+    }
+
+    // 3. Liga cada par botão+dropdown. O dataset é o guard: _initExport roda
+    //    em DOMContentLoaded E em painelGestorReady, e sem ele o segundo
+    //    registro faria o toggle abrir e fechar no mesmo clique.
+    document.querySelectorAll(".export-container").forEach((container) => {
+      if (container.dataset.exportBound) return;
+      container.dataset.exportBound = "1";
+
+      const trigger = container.querySelector(".export-btn");
+      const dropdown = container.querySelector(".export-dropdown");
+      if (!trigger || !dropdown) return;
+
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // fecha o dropdown do outro header antes de abrir este
+        document.querySelectorAll(".export-dropdown").forEach((d) => {
+          if (d !== dropdown) d.classList.add("display-none");
+        });
+        dropdown.classList.toggle("display-none");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.add("display-none");
+        }
+      });
+
+      dropdown.querySelectorAll("li").forEach((option) => {
+        option.addEventListener("click", () => baixar(option, dropdown));
       });
     });
   }

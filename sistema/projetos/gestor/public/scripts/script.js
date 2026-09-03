@@ -271,45 +271,14 @@
   if (divsGestor.length > 1 && compararBtn && cancelarBtn) {
     divsGestor[1].classList.add("display-none");
 
-    // O "Exportar" mora no header da Visão Principal — e esse painel inteiro
-    // é escondido ao entrar na comparação, então o botão ia junto. Em vez de
-    // duplicar o markup (o que duplicaria os ids btn-export-trigger e
-    // export-list, de que o manager-dashboard.js depende), MOVEMOS o mesmo nó
-    // para o header da comparação e o trazemos de volta ao cancelar. Mover um
-    // nó no DOM preserva os listeners já registrados nele, então a lógica de
-    // exportação continua valendo sem reinstalar nada.
-    const exportContainer = document.querySelector(".export-container");
-    const headerComparacao = divsGestor[1].querySelector(".periodos-navegacao");
-    const casaDoExport = exportContainer && exportContainer.parentNode;
-    const vizinhoOriginal = exportContainer && exportContainer.nextSibling;
-
-    function levarExportPara(destino, minimizado) {
-      if (!exportContainer || !destino) return;
-      // Antes do "Cancelar", para manter a mesma ordem do header principal,
-      // onde o "Exportar" vem antes do "Comparar".
-      const ancora = destino.querySelector("#cancelar");
-      if (ancora) destino.insertBefore(exportContainer, ancora);
-      else destino.appendChild(exportContainer);
-      exportContainer.classList.toggle("export-minimizado", minimizado);
-    }
-
     compararBtn.addEventListener("click", () => {
       divsGestor[0].classList.add("display-none");
       divsGestor[1].classList.remove("display-none");
-      // No header da comparação o espaço é do PERIODO A + PERIODO B, então o
-      // botão entra na forma reduzida (só o ícone) e se abre no hover/foco.
-      levarExportPara(headerComparacao, true);
     });
 
     cancelarBtn.addEventListener("click", () => {
       divsGestor[0].classList.remove("display-none");
       divsGestor[1].classList.add("display-none");
-      // Volta para a posição exata que ocupava no .actions-wrapper (antes do
-      // "Comparar"), em tamanho normal.
-      if (exportContainer && casaDoExport) {
-        casaDoExport.insertBefore(exportContainer, vizinhoOriginal);
-        exportContainer.classList.remove("export-minimizado");
-      }
     });
   }
 
