@@ -9180,3 +9180,38 @@ html:has(> body.modal-open) {
         text-align: left;
     }
 }
+
+
+/* =========================================================
+   Checkup Scan no mobile (<=468px) — caixa da câmera mais alta.
+
+   Como estava: a `.camera.viewer` herdava `aspect-ratio: 640 / 320` da regra
+   R28 (<=1200px), ou seja uma caixa 2:1. Mas o bitmap do canvas é 640x480 —
+   4:3, vindo de `canvasElement.width/height = videoWidth/videoHeight` no
+   camera.js. Com `object-fit: contain` no `#output`, o desenho era limitado
+   pela ALTURA e sobrava faixa morta nas laterais.
+
+   Medido a 390px de viewport: caixa 349,4 x 174,7; desenho renderizado
+   232,9 x 174,7; 58,3px de vazio de cada lado.
+
+   Correção: no mobile a caixa passa a ter a MESMA proporção do bitmap. Aí o
+   desenho preenche a caixa inteira, sem faixa morta em lado nenhum:
+   349,4 x 262 — 50% maior em cada eixo, 125% mais área de esqueleto.
+
+   PROPORÇÃO: nada é achatado nem esticado. Quem garante isso é o
+   `object-fit: contain` que o #output já tinha (R8#2): ele encaixa o bitmap
+   preservando a proporção em QUALQUER caixa. A mudança aqui só faz a caixa
+   parar de desperdiçar espaço — o rosto não muda de forma, só de tamanho.
+   O <video> não entra na conta: ele é `display: none`, e o que aparece são
+   os landmarks desenhados sobre fundo transparente.
+
+   Por que não uma altura fixa de 350/400px: com `contain`, qualquer altura
+   ACIMA de 4:3 deixa o desenho do mesmo tamanho (ele passa a ser limitado
+   pela largura) e só acrescenta faixa vazia em cima e embaixo. 4:3 é o ponto
+   em que o esqueleto fica no maior tamanho possível para a largura atual.
+   ========================================================= */
+@media screen and (max-width: 468px) {
+    .camera.viewer {
+        aspect-ratio: 640 / 480;
+    }
+}
