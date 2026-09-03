@@ -42,17 +42,56 @@ let currentPostureScore = 100;
 const CALIBRATION_SAMPLES = 24;
 const calibrationBuffer = [];
 
+/*
+ * MEDIA APARADA, no lugar da media simples.
+ *
+ * A media simples nao tem defesa contra outlier. O MediaPipe solta, de vez em
+ * quando, um quadro com tracking perdido ou landmark ocluido; um unico desses
+ * com 20 graus de erro entre 24 amostras desloca a baseline em 0,83 grau — e
+ * esse desvio fica FIXO para a sessao inteira, porque a calibracao acontece
+ * uma vez so.
+ *
+ * A aparagem descarta as 4 maiores e as 4 menores leituras de CADA metrica
+ * (independentemente umas das outras: o quadro ruim para o ombro nao costuma
+ * ser o mesmo que e ruim para a rotacao) e promedia as 16 do meio. Isso
+ * mantem a reducao de variancia da media — o erro-padrao continua caindo com
+ * a raiz de N — e ganha a robustez da mediana: aguenta ate 4 outliers por
+ * ponta sem mover o resultado.
+ *
+ * Custo: quatro sorts de 24 numeros, UMA VEZ por calibracao. Nada.
+ *
+ * CALIBRATION_SAMPLES continua 24 e a cadencia de 83ms que enche o buffer
+ * continua a mesma — a Fase 16 nao e tocada aqui.
+ */
+const APARA_POR_PONTA = 4;
+
+function mediaAparada(valores) {
+    const n = valores.length;
+    if (n === 0) return 0;
+    // Precisa sobrar pelo menos 4 no meio para a aparagem valer a pena.
+    const corte = n >= 12 ? APARA_POR_PONTA : 0;
+    const ordenados = valores.slice().sort((a, b) => a - b);
+    const meio = ordenados.slice(corte, n - corte);
+    let soma = 0;
+    for (let i = 0; i < meio.length; i++) soma += meio[i];
+    return soma / meio.length;
+}
+
 function averageRawMetrics() {
     if (calibrationBuffer.length === 0) return lastRawMetrics;
-    let sA = 0, hP = 0, nY = 0, bA = 0;
+    const sA = [], hP = [], nY = [], bA = [];
     for (let i = 0; i < calibrationBuffer.length; i++) {
-        sA += calibrationBuffer[i].shoulderAngle;
-        hP += calibrationBuffer[i].headPitch;
-        nY += calibrationBuffer[i].neckYaw;
-        bA += calibrationBuffer[i].backAngle;
+        sA.push(calibrationBuffer[i].shoulderAngle);
+        hP.push(calibrationBuffer[i].headPitch);
+        nY.push(calibrationBuffer[i].neckYaw);
+        bA.push(calibrationBuffer[i].backAngle);
     }
-    const n = calibrationBuffer.length;
-    return { shoulderAngle: sA / n, headPitch: hP / n, neckYaw: nY / n, backAngle: bA / n };
+    return {
+        shoulderAngle: mediaAparada(sA),
+        headPitch:     mediaAparada(hP),
+        neckYaw:       mediaAparada(nY),
+        backAngle:     mediaAparada(bA)
+    };
 }
 
 // Suavização de Métricas de Postura
@@ -189,23 +228,116 @@ const CLASSIFICATION_RULES = {
  * crítica derrubava um quarto inteiro da nota e, combinada com as tolerâncias
  * apertadas acima, era o que impedia a Stamina de chegar a "Excelente".
  */
-function classifyMetricVal(metricName, v) {
-    const deviation = Math.abs(v || 0);
+/* =========================================================================
+ * ZONA MORTA
+ *
+ * Ancora a vizinhanca imediata da baseline em "Perfeito". Sem ela, um usuario
+ * cuja calibracao ficou levemente deslocada opera colado num limiar, e o ruido
+ * residual do detector (que o EMA reduz mas nao elimina) fica atravessando o
+ * degrau para os dois lados.
+ *
+ * D = metade da faixa "Perfeito" de cada metrica, derivado das PROPRIAS
+ * CLASSIFICATION_RULES para que nunca saia de sincronia com elas:
+ *     ombro 1,5°   cabeca 2,5°   rotacao 3,0°   tronco 2,5°
+ *
+ * EFEITO COLATERAL, DECLARADO: como D cabe inteiro dentro da faixa "Perfeito",
+ * subtrai-lo antes de classificar desloca TODOS os limiares para cima. Na
+ * pratica a faixa "Perfeito" passa a valer:
+ *     ombro 4,5°   cabeca 7,5°   rotacao 9,0°   tronco 7,5°
+ * e as faixas Bom/Ruim/Critico deslocam o mesmo tanto. Nao existe zona morta
+ * que ajude e ao mesmo tempo deixe as tolerancias intactas: se ela coubesse
+ * dentro do "Perfeito" sem deslocar nada, seria um no-op, porque tudo ali ja
+ * era "Perfeito". As CLASSIFICATION_RULES em si nao foram tocadas.
+ * ========================================================================= */
+const ZONA_MORTA = {
+    shoulder: CLASSIFICATION_RULES.shoulder.perfeito * 0.5,
+    head:     CLASSIFICATION_RULES.head.perfeito     * 0.5,
+    rotation: CLASSIFICATION_RULES.rotation.perfeito * 0.5,
+    back:     CLASSIFICATION_RULES.back.perfeito     * 0.5
+};
+
+function desvioUtil(metricName, v) {
+    const bruto = Math.abs(v || 0);
+    const d = ZONA_MORTA[metricName] || 0;
+    return bruto <= d ? 0 : bruto - d;
+}
+
+const NIVEIS = [
+    { label: 'Perfeito', score: 1    },
+    { label: 'Bom',      score: 0.75 },
+    { label: 'Ruim',     score: 0.50 },
+    { label: 'Crítico',  score: 0.25 }
+];
+
+function nivelCru(metricName, desvio) {
     const r = CLASSIFICATION_RULES[metricName];
+    if (desvio <= r.perfeito) return 0;
+    if (desvio <= r.bom)      return 1;
+    if (desvio <= r.ruim)     return 2;
+    return 3;
+}
 
-    let label, scoreRatio;
+function classifyMetricVal(metricName, v) {
+    const desvio = desvioUtil(metricName, v);
+    const n = nivelCru(metricName, desvio);
+    // `value` continua sendo o desvio BRUTO, para nao mudar o significado de um
+    // campo que ja existia (ninguem o le hoje, mas ele serve de diagnostico).
+    return { label: NIVEIS[n].label, score: NIVEIS[n].score, value: Number(Math.abs(v || 0).toFixed(2)) };
+}
 
-    if (deviation <= r.perfeito) {
-        label = 'Perfeito'; scoreRatio = 1;
-    } else if (deviation <= r.bom) {
-        label = 'Bom'; scoreRatio = 0.75;
-    } else if (deviation <= r.ruim) {
-        label = 'Ruim'; scoreRatio = 0.50;
+/* =========================================================================
+ * HISTERESE ASSIMETRICA
+ *
+ * A nota de postura e a media de quatro scoreRatio que so assumem
+ * {1; 0,75; 0,50; 0,25}, entao ela so pode cair em 13 valores e UMA metrica
+ * cruzando UM limiar move a nota 6,25 pontos de uma vez. Como a quantizacao
+ * acontece DEPOIS do EMA, suavizar o angulo nao suaviza a nota: um valor
+ * suavizado oscilando entre 2,98° e 3,02° em torno do limiar de 3° produz o
+ * pisca-pisca 100 -> 93,75 -> 100.
+ *
+ * A saida e tornar a fronteira assimetrica:
+ *   - PIORAR usa o limiar cheio (reage na hora, seguranca em primeiro lugar);
+ *   - MELHORAR exige 80% do limiar do nivel de destino.
+ * Para voltar a "Perfeito" no ombro nao basta cair abaixo de 3°: e preciso
+ * chegar a 2,4°. A banda morta de 0,6° entre subir e descer e o que impede a
+ * oscilacao de atravessar de novo.
+ *
+ * A promocao desce um nivel por vez, cada um com a sua propria folga, para que
+ * uma queda grande de desvio (de Critico direto para perto de zero) ainda
+ * chegue a Perfeito no mesmo quadro.
+ *
+ * O estado e resetado junto com os suavizadores em toda (re)calibracao: a
+ * baseline mudou, entao a memoria do nivel anterior perdeu o sentido.
+ * ========================================================================= */
+const HISTERESE = 0.8;
+const _nivelAnterior = { shoulder: null, head: null, rotation: null, back: null };
+
+function resetarHisterese() {
+    _nivelAnterior.shoulder = null;
+    _nivelAnterior.head = null;
+    _nivelAnterior.rotation = null;
+    _nivelAnterior.back = null;
+}
+
+function classifyComHisterese(metricName, v) {
+    const r = CLASSIFICATION_RULES[metricName];
+    const desvio = desvioUtil(metricName, v);
+    const cru = nivelCru(metricName, desvio);
+    const anterior = _nivelAnterior[metricName];
+
+    let n;
+    if (anterior === null || cru > anterior) {
+        // Primeira leitura, ou piorou: aceita direto, no limiar cheio.
+        n = cru;
     } else {
-        label = 'Crítico'; scoreRatio = 0.25;
+        // Melhorou: sobe um degrau de cada vez, cada um com a sua folga.
+        const limiares = [r.perfeito, r.bom, r.ruim];
+        n = anterior;
+        while (n > 0 && desvio <= limiares[n - 1] * HISTERESE) n--;
     }
 
-    return { label, score: scoreRatio, value: Number(deviation.toFixed(2)) };
+    _nivelAnterior[metricName] = n;
+    return { label: NIVEIS[n].label, score: NIVEIS[n].score, value: Number(Math.abs(v || 0).toFixed(2)) };
 }
 
 function classifyMetricsSimpleJSON(metrics) {
@@ -260,10 +392,11 @@ onmessage = (ev) => {
         // junto no postMessage, poupando um round-trip completo por quadro.
         // Identico, por construcao, ao que classifyMetricsSimpleJSON({shoulder:
         // sS, head: sH, rotation: sR, back: sB}) devolvia no caminho antigo.
-        const cS = classifyMetricVal('shoulder', sS);
-        const cH = classifyMetricVal('head', sH);
-        const cR = classifyMetricVal('rotation', sR);
-        const cB = classifyMetricVal('back', sB);
+        // Com histerese: e este o caminho que alimenta a nota exibida.
+        const cS = classifyComHisterese('shoulder', sS);
+        const cH = classifyComHisterese('head', sH);
+        const cR = classifyComHisterese('rotation', sR);
+        const cB = classifyComHisterese('back', sB);
 
         currentPostureScore = Math.round(((cS.score + cH.score + cR.score + cB.score) / 4) * 100);
 
@@ -285,10 +418,23 @@ onmessage = (ev) => {
         let expr = d.exprBuffer ? new Float32Array(d.exprBuffer) : (d.expressions ? new Float32Array(d.expressions) : null);
         if (!expr) return;
 
+        // EMA da emocao — pesos CORRIGIDOS.
+        //
+        // Estava `FIXED_SMOOTHING * ema + (1 - FIXED_SMOOTHING) * v`, ou seja o
+        // historico pesava 0,20 e o quadro novo 0,80. Isso e o INVERSO da
+        // convencao usada na postura (`a * novo + (1 - a) * antigo`, com a
+        // entre 0,20 e 0,25) e deixava o filtro praticamente inerte: reduzia o
+        // desvio-padrao do ruido em apenas 18%, contra 62 a 67% na postura. Era
+        // o que fazia os percentuais de Humor piscarem.
+        //
+        // Agora o historico pesa 0,80 e o quadro novo 0,20 — mesma reducao de
+        // ruido dos suavizadores de postura (fator 0,33, ou seja -67%).
+        // A CONSTANTE nao mudou: FIXED_SMOOTHING continua 0,20, e agora ela
+        // significa o que o nome diz. O `ema[i] += (p - ema[i])` tambem saiu:
+        // era uma forma rebuscada de escrever `ema[i] = p`.
         for (let i = 0; i < 4; i++) {
             const v = expr[i] || 0;
-            const p = FIXED_SMOOTHING * ema[i] + (1 - FIXED_SMOOTHING) * v;
-            ema[i] += (p - ema[i]); 
+            ema[i] = FIXED_SMOOTHING * v + (1 - FIXED_SMOOTHING) * ema[i];
         }
 
         // --- BOOST ALEGRIA (4s) ---
@@ -361,6 +507,7 @@ onmessage = (ev) => {
         // como ponto de partida — e esse frame é justamente o de depois do
         // alert(), quando o usuário já se mexeu para fechar a caixa.
         smootherValues.fill(0);
+        resetarHisterese();
         postMessage({
             type: 'calibrationSuccess',
             offsets: calibrationOffsets,
@@ -375,6 +522,7 @@ onmessage = (ev) => {
         calibrationOffsets.rotation = d.offsets.rotation || 0;
         calibrationOffsets.back     = d.offsets.back || 0;
         smootherValues.fill(0);
+        resetarHisterese();
         postMessage({ type: 'calibrationLoaded' });
         return;
     }
