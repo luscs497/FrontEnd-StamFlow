@@ -39,6 +39,13 @@ let rafScheduled = false;
 let latestPostureMsg = null;
 let latestEmotionMsg = null;
 
+// O1 — auto-calibracao pos-onboarding. Com o startApp adiado ate o clique em
+// "Ativar StamFlow", a camera ainda esta subindo quando o script.js clica em
+// #btn-send-metrics 100ms depois. Esta flag diz que a calibracao ja esta a
+// caminho: o clique nao vira alerta de erro e a calibracao dispara sozinha
+// quando o worker avisar que o buffer de amostras encheu (calibReady).
+let _calibracaoPendente = false;
+
 // Detecção de ausência de rosto: quando o rosto sai do quadro, a stamina
 // deve ir a 0 (e as métricas ficarem vazias), em vez de manter valores altos.
 let _facePresent = false;
@@ -213,7 +220,11 @@ function applyWorkerUpdates() {
   // 1. Postura: atualiza as classificações individuais (ombro/cabeça/rotação/costas)
   if (latestPostureMsg && latestPostureMsg.metrics) {
     currentRawMetrics = latestPostureMsg.metrics;
-    classifyPostureMetrics(latestPostureMsg.metrics).then(updateDiagnosticUI).catch(() => {});
+    // C5 — o worker ja calcula estes rotulos no mesmo passo em que compoe o
+    // currentPostureScore (mesma funcao classifyMetricVal, mesmas entradas) e
+    // agora os manda junto. Antes cada quadro pagava um segundo postMessage,
+    // uma Promise, uma entrada de Map e um setTimeout de limpeza de 1s.
+    if (latestPostureMsg.classification) updateDiagnosticUI(latestPostureMsg.classification);
   }
 
   // Sem dados de emoção/estado ainda -> não há o que atualizar (mantém "--")
@@ -285,14 +296,17 @@ bgWorker.onmessage = (ev) => {
 
   if (msg.type === 'postureMetrics') {
       latestPostureMsg = msg;
+      // O1 — calibracao agendada pelo onboarding: espera o worker sinalizar que
+      // o buffer ja tem as CALIBRATION_SAMPLES amostras. Quem manda no numero
+      // continua sendo o worker; aqui so se obedece ao calibReady, para a
+      // calibracao seguir sendo a MEDIA da Fase 16 e nao um frame solto.
+      if (_calibracaoPendente && msg.metrics && msg.calibReady) {
+          _calibracaoPendente = false;
+          bgWorker.postMessage({ type: 'calibrate' });
+      }
   }
   else if (msg.type === 'emotionState') {
       latestEmotionMsg = msg;
-  }
-  else if (msg.type === 'postureClassification' && msg.id != null) {
-    const pending = _pendingClassify.get(msg.id);
-    if (pending) { pending.resolve(msg.classification); _pendingClassify.delete(msg.id); }
-    return;
   }
   else if (msg.type === 'calibrationSuccess') {
       console.log("✅ Calibração realizada!", msg.offsets);
@@ -340,11 +354,38 @@ function sendExpressionsToWorker(expressionsObj, ts){
   bgWorker.postMessage({ type: 'expressions', ts, expressions: arr });
 }
 
+/*
+ * C3 — o #output vive dentro da aba "Checkup Scan", que nasce com
+ * display:none e so aparece quando o usuario abre a aba. Um canvas escondido
+ * NAO pula a rasterizacao: os comandos de desenho continuam executando contra
+ * o backing store, so a composicao e descartada. Ou seja, os ~2,5 mil tracos
+ * da malha facial eram pagos a cada quadro para pixels que ninguem via.
+ * checkVisibility() responde olhando a cadeia de ancestrais; onde ele nao
+ * existe (Safari < 17.4) o fallback e getClientRects().
+ */
+function canvasVisivel(){
+  if (!canvasElement) return false;
+  if (typeof canvasElement.checkVisibility === 'function') {
+    return canvasElement.checkVisibility({ checkVisibilityCSS: true, contentVisibilityAuto: true });
+  }
+  return canvasElement.getClientRects().length > 0;
+}
+
 function drawHolisticResults(results){
+  // Só o TRACO para. A inferencia, o envio ao worker, a calibracao, a stamina
+  // e a telemetria seguem exatamente como antes — ver onHolisticResults.
+  if (!canvasVisivel()) return;
+
   const vw = videoElement.videoWidth || 640;
   const vh = videoElement.videoHeight || 480;
-  canvasElement.width = vw;
-  canvasElement.height = vh;
+  // C4 — atribuir width/height SEMPRE reseta o canvas e realoca o bitmap de
+  // ~1,2 MB, mesmo quando o valor e identico (a 30fps eram ~37 MB/s de lixo
+  // para o GC). So reatribui quando a dimensao muda de verdade; o clearRect
+  // abaixo continua limpando o quadro nos demais casos.
+  if (canvasElement.width !== vw || canvasElement.height !== vh) {
+    canvasElement.width = vw;
+    canvasElement.height = vh;
+  }
   canvasCtx.clearRect(0, 0, vw, vh);
   canvasCtx.save();
   canvasCtx.scale(-1, 1);
@@ -473,6 +514,7 @@ async function startApp(){
       await camera.start();
 
       statusEl.textContent = "Monitoramento Ativo";
+      iniciarTemporizadoresDeEmocao(); // Q6
       statusEl.classList.add('active');
       statusEl.classList.remove('error');
       if (statusEl) statusEl.title = "";
@@ -503,6 +545,8 @@ function cameraUnavailable(msg) {
       statusEl.title = msg || "";
   }
   _facePresent = false;
+  _calibracaoPendente = false; // camera indisponivel: nao ha calibracao a caminho
+  pararTemporizadoresDeEmocao(); // Q6
   setNoFaceState();
   resetMetricsToInactive();
   console.warn("[camera]", msg);
@@ -516,23 +560,23 @@ function friendlyCameraError(err) {
   return "Não foi possível acessar a câmera.";
 }
 
-const _pendingClassify = new Map();
-let _classifyReqId = 1;
-function classifyPostureMetrics(metrics) {
-  return new Promise((resolve) => {
-    const id = _classifyReqId++;
-    _pendingClassify.set(id, { resolve });
-    bgWorker.postMessage({ type: 'classifyMetrics', id, metrics });
-    setTimeout(() => { if(_pendingClassify.has(id)) _pendingClassify.delete(id); }, 1000);
-  });
-}
+// C5 — classifyPostureMetrics() foi removida: ela mandava as MESMAS metricas
+// de volta ao worker (type: 'classifyMetrics') so para receber os rotulos que
+// o worker ja tinha calculado e descartado, ao custo de uma Promise, uma
+// entrada de Map e um setTimeout por quadro. Os rotulos agora chegam dentro da
+// propria mensagem 'postureMetrics'. O handler no worker continua la, inerte,
+// para nao quebrar nada que ainda o chame.
 
 const btnSendMetrics = document.getElementById('btn-send-metrics');
 if (btnSendMetrics) {
   btnSendMetrics.addEventListener('click', () => {
     if (!latestPostureMsg || !latestPostureMsg.metrics) {
+        // Auto-calibracao pos-onboarding: a camera ainda esta subindo, a
+        // calibracao ja esta agendada e dispara sozinha assim que o buffer
+        // encher. Nao ha erro nenhum a relatar ao usuario aqui.
+        if (_calibracaoPendente) return;
         alert("⚠️ Câmera inativa ou rosto não detectado!");
-        return; 
+        return;
     }
     requestNotificationPermission();
     bgWorker.postMessage({ type: 'calibrate' });
@@ -550,10 +594,58 @@ function __startAppOnce() {
   __startAppDone = true;
   startApp();
 }
-window.addEventListener('DOMContentLoaded', __startAppOnce);
-document.addEventListener('stamflow:heavy-ready', __startAppOnce);
+
+/*
+ * O1 — a pilha de visao computacional NAO pode subir durante o onboarding.
+ *
+ * Antes, startApp() rodava assim que o camera.js era avaliado (o readyState ja
+ * era "complete" na fase 2, entao o setTimeout(...,0) disparava na hora, antes
+ * mesmo do stamflow:heavy-ready). Resultado: enquanto o usuario deslizava os
+ * quatro slides, o aparelho baixava os pesos do face-api, baixava E COMPILAVA
+ * o WASM + .tflite do Holistic (compilacao de WASM bloqueia a main thread),
+ * abria o prompt de camera por cima do slide 1 e, logo em seguida, rodava duas
+ * CNNs mais ~2,5 mil tracos de canvas por quadro — tudo competindo com a
+ * animacao do Swiper na mesma thread.
+ *
+ * Agora: quem ja passou pelo onboarding (ou nao tem onboarding na tela) inicia
+ * exatamente como antes. Quem esta vendo o onboarding so liga a camera ao
+ * tocar em "Ativar StamFlow" — o mesmo clique que o script.js ja usa para
+ * fechar o onboarding e pedir a calibracao.
+ */
+function __onboardingAberto() {
+  if (localStorage.getItem('onboardingCompleted') === 'true') return false;
+  const onb = document.getElementById('on-boarding');
+  if (!onb) return false;
+  return !onb.classList.contains('display-none');
+}
+
+let __startAppAgendado = false;
+function __agendarStartApp() {
+  if (__startAppAgendado || __startAppDone) return;
+  __startAppAgendado = true;
+
+  if (!__onboardingAberto()) {
+    __startAppOnce();
+    return;
+  }
+
+  // Onboarding no ar: espera o "Ativar StamFlow". O script.js escuta o mesmo
+  // clique para esconder o onboarding, gravar onboardingCompleted e disparar
+  // #btn-send-metrics 100ms depois — por isso marcamos aqui que a calibracao
+  // esta a caminho, senao aquele clique cairia no alerta de "Camera inativa".
+  document.addEventListener('click', (e) => {
+    if (!e.target || !e.target.closest || !e.target.closest('#ativar-sistema')) return;
+    _calibracaoPendente = true;
+    __startAppOnce();
+  });
+}
+
+window.addEventListener('DOMContentLoaded', __agendarStartApp);
+document.addEventListener('stamflow:heavy-ready', __agendarStartApp);
+// Se o script carregar quando o DOM ja esta pronto (fase 2 tardia), agenda ja.
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  setTimeout(__startAppOnce, 0);
+  // pequeno defer para garantir que os globals (Holistic, faceapi) existam
+  setTimeout(__agendarStartApp, 0);
 }
 
 // ============================================================================
@@ -683,12 +775,29 @@ function flushEmotionWindow() {
     _emotionWindowTicks = 0;
 }
 
-// Coleta votos na mesma cadência do envio de expressões ao worker (~100ms),
-// garantindo várias leituras por janela de 2s.
-setInterval(sampleEmotionTick, EMOTION_SEND_INTERVAL_MS);
+// Q6 — estes dois temporizadores nasciam junto com o script e rodavam a 10 Hz
+// e 0,5 Hz para sempre, mesmo com a camera desligada (e, depois do O1, durante
+// todo o onboarding). Agora sobem com a camera e caem com ela. A cadencia e o
+// conteudo de cada tick sao os mesmos de antes.
+let _temporizadoresEmocao = null;
 
-// Fecha a janela de emoção a cada 2s, gravando a predominante real.
-setInterval(flushEmotionWindow, EMOTION_WINDOW_MS);
+function iniciarTemporizadoresDeEmocao() {
+  if (_temporizadoresEmocao) return;
+  _temporizadoresEmocao = {
+    // Coleta votos na mesma cadência do envio de expressões ao worker (~100ms),
+    // garantindo várias leituras por janela de 2s.
+    amostra: setInterval(sampleEmotionTick, EMOTION_SEND_INTERVAL_MS),
+    // Fecha a janela de emoção a cada 2s, gravando a predominante real.
+    janela: setInterval(flushEmotionWindow, EMOTION_WINDOW_MS)
+  };
+}
+
+function pararTemporizadoresDeEmocao() {
+  if (!_temporizadoresEmocao) return;
+  clearInterval(_temporizadoresEmocao.amostra);
+  clearInterval(_temporizadoresEmocao.janela);
+  _temporizadoresEmocao = null;
+}
 
 // Amostragem de POSTURA (independente da emoção): a cada 10s grava o estado
 // atual de cada parte do corpo. As 4 partes são registradas a cada amostra.

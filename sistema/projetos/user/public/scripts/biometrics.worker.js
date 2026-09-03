@@ -254,16 +254,28 @@ onmessage = (ev) => {
         const sR = smootherUpdate(2, rawAdj.rotation);
         const sB = smootherUpdate(3, rawAdj.back);
 
-        const scoreS = classifyMetricVal('shoulder', sS).score;
-        const scoreH = classifyMetricVal('head', sH).score;
-        const scoreR = classifyMetricVal('rotation', sR).score;
-        const scoreB = classifyMetricVal('back', sB).score;
-        
-        currentPostureScore = Math.round(((scoreS + scoreH + scoreR + scoreB) / 4) * 100);
+        // C5 — guarda o objeto inteiro em vez de so o .score. Sao as MESMAS
+        // quatro chamadas de classifyMetricVal com as MESMAS entradas de
+        // antes; o que muda e que os rotulos deixam de ser descartados e vao
+        // junto no postMessage, poupando um round-trip completo por quadro.
+        // Identico, por construcao, ao que classifyMetricsSimpleJSON({shoulder:
+        // sS, head: sH, rotation: sR, back: sB}) devolvia no caminho antigo.
+        const cS = classifyMetricVal('shoulder', sS);
+        const cH = classifyMetricVal('head', sH);
+        const cR = classifyMetricVal('rotation', sR);
+        const cB = classifyMetricVal('back', sB);
+
+        currentPostureScore = Math.round(((cS.score + cH.score + cR.score + cB.score) / 4) * 100);
 
         postMessage({
             type: 'postureMetrics',
-            metrics: { shoulder: sS, head: sH, rotation: sR, back: sB }
+            metrics: { shoulder: sS, head: sH, rotation: sR, back: sB },
+            classification: { shoulder: cS, head: cH, rotation: cR, back: cB },
+            // Quem manda no numero de amostras da calibracao continua sendo
+            // este arquivo. O camera.js so obedece a este sinal para disparar a
+            // auto-calibracao pos-onboarding com o buffer JA cheio, mantendo a
+            // media de CALIBRATION_SAMPLES da Fase 16 intacta.
+            calibReady: calibrationBuffer.length >= CALIBRATION_SAMPLES
         });
         return;
     }

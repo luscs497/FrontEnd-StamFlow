@@ -2117,7 +2117,8 @@ header {
     display: none;
 }
 
-#output, #output-humor {
+/* Q6 — #output-humor nao existe no markup; seletor orfao removido. */
+#output {
     position: absolute;
     top: 0;
     left: 0;
@@ -2379,7 +2380,9 @@ header {
     background: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
     border-radius: 25.6px;
     border: 0.8px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(28px);
+    /* O2 — backdrop-filter: blur(28px) removido. O background acima e um
+       radial-gradient TOTALMENTE OPACO (#1e293b -> #0f172a), entao o blur era
+       coberto pixel a pixel: custo de GPU alto, resultado invisivel. */
     display: flex;
     align-items: center;
     justify-content: center;
