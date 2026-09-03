@@ -10,7 +10,7 @@
   BUMPAR A CADA DEPLOY que altere qualquer arquivo em /public/scripts ou
   /public/styles. O formato é livre; a data facilita rastrear.
 */
-export const ASSET_VERSION = "20260903";
+export const ASSET_VERSION = "20260904";
 
 /** Anexa ?v= apenas a assets locais (CDNs já versionam na própria URL). */
 export function comVersao(src) {

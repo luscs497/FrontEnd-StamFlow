@@ -447,33 +447,48 @@ function periodoLabelFromKey(key) {
     //    Normalmente são os inputs da Visão Principal (antes era lido do chip
     //    Hoje/Semana/Mês, que não existe mais). Com a comparação aberta, a
     //    Visão Principal está escondida: exportar as datas dela entregaria um
-    //    PDF de um período que o gestor não está vendo, então valem as do
-    //    PERIODO A.
+    //    PDF de um período que o gestor não está vendo, então vale o PERIODO A
+    //    — e o PERIODO B vai junto, para o backend montar o comparativo.
     function getDatesFromActiveTab() {
       const painelComparacao = document.querySelectorAll(".painel-gestor")[1];
       const comparando =
         painelComparacao && !painelComparacao.classList.contains("display-none");
 
-      const inicioEl = document.getElementById(comparando ? "data-inicio-a" : "data-inicio-principal");
-      const fimEl = document.getElementById(comparando ? "data-fim-a" : "data-fim-principal");
-      const inicio = inicioEl?.value;
-      const fim = fimEl?.value;
-
-      if (!inicio || !fim) {
-        const hoje = toISODateLocal(new Date());
-        return { start_date: hoje, end_date: hoje };
+      // Lê um par de inputs e devolve [inicio, fim] em ordem cronológica —
+      // o usuário pode preencher a data final antes da inicial.
+      function lerIntervalo(idInicio, idFim) {
+        const inicio = document.getElementById(idInicio)?.value;
+        const fim = document.getElementById(idFim)?.value;
+        if (!inicio || !fim) return null;
+        return inicio <= fim ? [inicio, fim] : [fim, inicio];
       }
 
-      // Garante ordem cronológica correta mesmo se o usuário escolher a
-      // data final antes da inicial.
-      const [start_date, end_date] = inicio <= fim ? [inicio, fim] : [fim, inicio];
-      return { start_date, end_date };
+      const principal = comparando
+        ? lerIntervalo("data-inicio-a", "data-fim-a")
+        : lerIntervalo("data-inicio-principal", "data-fim-principal");
+
+      const hoje = toISODateLocal(new Date());
+      const [start_date, end_date] = principal || [hoje, hoje];
+      const datas = { start_date, end_date, comparando: !!comparando };
+
+      if (comparando) {
+        const b = lerIntervalo("data-inicio-b", "data-fim-b");
+        // Sem o PERIODO B preenchido não há comparativo a pedir: manda só o A,
+        // e o backend devolve o relatório simples de sempre.
+        if (b) {
+          datas.compare_start_date = b[0];
+          datas.compare_end_date = b[1];
+        }
+      }
+
+      return datas;
     }
 
     // 2. Baixa o relatório a partir de uma opção do dropdown.
     async function baixar(option, dropdown) {
       const format = option.getAttribute("data-format");
-      const { start_date, end_date } = getDatesFromActiveTab();
+      const { start_date, end_date, compare_start_date, compare_end_date } =
+        getDatesFromActiveTab();
 
       const originalText = option.innerHTML;
       option.innerHTML = "Baixando...";
@@ -494,6 +509,18 @@ function periodoLabelFromKey(key) {
           endDate: end_date,
           format,
         });
+
+        // Na aba Comparar o relatório é comparativo: o PERIODO B viaja junto,
+        // e o backend monta A vs B. Em camelCase (o contrato do endpoint
+        // refatorado) e em snake_case, pelo mesmo motivo de start_date/startDate
+        // — a migração no backend não precisa de deploy sincronizado aqui.
+        if (compare_start_date && compare_end_date) {
+          params.set("compareStartDate", compare_start_date);
+          params.set("compareEndDate", compare_end_date);
+          params.set("compare_start_date", compare_start_date);
+          params.set("compare_end_date", compare_end_date);
+        }
+
         const url = `https://api.stamflow.com.br/reports/export?${params.toString()}`;
 
         const fetcher = window.authFetch || fetch;
@@ -516,7 +543,9 @@ function periodoLabelFromKey(key) {
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = downloadUrl;
-        a.download = `relatorio_stamflow_${start_date}_${end_date}.${format}`;
+        a.download = compare_start_date
+          ? `relatorio_stamflow_${start_date}_${end_date}_vs_${compare_start_date}_${compare_end_date}.${format}`
+          : `relatorio_stamflow_${start_date}_${end_date}.${format}`;
         document.body.appendChild(a);
         a.click();
 

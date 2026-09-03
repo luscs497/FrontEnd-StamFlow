@@ -2217,25 +2217,14 @@ header.nav-mini .imagem-usuario {
     }
 }
 
-/* O bloco PERIODO A + PERIODO B cresce até onde puder e encostava no
-   "Exportar" — o margin-left: auto só empurra quando sobra espaço, e aqui não
-   sobra. A margem garante o mesmo respiro que os botões têm entre si, em
-   todas as larguras onde a barra ainda é uma linha (a partir de 769px ela
-   empilha e o gap da coluna assume). */
+/* Header da COMPARAÇÃO: o "Exportar" (minimizado) fica à ESQUERDA do
+   "Cancelar", e os dois viajam juntos para a ponta direita. Sem isto, de 769 a
+   992px o `space-between` espalhava os três filhos e deixava um vão enorme
+   entre os botões. A regra genérica .export-container (order: 3 +
+   margin-left: auto, no @media de 993px) continua servindo ao header
+   principal, onde o Exportar é o último; aqui os dois seletores de classe
+   ganham dela por especificidade, em qualquer ordem no arquivo. */
 @media (min-width: 769px) {
-    .prazosDiv {
-        margin-right: 14.4px;
-    }
-
-    /* Header da COMPARAÇÃO: o "Exportar" (minimizado) fica à ESQUERDA do
-       "Cancelar", e os dois viajam juntos para a ponta direita. Sem isto, de
-       769 a 992px o `space-between` espalhava os três filhos e deixava um vão
-       enorme entre os dois botões. A regra genérica .export-container
-       (order: 3 + margin-left: auto, no @media de 993px) continua servindo ao
-       header principal, onde o Exportar é o último; aqui os dois seletores de
-       classe ganham dela por especificidade, em qualquer ordem no arquivo.
-       O margin-left do Cancelar repete os 14.4px que o "Comparar" já usa no
-       header principal, mantendo o mesmo respiro entre botões nos dois. */
     .export-container.export-minimizado {
         order: 2;
         margin-left: auto;
@@ -2243,6 +2232,21 @@ header.nav-mini .imagem-usuario {
 
     .cancelar-btn {
         order: 3;
+    }
+}
+
+/* Acima de 1200px a barra é uma linha só e NÃO tem `gap` próprio — de 769 a
+   1200 ela ganha `flex-wrap: wrap` e `gap: 12px` (styles-1200 e styles-992),
+   que já cuidam do respiro. Por isso as margens vivem só aqui: aplicá-las nas
+   outras faixas somava ao gap (12 + 14.4 = 26px entre os botões) e o
+   margin-right ainda descontava da .prazosDiv, que tem width: 100% e deixava
+   de alcançar a borda do padding. */
+@media (min-width: 1201px) {
+    .prazosDiv {
+        margin-right: 14.4px;
+    }
+
+    .cancelar-btn {
         margin-left: 14.4px;
     }
 }
