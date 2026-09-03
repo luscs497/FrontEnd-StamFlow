@@ -456,12 +456,19 @@ function periodoLabelFromKey(key) {
       });
     }
 
-    // 2. Função Auxiliar: Obter Datas (YYYY-MM-DD) do período selecionado
-    //    nos inputs de data da Visão Principal (antes era lido do chip
-    //    Hoje/Semana/Mês, que não existe mais).
+    // 2. Função Auxiliar: Obter Datas (YYYY-MM-DD) do período que está NA TELA.
+    //    Normalmente são os inputs da Visão Principal (antes era lido do chip
+    //    Hoje/Semana/Mês, que não existe mais). Mas o "Exportar" agora também
+    //    aparece na comparação, e ali a Visão Principal está escondida: exportar
+    //    as datas dela entregaria um PDF de um período que o gestor não está
+    //    vendo. Com a comparação aberta, valem as datas do PERIODO A.
     function getDatesFromActiveTab() {
-      const inicioEl = document.getElementById("data-inicio-principal");
-      const fimEl = document.getElementById("data-fim-principal");
+      const painelComparacao = document.querySelectorAll(".painel-gestor")[1];
+      const comparando =
+        painelComparacao && !painelComparacao.classList.contains("display-none");
+
+      const inicioEl = document.getElementById(comparando ? "data-inicio-a" : "data-inicio-principal");
+      const fimEl = document.getElementById(comparando ? "data-fim-a" : "data-fim-principal");
       const inicio = inicioEl?.value;
       const fim = fimEl?.value;
 

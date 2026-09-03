@@ -164,6 +164,37 @@ header.nav-mini .logo {
   justify-content: center;
 }
 
+/* "Exportar" na aba Comparar: nesta faixa o header já empilha em coluna e os
+   botões ocupam a linha inteira, como o Cancelar. Minimizar aqui só deixaria
+   um ícone solto num layout empilhado — e sem hover confiável no toque ele
+   ficaria sem rótulo nenhum. Então a forma reduzida é desligada: o botão volta
+   ao tamanho normal e herda o min-height dos demais, mantendo o alvo de toque.
+   O dropdown volta a ancorar à direita, como no resto desta faixa. */
+.export-minimizado,
+.export-minimizado .export-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.export-minimizado .export-btn {
+  gap: 6px;
+  /* As regras de min-height dos botoes moram em @media (max-width: 500px), no
+     styles.css — nesta faixa (469-768) o .export-btn ficava com a altura do
+     padding, ~39px. Como aqui ele e um alvo de toque de verdade (o header ja
+     esta empilhado e nao ha hover), garantimos os 44px recomendados. */
+  min-height: 44px;
+}
+
+.export-minimizado .export-btn-rotulo {
+  max-width: none;
+  opacity: 1;
+}
+
+.export-minimizado .export-dropdown {
+  right: 0;
+  left: auto;
+}
+
 /* 2) Comparação: empilha tudo */
 .linha-comparacao {
   flex-direction: column;
