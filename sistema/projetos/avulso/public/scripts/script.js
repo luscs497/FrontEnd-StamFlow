@@ -394,10 +394,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (typeof Swiper !== "undefined" && onboardingContainer) {
     const cores = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#14B8A6"];
+    /*
+     * O5 — autoHeight DESLIGADO.
+     *
+     * Com autoHeight, o Swiper mede cada slide e aplica uma TRANSICAO DE
+     * height no .swiper-wrapper a cada troca. Altura e propriedade de layout:
+     * cada quadro da transicao custa layout + paint da subarvore inteira, na
+     * main thread. E o .on-boarding-container e overflow:auto com max-height
+     * em todos os breakpoints, entao o scroll anchoring entra junto. Os quatro
+     * slides tem 2, 3, 4 e 1 ".point" — a maior distancia possivel de animar.
+     *
+     * Sem ele, o deslize passa a ser so o translate3d que o Swiper ja fazia:
+     * puro transform, composto na GPU, sem tocar o layout.
+     *
+     * A altura vem de ajustarAlturaDoOnboarding(): a do slide mais alto,
+     * MEDIDA (nao chutada), entao nada e cortado em nenhum breakpoint.
+     */
     const swiperBoarding = new Swiper(".swiper-onboarding", {
       loop: false,
       slidesPerView: 1,
-      autoHeight: true,
+      autoHeight: false,
       navigation: { nextEl: ".next-boarding", prevEl: ".prev" },
       pagination: { el: ".pagination", clickable: false },
       on: {
@@ -409,6 +425,42 @@ document.addEventListener("DOMContentLoaded", async () => {
           document.documentElement.style.setProperty("--bullet-active-color", novaCor);
         },
       },
+    });
+
+    /*
+     * O5 — altura do carrossel: a do slide mais alto, medida de verdade.
+     * Recalculada no resize e quando as fontes terminam de carregar, porque as
+     * duas coisas mudam a altura do texto. Nao mede com o onboarding escondido
+     * (mediria zero e travaria a altura em nada).
+     */
+    function ajustarAlturaDoOnboarding() {
+      const secao = document.getElementById("on-boarding");
+      if (!secao || secao.classList.contains("display-none")) return;
+      const wrapper = document.querySelector(".swiper-onboarding .swiper-wrapper");
+      const cards = document.querySelectorAll(
+        ".swiper-onboarding .swiper-slide > .on-boarding-card"
+      );
+      if (!wrapper || !cards.length) return;
+
+      wrapper.style.height = "auto"; // solta para medir o natural
+      let maior = 0;
+      cards.forEach((c) => {
+        const h = c.getBoundingClientRect().height;
+        if (h > maior) maior = h;
+      });
+      if (maior > 0) wrapper.style.height = Math.ceil(maior) + "px";
+    }
+
+    ajustarAlturaDoOnboarding();
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(ajustarAlturaDoOnboarding).catch(() => {});
+    }
+
+    let _tempoAltura = 0;
+    window.addEventListener("resize", () => {
+      clearTimeout(_tempoAltura);
+      _tempoAltura = setTimeout(ajustarAlturaDoOnboarding, 150);
     });
 
     const btnSkip = document.querySelector(".skip");

@@ -737,64 +737,34 @@ if (btnSendMetrics) {
 // disparado), escutamos também o evento "stamflow:heavy-ready" emitido pelo
 // bootstrap ao terminar de carregar as libs pesadas. Um guard evita rodar
 // startApp duas vezes caso ambos os eventos ocorram.
+/*
+ * O1 (revisto apos o QA) — QUEM decide se a camera pode ligar e o
+ * LegacyBootstrap, nao este arquivo.
+ *
+ * A versao anterior registrava aqui mesmo o listener de #ativar-sistema. Isso
+ * exige que ESTE script ja tenha executado no instante do clique — e ele e o
+ * quinto item de uma fase que baixa ~1 MB de libs de visao antes dele. No
+ * mobile o usuario chega ao botao antes, e o clique nao encontrava listener
+ * nenhum. Agora a fase 2 so e carregada DEPOIS que o onboarding sai da tela,
+ * entao quando este arquivo executa a decisao ja foi tomada: e so iniciar.
+ */
 let __startAppDone = false;
 function __startAppOnce() {
   if (__startAppDone) return;
   __startAppDone = true;
+  // Sinalizador posto pelo bootstrap no clique de "Ativar StamFlow": a
+  // auto-calibracao ja esta a caminho, entao o clique que o script.js dispara
+  // em #btn-send-metrics 100ms depois nao deve virar alerta de erro.
+  if (window.__stamflowCalibrarAoIniciar) _calibracaoPendente = true;
   startApp();
 }
 
-/*
- * O1 — a pilha de visao computacional NAO pode subir durante o onboarding.
- *
- * Antes, startApp() rodava assim que o camera.js era avaliado (o readyState ja
- * era "complete" na fase 2, entao o setTimeout(...,0) disparava na hora, antes
- * mesmo do stamflow:heavy-ready). Resultado: enquanto o usuario deslizava os
- * quatro slides, o aparelho baixava os pesos do face-api, baixava E COMPILAVA
- * o WASM + .tflite do Holistic (compilacao de WASM bloqueia a main thread),
- * abria o prompt de camera por cima do slide 1 e, logo em seguida, rodava duas
- * CNNs mais ~2,5 mil tracos de canvas por quadro — tudo competindo com a
- * animacao do Swiper na mesma thread.
- *
- * Agora: quem ja passou pelo onboarding (ou nao tem onboarding na tela) inicia
- * exatamente como antes. Quem esta vendo o onboarding so liga a camera ao
- * tocar em "Ativar StamFlow" — o mesmo clique que o script.js ja usa para
- * fechar o onboarding e pedir a calibracao.
- */
-function __onboardingAberto() {
-  if (localStorage.getItem('onboardingCompleted') === 'true') return false;
-  const onb = document.getElementById('on-boarding');
-  if (!onb) return false;
-  return !onb.classList.contains('display-none');
-}
-
-let __startAppAgendado = false;
-function __agendarStartApp() {
-  if (__startAppAgendado || __startAppDone) return;
-  __startAppAgendado = true;
-
-  if (!__onboardingAberto()) {
-    __startAppOnce();
-    return;
-  }
-
-  // Onboarding no ar: espera o "Ativar StamFlow". O script.js escuta o mesmo
-  // clique para esconder o onboarding, gravar onboardingCompleted e disparar
-  // #btn-send-metrics 100ms depois — por isso marcamos aqui que a calibracao
-  // esta a caminho, senao aquele clique cairia no alerta de "Camera inativa".
-  document.addEventListener('click', (e) => {
-    if (!e.target || !e.target.closest || !e.target.closest('#ativar-sistema')) return;
-    _calibracaoPendente = true;
-    __startAppOnce();
-  });
-}
-
-window.addEventListener('DOMContentLoaded', __agendarStartApp);
-document.addEventListener('stamflow:heavy-ready', __agendarStartApp);
-// Se o script carregar quando o DOM ja esta pronto (fase 2 tardia), agenda ja.
+window.addEventListener('DOMContentLoaded', __startAppOnce);
+document.addEventListener('stamflow:heavy-ready', __startAppOnce);
+// Se o script carregar quando o DOM ja esta pronto (fase 2 tardia), inicia ja.
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   // pequeno defer para garantir que os globals (Holistic, faceapi) existam
-  setTimeout(__agendarStartApp, 0);
+  setTimeout(__startAppOnce, 0);
 }
 
 // ============================================================================

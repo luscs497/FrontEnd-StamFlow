@@ -220,20 +220,125 @@ export default function LegacyBootstrap() {
       );
       window.dispatchEvent(new Event("load"));
 
-      // FASE 2 (pesada): face-api + MediaPipe + camera.js + relatórios.
-      // Carrega em seguida, sem travar a primeira pintura do onboarding.
-      // Só são necessários quando a câmera liga.
-      for (const src of LEGACY_SCRIPTS_HEAVY) {
-        if (cancelled) return;
-        await loadScript(src);
-      }
-      if (cancelled) return;
+      /* ---------------------------------------------------------------
+         FASE 2 (pesada): face-api + MediaPipe + camera.js + relatórios.
 
-      // Segundo disparo: agora que as libs de câmera existem, notifica os
-      // scripts que aguardam esses globals (camera.js escuta este evento).
-      document.dispatchEvent(
-        new Event("stamflow:heavy-ready", { bubbles: true })
-      );
+         QUEM DECIDE QUANDO A CÂMERA LIGA MORA AQUI, e não mais no camera.js.
+
+         Antes, o camera.js registrava ele mesmo o listener de
+         #ativar-sistema. Isso só funciona se o camera.js já tiver EXECUTADO
+         no instante do clique — e ele é o quinto item de uma fase que baixa
+         ~1 MB de libs de visão antes dele. No mobile o usuário chega no
+         "Ativar StamFlow" antes disso, e o clique caía no vazio. O
+         LegacyBootstrap, ao contrário, já está de pé desde a primeira
+         pintura: não existe corrida possível.
+
+         E como a fase 2 inteira passa a ser carregada só depois do
+         onboarding, o parse e a compilação do WASM do MediaPipe — que
+         bloqueiam a main thread mesmo com o startApp adiado — saem de cima
+         da animação dos slides.
+      --------------------------------------------------------------- */
+      let fase2Iniciada = false;
+      const carregarFase2 = async () => {
+        if (fase2Iniciada || cancelled) return;
+        fase2Iniciada = true;
+        for (const src of LEGACY_SCRIPTS_HEAVY) {
+          if (cancelled) return;
+          await loadScript(src);
+        }
+        if (cancelled) return;
+        document.dispatchEvent(
+          new Event("stamflow:heavy-ready", { bubbles: true })
+        );
+        agendarFase3();
+      };
+
+      /* Baixa sem executar. O <link rel="preload" as="script"> deixa o
+         navegador buscar os megabytes de libs de IA durante a leitura do
+         onboarding — trabalho de rede, fora da main thread — para que o
+         clique em "Ativar StamFlow" pague só o parse, com o cache quente.
+         Sem `crossorigin`, para casar com o fetch no-cors que a tag <script>
+         clássica fará depois; com ele o navegador baixaria duas vezes. */
+      const precarregarFase2 = () => {
+        for (const src of LEGACY_SCRIPTS_HEAVY) {
+          if (document.querySelector(`link[data-preload="${src}"]`)) continue;
+          const l = document.createElement("link");
+          l.rel = "preload";
+          l.as = "script";
+          l.href = comVersao(src);
+          l.dataset.preload = src;
+          document.head.appendChild(l);
+        }
+      };
+
+      /* Em janela privada, ou com dados de site bloqueados, o simples ACESSO
+         ao localStorage lança. Sem esta guarda o throw derrubava a função que
+         decide ligar a câmera — silenciosamente, porque acontecia dentro de um
+         setTimeout. */
+      const lerLocal = (chave: string): string | null => {
+        try {
+          return window.localStorage.getItem(chave);
+        } catch {
+          return null;
+        }
+      };
+
+      const onboardingAberto = (): boolean => {
+        if (lerLocal("onboardingCompleted") === "true") return false;
+        const onb = document.getElementById("on-boarding");
+        if (!onb) return false;
+        return !onb.classList.contains("display-none");
+      };
+
+      const aoSairDoOnboarding = (aoFinalizar: () => void) => {
+        let disparado = false;
+        let observador: MutationObserver | null = null;
+
+        const disparar = () => {
+          if (disparado) return;
+          disparado = true;
+          // O script.js clica em #btn-send-metrics 100 ms depois deste mesmo
+          // clique, para auto-calibrar. Nessa hora o camera.js ainda está
+          // baixando, então quem avisa que a calibração está a caminho é este
+          // sinalizador — o camera.js o lê ao iniciar.
+          (window as unknown as { __stamflowCalibrarAoIniciar?: boolean })
+            .__stamflowCalibrarAoIniciar = true;
+          observador?.disconnect();
+          document.removeEventListener("click", aoClicar, true);
+          aoFinalizar();
+        };
+
+        function aoClicar(e: Event) {
+          const alvo = e.target as HTMLElement | null;
+          if (alvo?.closest?.("#ativar-sistema")) disparar();
+        }
+
+        // Fase de CAPTURA: desce antes de qualquer handler de bolha, então
+        // nenhum stopPropagation de outro script pode engolir este clique.
+        document.addEventListener("click", aoClicar, true);
+
+        // Rede de segurança: qualquer caminho que esconda o onboarding libera
+        // a câmera, não só o botão. Se amanhã alguém fechar a tela por outro
+        // gesto, a câmera continua ligando.
+        const onb = document.getElementById("on-boarding");
+        if (onb) {
+          observador = new MutationObserver(() => {
+            if (onb.classList.contains("display-none")) disparar();
+          });
+          observador.observe(onb, {
+            attributes: true,
+            attributeFilter: ["class"],
+          });
+        }
+      };
+
+      if (onboardingAberto()) {
+        precarregarFase2();
+        aoSairDoOnboarding(carregarFase2);
+      } else {
+        // Usuário recorrente (ou sem onboarding na tela): igual a antes.
+        void carregarFase2();
+      }
 
       // FASE 3 (Q4): html2canvas + jsPDF + detox.js — ~230 KB que só a aba
       // Detox Mental usa, e que até aqui todo usuário baixava em toda sessão.
@@ -267,13 +372,15 @@ export default function LegacyBootstrap() {
       };
       document.addEventListener("pointerdown", aoApontarNoDetox, true);
 
-      const agendarOcioso = (window as unknown as {
-        requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void;
-      }).requestIdleCallback;
-      if (typeof agendarOcioso === "function") {
-        agendarOcioso(carregarFase3, { timeout: 5000 });
-      } else {
-        setTimeout(carregarFase3, 2000);
+      function agendarFase3() {
+        const agendarOcioso = (window as unknown as {
+          requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void;
+        }).requestIdleCallback;
+        if (typeof agendarOcioso === "function") {
+          agendarOcioso(carregarFase3, { timeout: 5000 });
+        } else {
+          setTimeout(carregarFase3, 2000);
+        }
       }
     })();
 
