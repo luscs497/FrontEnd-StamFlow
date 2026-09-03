@@ -437,93 +437,159 @@ function periodoLabelFromKey(key) {
 ============================================================================ */
 
 (function () {
+  // Cada header tem o SEU "Exportar": o da Visão Principal e o da comparação
+  // (este último minimizado). Nada é movido entre painéis — cada botão vive no
+  // header a que pertence e some junto com ele, que é o comportamento natural.
+  // Por isso os ganchos são por CLASSE, não por id: ids teriam de ser únicos e
+  // um getElementById pegaria só o primeiro.
   function _initExport() {
-    const btnExportTrigger = document.getElementById("btn-export-trigger");
-    const exportDropdown = document.getElementById("export-list");
-    const exportOptions = document.querySelectorAll(".export-dropdown li");
+    // 1. Função Auxiliar: Obter Datas (YYYY-MM-DD) do período que está NA TELA.
+    //    Normalmente são os inputs da Visão Principal (antes era lido do chip
+    //    Hoje/Semana/Mês, que não existe mais). Com a comparação aberta, a
+    //    Visão Principal está escondida: exportar as datas dela entregaria um
+    //    PDF de um período que o gestor não está vendo, então vale o PERIODO A
+    //    — e o PERIODO B vai junto, para o backend montar o comparativo.
+    function getDatesFromActiveTab() {
+      const painelComparacao = document.querySelectorAll(".painel-gestor")[1];
+      const comparando =
+        painelComparacao && !painelComparacao.classList.contains("display-none");
 
-    // 1. Toggle do Dropdown
-    if (btnExportTrigger && exportDropdown) {
-      btnExportTrigger.addEventListener("click", (e) => {
+      // Lê um par de inputs e devolve [inicio, fim] em ordem cronológica —
+      // o usuário pode preencher a data final antes da inicial.
+      function lerIntervalo(idInicio, idFim) {
+        const inicio = document.getElementById(idInicio)?.value;
+        const fim = document.getElementById(idFim)?.value;
+        if (!inicio || !fim) return null;
+        return inicio <= fim ? [inicio, fim] : [fim, inicio];
+      }
+
+      const principal = comparando
+        ? lerIntervalo("data-inicio-a", "data-fim-a")
+        : lerIntervalo("data-inicio-principal", "data-fim-principal");
+
+      const hoje = toISODateLocal(new Date());
+      const [start_date, end_date] = principal || [hoje, hoje];
+      const datas = { start_date, end_date, comparando: !!comparando };
+
+      if (comparando) {
+        const b = lerIntervalo("data-inicio-b", "data-fim-b");
+        // Sem o PERIODO B preenchido não há comparativo a pedir: manda só o A,
+        // e o backend devolve o relatório simples de sempre.
+        if (b) {
+          datas.compare_start_date = b[0];
+          datas.compare_end_date = b[1];
+        }
+      }
+
+      return datas;
+    }
+
+    // 2. Baixa o relatório a partir de uma opção do dropdown.
+    async function baixar(option, dropdown) {
+      const format = option.getAttribute("data-format");
+      const { start_date, end_date, compare_start_date, compare_end_date } =
+        getDatesFromActiveTab();
+
+      const originalText = option.innerHTML;
+      option.innerHTML = "Baixando...";
+      option.style.pointerEvents = "none";
+
+      try {
+        // As datas saem de getDatesFromActiveTab(), que lê os inputs de data
+        // do painel que está na tela — o estado que o painel já mantinha. Não
+        // há UI dedicada à exportação: o relatório cobre o período visível.
+        // Enviamos em snake_case (contrato atual) e em camelCase, porque o
+        // endpoint refatorado do relatório (cabeçalho + nota LGPD) espera
+        // startDate/endDate — assim a troca no backend não exige deploy
+        // sincronizado do frontend.
+        const params = new URLSearchParams({
+          start_date,
+          end_date,
+          startDate: start_date,
+          endDate: end_date,
+          format,
+        });
+
+        // Na aba Comparar o relatório é comparativo: o PERIODO B viaja junto,
+        // e o backend monta A vs B. Em camelCase (o contrato do endpoint
+        // refatorado) e em snake_case, pelo mesmo motivo de start_date/startDate
+        // — a migração no backend não precisa de deploy sincronizado aqui.
+        if (compare_start_date && compare_end_date) {
+          params.set("compareStartDate", compare_start_date);
+          params.set("compareEndDate", compare_end_date);
+          params.set("compare_start_date", compare_start_date);
+          params.set("compare_end_date", compare_end_date);
+        }
+
+        const url = `https://api.stamflow.com.br/reports/export?${params.toString()}`;
+
+        const fetcher = window.authFetch || fetch;
+        const response = await fetcher(url, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        // 404 = não há dados no período selecionado (não é erro de sistema)
+        if (response.status === 404) {
+          dropdown.classList.add("display-none");
+          alert("Nenhum dado encontrado para o período selecionado. Os relatórios aparecem aqui depois que a equipe registrar atividade no StamFlow.");
+          return;
+        }
+
+        if (!response.ok) throw new Error("Erro na exportação");
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = compare_start_date
+          ? `relatorio_stamflow_${start_date}_${end_date}_vs_${compare_start_date}_${compare_end_date}.${format}`
+          : `relatorio_stamflow_${start_date}_${end_date}.${format}`;
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+
+        dropdown.classList.add("display-none");
+      } catch (error) {
+        console.error("Erro ao exportar:", error);
+        alert("Não foi possível gerar o relatório. Tente novamente.");
+      } finally {
+        option.innerHTML = originalText;
+        option.style.pointerEvents = "auto";
+      }
+    }
+
+    // 3. Liga cada par botão+dropdown. O dataset é o guard: _initExport roda
+    //    em DOMContentLoaded E em painelGestorReady, e sem ele o segundo
+    //    registro faria o toggle abrir e fechar no mesmo clique.
+    document.querySelectorAll(".export-container").forEach((container) => {
+      if (container.dataset.exportBound) return;
+      container.dataset.exportBound = "1";
+
+      const trigger = container.querySelector(".export-btn");
+      const dropdown = container.querySelector(".export-dropdown");
+      if (!trigger || !dropdown) return;
+
+      trigger.addEventListener("click", (e) => {
         e.stopPropagation();
-        exportDropdown.classList.toggle("display-none");
+        // fecha o dropdown do outro header antes de abrir este
+        document.querySelectorAll(".export-dropdown").forEach((d) => {
+          if (d !== dropdown) d.classList.add("display-none");
+        });
+        dropdown.classList.toggle("display-none");
       });
 
       document.addEventListener("click", (e) => {
-        if (!btnExportTrigger.contains(e.target) && !exportDropdown.contains(e.target)) {
-          exportDropdown.classList.add("display-none");
+        if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.add("display-none");
         }
       });
-    }
 
-    // 2. Função Auxiliar: Obter Datas (YYYY-MM-DD) do período selecionado
-    //    nos inputs de data da Visão Principal (antes era lido do chip
-    //    Hoje/Semana/Mês, que não existe mais).
-    function getDatesFromActiveTab() {
-      const inicioEl = document.getElementById("data-inicio-principal");
-      const fimEl = document.getElementById("data-fim-principal");
-      const inicio = inicioEl?.value;
-      const fim = fimEl?.value;
-
-      if (!inicio || !fim) {
-        const hoje = toISODateLocal(new Date());
-        return { start_date: hoje, end_date: hoje };
-      }
-
-      // Garante ordem cronológica correta mesmo se o usuário escolher a
-      // data final antes da inicial.
-      const [start_date, end_date] = inicio <= fim ? [inicio, fim] : [fim, inicio];
-      return { start_date, end_date };
-    }
-
-    // 3. Lógica de Download
-    exportOptions.forEach((option) => {
-      option.addEventListener("click", async () => {
-        const format = option.getAttribute("data-format");
-        const { start_date, end_date } = getDatesFromActiveTab();
-
-        const originalText = option.innerHTML;
-        option.innerHTML = "Baixando...";
-        option.style.pointerEvents = "none";
-
-        try {
-          const url = `https://api.stamflow.com.br/reports/export?start_date=${start_date}&end_date=${end_date}&format=${format}`;
-
-          const fetcher = window.authFetch || fetch;
-          const response = await fetcher(url, {
-            method: 'GET',
-            credentials: 'include',
-          });
-
-          // 404 = não há dados no período selecionado (não é erro de sistema)
-          if (response.status === 404) {
-            exportDropdown.classList.add("display-none");
-            alert("Nenhum dado encontrado para o período selecionado. Os relatórios aparecem aqui depois que a equipe registrar atividade no StamFlow.");
-            return;
-          }
-
-          if (!response.ok) throw new Error("Erro na exportação");
-
-          const blob = await response.blob();
-
-          const downloadUrl = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = downloadUrl;
-          a.download = `relatorio_stamflow_${start_date}_${end_date}.${format}`;
-          document.body.appendChild(a);
-          a.click();
-
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(downloadUrl);
-
-          exportDropdown.classList.add("display-none");
-        } catch (error) {
-          console.error("Erro ao exportar:", error);
-          alert("Não foi possível gerar o relatório. Tente novamente.");
-        } finally {
-          option.innerHTML = originalText;
-          option.style.pointerEvents = "auto";
-        }
+      dropdown.querySelectorAll("li").forEach((option) => {
+        option.addEventListener("click", () => baixar(option, dropdown));
       });
     });
   }

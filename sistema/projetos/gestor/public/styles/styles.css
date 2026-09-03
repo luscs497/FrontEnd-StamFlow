@@ -630,6 +630,16 @@ header.nav-mini .imagem-usuario {
     flex-shrink: 0;
 }
 
+/* "Indícios de humor (entusiasmo, neutro, raiva, tristeza)": a lista entre
+   parênteses é longa demais para o mesmo peso do título — fica como
+   legenda, na mesma linha quando cabe e quebrando abaixo quando não cabe. */
+.humor-subtitulo {
+    display: inline-block;
+    font-size: 0.72em;
+    font-weight: 500;
+    color: rgb(156, 163, 175);
+}
+
 .periodos {
     width: fit-content;
     list-style: none;
@@ -2084,6 +2094,76 @@ header.nav-mini .imagem-usuario {
     transform: translateY(2px);
 }
 
+/* -----------------------------------------------------------------------------
+   "Exportar" na aba Comparar: ícone sozinho, rótulo abrindo no hover.
+
+   Ao entrar na comparação o script.js move este mesmo botão para o header de
+   lá e marca o container com .export-minimizado. O espaço ali é do PERIODO A
+   + PERIODO B, então o botão encolhe até o ícone em vez de sumir.
+
+   Mesmo mecanismo dos botões do rodapé do Detox Mental: o rótulo NÃO usa
+   `display: none` — ele continua no fluxo, com a largura limitada a zero,
+   porque só assim dá para animar a abertura. O `gap` entra na conta junto:
+   fechado ele deixaria uma sobra entre o ícone e um rótulo invisível, e o
+   botão não ficaria redondo em volta do ícone.
+   -------------------------------------------------------------------------- */
+.export-minimizado .export-btn {
+    gap: 0;
+    transition: background-color 0.2s ease, transform 0.1s,
+                gap 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.export-minimizado .export-btn-rotulo {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    white-space: nowrap;
+    transition: max-width 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s ease 0.04s;
+}
+
+.export-minimizado .export-btn:hover,
+.export-minimizado .export-btn:focus-visible {
+    gap: 6px;
+}
+
+.export-minimizado .export-btn:hover .export-btn-rotulo,
+.export-minimizado .export-btn:focus-visible .export-btn-rotulo {
+    max-width: 8rem;
+    opacity: 1;
+}
+
+/* O dropdown é ancorado à direita (right: 0) no container, que encolheu junto
+   com o botão. Sem isto ele abriria alinhado a um container de ~40px e
+   escaparia da tela pela esquerda. */
+.export-minimizado .export-dropdown {
+    right: auto;
+    left: 0;
+}
+
+/* Sem mouse não existe hover: no toque o rótulo fica sempre aberto, senão o
+   botão viraria um ícone sem nome que ninguém sabe o que faz. Vale para
+   qualquer largura — um tablet de 1024px também cai aqui. */
+@media (hover: none) {
+    .export-minimizado .export-btn {
+        gap: 6px;
+    }
+
+    .export-minimizado .export-btn-rotulo {
+        max-width: 8rem;
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .export-minimizado .export-btn,
+    .export-minimizado .export-btn-rotulo {
+        transition-duration: 0.01ms;
+    }
+}
+
 /* ------------------------------------------------------------------
    Reordenação visual a partir de 993px (cobre desktop puro >1140px E
    a faixa tablet 993-1140px, que usa o mesmo layout em linha — só o
@@ -2134,6 +2214,40 @@ header.nav-mini .imagem-usuario {
     .export-container {
         order: 3;
         margin-left: auto;
+    }
+}
+
+/* Header da COMPARAÇÃO: o "Exportar" (minimizado) fica à ESQUERDA do
+   "Cancelar", e os dois viajam juntos para a ponta direita. Sem isto, de 769 a
+   992px o `space-between` espalhava os três filhos e deixava um vão enorme
+   entre os botões. A regra genérica .export-container (order: 3 +
+   margin-left: auto, no @media de 993px) continua servindo ao header
+   principal, onde o Exportar é o último; aqui os dois seletores de classe
+   ganham dela por especificidade, em qualquer ordem no arquivo. */
+@media (min-width: 769px) {
+    .export-container.export-minimizado {
+        order: 2;
+        margin-left: auto;
+    }
+
+    .cancelar-btn {
+        order: 3;
+    }
+}
+
+/* Acima de 1200px a barra é uma linha só e NÃO tem `gap` próprio — de 769 a
+   1200 ela ganha `flex-wrap: wrap` e `gap: 12px` (styles-1200 e styles-992),
+   que já cuidam do respiro. Por isso as margens vivem só aqui: aplicá-las nas
+   outras faixas somava ao gap (12 + 14.4 = 26px entre os botões) e o
+   margin-right ainda descontava da .prazosDiv, que tem width: 100% e deixava
+   de alcançar a borda do padding. */
+@media (min-width: 1201px) {
+    .prazosDiv {
+        margin-right: 14.4px;
+    }
+
+    .cancelar-btn {
+        margin-left: 14.4px;
     }
 }
 

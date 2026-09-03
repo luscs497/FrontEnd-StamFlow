@@ -175,6 +175,39 @@ header.nav-mini .logo {
   font-size: 13.6px;
 }
 
+/* "Exportar" na aba Comparar: nesta faixa o header já empilha em coluna e os
+   botões ocupam a linha inteira, como o Cancelar. Minimizar aqui só deixaria
+   um ícone solto num layout empilhado — e sem hover confiável no toque ele
+   ficaria sem rótulo nenhum. Então a forma reduzida é desligada: o botão volta
+   ao tamanho normal e herda o min-height dos demais, mantendo o alvo de toque.
+   O dropdown volta a ancorar à direita, como no resto desta faixa. */
+.export-minimizado,
+.export-minimizado .export-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.export-minimizado .export-btn {
+  gap: 6px;
+}
+
+.export-minimizado .export-btn-rotulo {
+  max-width: none;
+  opacity: 1;
+}
+
+.export-minimizado .export-dropdown {
+  right: 0;
+  left: auto;
+}
+
+/* Empilhados nesta faixa, o gap de 6px da barra deixa "Exportar" e "Cancelar"
+   praticamente colados — dois alvos de toque grudados um no outro. Somados,
+   os 6px do gap e estes 6px dão os ~12px de respiro do resto do painel. */
+.export-minimizado + .cancelar-btn {
+  margin-top: 6px;
+}
+
 /* Botões + chip "Hoje" um pouco mais compactos — ainda confortáveis ao
    toque (min-height 40px é o piso recomendado), mas sem a folga extra de
    antes, que deixava a barra de período ocupando altura demais. */

@@ -27,4 +27,53 @@ ErrorDocument 404 /404.html
     Header always set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 
+  # Q2 — /_next/static tem hash no nome do arquivo: o conteudo de uma URL
+  # NUNCA muda, entao revalidar e desperdicio puro. Sem cabecalho explicito o
+  # navegador cai no cache heuristico e volta a bater no servidor a toa.
+  # `immutable` diz que nem em reload manual precisa revalidar.
+  #
+  # Vale SO para /_next/static. Os arquivos de /scripts/ tem URL fixa e sao
+  # sobrescritos a cada deploy — quem os versiona e o ASSET_VERSION na query,
+  # e dar max-age longo a eles reintroduziria exatamente o bug de cache que a
+  # regra do index.html acima existe para evitar.
+  <IfModule mod_setenvif.c>
+    SetEnvIf Request_URI "^/_next/static/" STAMFLOW_IMUTAVEL=1
+    Header always set Cache-Control "public, max-age=31536000, immutable" env=STAMFLOW_IMUTAVEL
+  </IfModule>
+
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Q1 — Compressao de texto.
+#
+# Nao havia nenhuma diretiva de compressao aqui. Com ~400 KB de HTML (metade
+# deles o payload de hidratacao do Next, que e texto repetido e comprime
+# muito bem), ~100 KB de CSS e ~380 KB de scripts legados, e o maior ganho de
+# rede por linha escrita do painel.
+#
+# Os dois blocos sao <IfModule>: onde o modulo nao existir, viram no-op em vez
+# de derrubar o site com 500. O LiteSpeed da Hostinger interpreta as diretivas
+# de mod_deflate.
+#
+# Binarios ja comprimidos (png/jpg/webp/woff2/zip) ficam de fora de proposito:
+# recomprimi-los gasta CPU e costuma AUMENTAR o tamanho.
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE text/javascript application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml application/xml application/rss+xml
+  AddOutputFilterByType DEFLATE font/ttf font/otf application/vnd.ms-fontobject
+
+  # Proxies precisam variar a resposta pelo Accept-Encoding.
+  <IfModule mod_headers.c>
+    Header append Vary Accept-Encoding
+  </IfModule>
+</IfModule>
+
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml
+  AddOutputFilterByType BROTLI_COMPRESS text/javascript application/javascript application/x-javascript
+  AddOutputFilterByType BROTLI_COMPRESS application/json application/manifest+json
+  AddOutputFilterByType BROTLI_COMPRESS image/svg+xml application/xml application/rss+xml
 </IfModule>
