@@ -35,23 +35,83 @@
     return no.classList.contains("hidden") || no.classList.contains("display-none");
   }
 
+  /* -------------------------------------------------------------------------
+     O4 — a lista de candidatos, em cache.
+
+     `algumAberto()` refazia o `querySelectorAll` a cada quadro. O seletor tem
+     seis partes e uma delas é `[id$="Modal"]`: casamento por SUFIXO de
+     atributo, que nenhum índice do motor cobre, então percorre os ~1.584
+     elementos da árvore. Como o camera.js escreve `className` em cerca de dez
+     elementos por leitura do worker (~10x/s), essa varredura virou trabalho de
+     caminho quente.
+
+     O cache tem prazo curto de propósito: os pop-ups são markup estático, mas
+     um TTL de 1s garante que qualquer inserção dinâmica futura seja vista sem
+     precisar observar `childList` — o que colocaria este código no caminho do
+     arraste de post-its do Detox, exatamente o que o comentário do observer
+     abaixo evita.
+  ------------------------------------------------------------------------- */
+  var CACHE_TTL_MS = 1000;
+  var candidatos = null;
+  var candidatosEm = 0;
+
+  function listaDeCandidatos() {
+    var agora = Date.now();
+    if (!candidatos || agora - candidatosEm > CACHE_TTL_MS) {
+      candidatos = document.querySelectorAll(SELETOR);
+      candidatosEm = agora;
+    }
+    return candidatos;
+  }
+
+  /* -------------------------------------------------------------------------
+     O4 — `visivel()` sem forçar reflow.
+
+     O `getClientRects()` de antes resolvia o problema certo (enxerga ancestral
+     escondido, coisa que o getComputedStyle não faz) pelo preço errado: é
+     reflow SÍNCRONO forçado, e rodava por candidato, por quadro. O
+     `checkVisibility({checkVisibilityCSS: true})` responde exatamente a mesma
+     pergunta — percorre a cadeia de ancestrais — sem obrigar o layout a ser
+     recalculado. Onde ele não existe (Safari < 17.4), cai no comportamento
+     anterior, que continua correto.
+  ------------------------------------------------------------------------- */
+  function visivel(no) {
+    if (typeof no.checkVisibility === "function") {
+      return no.checkVisibility({ checkVisibilityCSS: true });
+    }
+    return no.getClientRects().length > 0;
+  }
+
   function algumAberto() {
-    var nos = document.querySelectorAll(SELETOR);
+    var nos = listaDeCandidatos();
     for (var i = 0; i < nos.length; i++) {
-      // Teste barato primeiro: a classe. Só o que passa por ele paga um
-      // getComputedStyle, que força recálculo de estilo — e este código roda a
-      // cada mudança de classe na árvore, inclusive durante o arraste de um
-      // post-it do Detox.
+      // Teste barato primeiro: a classe.
       if (escondidoPorClasse(nos[i])) continue;
-      // getComputedStyle NAO serve aqui: ele devolve o display do proprio
-      // elemento, ignorando ancestral escondido. Os cinco `popup-embasamento`
-      // e o modal de Perfil vivem dentro de <section id="modais">, que e o
-      // overlay e tem o seu proprio `.display-none` — com um popup destravado
-      // e o #modais ainda escondido, o computed dizia "flex" e a trava ligava
-      // com nada na tela. Medido: computedDisplay "flex", getClientRects() 0.
-      // getClientRects() ve a arvore inteira: zero retangulos = invisivel,
-      // seja por qual ancestral for.
-      if (nos[i].getClientRects().length > 0) return true;
+      if (visivel(nos[i])) return true;
+    }
+    return false;
+  }
+
+  /* -------------------------------------------------------------------------
+     O4 — filtro de mutação.
+
+     Só duas classes de mutação podem mudar a resposta de `algumAberto()`:
+     a classe mudou NO PRÓPRIO pop-up (abriu/fechou), ou mudou em um ANCESTRAL
+     dele (o `<section id="modais">` que envolve os `popup-embasamento`, por
+     exemplo). Tudo o mais — e é a esmagadora maioria, porque o camera.js
+     reescreve `className` nas barras de stamina e nos rótulos de postura ~10
+     vezes por segundo — não pode alterar visibilidade de pop-up nenhum.
+
+     Sem este filtro, cada uma dessas escritas agendava um quadro e pagava a
+     varredura completa mais o reflow forçado.
+  ------------------------------------------------------------------------- */
+  function mutacaoRelevante(m) {
+    var alvo = m.target;
+    if (!alvo || alvo.nodeType !== 1) return false;
+    if (alvo.matches && alvo.matches(SELETOR)) return true;
+    var nos = listaDeCandidatos();
+    for (var i = 0; i < nos.length; i++) {
+      if (alvo.contains(nos[i])) return true;
     }
     return false;
   }
@@ -79,7 +139,11 @@
     // Só `class`: é por ela que os pop-us abrem e fecham. Observar `style`
     // junto colocaria este código no caminho quente do arraste de post-its,
     // que mexe em `style` a cada quadro.
-    new MutationObserver(agendar).observe(document.body, {
+    new MutationObserver(function (mutacoes) {
+      for (var i = 0; i < mutacoes.length; i++) {
+        if (mutacaoRelevante(mutacoes[i])) { agendar(); return; }
+      }
+    }).observe(document.body, {
       subtree: true,
       attributes: true,
       attributeFilter: ["class"]

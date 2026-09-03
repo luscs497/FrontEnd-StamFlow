@@ -38,14 +38,27 @@ export const LEGACY_SCRIPTS_HEAVY: string[] = [
   "/scripts/camera.js",
   "/scripts/get-repots.js",
   "/scripts/notifications.js",
-  // Aba Detox Mental. html2canvas e jsPDF só são usados na exportação do quadro
-  // (PNG/PDF); ficam na fase pesada por isso. São libs isoladas, sem reset
-  // global — ao contrário do Tailwind, que foi eliminado do runtime.
-  //
-  // Servidas pelo jsDelivr, não pelo cdnjs: a CSP do .htaccess libera apenas
-  // 'self' e cdn.jsdelivr.net em script-src. Pelo cdnjs (como vinha o artefato
-  // original) o navegador bloqueia os dois em produção e os downloads PNG/PDF
-  // param de funcionar — o dev server não tem CSP, então isso só aparece no ar.
+];
+
+/*
+ * FASE 3 (Q4) — aba Detox Mental. ~230 KB que TODO usuário baixava em TODA
+ * sessão, mesmo sem nunca abrir a aba.
+ *
+ * Servidas pelo jsDelivr, não pelo cdnjs: a CSP do .htaccess libera apenas
+ * 'self' e cdn.jsdelivr.net em script-src. Pelo cdnjs (como vinha o artefato
+ * original) o navegador bloqueia os dois em produção e os downloads PNG/PDF
+ * param de funcionar — o dev server não tem CSP, então isso só aparece no ar.
+ *
+ * ATENÇÃO ao mexer nisto: o markup do Detox usa handlers inline
+ * (onclick="detoxMental.openModal(...)"), então `window.detoxMental` precisa
+ * existir no instante em que a aba aparece — não dá para carregar SÓ no clique
+ * e torcer. Por isso o LegacyBootstrap usa dois gatilhos: antecipa no
+ * pointerdown do item de menu e, como rede de segurança, carrega na primeira
+ * ociosidade do navegador. O detox.js se inicializa sozinho quando chega tarde
+ * (ele testa document.readyState e chama init() no else), então carregar fora
+ * do DOMContentLoaded é seguro.
+ */
+export const LEGACY_SCRIPTS_DETOX: string[] = [
   "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
   "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js",
   "/scripts/detox.js",
@@ -55,6 +68,7 @@ export const LEGACY_SCRIPTS_HEAVY: string[] = [
 export const LEGACY_SCRIPTS: string[] = [
   ...LEGACY_SCRIPTS_CORE,
   ...LEGACY_SCRIPTS_HEAVY,
+  ...LEGACY_SCRIPTS_DETOX,
 ];
 
 /*
@@ -69,7 +83,7 @@ export const LEGACY_SCRIPTS: string[] = [
   BUMPAR A CADA DEPLOY que altere qualquer arquivo em /public/scripts ou
   /public/data (o script.js versiona o fetch dos JSON com esta mesma chave).
 */
-export const ASSET_VERSION = "20260903";
+export const ASSET_VERSION = "20260903-2";
 
 /** Anexa ?v= apenas a assets locais (CDNs já versionam na própria URL). */
 export function comVersao(src: string): string {
