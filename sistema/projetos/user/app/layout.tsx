@@ -7,8 +7,8 @@ import "./globals.css";
 import "./detox.css";
 
 // Lido em build time (Server Component), no mesmo padrao do LegacyMarkup.
-const SWIPER_CSS = fs.readFileSync(
-  path.join(process.cwd(), "app", "_legacy", "swiper-bundle.min.css"),
+const CARROSSEL_CSS = fs.readFileSync(
+  path.join(process.cwd(), "app", "_legacy", "onboarding-carrossel.css"),
   "utf8"
 );
 
@@ -43,7 +43,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
         {/*
-          Q3 — Swiper styles (used by the onboarding carousel), embutidos.
+          Estilos do carrossel do onboarding, embutidos.
 
           Como <link> para o jsDelivr, este arquivo era uma requisicao
           cross-origin BLOQUEANTE de render: DNS + TLS + download antes de
@@ -55,7 +55,7 @@ export default function RootLayout({
           posicao do <head> para preservar a ordem da cascata: continua depois
           dos estilos do Next, como era.
         */}
-        <style dangerouslySetInnerHTML={{ __html: SWIPER_CSS }} />
+        <style dangerouslySetInnerHTML={{ __html: CARROSSEL_CSS }} />
       </head>
       <body>{children}</body>
     </html>

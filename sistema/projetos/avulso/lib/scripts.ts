@@ -19,7 +19,10 @@
 
 // Fase 1 — carrega primeiro, destrava o onboarding rapidamente.
 export const LEGACY_SCRIPTS_CORE: string[] = [
-  "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+  // O Swiper saiu daqui: eram 154.597 bytes que custavam 67 a 77 ms de main
+  // thread so em parse + execucao num celular de entrada (Chrome, CPU 20x) —
+  // e caiam ANTES da primeira pintura do onboarding. O carrossel agora e
+  // nativo, dentro do proprio script.js.
   "/scripts/auth.js",
   "/scripts/script.js",
   // Trava a rolagem da pagina com qualquer pop-up aberto (R26). Fase 1 porque o
@@ -83,7 +86,7 @@ export const LEGACY_SCRIPTS: string[] = [
   BUMPAR A CADA DEPLOY que altere qualquer arquivo em /public/scripts ou
   /public/data (o script.js versiona o fetch dos JSON com esta mesma chave).
 */
-export const ASSET_VERSION = "20260903-4";
+export const ASSET_VERSION = "20260903-5";
 
 /** Anexa ?v= apenas a assets locais (CDNs já versionam na própria URL). */
 export function comVersao(src: string): string {

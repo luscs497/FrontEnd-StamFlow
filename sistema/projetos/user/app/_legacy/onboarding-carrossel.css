@@ -1,0 +1,86 @@
+/*
+ * Carrossel do onboarding — substitui o swiper-bundle.min.css (18 KB) pelas
+ * ÚNICAS regras que a tela realmente usava.
+ *
+ * Os seletores são os mesmos do Swiper de propósito: o globals.css já tem
+ * regras casadas com `.swiper-onboarding`, `.swiper-pagination-bullet` e
+ * `.prev.swiper-button-disabled`, e manter os nomes preserva a cascata
+ * exatamente como estava. Só o onboarding usa `.swiper*` neste projeto —
+ * conferido no app-body.html: 1 container, 1 wrapper, 4 slides.
+ *
+ * Cada valor abaixo foi lido do getComputedStyle da versão com Swiper rodando,
+ * não deduzido da documentação.
+ */
+
+.swiper {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    z-index: 1;
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
+    list-style: none;
+}
+
+.swiper-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    box-sizing: content-box;
+    /* `height` entra junto: é o autoHeight. O JS escreve a altura do slide
+       ativo e ela anima na mesma duração do deslize, como o Swiper fazia. */
+    transition-property: transform, height;
+    transition-timing-function: ease;
+}
+
+/* autoHeight: o wrapper manda na altura, então os slides não esticam. */
+.swiper-autoheight .swiper-wrapper {
+    align-items: flex-start;
+}
+
+.swiper-autoheight .swiper-slide {
+    height: auto;
+}
+
+.swiper-slide {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    transition-property: transform;
+}
+
+/* Mantido porque JÁ ERA assim: o Swiper aplicava `swiper-backface-hidden` e
+   com ele os slides ganham camada de composição própria. Tirar mudaria o
+   antialiasing do texto — medido, 5% dos pixels. */
+.swiper-backface-hidden .swiper-slide {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Bullets: o globals.css já define largura, altura, raio e cor com
+   !important. O que vinha do Swiper e continua vindo daqui é só a opacidade
+   do inativo e o espaçamento horizontal. */
+.swiper-pagination-bullet {
+    display: inline-block;
+    opacity: 0.2;
+}
+
+.swiper-pagination-horizontal > .swiper-pagination-bullet {
+    margin: 0 4px;
+}
+
+/* O container das bolinhas ocupa a largura toda e ancora pelo rodape do
+   .on-boarding-header. Sem isto ele encolhe para o tamanho do conteudo (92px
+   em vez de 331px) e as bolinhas saem do lugar — medido: era exatamente esta
+   regra que faltava no primeiro diff de pixel. */
+.swiper-pagination-bullets.swiper-pagination-horizontal {
+    left: 0;
+    width: 100%;
+    top: auto;
+    bottom: 8px;
+}

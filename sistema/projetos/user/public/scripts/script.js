@@ -371,6 +371,217 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  /*
+   * ==========================================================================
+   * Carrossel do onboarding — nativo, no lugar do Swiper.
+   *
+   * O swiper-bundle.min.js são 154.597 bytes que custavam 67 a 77 ms de main
+   * thread só para parse + execução num celular de entrada (medido no Chrome
+   * com CPU 20x). E ele vinha na FASE 1, ou seja, esse custo caía antes da
+   * primeira pintura do onboarding — a primeira tela que um usuário novo vê.
+   * Disso o carrossel usava quatro slides sem loop, paginação não clicável e
+   * autoHeight.
+   *
+   * CONTRATO PRESERVADO. As classes e os estilos inline abaixo são os mesmos
+   * que o Swiper aplicava, porque o globals.css depende deles:
+   *   - container: swiper-initialized / swiper-horizontal / swiper-autoheight /
+   *                swiper-backface-hidden
+   *   - slides:    swiper-slide-active / -next / -prev, e width inline em px
+   *   - wrapper:   transform translate3d(...) e height inline em px
+   *   - paginação: swiper-pagination-bullets / -horizontal no container e
+   *                spans .swiper-pagination-bullet, com -active + aria-current
+   *   - navegação: swiper-button-disabled nas pontas (o globals.css estiliza
+   *                `.prev.swiper-button-disabled`)
+   *
+   * Cada valor foi lido do getComputedStyle da versão com Swiper rodando: 300 ms
+   * de duração, curva `ease`, e a altura animando junto com o deslize.
+   * ==========================================================================
+   */
+  function criarCarrosselOnboarding(cores) {
+    const container = document.querySelector(".swiper-onboarding");
+    if (!container) return null;
+    const wrapper = container.querySelector(".swiper-wrapper");
+    const slides = Array.prototype.slice.call(container.querySelectorAll(".swiper-slide"));
+    if (!wrapper || !slides.length) return null;
+
+    const paginacao = document.querySelector(".pagination");
+    const btnsProximo = Array.prototype.slice.call(document.querySelectorAll(".next-boarding"));
+    const btnAnterior = document.querySelector(".prev");
+
+    const DURACAO = 300; // mesmo default do Swiper
+    let indice = 0;
+    let largura = 0;
+    let bullets = [];
+
+    container.classList.add(
+      "swiper-initialized", "swiper-horizontal",
+      "swiper-autoheight", "swiper-backface-hidden"
+    );
+
+    if (paginacao) {
+      paginacao.classList.add("swiper-pagination-bullets", "swiper-pagination-horizontal");
+      paginacao.innerHTML = "";
+      bullets = slides.map(function () {
+        const b = document.createElement("span");
+        b.className = "swiper-pagination-bullet";
+        paginacao.appendChild(b);
+        return b;
+      });
+    }
+
+    function alturaDoAtivo() {
+      // offsetHeight, e nao getBoundingClientRect: e exatamente o que o
+      // updateAutoHeight do Swiper usava (`const e = s[i].offsetHeight`), e a
+      // diferenca de arredondamento entre os dois aparecia como 1 degrau de
+      // 255 no gradiente do botao "Proximo" do slide 2. Medido.
+      const s = slides[indice];
+      return s ? s.offsetHeight : 0;
+    }
+
+    function medir() {
+      largura = container.clientWidth;
+      // O Swiper escrevia a largura em px inteiros em cada slide.
+      const px = Math.round(largura) + "px";
+      slides.forEach(function (s) { s.style.width = px; });
+    }
+
+    let tempoDeVolta = 0;
+    function posicionar(duracao) {
+      wrapper.style.transitionDuration = duracao + "ms";
+      wrapper.style.transform = "translate3d(" + (-indice * largura) + "px, 0, 0)";
+      wrapper.style.height = alturaDoAtivo() + "px";
+      clearTimeout(tempoDeVolta);
+      if (duracao > 0) {
+        // Volta a 0ms depois da transição, como o Swiper: assim um arraste
+        // seguinte gruda no dedo em vez de herdar a duração anterior.
+        tempoDeVolta = setTimeout(function () {
+          wrapper.style.transitionDuration = "0ms";
+        }, duracao);
+      }
+    }
+
+    function pintarEstado() {
+      slides.forEach(function (s, i) {
+        s.classList.toggle("swiper-slide-active", i === indice);
+        s.classList.toggle("swiper-slide-next", i === indice + 1);
+        s.classList.toggle("swiper-slide-prev", i === indice - 1);
+      });
+      bullets.forEach(function (b, i) {
+        const ativo = i === indice;
+        b.classList.toggle("swiper-pagination-bullet-active", ativo);
+        if (ativo) b.setAttribute("aria-current", "true");
+        else b.removeAttribute("aria-current");
+      });
+      if (btnAnterior) {
+        btnAnterior.classList.toggle("swiper-button-disabled", indice === 0);
+      }
+      btnsProximo.forEach(function (b) {
+        b.classList.toggle("swiper-button-disabled", indice === slides.length - 1);
+      });
+      document.documentElement.style.setProperty(
+        "--bullet-active-color", cores[indice % cores.length]
+      );
+    }
+
+    function irPara(i, duracao) {
+      indice = Math.max(0, Math.min(slides.length - 1, i));
+      pintarEstado();
+      posicionar(typeof duracao === "number" ? duracao : DURACAO);
+    }
+
+    // ---- arraste por toque ------------------------------------------------
+    let xInicial = 0, yInicial = 0, desloc = 0;
+    let arrastando = false, eixoDecidido = false, horizontal = false;
+
+    container.addEventListener("touchstart", function (e) {
+      if (e.touches.length !== 1) return;
+      xInicial = e.touches[0].clientX;
+      yInicial = e.touches[0].clientY;
+      desloc = 0;
+      arrastando = true;
+      eixoDecidido = false;
+      horizontal = false;
+      clearTimeout(tempoDeVolta);
+      wrapper.style.transitionDuration = "0ms"; // gruda no dedo
+    }, { passive: true });
+
+    container.addEventListener("touchmove", function (e) {
+      if (!arrastando) return;
+      const x = e.touches[0].clientX;
+      const y = e.touches[0].clientY;
+      desloc = x - xInicial;
+
+      if (!eixoDecidido) {
+        // Só decide o eixo depois de sair da zona morta, senão um toque
+        // trêmulo sequestra a rolagem vertical do card.
+        if (Math.abs(desloc) < 6 && Math.abs(y - yInicial) < 6) return;
+        eixoDecidido = true;
+        horizontal = Math.abs(desloc) > Math.abs(y - yInicial);
+        if (!horizontal) { arrastando = false; return; } // deixa a página rolar
+      }
+
+      // Resistência nas pontas: sem loop, o Swiper também segurava aqui.
+      let d = desloc;
+      if ((indice === 0 && d > 0) || (indice === slides.length - 1 && d < 0)) d *= 0.35;
+      wrapper.style.transform = "translate3d(" + (-indice * largura + d) + "px, 0, 0)";
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+
+    function soltar() {
+      if (!arrastando) return;
+      arrastando = false;
+      if (!horizontal) return;
+      const limiar = Math.max(40, largura * 0.15);
+      if (desloc <= -limiar) irPara(indice + 1);
+      else if (desloc >= limiar) irPara(indice - 1);
+      else irPara(indice); // volta para o lugar
+    }
+    container.addEventListener("touchend", soltar);
+    container.addEventListener("touchcancel", soltar);
+
+    // ---- botões -----------------------------------------------------------
+    btnsProximo.forEach(function (b) {
+      b.addEventListener("click", function (e) {
+        e.preventDefault();
+        irPara(indice + 1);
+      });
+    });
+    if (btnAnterior) {
+      btnAnterior.addEventListener("click", function (e) {
+        e.preventDefault();
+        irPara(indice - 1);
+      });
+    }
+
+    // ---- redimensionamento ------------------------------------------------
+    let tempoResize = 0;
+    window.addEventListener("resize", function () {
+      clearTimeout(tempoResize);
+      tempoResize = setTimeout(function () {
+        medir();
+        posicionar(0); // reposiciona sem animar
+      }, 150);
+    });
+
+    // A altura do slide muda quando as fontes trocam de fallback para a Inter.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { posicionar(0); }).catch(function () {});
+    }
+
+    medir();
+    pintarEstado();
+    posicionar(0);
+
+    // Mesma superfície que o resto do arquivo usava do Swiper.
+    return {
+      slides: slides,
+      slideTo: function (i, duracao) { irPara(i, duracao); },
+      slideNext: function () { irPara(indice + 1); },
+      slidePrev: function () { irPara(indice - 1); },
+      get realIndex() { return indice; }
+    };
+  }
+
   // ============================================================
   // 7. Onboarding
   // ============================================================
@@ -380,24 +591,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     onboardingContainer.classList.add("display-none");
   }
 
-  if (typeof Swiper !== "undefined" && onboardingContainer) {
+  if (onboardingContainer) {
     const cores = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#14B8A6"];
-    const swiperBoarding = new Swiper(".swiper-onboarding", {
-      loop: false,
-      slidesPerView: 1,
-      autoHeight: true,
-      navigation: { nextEl: ".next-boarding", prevEl: ".prev" },
-      pagination: { el: ".pagination", clickable: false },
-      on: {
-        init: function () {
-          document.documentElement.style.setProperty("--bullet-active-color", cores[0]);
-        },
-        slideChange: function () {
-          const novaCor = cores[this.realIndex % cores.length];
-          document.documentElement.style.setProperty("--bullet-active-color", novaCor);
-        },
-      },
-    });
+    const swiperBoarding = criarCarrosselOnboarding(cores);
 
     const btnSkip = document.querySelector(".skip");
     if (btnSkip) {
